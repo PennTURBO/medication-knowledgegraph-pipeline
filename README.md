@@ -18,7 +18,7 @@ Assumptions:
 
 ### Previous output `PDS_meds_to_turbo_terms_and_roles_17col.csv` had the following columns
 
-- **PK_MEDICATION_ID**
+- ***PK_MEDICATION_ID***
 - FULL_NAME
 - SOURCE_CODE
 - ~~PHARMACY_CLASS~~
@@ -30,7 +30,7 @@ Assumptions:
 - bestterm_turbo
 - best_RXNORM_CODE_turbo
 - best_RXNORM_label_turbo
-- **doseform_turbo**
+- ***doseform_turbo***
 - ~~analgesic_role_turbo~~
 - ~~antiarrhythmic_role_turbo~~
 - ~~antiemetic_role_turbo~~
