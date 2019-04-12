@@ -36,4 +36,8 @@ Assumptions:
 - ~~antiemetic_role_turbo~~
 - ~~antipsychotic_role_turbo~~
 
-### Output in previouos GraphDB repository ... had the following graph names and triples patterns...
+### Output in previouos GraphDB repository 
+http://example.com/resource/pds_solr_res_best_preds graph in epic_mdm_ods_20180918?
+
+see also graphs http://example.com/resource/rxn_role_materializations and http://example.com/resource/role_inheritance and possibly repo backtrack_and_document
+
