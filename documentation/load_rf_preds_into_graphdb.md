@@ -1,4 +1,96 @@
-## Exported from R medication mapping prediction phase:
+## Move medication mapping predictions from R to RDF
+
+Previously only loaded a small number of columns, only for the 'best' prediction for each FULL_NAME.  Now try all columns (as far as important training features, etc.) for all rows except FALSE-FALSE-FALSE-FALSE proximity predictions
+
+Just remember 
+- solrsubmission (query = tidied full name)
+- labelContent (subject = term's label, as is)
+
+BUT string similarity was calculated against "noproduct" (words "product" and "containing" removed, and "@" replaced with " ")
+
+Dimensions of CSV file: 4,132,516 x 36
+
+```
+> colnames(for.graphdb)
+ [1] "trn"                     "R_MEDICATION_URI"        "solrsubmission"          "labelContent"            "term"                   
+ [6] "ontology"                "rxnifavailable"          "jaccard"                 "score"                   "cosine"                 
+[11] "rank"                    "jw"                      "hwords"                  "hchars"                  "qchars"                 
+[16] "qgram"                   "term.count"              "qwords"                  "lv"                      "lcs"                    
+[21] "T200"                    "ontology.count"          "rxnMatchMeth"            "altLabel"                "labelType"              
+[26] "solr_rxnorm"             "rf_predicted_proximity"  "FALSE-FALSE-FALSE-FALSE" "FALSE-FALSE-FALSE-TRUE"  "FALSE-FALSE-TRUE-FALSE" 
+[31] "FALSE-FALSE-TRUE-TRUE"   "FALSE-TRUE-FALSE-FALSE"  "FALSE-TRUE-TRUE-FALSE"   "TRUE-FALSE-FALSE-FALSE"  "TRUE-TRUE-FALSE-FALSE"  
+[36] "max.useful.prob" 
+
+> sort(colnames(for.graphdb))
+ [1] "altLabel"                "cosine"                  "FALSE-FALSE-FALSE-FALSE" "FALSE-FALSE-FALSE-TRUE"  "FALSE-FALSE-TRUE-FALSE" 
+ [6] "FALSE-FALSE-TRUE-TRUE"   "FALSE-TRUE-FALSE-FALSE"  "FALSE-TRUE-TRUE-FALSE"   "hchars"                  "hwords"                 
+[11] "jaccard"                 "jw"                      "labelContent"            "labelType"               "lcs"                    
+[16] "lv"                      "max.useful.prob"         "ontology"                "ontology.count"          "qchars"                 
+[21] "qgram"                   "qwords"                  "rank"                    "rf_predicted_proximity"  "R_MEDICATION_URI"       
+[26] "rxnifavailable"          "rxnMatchMeth"            "score"                   "solr_rxnorm"             "solrsubmission"         
+[31] "T200"                    "term"                    "term.count"              "trn"                     "TRUE-FALSE-FALSE-FALSE" 
+[36] "TRUE-TRUE-FALSE-FALSE"  
+
+ > summary(for.graphdb)
+                                      R_MEDICATION_URI   solrsubmission     labelContent           term          
+ urn:uuid:00de798f-25b8-4e6d-982a-39c36170bd24:     30   Length:4132516     Length:4132516     Length:4132516    
+ urn:uuid:00e72ab6-e7d1-4bac-b677-659a4934894a:     30   Class :character   Class :character   Class :character  
+ urn:uuid:01318295-00d4-45f1-b1e6-c1946054920e:     30   Mode  :character   Mode  :character   Mode  :character  
+ urn:uuid:015198ea-d744-443f-bb60-f9af5e4837ee:     30                                                           
+ urn:uuid:025c4fae-78e0-4a0c-9aee-3514e00e7d09:     30                                                           
+ urn:uuid:02735dac-90f4-4d2d-816f-982d00611149:     30                                                           
+ (Other)                                      :4132336                                                           
+                                                                   ontology       rxnifavailable        jaccard      
+ https://www.nlm.nih.gov/research/umls/sourcereleasedocs/current/RXNORM:1105991   Length:4132516     Min.   :0.0000  
+ https://www.nlm.nih.gov/research/umls/sourcereleasedocs/current/MMSL/ : 824922   Class :character   1st Qu.:0.1786  
+ https://bitbucket.org/uamsdbmi/dron/raw/master/dron-full.owl          : 491541   Mode  :character   Median :0.2800  
+ https://www.nlm.nih.gov/research/umls/sourcereleasedocs/current/MMX/  : 319111                      Mean   :0.2980  
+ https://www.nlm.nih.gov/research/umls/sourcereleasedocs/current/MTH/  : 189361                      3rd Qu.:0.4118  
+ https://www.nlm.nih.gov/research/umls/sourcereleasedocs/current/GS/   : 188476                      Max.   :0.9500  
+ (Other)                                                               :1013114                                      
+     score            cosine             rank             jw             hwords            hchars           qchars      
+ Min.   : 1.343   Min.   :0.00000   Min.   : 1.00   Min.   :0.0000   Min.   :  0.000   Min.   :  1.00   Min.   :  1.00  
+ 1st Qu.: 6.722   1st Qu.:0.05509   1st Qu.: 4.00   1st Qu.:0.1573   1st Qu.:  1.000   1st Qu.: 14.00   1st Qu.: 26.00  
+ Median : 8.247   Median :0.09869   Median :10.00   Median :0.2189   Median :  4.000   Median : 30.00   Median : 36.00  
+ Mean   : 8.761   Mean   :0.12660   Mean   :11.45   Mean   :0.2162   Mean   :  4.527   Mean   : 32.87   Mean   : 39.44  
+ 3rd Qu.:10.148   3rd Qu.:0.17071   3rd Qu.:18.00   3rd Qu.:0.2736   3rd Qu.:  7.000   3rd Qu.: 45.00   3rd Qu.: 49.00  
+ Max.   :62.354   Max.   :0.91246   Max.   :30.00   Max.   :1.0000   Max.   :199.000   Max.   :875.00   Max.   :289.00  
+                                                                                                                        
+     qgram          term.count          qwords             lv              lcs              T200        ontology.count   
+ Min.   :  0.00   Min.   :    1.0   Min.   : 0.000   Min.   :  0.00   Min.   :  0.00   Min.   :0.0000   Min.   :  32705  
+ 1st Qu.: 11.00   1st Qu.:   51.0   1st Qu.: 3.000   1st Qu.: 11.00   1st Qu.: 12.00   1st Qu.:0.0000   1st Qu.:1619852  
+ Median : 18.00   Median :  161.0   Median : 5.000   Median : 20.00   Median : 22.00   Median :1.0000   Median :3469702  
+ Mean   : 20.55   Mean   :  934.5   Mean   : 6.719   Mean   : 23.56   Mean   : 26.67   Mean   :0.6026   Mean   :3168517  
+ 3rd Qu.: 27.00   3rd Qu.:  607.0   3rd Qu.: 9.000   3rd Qu.: 31.00   3rd Qu.: 36.00   3rd Qu.:1.0000   3rd Qu.:5067224  
+ Max.   :832.00   Max.   :45194.0   Max.   :97.000   Max.   :831.00   Max.   :859.00   Max.   :1.0000   Max.   :5067224  
+                                                                                                                         
+                rxnMatchMeth        altLabel                                              labelType        solr_rxnorm    
+ non-BP-CUI           :1566583   Min.   :0.0000   http://www.w3.org/2000/01/rdf-schema#label   : 563877   Min.   :0.0000  
+ RxNorm direct        :1105991   1st Qu.:0.0000   http://www.w3.org/2004/02/skos/core#altLabel : 948612   1st Qu.:0.0000  
+ unmapped             : 525898   Median :0.0000   http://www.w3.org/2004/02/skos/core#prefLabel:2620027   Median :0.0000  
+ DrOn assertion       : 491541   Mean   :0.2295                                                           Mean   :0.2676  
+ CUI; LOOM; non-BP-CUI: 242132   3rd Qu.:0.0000                                                           3rd Qu.:1.0000  
+ CUI; non-BP-CUI      : 133224   Max.   :1.0000                                                           Max.   :1.0000  
+ (Other)              :  67147                                                                                            
+            rf_predicted_proximity FALSE-FALSE-FALSE-FALSE FALSE-FALSE-FALSE-TRUE FALSE-FALSE-TRUE-FALSE FALSE-FALSE-TRUE-TRUE
+ FALSE-FALSE-FALSE-TRUE:1116459    Min.   :0.0000          Min.   :0.00000        Min.   :0.00000        Min.   :0.00000      
+ TRUE-TRUE-FALSE-FALSE :1024666    1st Qu.:0.1667          1st Qu.:0.01000        1st Qu.:0.03333        1st Qu.:0.00000      
+ FALSE-FALSE-TRUE-FALSE: 663541    Median :0.2433          Median :0.05333        Median :0.08000        Median :0.01000      
+ FALSE-TRUE-FALSE-FALSE: 634347    Mean   :0.2354          Mean   :0.17605        Mean   :0.15031        Mean   :0.07729      
+ FALSE-FALSE-TRUE-TRUE : 338933    3rd Qu.:0.3100          3rd Qu.:0.34000        3rd Qu.:0.18333        3rd Qu.:0.08000      
+ TRUE-FALSE-FALSE-FALSE: 289734    Max.   :0.5000          Max.   :1.00000        Max.   :1.00000        Max.   :1.00000      
+ (Other)               :  64836                                                                                               
+ FALSE-TRUE-FALSE-FALSE FALSE-TRUE-TRUE-FALSE TRUE-FALSE-FALSE-FALSE TRUE-TRUE-FALSE-FALSE max.useful.prob 
+ Min.   :0.000000       Min.   :0.000000      Min.   :0.000000       Min.   :0.00000       Min.   :0.1567  
+ 1st Qu.:0.003333       1st Qu.:0.000000      1st Qu.:0.000000       1st Qu.:0.00000       1st Qu.:0.3767  
+ Median :0.040000       Median :0.000000      Median :0.003333       Median :0.05333       Median :0.4567  
+ Mean   :0.126078       Mean   :0.017989      Mean   :0.062540       Mean   :0.15431       Mean   :0.4924  
+ 3rd Qu.:0.183333       3rd Qu.:0.006667      3rd Qu.:0.036667       3rd Qu.:0.29333       3rd Qu.:0.5767  
+ Max.   :1.000000       Max.   :1.000000      Max.   :1.000000       Max.   :1.00000       Max.   :1.0000  
+
+```
+
+## As a CSV file:
 
 ```ubuntu@ip-172-31-88-67:~$ head pred_has_potential_without_nddf_alt_rownums.csv`
 "trn","R_MEDICATION_URI","solrsubmission","labelContent","term","ontology","rxnifavailable","jaccard","score","cosine","rank","jw","hwords","hchars","qchars","qgram","term.count","qwords","lv","lcs","T200","ontology.count","rxnMatchMeth","altLabel","labelType","solr_rxnorm","rf_predicted_proximity","FALSE-FALSE-FALSE-FALSE","FALSE-FALSE-FALSE-TRUE","FALSE-FALSE-TRUE-FALSE","FALSE-FALSE-TRUE-TRUE","FALSE-TRUE-FALSE-FALSE","FALSE-TRUE-TRUE-FALSE","TRUE-FALSE-FALSE-FALSE","TRUE-TRUE-FALSE-FALSE","max.useful.prob"
@@ -81,11 +173,31 @@ rfres:{trn} a rfres:rfres ;
 ubuntu@ip-172-31-88-67:~$ stardog-6.1.2/bin/stardog-admin virtual import rf_res periods.ttl pred_has_potential_without_nddf_alt_rownums.csv
 Successfully imported 140 505 544 triples into rf_res
 ```
-Export from StarDog
+## Export from StarDog
+
+```
+ubuntu@ip-172-31-88-67:~$ stardog-6.1.2/bin/stardog data export -f PRETTY_TURTLE -s -v rf_res
+Exported 140,505,544 statements from rf_res to /home/ubuntu/.exports/rf_res-2019-04-15.ttl in 4.747 min
+```
+
+8 GB, ~ 600 MB gzipped
 
 *probably could have written a StarDog VG configuration that would have eliminated the need for the following steps*
 
-## Ontorefine
+Import into graph http://example.com/resource/rf_res-2019-04-15_strings in repo  pred_has_potential_without_nddf_alt_first_strings on host medmapping.pennturbo.org:7200
+
+> rf_res-2019-04-15.ttl Imported successfully in 20m 2s.
+
+## Tidying
+
+- count entries
+- double check all properties are present
+- cast URIs and create UUID records
+- check for NA solr_rxnorm URIs
+- document
+- this uses shallow semantics like several other database imports... change to realism?
+- check MRB's birth control/opioid complaint
+    - .Morphine Liq Oral 20 mg/5 mL-HUP
 
 ```
 PREFIX mydata: <http://example.com/resource/>
