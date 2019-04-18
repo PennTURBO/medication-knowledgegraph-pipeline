@@ -55,7 +55,7 @@ Column key:
 - ~~Omitted in newest report, generally because it is dependent on knowledge pulled from EPIC (not PDS) and was intended as an early sanity check.~~
 - ***To be included in newest report?  Requires additional linking thorough RxNorm.***
 
-*MAM: still working on different levels of aggregation for best terms and all-term-concatenation *
+*MAM: still working on different levels of aggregation for best terms and all-term-concatenation*
 
 ### Old output from earlier medication mapping runs
 
