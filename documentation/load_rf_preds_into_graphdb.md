@@ -317,6 +317,17 @@ where {
 
 > Added 135705869 statements. Update took 47m 16s, minutes ago.
 
+```
+PREFIX mydata: <http://example.com/resource/>
+select (count(distinct ?uuid) as ?count) where {
+    graph mydata:med_map_rf_pred {
+        ?uuid a mydata:med_map_rf_pred 
+    }
+}
+```
+
+> 4 132 516
+
 ## Dump from GraphDB for reimport into actual medication mapping graph
 
 ```
