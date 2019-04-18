@@ -27,6 +27,8 @@ Also not included in in this GitHub repo:
 
 - the random forest model, like `turbo_med_mapping_rf_classifier_no_nddf_alt.Rdata`, whose file size is greater than 1 GB. 
     - Where could that be stored?  Zenodo?  Can be recreated with `turbo_med_mapping_train.R`
+    
+The training is not thoroughly commented yet and was probaly not written for optimal efficiency.  We run it on a dedicated 64 or 128 GB server.
 
 ### Previous report `PDS_meds_to_turbo_terms_and_roles_17col.csv`
 
