@@ -111,14 +111,6 @@ Dimensions of CSV file: 4,132,516 x 36
 
 ----
 
-Previously:
-- Wrote from R to CSV
-- Used StarDog VG import with "periods.ttl" config
-- Then dumped to TTL
-- Then loaded into GraphDB
-
-Any intermediate cleanup steps?
-
 ## StarDog Virtual Graph config file "periods.ttl"
 
 ```
