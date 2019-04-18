@@ -4,22 +4,22 @@
 
 ## observed proximities:
 
-FFFF useless
-FFFT separated by 2 permitted links
-FFTF separated by 1 permitted link
-FFTT separated by at least one 1-link and one 2-link paths
-FTFF siblings sharing same is-a parent
-FTTF siblings and connected by some one-link path
-TFFF exact match
-TTFF exact match and has "is_a" parent
+- FFFF useless
+- FFFT separated by 2 permitted links
+- FFTF separated by 1 permitted link
+- FFTT separated by at least one 1-link and one 2-link paths
+- FTFF siblings sharing same is-a parent
+- FTTF siblings and connected by some one-link path
+- TFFF exact match
+- TTFF exact match and has "is_a" parent
 
 8 used out of 2^4=16
 
 Previously:
-Wrote from R to CSV
-Used StarDog VG import with "periods.ttl" config
-Then dumped to TTL
-Then loaded into GraphDB
+- Wrote from R to CSV
+- Used StarDog VG import with "periods.ttl" config
+- Then dumped to TTL
+- Then loaded into GraphDB
 
 Any intermediate cleanup steps?
 
