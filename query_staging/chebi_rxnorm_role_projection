@@ -1,0 +1,40 @@
+Can be run immediately after loading RF predictions into graph
+
+```
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX mydata: <http://example.com/resource/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+insert {
+    graph mydata:rxn_role_projection {
+        ?uuid  a mydata:rxn_role_projection ;
+            mydata:rxn_comp ?rxncomp ;
+            mydata:chebi_role ?role ;
+            mydata:authority <http://bioportal.bioontology.org/mappings> .
+    }
+}
+where {
+    graph <ftp://ftp.ebi.ac.uk/pub/databases/chebi/ontology/chebi.owl.gz> {
+        ?chebicomp rdfs:subClassOf ?restr ;
+                   rdfs:label ?complab .
+        ?restr a owl:Restriction ;
+               owl:onProperty obo:RO_0000087 ;
+               owl:someValuesFrom ?role .
+        # DRUG role
+        ?role rdfs:subClassOf obo:CHEBI_23888 ;
+              rdfs:label ?rolelab .
+    }
+    graph <http://bioportal.bioontology.org/mappings> {
+        ?mapping a mydata:Row ;
+                 ?p1 ?chebicomp ;
+                 ?p2 ?rxncomp .
+    }
+    graph <https://www.nlm.nih.gov/research/umls/sourcereleasedocs/current/RXNORM/> {
+        ?rxncomp skos:prefLabel ?rxnlab .
+    }
+    bind(uuid() as ?uuid)
+}
+```
+
+> Added 28552 statements. Update took 2.5s, moments ago.
