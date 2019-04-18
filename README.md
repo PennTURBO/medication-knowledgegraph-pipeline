@@ -1,5 +1,17 @@
 # PennTURBO medication mapping
 
+## Benefits:
+
+- Can attempt mapping against any vocabulary that can be linked to RxNorm by any method, such as shared CUIs, BioPortal mappings, or DrOn assertions
+- Can use vocabularies as soon as they're released...  don't have to wait for CLAMP, MedEx etc. to catch up.  (Relevance to MetaMap, CTAKES, etc?)
+- Can map to vocabularies that aren't really about drugs.  FULL_NAMEs are contaminated with tests, procedures, nutrition, devices...
+- Provides an "expansion" accounts for systematic differences between source (PDS) word usage (PO tabs) and target vocabulary word usage (oral tablet).  Examining provided differential word usage tables provides guidance on creating expansion rules.
+- No negative training or marked-up text needed, just *a little* positive training data
+- Predicts semantic proximity between Solr hit and input term.  Also provides numerical confidence.
+- Understands that orders are atomic... doesn't try to parse out multiple medications per line, or span across lines (like you prefer for scanning clinical notes)
+
+----
+
 The PennTURBO medication mapping approach searches the string representations of medication orders (like R_MEDICATION.FULL_NAMEs from PDS) against a Solr collection of the labels for terms from drug-oriented linked datasets, like DrOn, ChEBI, RxNorm, and various other subsets of UMLS.
 
 Because a small subset of the R_MEDICATIONs are already tagged with RxNorm values in PDS, a random forest can be trained to classify the Solr search results according to their semantic proximity to the correct RxNorm term.
