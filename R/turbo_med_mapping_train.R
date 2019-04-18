@@ -1,4 +1,13 @@
-# still haven't excluded alt lables from NDDF (or chebi... chemical names)
+# review the code comments in previous versions and in this scripts current prediction counterpart
+
+# run this with 100% of everything, but save the predictor so that it only processes a small portion
+#  the Solr search phase for all FULL_NAMES takes > 8 hours
+
+# save the scripts so that they don't write or save anything 
+#  EXCEPT the Solr "pairs" RDF, which goes into the graphdb-import folder
+#  that, and the loading of RF results into the graph are still areas for improvement
+
+# still haven't excluded alt labels from NDDF (or chebi... chemical names)
 
 # use faster merge (join) and cast (dcast) functions
 
@@ -411,7 +420,7 @@ table(result.frame$rxnMatchMeth, result.frame$combo_likely, useNA = 'always')
 solr.dropouts <- setdiff(unique.queries, result.frame$order)
 print(length(solr.dropouts))
 print(sort(sample(solr.dropouts, 10)))
-writeLines(solr.dropouts, "training_solr_dropuouts.txt")
+# writeLines(solr.dropouts, "training_solr_dropuouts.txt")
 
 
 ###   ###   ###
@@ -1291,7 +1300,7 @@ backmerge <- backmerge[complete.cases(backmerge),]
 
 backmerge <-
   backmerge[!(backmerge$ontology == "https...www.nlm.nih.gov.research.umls.sourcereleasedocs.current.NDDF." &
-              backmerge$labelType == "http...www.w3.org.2004.02.skos.core.altLabel") , ]
+                backmerge$labelType == "http...www.w3.org.2004.02.skos.core.altLabel") , ]
 
 # sneaky.sty <-
 #   grepl(pattern = "http://purl.bioontology.org/ontology/STY/", x = backmerge$rxnifavailable)
