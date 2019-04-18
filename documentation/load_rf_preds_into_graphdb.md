@@ -109,6 +109,8 @@ Dimensions of CSV file: 4,132,516 x 36
 
 8 used out of 2^4=16
 
+----
+
 Previously:
 - Wrote from R to CSV
 - Used StarDog VG import with "periods.ttl" config
