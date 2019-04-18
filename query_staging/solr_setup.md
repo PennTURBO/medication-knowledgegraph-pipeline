@@ -1,5 +1,7 @@
 http://54.173.154.214:8983/solr/medmappers_20181109/select/?q=*%3A*&rows=0&facet=on&facet.field=combo_likely
 
+## OLD campaign
+
 creating:
 
 clearing: 
@@ -11,10 +13,6 @@ posting:
 ```
 /home/ubuntu/solr-8.0.0/bin/post -c med_map_support_20180403 -params "overwrite=false" for_solr_dron_via_r.csv for_solr_rxnorm.csv for_solr_other.csv
 ```
-
-
-## OLD campaign
-
 
 #### From <http://54.173.154.214:8983/solr/medmappers_20181109/select/?q=*%3A*&rows=0&facet=on&facet.field=matchType> 
 ```
