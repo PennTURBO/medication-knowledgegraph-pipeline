@@ -1,3 +1,5 @@
+## Exported from R medication mapping prediction phase:
+
 ```ubuntu@ip-172-31-88-67:~$ head pred_has_potential_without_nddf_alt_rownums.csv`
 "trn","R_MEDICATION_URI","solrsubmission","labelContent","term","ontology","rxnifavailable","jaccard","score","cosine","rank","jw","hwords","hchars","qchars","qgram","term.count","qwords","lv","lcs","T200","ontology.count","rxnMatchMeth","altLabel","labelType","solr_rxnorm","rf_predicted_proximity","FALSE-FALSE-FALSE-FALSE","FALSE-FALSE-FALSE-TRUE","FALSE-FALSE-TRUE-FALSE","FALSE-FALSE-TRUE-TRUE","FALSE-TRUE-FALSE-FALSE","FALSE-TRUE-TRUE-FALSE","TRUE-FALSE-FALSE-FALSE","TRUE-TRUE-FALSE-FALSE","max.useful.prob"
 1,"urn:uuid:429dcfee-82a6-48d7-b640-8f9965425404","0.000002g nafcillin injectable","nafcillin injectable product","http://purl.bioontology.org/ontology/RXNORM/1156404","https://www.nlm.nih.gov/research/umls/sourcereleasedocs/current/RXNORM","http://purl.bioontology.org/ontology/RXNORM/1156404",0.266666666666667,7.3178864,0.260735752313845,2,0.258730158730159,2,28,30,9,224,3,11,11,1,5067224,"RxNorm direct",0,"http://www.w3.org/2004/02/skos/core#prefLabel",1,"FALSE-FALSE-FALSE-TRUE",0.186666666666667,0.246666666666667,0.07,0.04,0.0866666666666667,0.186666666666667,0.0166666666666667,0.166666666666667,0.246666666666667```
@@ -23,7 +25,7 @@ Previously:
 
 Any intermediate cleanup steps?
 
-## periods.ttl
+## StarDog Virtual Graph config file "periods.ttl"
 
 ```
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
