@@ -36,7 +36,7 @@ ON ODS.R_MEDICATION.PK_MEDICATION_ID = MDM.R_MEDICATION.PK_MEDICATION_ID;
 940 000+ rows
 
 
-Massage in R
+Check in R
 
 ```
 library(readr)
@@ -141,4 +141,46 @@ insert {
     }
 }
 ```
+
+> Added 22589136 statements. Update took 36m 46s, today at 21:06. @ r5.4xl
+
+```
+select (count(distinct ?s) as ?count)
+where {
+    graph <http://example.com/resource/mdm_ods_meds_20180403_unique_cols.csv> {
+        ?s a ?t
+    }
+}
+```
+
+> 941214
+
+```
+select (count(distinct ?s) as ?count)
+where {
+    graph <http://example.com/resource/mdm_ods_meds_20180403_unique_cols.csv> {
+        ?s ?p "NA"
+    }
+}
+```
+
+> 941013
+
+```
+delete {
+    graph <http://example.com/resource/mdm_ods_meds_20180403_unique_cols.csv> {
+        ?s ?p "NA"
+    }
+}
+where {
+    graph <http://example.com/resource/mdm_ods_meds_20180403_unique_cols.csv> {
+        ?s ?p "NA"
+    }
+}
+```
+
+> Removed 11946667 statements. Update took 1m 19s, moments ago.
+
+941214 http://example.com/resource/Row  individuals before and after
+
 
