@@ -8,4 +8,7 @@ Did NDFRT RF generation with "load on CUIs".  NCBO imples that it would be OK to
 
 Note:  the labels containing @s instead of whitespace are alternate labels from NDFRT
 
-NDDF alternate labels were excluded from training and filtered out of prediction results.
+NDDF alternate labels were excluded from training and filtered out of prediction results...
+
+FULL_NAME ".Morphine Liq Oral 20 mg/5 mL-HUP" with PK 59991 can be mapped to http://purl.bioontology.org/ontology/NDDF/004089, which has the preferred label “MORPHINE SULFATE 20 mg/5 mL (4 mg/mL) ORAL SOLUTION, ORAL”.  
+Unfortunately, NDDF 004089 has the unrelated alternative label "gestodene-ethinyl estradiol", corresponding to an unrelated CUI.
