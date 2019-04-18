@@ -8,3 +8,4 @@ Did NDFRT RF generation with "load on CUIs".  NCBO imples that it would be OK to
 
 Note:  the labels containing @s instead of whitespace are alternate labels from NDFRT
 
+NDDF alternate labels were excluded from training and filtered out of prediction results.
