@@ -10,6 +10,8 @@ Therefore, for any R_MEDICATION.FULL_NAME, PennTURBO medication mapping can freq
 
 All of the data discussed above is also present in a Medication Mapping RDF graph.  That means that the relationships between these entities can be visualized.  It also make the R_MEDICATIONs search-able by rote/form, and frequently by ChEBI drug roles.
 
+*MAM:  done with direct ChEBI to RxNorm role projection and single-link inheritance.  Still working on two-hop RxNorm role inheritance.  Haven't started materialized role closure.*
+
 This GitHub repository does not include all of the dependencies of the medication mapping pipeline.
 
 Assumptions: 
