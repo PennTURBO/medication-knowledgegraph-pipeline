@@ -167,6 +167,10 @@ rfres:{trn} a rfres:rfres ;
 ubuntu@ip-172-31-88-67:~$ stardog-6.1.2/bin/stardog-admin virtual import rf_res periods.ttl pred_has_potential_without_nddf_alt_rownums.csv
 Successfully imported 140 505 544 triples into rf_res
 ```
+
+Roughly 2 hours?
+
+
 ## Export from StarDog
 
 ```
@@ -176,7 +180,9 @@ Exported 140,505,544 statements from rf_res to /home/ubuntu/.exports/rf_res-2019
 
 8 GB, ~ 600 MB gzipped
 
-*probably could have written a StarDog VG configuration that would have eliminated the need for the following steps*
+*maybe could have written a StarDog VG configuration that would have eliminated the need for the following steps?*
+
+See https://community.stardog.com/t/creating-virtual-graph-when-csv-contains-legitimate-uris/1599
 
 Import into graph http://example.com/resource/rf_res-2019-04-15_strings in repo  pred_has_potential_without_nddf_alt_first_strings on host medmapping.pennturbo.org:7200
 
