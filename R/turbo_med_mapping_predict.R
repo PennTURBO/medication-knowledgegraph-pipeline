@@ -46,6 +46,7 @@ options(java.parameters = "-Xmx32g")
 # i thought the joins came from here!
 # library(data.table)
 # not here
+library(plyr)
 library(dplyr)
 # does the order l=of laoding plyr and dplyr matter?
 library(RColorBrewer)
@@ -58,7 +59,7 @@ library(data.table)
 library(tidyr)
 library(randomForest)
 library(caret)
-library(plyr)
+# library(plyr)
 library(tidytext)
 library(tibble)
 library(devtools)
@@ -69,7 +70,7 @@ library(rrdf)
 rm(list = ls())
 gc()
 
-uphs.subset.frac <- 0.01
+uphs.subset.frac <- 1.0
 
 solr.submission.fraction <- 1.0
 
@@ -81,7 +82,7 @@ my.target <- "pastedProx"
 
 ###  load and print reviously determined feature importance here
 # load("turbo_med_mapping_rf_classifier.Rdata")
-load("turbo_med_mapping_rf_classifier_no_nddf_alt.Rdata")
+load("/terabyte/turbo_med_mapping_rf_classifier_no_nddf_alt.Rdata")
 
 # should get this from the model
 important.features <- c(
@@ -162,9 +163,9 @@ where
   '
 )
 
+
 time.start <-  Sys.time()
 print(time.start)
-
 complete.uphs.with.current.rxnorm <-
   sparql.remote(endpoint = sparql.endpoint,
                 sparql = uphs.name.to.rxn.q,
@@ -173,8 +174,8 @@ time.stop <-  Sys.time()
 time.duration <- time.stop - time.start
 print(time.duration)
 
-nrow(complete.uphs.with.current.rxnorm)
 
+nrow(complete.uphs.with.current.rxnorm)
 table(complete.uphs.with.current.rxnorm[, "source"])
 
 # Time difference of 2.962501 mins
@@ -189,22 +190,31 @@ table(complete.uphs.with.current.rxnorm[, "source"])
 
 ###   ###   ###
 
-uphs.with.current.rxnorm.frac <-
+complete.uphs.with.current.rxnorm <-
   complete.uphs.with.current.rxnorm[sample(
     nrow(complete.uphs.with.current.rxnorm),
     nrow(complete.uphs.with.current.rxnorm) * uphs.subset.frac
   ),]
 
-temp <- is.na(uphs.with.current.rxnorm.frac[, "RXNORM_CODE_URI"])
 
-uphs.with.current.rxnorm.frac <-
-  uphs.with.current.rxnorm.frac[temp,]
+# hgf_flag <- complete.uphs.with.current.rxnorm[,3] %in% hgf_api_only
+# table(hgf_flag)
+# 
+# complete.uphs.with.current.rxnorm <- complete.uphs.with.current.rxnorm[hgf_flag,]
+# 
+# dim(complete.uphs.with.current.rxnorm)
+# # [1] 37939     6
+
+temp <- is.na(complete.uphs.with.current.rxnorm[, "RXNORM_CODE_URI"])
+table(temp)
+ 
+# complete.uphs.with.current.rxnorm <-
+#   complete.uphs.with.current.rxnorm[temp,]
 
 ###   ###   ###
 
 queries <-
-  as.character(uphs.with.current.rxnorm.frac[, "MedicationName"])
-
+  as.character(complete.uphs.with.current.rxnorm[, "MedicationName"])
 
 queries <- cbind.data.frame(queries, tolower(queries))
 
@@ -232,9 +242,9 @@ where {
 }
 '
 
+
 time.start <-  Sys.time()
 print(time.start)
-
 expansion.rules.res <-
   sparql.remote(endpoint = sparql.endpoint,
                 sparql = expansion.rules.q,
@@ -243,7 +253,9 @@ time.stop <-  Sys.time()
 time.duration <- time.stop - time.start
 print(time.duration)
 
+
 nrow(expansion.rules.res)
+
 
 expansion.rules.res <-
   as.data.frame(expansion.rules.res, stringsAsFactors = FALSE)
@@ -330,15 +342,15 @@ tidied.queries <-
 
 queries$expanded <- tidied.queries
 
-uphs.with.current.rxnorm.frac <-
-  unique(as.data.frame(uphs.with.current.rxnorm.frac))
+complete.uphs.with.current.rxnorm <-
+  unique(as.data.frame(complete.uphs.with.current.rxnorm))
 
 queries <-
   unique(queries)
 
 uphs.plus.expanded <-
   merge(
-    x = uphs.with.current.rxnorm.frac,
+    x = complete.uphs.with.current.rxnorm,
     y = queries[, c("FULL_NAME", "expanded")],
     by.x = "MedicationName",
     by.y  = "FULL_NAME",
@@ -364,7 +376,6 @@ unique.queries.retained <- unique.queries[rand.temp > keep.thresh]
 ###   ###   ###
 
 # add ~ after each token for fuzzy search?
-
 
 print(Sys.time())
 solr.duration <-
@@ -415,7 +426,25 @@ solr.duration <-
 
 
 result.frame <- do.call(rbind.fill, via.solr)
+
+# pre.result.frame <- do.call(rbind.fill, via.solr)
+
+# 
+# ###   ###   ###
+# 
+# load("/terabyte/result_frame_201904200910.Rdata")
+# 
+# gc()
+# 
+# prfl <- nrow(pre.result.frame)
+# prf.probs <- runif(prfl)
+# 
+# solr.result.retention <- 1.0
+# 
+# result.frame <- pre.result.frame[prf.probs > (1 - rf.portion) ,]
+
 print(dim(result.frame))
+length(unique(result.frame$solrsubmission))
 
 # 0.01% = 7400 searches
 #
@@ -431,7 +460,7 @@ table(result.frame$rxnMatchMeth, useNA = 'always')
 table(result.frame$rxnMatchMeth, result.frame$labelType, useNA = 'always')
 table(result.frame$rxnMatchMeth, result.frame$combo_likely, useNA = 'always')
 
-# append  ~ onto each "word" in search
+# append  ~ onto each "word" in search ?
 
 # this won't work as expected for partial searches (solr.submission.fraction < 1)?
 # or maybe it's OK since the LHS of the setdiff is the subset of actually submitted queries
@@ -440,20 +469,9 @@ solr.dropouts <-
   setdiff(unique.queries, result.frame$solrsubmission)
 print(length(solr.dropouts))
 print(sort(sample(solr.dropouts, 10)))
-# writeLines(solr.dropouts, "training_solr_dropuouts.txt")
+# writeLines(solr.dropouts, "prediction_solr_dropuouts_201904200752.txt")
 
 ###   ###   ###
-
-# result.frame <-
-#   merge(
-#     x = result.frame,
-#     y = uphs.plus.expanded,
-#     by.x = "solrsubmission",
-#     by.y  = "expanded",
-#     all.x = TRUE
-#   )
-# 
-# result.frame <- unique(result.frame)
 
 start.time <-  Sys.time()
 print(start.time)
@@ -462,6 +480,7 @@ result.frame <-
             y = uphs.plus.expanded,
             by = c("solrsubmission" = "expanded"))
 end.time <-  Sys.time()
+print(end.time - start.time)
 
 # result.frame <- unique(result.frame)
 
@@ -492,90 +511,156 @@ table(result.frame$combo_likely, useNA = 'always')
 result.frame$combo_likely[is.na(result.frame$combo_likely)] <- FALSE
 table(result.frame$combo_likely, useNA = 'always')
 
-result.frame.rxnavailable <- result.frame
+# result.frame.rxnavailable <- result.frame
 
 ###   ###   ###
 
 ## decided to not convert full URIs to prefixed style
 ## ie keep them all consistently full
 
-# result.frame.rxnavailable$ontology <-
-#   sub(pattern = "/submissions/15/download",
-#       replacement = "",
-#       x = result.frame.rxnavailable$ontology)
+# #slow and inefficient
+# start.time <- Sys.time()
 #
-# result.frame.rxnavailable$ontology <-
-#   sub(pattern = "^.*:.*/",
-#       replacement = "",
-#       x = result.frame.rxnavailable$ontology)
+# result.frame$ontology <-
+#   make.names(result.frame$ontology)
+#
+# end.time <- Sys.time()
+# print(end.time  - start.time)
 
-# slow and inefficient
-result.frame.rxnavailable$ontology <-
-  make.names(result.frame.rxnavailable$ontology)
+# 0.01 fraction:
+# Time difference of 3.611061 secs
 
-# result.frame.rxnavailable$labelType <-
+# 0.10 fraction:
+# Time difference of 35.84793 secs
+
+###
+
+start.time <- Sys.time()
+result.frame$ontology <-
+  factor(
+    x = result.frame$ontology,
+    levels = c(
+      "https://www.nlm.nih.gov/research/umls/sourcereleasedocs/current/CVX/",
+      "https://www.nlm.nih.gov/research/umls/sourcereleasedocs/current/DRUGBANK/",
+      "https://www.nlm.nih.gov/research/umls/sourcereleasedocs/current/GS/",
+      "https://www.nlm.nih.gov/research/umls/sourcereleasedocs/current/MDDB/",
+      "https://www.nlm.nih.gov/research/umls/sourcereleasedocs/current/MED-RT/",
+      "https://www.nlm.nih.gov/research/umls/sourcereleasedocs/current/MMSL/",
+      "https://www.nlm.nih.gov/research/umls/sourcereleasedocs/current/MMX/",
+      "https://www.nlm.nih.gov/research/umls/sourcereleasedocs/current/MTH/",
+      "https://www.nlm.nih.gov/research/umls/sourcereleasedocs/current/NCI_FDA/",
+      "https://www.nlm.nih.gov/research/umls/sourcereleasedocs/current/NCI_NCPDP/",
+      "https://www.nlm.nih.gov/research/umls/sourcereleasedocs/current/NDDF/",
+      "https://www.nlm.nih.gov/research/umls/sourcereleasedocs/current/NDFRT/",
+      "https://www.nlm.nih.gov/research/umls/sourcereleasedocs/current/RXNORM",
+      "https://www.nlm.nih.gov/research/umls/sourcereleasedocs/current/SPN/",
+      "https://www.nlm.nih.gov/research/umls/sourcereleasedocs/current/ATC/",
+      "https://www.nlm.nih.gov/research/umls/sourcereleasedocs/current/UMD/",
+      "https://www.nlm.nih.gov/research/umls/sourcereleasedocs/current/USP/",
+      "https://www.nlm.nih.gov/research/umls/sourcereleasedocs/current/USPMG/",
+      "https://www.nlm.nih.gov/research/umls/sourcereleasedocs/current/VANDF/",
+      "ftp://ftp.ebi.ac.uk/pub/databases/chebi/ontology/chebi.owl.gz",
+      "https://bitbucket.org/uamsdbmi/dron/raw/master/dron-full.owl"
+    ),
+    labels = c(
+      "https...www.nlm.nih.gov.research.umls.sourcereleasedocs.current.CVX.",
+      "https...www.nlm.nih.gov.research.umls.sourcereleasedocs.current.DRUGBANK.",
+      "https...www.nlm.nih.gov.research.umls.sourcereleasedocs.current.GS.",
+      "https...www.nlm.nih.gov.research.umls.sourcereleasedocs.current.MDDB.",
+      "https...www.nlm.nih.gov.research.umls.sourcereleasedocs.current.MED.RT.",
+      "https...www.nlm.nih.gov.research.umls.sourcereleasedocs.current.MMSL.",
+      "https...www.nlm.nih.gov.research.umls.sourcereleasedocs.current.MMX.",
+      "https...www.nlm.nih.gov.research.umls.sourcereleasedocs.current.MTH.",
+      "https...www.nlm.nih.gov.research.umls.sourcereleasedocs.current.NCI_FDA.",
+      "https...www.nlm.nih.gov.research.umls.sourcereleasedocs.current.NCI_NCPDP.",
+      "https...www.nlm.nih.gov.research.umls.sourcereleasedocs.current.NDDF.",
+      "https...www.nlm.nih.gov.research.umls.sourcereleasedocs.current.NDFRT.",
+      "https...www.nlm.nih.gov.research.umls.sourcereleasedocs.current.RXNORM",
+      "https...www.nlm.nih.gov.research.umls.sourcereleasedocs.current.SPN.",
+      "https...www.nlm.nih.gov.research.umls.sourcereleasedocs.current.ATC.",
+      "https...www.nlm.nih.gov.research.umls.sourcereleasedocs.current.UMD.",
+      "https...www.nlm.nih.gov.research.umls.sourcereleasedocs.current.USP.",
+      "https...www.nlm.nih.gov.research.umls.sourcereleasedocs.current.USPMG.",
+      "https...www.nlm.nih.gov.research.umls.sourcereleasedocs.current.VANDF.",
+      "ftp...ftp.ebi.ac.uk.pub.databases.chebi.ontology.chebi.owl.gz",
+      "https...bitbucket.org.uamsdbmi.dron.raw.master.dron.full.owl"
+    )
+  )
+
+end.time <- Sys.time()
+print(end.time  - start.time)
+
+# Time difference of 0.9170771 secs @ 0.01
+
+###
+
+# result.frame$labelType <-
 #   sub(pattern = "^.*:.*#",
 #       replacement = "",
-#       x = result.frame.rxnavailable$labelType)
+#       x = result.frame$labelType)
 #
-# result.frame.rxnavailable$labelType <-
+# result.frame$labelType <-
 #   sub(pattern = "^skos:",
 #       replacement = "",
-#       x = result.frame.rxnavailable$labelType)
+#       x = result.frame$labelType)
 #
-# result.frame.rxnavailable$labelType <-
+# result.frame$labelType <-
 #   sub(pattern = "^rdfs:",
 #       replacement = "",
-#       x = result.frame.rxnavailable$labelType)
+#       x = result.frame$labelType)
 
-result.frame.rxnavailable$noproduct <-
+result.frame$noproduct <-
   gsub(
     pattern = "@",
     replacement = " " ,
-    x = result.frame.rxnavailable$labelContent,
+    x = result.frame$labelContent,
     ignore.case = TRUE
   )
 
-result.frame.rxnavailable$noproduct <-
+result.frame$noproduct <-
   gsub(
     pattern = "product",
     replacement = "" ,
-    x = result.frame.rxnavailable$noproduct,
+    x = result.frame$noproduct,
     ignore.case = TRUE
   )
 
-result.frame.rxnavailable$noproduct <-
+result.frame$noproduct <-
   gsub(
     pattern = "containing",
     replacement = "" ,
-    x = result.frame.rxnavailable$noproduct,
+    x = result.frame$noproduct,
     ignore.case = TRUE
   )
 
 
 ###   ###   ###
 
-result.frame.rxnavailable$qchars <-
-  nchar(as.character(result.frame.rxnavailable$solrsubmission))
+result.frame$qchars <-
+  nchar(as.character(result.frame$solrsubmission))
 
-result.frame.rxnavailable$hchars <-
-  nchar(as.character(result.frame.rxnavailable$labelContent))
+result.frame$hchars <-
+  nchar(as.character(result.frame$labelContent))
 
-result.frame.rxnavailable$qwords <-
+#  much slower than charcters
+
+result.frame$qwords <-
   lengths(regmatches(
-    result.frame.rxnavailable$solrsubmission,
-    gregexpr("\\W", result.frame.rxnavailable$solrsubmission)
+    result.frame$solrsubmission,
+    gregexpr("\\W", result.frame$solrsubmission)
   ))
 
-result.frame.rxnavailable$hwords <-
+# could be calculated on unique hit terms and then merged out?
+
+result.frame$hwords <-
   lengths(regmatches(
-    result.frame.rxnavailable$labelContent,
-    gregexpr("\\W", result.frame.rxnavailable$labelContent)
+    result.frame$labelContent,
+    gregexpr("\\W", result.frame$labelContent)
   ))
 
 ###   ###   ###
 
-ontology.freq <- table(result.frame.rxnavailable$ontology)
+ontology.freq <- table(result.frame$ontology)
 
 ontology.freq <-
   cbind.data.frame(names(ontology.freq), as.numeric(ontology.freq))
@@ -586,34 +671,24 @@ names(ontology.freq) <- c("ontology", "ontology.count")
 ontology.freq$relfreq <-
   ontology.freq$ontology.count / max(ontology.freq$ontology.count)
 
-# result.frame.rxnavailable <-
-#   merge(x = result.frame.rxnavailable,
-#         y = ontology.freq,
-#         by = "ontology",
-#         all.x = TRUE)
-
-result.frame.rxnavailable <-
-  left_join(x = result.frame.rxnavailable, y = ontology.freq, by = "ontology")
+result.frame <-
+  left_join(x = result.frame, y = ontology.freq, by = "ontology")
 
 ###   ###   ###
 
-term.freq <- table(result.frame.rxnavailable$term)
+term.freq <- table(result.frame$term)
 term.freq <-
   cbind.data.frame(names(term.freq), as.numeric(term.freq))
 
 names(term.freq) <- c("term", "term.count")
 
-# result.frame.rxnavailable <-
-#   merge(x = result.frame.rxnavailable,
-#         y = term.freq,
-#         by = "term",
-#         all.x = TRUE)
-
-result.frame.rxnavailable <-
-  left_join(x = result.frame.rxnavailable, y = term.freq, by = "term")
+result.frame <-
+  left_join(x = result.frame, y = term.freq, by = "term")
 
 
 ###   ###   ###
+
+# this isn't really in the most logical location
 
 get.word.freqs <- function(term.vector) {
   text_df <-
@@ -638,13 +713,13 @@ get.word.freqs <- function(term.vector) {
 }
 
 MedicationName.word.freqs <-
-  get.word.freqs(result.frame.rxnavailable$MedicationName)
+  get.word.freqs(result.frame$MedicationName)
 
 solrsubmission.word.freqs <-
-  get.word.freqs(result.frame.rxnavailable$solrsubmission)
+  get.word.freqs(result.frame$solrsubmission)
 
 solr.hit.word.freqs <-
-  get.word.freqs(result.frame.rxnavailable$noproduct)
+  get.word.freqs(result.frame$noproduct)
 
 head.to.head <- function(xframe, yframe, xsuff, ysuff) {
   head.to.head.tokens <-
@@ -701,29 +776,15 @@ uphs.vs.solr.hit <- head.to.head(
 ###   ###   ###
 
 # just feature generation and modeling from here on out?
-result.frame.rxnavailable$rownum <-
-  1:nrow(result.frame.rxnavailable)
+result.frame$rownum <-
+  1:nrow(result.frame)
 
 rxnMatchMeth.frame <-
-  result.frame.rxnavailable[, c("rownum", "rxnMatchMeth")]
+  result.frame[, c("rownum", "rxnMatchMeth")]
 rxnMatchMeth.frame$placeholder <- 1
 
 
 ###   ###   ###
-
-# try dcast
-
-# start.time <- Sys.time()
-# rxnMatchMeth.cast <-
-#   reshape::cast(
-#     data = rxnMatchMeth.frame,
-#     formula = rownum ~ rxnMatchMeth,
-#     fun.aggregate = max,
-#     value = "placeholder"
-#   )
-# stop.time <- Sys.time()
-# cast.time <- stop.time - start.time
-# print(cast.time)
 
 start.time <- Sys.time()
 rxnMatchMeth.cast <- dcast(
@@ -744,6 +805,7 @@ rxnMatchMeth.cast.data <-
   as.matrix.data.frame(rxnMatchMeth.cast[, setdiff(names(rxnMatchMeth.cast), "rownum")])
 rxnMatchMeth.cast.data[rxnMatchMeth.cast.data == -Inf] <- 0
 
+# re-factoring faster
 rxnMatchMeth.colnames <-
   make.names(colnames(rxnMatchMeth.cast.data))
 
@@ -754,58 +816,40 @@ rxnMatchMeth.cast <-
 
 ###   ###   ###
 
-# result.frame.rxnavailable <-
-#   merge(
-#     x = result.frame.rxnavailable,
-#     y = rxnMatchMeth.cast,
-#     by.x = "rownum",
-#     by.y = "id",
-#     all = TRUE
-#   )
-
-result.frame.rxnavailable <- left_join(x = result.frame.rxnavailable,
-                                       y = rxnMatchMeth.cast,
-                                       by = c("rownum" = "id"))
+result.frame <-
+  left_join(x = result.frame,
+            y = rxnMatchMeth.cast,
+            by = c("rownum" = "id"))
 
 ###   ###   ###
 
-result.frame.rxnavailable$labelType <-
-  make.names(result.frame.rxnavailable$labelType)
+# re-factoring faster
+result.frame$labelType <-
+  make.names(result.frame$labelType)
 
-table(result.frame.rxnavailable$labelType)
+table(result.frame$labelType)
 
-result.frame.rxnavailable$prefLabSolrMatch <- 1
-result.frame.rxnavailable$prefLabSolrMatch[result.frame.rxnavailable$labelType == "http...www.w3.org.2004.02.skos.core.altLabel"] <-
-  0
-
-table(result.frame.rxnavailable$labelType)
-table(result.frame.rxnavailable$prefLabSolrMatch)
+## pnly do this if you think it's going to be an important  feature
+# result.frame$prefLabSolrMatch <- 1
+# result.frame$prefLabSolrMatch[result.frame$labelType == "http...www.w3.org.2004.02.skos.core.altLabel"] <-
+#   0
+# 
+# table(result.frame$labelType)
+# table(result.frame$prefLabSolrMatch)
 
 ###   ###   ###
 
-result.frame.rxnavailable$rownum <-
-  1:nrow(result.frame.rxnavailable)
+result.frame$rownum <-
+  1:nrow(result.frame)
 
-result.frame.rxnavailable$labelType <-
+result.frame$labelType <-
   sub(pattern = "^.*:.*#",
       replacement = "",
-      x = result.frame.rxnavailable$labelType)
+      x = result.frame$labelType)
 
 SolrlabelType.frame <-
-  result.frame.rxnavailable[, c("rownum", "labelType")]
+  result.frame[, c("rownum", "labelType")]
 SolrlabelType.frame$placeholder <- 1
-
-# start.time <- Sys.time()
-# SolrlabelType.cast <-
-#   reshape::cast(
-#     data = SolrlabelType.frame,
-#     formula = rownum ~ labelType,
-#     fun.aggregate = max,
-#     value = "placeholder"
-#   )
-# stop.time <- Sys.time()
-# cast.time <- stop.time - start.time
-# print(cast.time)
 
 start.time <- Sys.time()
 SolrlabelType.cast <-
@@ -828,27 +872,16 @@ SolrlabelType.cast.colnames <- colnames(SolrlabelType.cast.data)
 
 SolrlabelType.cast <-
   cbind.data.frame(id = SolrlabelType.cast.rownames, SolrlabelType.cast.data)
-# 
-# result.frame.rxnavailable <-
-#   merge(
-#     x = result.frame.rxnavailable,
-#     y = SolrlabelType.cast,
-#     by.x = "rownum",
-#     by.y = "id",
-#     all = TRUE
-#   )
-# 
 
-result.frame.rxnavailable <-
-  left_join(
-    x = result.frame.rxnavailable,
-    y = SolrlabelType.cast,
-    by = c("rownum" = "id"))
+result.frame <-
+  left_join(x = result.frame,
+            y = SolrlabelType.cast,
+            by = c("rownum" = "id"))
 
 ###   ###   ###
 
 new.tui.frame <-
-  unique(result.frame.rxnavailable[, c("term", "gctui")])
+  unique(result.frame[, c("term", "gctui")])
 new.tui.frame <- new.tui.frame[order(new.tui.frame$term), ]
 new.tui.frame <-
   apply(
@@ -898,18 +931,6 @@ common.tui.cols <- tui.tab$tui[tui.tab$count >= min.count]
 new.tui.frame <-
   new.tui.frame[new.tui.frame$tui %in% common.tui.cols, ]
 
-# start.time <- Sys.time()
-# tui.cast <-
-#   reshape::cast(
-#     data = new.tui.frame,
-#     formula = term ~ tui,
-#     fun.aggregate = max,
-#     value = "placeholder"
-#   )
-# stop.time <- Sys.time()
-# tui.cast.time <- stop.time - start.time
-# print(tui.cast.time)
-
 start.time <- Sys.time()
 tui.cast <-
   dcast(
@@ -924,7 +945,7 @@ print(tui.cast.time)
 
 tui.cast.rownames <- tui.cast$term
 
-tui.cast.data <-tui.cast[,2:ncol(tui.cast)]
+tui.cast.data <- tui.cast[, 2:ncol(tui.cast)]
 tui.cast.data <- as.matrix(tui.cast.data)
 
 # as.matrix.data.frame(tui.cast[, setdiff(names(tui.cast), "term")])
@@ -933,27 +954,17 @@ tui.cast.data[tui.cast.data == -Inf] <- 0
 tui.cast <-
   cbind.data.frame(term = tui.cast.rownames, tui.cast.data)
 
-# result.frame.rxnavailable <-
-#   merge(
-#     x = result.frame.rxnavailable,
-#     y = tui.cast,
-#     by.x = "term",
-#     by.y = "term",
-#     all = TRUE
-#   )
-
-result.frame.rxnavailable <-
-  left_join(
-    x = result.frame.rxnavailable,
-    y = tui.cast,
-    by = "term")
+result.frame <-
+  left_join(x = result.frame,
+            y = tui.cast,
+            by = "term")
 
 ###   ###   ###
 
-result.frame.rxnavailable$rownum <-
-  1:nrow(result.frame.rxnavailable)
+result.frame$rownum <-
+  1:nrow(result.frame)
 
-precast <- result.frame.rxnavailable[, c("rownum", "ontology")]
+precast <- result.frame[, c("rownum", "ontology")]
 precast$placeholder <- 1
 precast$rownum <- as.numeric(precast$rownum)
 
@@ -968,20 +979,6 @@ common.ontology.cols <-
   ontology.freq$ontology[ontology.freq$relfreq >= min.rel.freq]
 
 precast <- precast[precast$ontology %in% common.ontology.cols, ]
-
-# start.time <- Sys.time()
-# print(start.time)
-# casted.ontfreqs <-
-#   reshape::cast(
-#     formula = rownum ~ ontology,
-#     fun.aggregate = max,
-#     value = "placeholder",
-#     data = precast
-#   )
-# stop.time <- Sys.time()
-# ontfreqs.cast.time <- stop.time - start.time
-# print(ontfreqs.cast.time)
-
 
 start.time <- Sys.time()
 print(start.time)
@@ -1003,17 +1000,28 @@ casted.ontfreqs <- as.data.frame(casted.ontfreqs)
 
 casted.ontfreqs <- unique(casted.ontfreqs)
 
-# result.frame.rxnavailable <-
-#   merge(x = result.frame.rxnavailable,
-#         y = casted.ontfreqs,
-#         by = "rownum",
-#         all.x = TRUE)
+###   ###   ###
 
-result.frame.rxnavailable <-
-  left_join(x = result.frame.rxnavailable,
+gc()
+
+# # does this help, hurt or neutral
+# colnames(casted.ontfreqs) <- make.names(colnames(casted.ontfreqs))
+
+result.frame <-
+  left_join(x = result.frame,
             y = casted.ontfreqs,
             by = "rownum")
 
+
+temp <-
+  table(
+    result.frame$ontology,
+    result.frame$https...www.nlm.nih.gov.research.umls.sourcereleasedocs.current.RXNORM,
+    useNA = 'always'
+  )
+temp <- as.data.frame.matrix(temp)
+
+# temp <- as.matrix.data.frame(temp)
 ###   ###   ###
 
 # that leaves NAs when the map ontolgy is rare and no casted ontofreq line gets merged back in
@@ -1026,8 +1034,8 @@ distances <- lapply(distance.cols, function(one.meth) {
   print(one.meth)
   temp <-
     stringdist(
-      a = result.frame.rxnavailable$solrsubmission,
-      b = result.frame.rxnavailable$noproduct,
+      a = result.frame$solrsubmission,
+      b = result.frame$noproduct,
       method = one.meth,
       nthread = 4
     )
@@ -1037,8 +1045,8 @@ distances <- lapply(distance.cols, function(one.meth) {
 distances <- do.call(cbind.data.frame, distances)
 names(distances) <- distance.cols
 
-result.frame.rxnavailable <-
-  cbind.data.frame(result.frame.rxnavailable, distances)
+result.frame <-
+  cbind.data.frame(result.frame, distances)
 
 ### deleted yuck.sty thorugh
 # pm.cols <- colnames(pm.states.temp)
@@ -1046,7 +1054,7 @@ result.frame.rxnavailable <-
 ###   ###   ###
 
 
-backmerge <- result.frame.rxnavailable
+# backmerge <- result.frame.rxnavailable
 
 backmerge.keepers <-
   c(
@@ -1063,31 +1071,36 @@ backmerge.keepers <-
     important.features
   )
 
-backmerge <- backmerge[, backmerge.keepers]
+result.frame <- result.frame[, backmerge.keepers]
 
-# backmerge <- unique(backmerge)
+# print(length(result.frame))
+# # 27 660 551
+# result.frame <- unique(result.frame)
+# print(nrow(result.frame))
+# # 27 797 363 ?!
+# # 30 minutes... not worth it
 
 sneaky.sty <-
-  grepl(pattern = "http://purl.bioontology.org/ontology/STY/", x = backmerge$rxnifavailable)
+  grepl(pattern = "http://purl.bioontology.org/ontology/STY/", x = result.frame$rxnifavailable)
 
 table(sneaky.sty, useNA = 'always')
 
 # no, maybe keep them for prediction
-# backmerge <- backmerge[!sneaky.sty,]
+# result.frame <- result.frame[!sneaky.sty,]
 
 ###
 
 
 #  constant columns a concern for prediction?
 
-print(table(backmerge$ontology, useNA = 'always'))
+print(table(result.frame$ontology, useNA = 'always'))
 
 # add medrt and umd to training!
 # maybe shouldn't train on ontology factor column, just the booleans
 
-# backmerge$ontology <-
+# result.frame$ontology <-
 #   factor(
-#     backmerge$ontology,
+#     result.frame$ontology,
 #     levels = c(
 #       "ftp...ftp.ebi.ac.uk.pub.databases.chebi.ontology.chebi.owl.gz",
 #       "https...bitbucket.org.uamsdbmi.dron.raw.master.dron.full.owl",
@@ -1114,11 +1127,11 @@ print(table(backmerge$ontology, useNA = 'always'))
 #     )
 #   )
 
-print(table(backmerge$labelType, useNA = 'always'))
+print(table(result.frame$labelType, useNA = 'always'))
 
-backmerge$labelType <-
+result.frame$labelType <-
   factor(
-    backmerge$labelType,
+    result.frame$labelType,
     levels = c(
       "http...www.w3.org.2000.01.rdf.schema.label",
       "http...www.w3.org.2004.02.skos.core.altLabel" ,
@@ -1127,17 +1140,17 @@ backmerge$labelType <-
   )
 
 # NA match methods shouldn't be possible for TRAINING
-print(table(backmerge$rxnMatchMeth, useNA = 'always'))
+print(table(result.frame$rxnMatchMeth, useNA = 'always'))
 
-table(is.na(backmerge$rxnMatchMeth))
+table(is.na(result.frame$rxnMatchMeth))
 
-backmerge$rxnMatchMeth[is.na(backmerge$rxnMatchMeth)] <- "unmapped"
+result.frame$rxnMatchMeth[is.na(result.frame$rxnMatchMeth)] <- "unmapped"
 
-sort(table(backmerge$rxnMatchMeth, useNA = 'always'))
+sort(table(result.frame$rxnMatchMeth, useNA = 'always'))
 
-backmerge$rxnMatchMeth <-
+result.frame$rxnMatchMeth <-
   factor(
-    backmerge$rxnMatchMeth,
+    result.frame$rxnMatchMeth,
     levels = c(
       "CUI",
       "CUI; LOOM",
@@ -1152,7 +1165,7 @@ backmerge$rxnMatchMeth <-
     )
   )
 
-sort(table(backmerge$rxnMatchMeth, useNA = 'always'))
+sort(table(result.frame$rxnMatchMeth, useNA = 'always'))
 
 ###   ###   ###
 
@@ -1180,45 +1193,60 @@ actually.booleans <- c(
 numericals <-
   c(true.numericals, actually.booleans)
 
-print(dim(backmerge))
-# backmerge <- unique(backmerge)
-# print(dim(backmerge))
+print(dim(result.frame))
+# result.frame <- unique(result.frame)
+# print(dim(result.frame))
 
-na.tracking <- apply(backmerge, 2, anyNA)
+na.tracking <- apply(result.frame, 2, anyNA)
 na.tracking <-
   cbind.data.frame(names(na.tracking), as.logical(na.tracking))
 na.tracked <-
   as.character(na.tracking$`names(na.tracking)`[na.tracking$`as.logical(na.tracking)`])
 
 print(intersect(factvars, na.tracked))
+# action?  for now, just ontology, which isn't used in trianing
+# temp <- result.frame[is.na(result.frame$ontology) ,]
+
+# all from med rt?
 
 na.booleans <- intersect(actually.booleans, na.tracked)
 print(na.booleans)
 
 placeholder <- lapply(na.booleans, function(current.boolean) {
   print(current.boolean)
-  temp <- backmerge[, current.boolean]
+  temp <- result.frame[, current.boolean]
   temp[is.na(temp)] <- 0
-  backmerge[, current.boolean] <<- temp
+  result.frame[, current.boolean] <<- temp
 })
 
-print(intersect(true.numericals, na.tracked))
-
-# short term fix... 2 NA cosines?
-print(intersect(true.numericals, na.tracked))
-# [1] "cosine"
-table(is.na(backmerge$cosine))
-
-# FALSE     TRUE 
-# 26564166        2 
-print(mean(backmerge$cosine, na.rm = TRUE))
-# [1] 0.2085572
+na.numericals <- intersect(true.numericals, na.tracked)
+print(na.numericals)
 
 
-temp <- backmerge[is.na(backmerge$cosine) ,]
+placeholder <- lapply(na.numericals, function(current.numerical) {
+  print(current.numerical)
+  temp <- result.frame[, current.numerical]
+  temp.mean <- mean(temp, na.rm = TRUE)
+  print(temp.mean)
+  temp[is.na(temp)] <- temp.mean
+  result.frame[, current.numerical] <<- temp
+})
 
-backmerge$cosine[is.na(backmerge$cosine)] <-
-  mean(backmerge$cosine, na.rm = TRUE)
+
+# # short term fix... 2 NA cosines?
+# print(intersect(true.numericals, na.tracked))
+# # [1] "cosine"
+# table(is.na(result.frame$cosine))
+# 
+# # FALSE     TRUE
+# # 26564166        2
+# print(mean(result.frame$cosine, na.rm = TRUE))
+# # [1] 0.2085572
+# 
+# temp <- result.frame[is.na(result.frame$cosine) , ]
+# 
+# result.frame$cosine[is.na(result.frame$cosine)] <-
+#   mean(result.frame$cosine, na.rm = TRUE)
 
 ###   ###   ###
 
@@ -1226,25 +1254,32 @@ backmerge$cosine[is.na(backmerge$cosine)] <-
 # next.scaling <- 0.99
 
 rf_predictions <-
-  predict(rf_classifier, backmerge, type = "response")
+  predict(rf_classifier, result.frame, type = "response")
 
-backmerge$rf_predicted_proximity <- rf_predictions
+result.frame$rf_predicted_proximity <- rf_predictions
 
-rf_predictions <- predict(rf_classifier, backmerge, type = "prob")
+rf_predictions <-
+  predict(rf_classifier, result.frame, type = "prob")
 
 pred.col.names <- colnames(rf_predictions)
 
-backmerge <- cbind.data.frame(backmerge, rf_predictions)
+result.frame <- cbind.data.frame(result.frame, rf_predictions)
+
+table(result.frame$rf_predicted_proximity, useNA = 'always')
 
 ###   ###   ###
 
 pred.useless <-
-  backmerge[backmerge$rf_predicted_proximity == "FALSE-FALSE-FALSE-FALSE" ,]
+  result.frame[result.frame$rf_predicted_proximity == "FALSE-FALSE-FALSE-FALSE" ,]
 
 pred.has.potential  <-
-  backmerge[backmerge$rf_predicted_proximity != "FALSE-FALSE-FALSE-FALSE" ,]
+  result.frame[result.frame$rf_predicted_proximity != "FALSE-FALSE-FALSE-FALSE" ,]
+
+uncovered.fullnames <- setdiff(pred.useless$MedicationName, pred.has.potential$MedicationName)
 
 ###   ###   ###
+
+# pred.has.potential <- result.frame
 
 pred.cols <- pred.has.potential[, pred.col.names]
 
@@ -1256,7 +1291,7 @@ max.useful.prob <- apply(
   }
 )
 
-pred.has.potential$max.useful.prob <- max.useful.prob
+pred.has.potential$max.useful.prob.by.row <- max.useful.prob
 
 ###   ###   ###
 
@@ -1265,6 +1300,9 @@ pred.has.potential.without.nddf.alt <-
     pred.has.potential$ontology == "https...www.nlm.nih.gov.research.umls.sourcereleasedocs.current.NDDF." &
       pred.has.potential$labelType == "http...www.w3.org.2004.02.skos.core.altLabel"
   ) ,]
+
+# "https://www.nlm.nih.gov/research/umls/sourcereleasedocs/current/NDDF/" 
+# "https...www.nlm.nih.gov.research.umls.sourcereleasedocs.current.NDDF." 
 
 
 pred.has.potential.only.nddf.alt <-
@@ -1281,96 +1319,44 @@ only.nddf.alt.medications <-
 
 aggdata <-
   aggregate(
-    pred.has.potential$max.prob,
+    pred.has.potential$max.useful.prob,
     by = list(pred.has.potential$MedicationName),
     FUN = max,
     na.rm = TRUE
   )
-names(aggdata) <- c("MedicationName", "max.prob")
+names(aggdata) <- c("MedicationName", "max.useful.prob.by.med")
 
-pred.has.potential.max.prob <-
+pred.has.potential.max.useful.prob <-
   merge(x = pred.has.potential,
         y = aggdata,
-        by = c("MedicationName", "max.prob"))
+        by = c("MedicationName"))
+
+pred.has.potential.max.useful.prob$relative.prob <- pred.has.potential.max.useful.prob$max.useful.prob.by.row / pred.has.potential.max.useful.prob$max.useful.prob.by.med
 
 ###   ###   ###
 
-for.graphdb <-
-  pred.has.potential.without.nddf.alt[, c(
-    "s",
-    "solrsubmission",
-    "labelContent",
-    "term",
-    "ontology",
-    "rxnifavailable",
-    "jaccard",
-    "score",
-    "cosine",
-    "rank",
-    "jw",
-    "hwords",
-    "hchars",
-    "qchars",
-    "qgram",
-    "term.count",
-    "qwords",
-    "lv",
-    "lcs",
-    "T200",
-    "ontology.count",
-    "rxnMatchMeth",
-    "http...www.w3.org.2004.02.skos.core.altLabel",
-    "labelType",
-    "https...www.nlm.nih.gov.research.umls.sourcereleasedocs.current.RXNORM",
-    "rf_predicted_proximity",
-    "FALSE-FALSE-FALSE-FALSE",
-    "FALSE-FALSE-FALSE-TRUE",
-    "FALSE-FALSE-TRUE-FALSE",
-    "FALSE-FALSE-TRUE-TRUE",
-    "FALSE-TRUE-FALSE-FALSE",
-    "FALSE-TRUE-TRUE-FALSE",
-    "TRUE-FALSE-FALSE-FALSE",
-    "TRUE-TRUE-FALSE-FALSE",
-    "max.useful.prob"
-  )]
+# pred.has.potential.without.nddf.alt <- pred.has.potential.max.useful.prob
 
-names(for.graphdb) <- c(
-  "R_MEDICATION_URI",
-  "solrsubmission",
-  "labelContent",
-  "term",
-  "ontology",
-  "rxnifavailable",
-  "jaccard",
-  "score",
-  "cosine",
-  "rank",
-  "jw",
-  "hwords",
-  "hchars",
-  "qchars",
-  "qgram",
-  "term.count",
-  "qwords",
-  "lv",
-  "lcs",
-  "T200",
-  "ontology.count",
-  "rxnMatchMeth",
-  "altLabel",
-  "labelType",
-  "solr_rxnorm",
-  "rf_predicted_proximity",
-  "FALSE-FALSE-FALSE-FALSE",
-  "FALSE-FALSE-FALSE-TRUE",
-  "FALSE-FALSE-TRUE-FALSE",
-  "FALSE-FALSE-TRUE-TRUE",
-  "FALSE-TRUE-FALSE-FALSE",
-  "FALSE-TRUE-TRUE-FALSE",
-  "TRUE-FALSE-FALSE-FALSE",
-  "TRUE-TRUE-FALSE-FALSE",
-  "max.useful.prob"
-)
+for.graphdb <- pred.has.potential.without.nddf.alt[, c( "PK_MEDICATION_ID",
+                                                        "s", "solrsubmission", "labelContent", "term", "ontology", "rxnifavailable",
+                                                        "jaccard", "score", "cosine", "rank", "jw", "hwords", "hchars", "qchars",
+                                                        "qgram", "term.count", "qwords", "lv", "lcs", "T200", "ontology.count",
+                                                        "rxnMatchMeth", "http...www.w3.org.2004.02.skos.core.altLabel", "labelType",
+                                                        "https...www.nlm.nih.gov.research.umls.sourcereleasedocs.current.RXNORM",
+                                                        "rf_predicted_proximity", "FALSE-FALSE-FALSE-FALSE", "FALSE-FALSE-FALSE-TRUE",
+                                                        "FALSE-FALSE-TRUE-FALSE", "FALSE-FALSE-TRUE-TRUE", "FALSE-TRUE-FALSE-FALSE",
+                                                        "FALSE-TRUE-TRUE-FALSE", "TRUE-FALSE-FALSE-FALSE", "TRUE-TRUE-FALSE-FALSE",
+                                                        "max.useful.prob.by.row", "max.useful.prob.by.med", "relative.prob" )]
+
+names(for.graphdb) <- c( "PK_MEDICATION_ID", "R_MEDICATION_URI",
+                         "solrsubmission", "labelContent", "term", "ontology", "rxnifavailable",
+                         "jaccard", "score", "cosine", "rank", "jw", "hwords", "hchars", "qchars",
+                         "qgram", "term.count", "qwords", "lv", "lcs", "T200", "ontology.count",
+                         "rxnMatchMeth", "altLabel", "labelType", "solr_rxnorm",
+                         "rf_predicted_proximity", "FALSE-FALSE-FALSE-FALSE", "FALSE-FALSE-FALSE-TRUE",
+                         "FALSE-FALSE-TRUE-FALSE", "FALSE-FALSE-TRUE-TRUE", "FALSE-TRUE-FALSE-FALSE",
+                         "FALSE-TRUE-TRUE-FALSE", "TRUE-FALSE-FALSE-FALSE", "TRUE-TRUE-FALSE-FALSE",
+                         "max.useful.prob.by.row", "max.useful.prob.by.med", "relative.prob" )
 
 # recast ontolgy and labeltype columns back to real URIs
 # make URIs for other categoricals, like the sematic proximity?
@@ -1417,7 +1403,7 @@ for.graphdb$ontology <- factor(
              "https://www.nlm.nih.gov/research/umls/sourcereleasedocs/current/DRUGBANK/", 
              "https://www.nlm.nih.gov/research/umls/sourcereleasedocs/current/GS/", 
              "https://www.nlm.nih.gov/research/umls/sourcereleasedocs/current/MDDB/", 
-             "https://www.nlm.nih.gov/research/umls/sourcereleasedocs/current/MED.RT/", 
+             "https://www.nlm.nih.gov/research/umls/sourcereleasedocs/current/MED-RT/", 
              "https://www.nlm.nih.gov/research/umls/sourcereleasedocs/current/MMSL/", 
              "https://www.nlm.nih.gov/research/umls/sourcereleasedocs/current/MMX/", 
              "https://www.nlm.nih.gov/research/umls/sourcereleasedocs/current/MTH/", 
@@ -1438,10 +1424,13 @@ for.graphdb$ontology <- factor(
 )
 
 
-na.tracking <- apply(for.graphdb, 2, anyNA)
+# na.tracking <- apply(for.graphdb, 2, anyNA)
+# 
+# na.tracking <-
+#   cbind.data.frame(names(na.tracking), as.logical(na.tracking))
 
-na.tracking <-
-  cbind.data.frame(names(na.tracking), as.logical(na.tracking))
+trn <- 1:nrow(for.graphdb)
+for.graphdb <- cbind(trn, for.graphdb)
 
 dim(for.graphdb)
 
@@ -1449,7 +1438,4 @@ head(for.graphdb)
 
 ## write.table(for.graphdb, file = "/overflow/pred_has_potential_without_nddf_alt.tsv", sep = "\t", row.names = FALSE)
 
-# write.csv(for.graphdb, file = "/consolidation/pred_has_potential_without_nddf_alt_rownums.csv", row.names = FALSE)
-
-
-
+# write.csv(for.graphdb, file = "/terabyte/pred_has_potential_without_nddf_alt_rownums_201904211153.csv", row.names = FALSE)
