@@ -83,6 +83,18 @@ from.pds <- left_join(from.pds,
                       PK_ORDER_MED_ID_per_PK_MEDICATION,
                       by = "PK_MEDICATION_ID")
 
+temp <-
+  gsub(
+    pattern = "rxnorm:",
+    replacement = "",
+    x = from.pds$RXNORM_CODE_URI_active
+  )
+
+from.pds$RXNORM_CODE_URI_active <- temp
+
+from.pds$PK_ORDER_MED_ID.count <-
+  as.numeric(from.pds$PK_ORDER_MED_ID.count)
+
 ###   ###   ###
 
 pds.to.rfpred <- lapply(hexdigs, function(current.dig) {
@@ -348,6 +360,7 @@ stopping.point <-
   stopping.point[, c(
     "PK_MEDICATION_ID" ,
     "R_MEDICATION_URI",
+    "PK_ORDER_MED_ID.count",
     "FULL_NAME",
     "SOURCE_CODE",
     "pds_rxn_val",
@@ -362,6 +375,7 @@ colnames(stopping.point) <-
   c(
     "PK_MEDICATION_ID" ,
     "R_MEDICATION_URI",
+    "PK_ORDER_MED_ID.count",
     "FULL_NAME",
     "SOURCE_CODE",
     "RXNORM_CODEs_pds",
@@ -371,6 +385,9 @@ colnames(stopping.point) <-
     "bestrxn_turbo",
     "bestrxn_lab_turbo"
   )
+
+stopping.point$rxnvals_turbo[nchar(stopping.point$rxnvals_turbo) < 1] <-
+  NA
 
 
 write_csv(stopping.point, path = "/terabyte/med_map_general_report_20190501.csv")
