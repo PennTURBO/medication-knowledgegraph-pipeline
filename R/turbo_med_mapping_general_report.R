@@ -203,7 +203,7 @@ system.time(tidied.col <-
                 temp <- unlist(strsplit(current.rxns, ";")[1])
                 temp <-
                   gsub(pattern = "rxnorm:", replacement = "", temp)
-                temp <- sort(as.numeric(setdiff(temp, "NA")))
+                temp <- as.character(sort(as.numeric(setdiff(temp, "NA"))))
                 if (length(temp) > 0) {
                   return(paste0(temp, collapse = ";"))
                 }
@@ -388,6 +388,5 @@ colnames(stopping.point) <-
 
 stopping.point$rxnvals_turbo[nchar(stopping.point$rxnvals_turbo) < 1] <-
   NA
-
 
 write_csv(stopping.point, path = "/terabyte/med_map_general_report_20190501.csv")
