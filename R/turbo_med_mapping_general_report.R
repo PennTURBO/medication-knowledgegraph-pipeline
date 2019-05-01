@@ -260,7 +260,23 @@ best.terms <- do.call(rbind.data.frame, best.terms)
 
 nrow(best.terms)
 
+best.terms <- left_join(best.terms, pds.to.rfpred)
+
+nrow(best.terms)
+
 print(length(unique(best.terms$R_MEDICATION_URI)))
+
+best.terms <-
+  best.terms[, c("solrMatchTerm",
+                 "rxnifavailable",
+                 "rxnlab",
+                 "R_MEDICATION_URI")]
+
+colnames(best.terms) <-
+  c("solrMatchTerm",
+    "turbo_best_rxn",
+    "rxnlab",
+    "R_MEDICATION_URI")
 
 best.terms <- unique(best.terms)
 
@@ -327,15 +343,6 @@ stopping.point <- left_join(from.pds, terms.aggregation)
 
 dim(stopping.point)
 print(length(unique(stopping.point$R_MEDICATION_URI)))
-
-PK_MEDICATION_ID
-FULL_NAME.mdm
-SOURCE_CODE
-RXNORM_CODEs_pds
-rxnvals_turbo
-bestterm_turbo
-bestrxn_turbo
-bestrxn_lab_turbo
 
 stopping.point <-
   stopping.point[, c(
