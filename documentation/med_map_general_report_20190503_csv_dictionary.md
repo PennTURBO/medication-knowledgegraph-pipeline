@@ -10,3 +10,10 @@
 | bestterm_turbo          | Semantic term, from any vocabulary, that best represents the R_MEDICATION.  Chosen mainly based on the most confident RF classification for the R_MEDICATION, solr results, minus the FFFF classified results.  Each score was boosted by 1.1 if it could be linked to an RxNorm term and also by 1.1 if the RF classified it as exactly right (TFFF or TTFF). |
 | bestrxn_turbo           | RxNorm term equivalent to the best semantic term, if available.  Determined by identical UMLS CUIs, assertions from the Drug Ontology, and mappings from the NCBO Bioportal.                                                                                                                                                                                   |
 | bestrxn_lab_turbo       | Human readable label of the bestrxn_turbo, if available                                                                                                                                                                                                                                                                                                        |
+
+R_MEDICATIONs per PDS source:
+
+```
+   EMTRAC    EPIC      SCM THERADOC 
+  424,637 181,930  245,922   85,465
+```
