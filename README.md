@@ -26,46 +26,57 @@ Sensitivity     0.9832
 Specificity     0.8013
 ```
 
-The coverage, or ability to provide something other than a 'more distant' result for each PDS R_MEDICATION is assessed 
+The coverage, or ability to provide something other than a 'more distant' result for each PDS R_MEDICATION is assessed
 independently and appears to be a string correlate of the `identical` sensitivity and the 'more distant' specificity.
 
-### Latest coverage: 0.89
+**Latest coverage: 0.89**
 
-## Running
+## Prerequisites
+### Training and Classification R Scripts
+- [R Interpreter](https://cran.r-project.org/)
+  - Install R libraries in an interactive R session with `install.packages(<"package1">, <"package2">,...,<"packageN">)`
+      - RJDBC
+      - ROCR
+      - caret
+      - config
+      - ggplot2
+      - randomForest
+      - readr
+      - splitstackshape
+      - stringdist
+      - stringr
 
-- Install prerequisites, including an [R Interpreter](https://cran.r-project.org/), [Docker](https://www.docker.com/products/docker-desktop), [RXB](https://rxnav.nlm.nih.gov/RxNav-in-a-Box.html), MySQL and Oracle JDBC drivers. The Oracle 12c JDBC drivers can be found at https://www.oracle.com/database/technologies/jdbc-drivers-12c-downloads.html, and the MySQL driver can be found at https://dev.mysql.com/downloads/connector/j/, but TMM has been tested with `ojdbc8.jar` and `mysql-connector-java-8.0.19.jar`. Downloading RXB requires obtaining a [UMLS license](https://uts.nlm.nih.gov/license.html), which requires completing some use-case documentation and waiting a few days. Downloading Oracle and MySQL JDBC driver may require an [Oracle account](https://profile.oracle.com/myprofile/account/create-account.jspx).
-- Install R libraries in an interactive R session with `install.packages(<"package1">, <"package2">,...,<"packageN">)`
+  - RJDBC requires the rJava R library, which requires a JRE. TMM has been tested with
 
-    - RJDBC
-    - ROCR
-    - caret
-    - config
-    - ggplot2
-    - randomForest
-    - readr
-    - splitstackshape
-    - stringdist
-    - stringr
+    ```
+    Java(TM) SE Runtime Environment (build 1.8.0_241-b07)
+    Java HotSpot(TM) 64-Bit Server VM (build 25.241-b07, mixed mode)
+    ```
 
-RJDBC requires the rJava R library, which requires a JRE. TMM has been tested with 
+    rJava can be more difficult to install and auto-configure, compared to other R packages. If this is an absolute blocker, RJDBC could probably be replaced with RODBC, along with corresponding code changes.
 
-```
-Java(TM) SE Runtime Environment (build 1.8.0_241-b07)
-Java HotSpot(TM) 64-Bit Server VM (build 25.241-b07, mixed mode)
-```
+- Oracle and MySql JDBC Drivers
 
-rJava can be more difficult to install and auto-configure, compared to other R packages. If this is an absolute blocker, RJDBC could probably be replaced with RODBC, along with corresponding code changes.
+   TMM has been tested with `ojdbc8.jar` and `mysql-connector-java-8.0.19.jar`.  Downloading Oracle and MySQL JDBC driver may require an [Oracle account](https://profile.oracle.com/myprofile/account/create-account.jspx).
+  - The Oracle 12c JDBC drivers can be found [here](https://www.oracle.com/database/technologies/jdbc-drivers-12c-downloads.html)
+  - The MySQL driver can be found [here](https://dev.mysql.com/downloads/connector/j/)
+- MySQL (? is a separate mySql instance necessary? Listed in the orignal prereqs, but doesn't seem to be used)
 
- RXB states the following requirements:
-- 12 gigabytes of memory to devote to Docker containers
-- 50 gigabytes of disk space
+### RxNav-in-a-Box
 
-Additional RAM and disk space are obviously required for R's working memory and saving trained models and RXCUI predications, plus QC columns, from the unknown medication strings.
+- RxNav-in-a-Box ([RXB](https://rxnav.nlm.nih.gov/RxNav-in-a-Box.html))
+  - Downloading RXB requires obtaining a [UMLS license](https://uts.nlm.nih.gov/license.html), which requires completing some use-case documentation and waiting a few days.
+- [Docker Desktop](https://www.docker.com/products/docker-desktop), or any version that supports Docker Compose
+  - RXB states the following requirements:
+    - 12 gigabytes of memory to devote to Docker containers
+    - 50 gigabytes of disk space
+
+## Configuration
 
 The current classifier assumes that the unknowns will come from the Penn Data Store clinical warehouse at the University of Pennsylvania's Healthcare system. The script could be modified to take input from other sources. In the current state, PDS credentials are required, possibly along with a VPN connection and/or port forwarding. Those database and networking concerns are left to the reader.
 
-- Before starting RXB, modify `docker-compose.yml` by **adding** a port mapping as below
-
+### Expose RXB's MySQL port
+Before starting RXB, modify `docker-compose.yml` by **adding** a port mapping as below:
 ```
 services:
   rxnav_db:
@@ -73,23 +84,22 @@ services:
     - "3307:3306"
  ```
 
-- The external port for RxNav's MySQL server (3307 in the case above) and the password saved in `mysql-secret.txt` , should be recorded in `rxnav_med_mapping.yaml`. The training and classification scripts should be run from the same folder that contains this configuration file. (They could be modified to take a configuration path as a command line argument. Note: no file-missing or database-unavailable tests are present in the current scripts.) Other files required by TMM are specified in the configuration file and can reside elsewhere.
-- Likewise, connection parameters for PDS or any other RDBMS source of medication strings should be entered into `rxnav_med_mapping.yaml`. See below.
-- Several other parameters in put constrains on whether long queries should be repeated (vs reading from a cache saved to disk), what fraction of the available data are used for training and how the random forest is trained. These will be described in greater detail at a later date. 
+### Create the configuration file for the training and testing scripts
+`rxnav_med_mapping.yaml` is the default name of configuration file needed for the training and classification scripts, template named `rx_med_mapping.yaml.template` is provided.  The scripts should be run from the same folder as the config file.  (They could be modified to take a configuration path as a command line argument. Note: no file-missing or database-unavailable tests are present in the current scripts.) Other files required by TMM are specified in the configuration file and can reside elsewhere.  
 
-### Run training with 
+Copy `rx_med_mapping.yaml.template` to `rx_med_mapping.yaml` then modify the file:
 
-- `$ Rscript rxnav_med_mapping_proximity_training_no_tuning.R`
+- Set `rxnav.mysql.port` and `rxnav.mysql.pw` to the exposed port (3307 in the case above) and root password for RXB's MySql server.
+  - The root password is located in `mysql-secret.txt`
+- Set `pds.host`, `pds.port`, `pds.database`, `pds.user`, and `pds.pw` with the connection parameters for PDS (or any other RDBMS source of medication strings (**Question: Is this accurate? Can this currently be used with other RDBMS data sources?  Are references PDS schema hardcoded in the current scripts?**))
 
-### Run classification of PDS `R_MEDICATION.FULL_NAME`s with
+- Several other parameters in put constrains on whether long queries should be repeated (vs reading from a cache saved to disk), what fraction of the available data are used for training and how the random forest is trained. These will be described in greater detail at a later date.
 
-- `$ Rscript rxnav_med_mapping_pds_proximity_classifier.R`
-
-## `rxnav_med_mapping.yaml` parameters
+#### `rxnav_med_mapping.yaml` Parameters
 
 - `reissue.pds.query`: read medication strings live from PDS, or from `pds.rmedication.result.loadpath`
     - If the query is repeated, the results will be saved to `pds.rmedication.result.savepath`
-- `min.empi.count`: (default = 5). medication strings that have been ordered for fewer EMPIs (and indirectly fewer distinct patients) will not be classified. In PDS, there is a very large number of orders attributed to one single EMPI. The strings frequently include a lot of personalized drug-utilization information, and even clinician or patient names. These can be left out for decreasing the time required, increasing the prediction accuracy, and 
+- `min.empi.count`: (default = 5). medication strings that have been ordered for fewer EMPIs (and indirectly fewer distinct patients) will not be classified. In PDS, there is a very large number of orders attributed to one single EMPI. The strings frequently include a lot of personalized drug-utilization information, and even clinician or patient names. These can be left out for decreasing the time required, increasing the prediction accuracy, and
 - `normalization.file`: unknown medication strings can be scrubbed of tokens that are source specific, or even replaced with tokens that are characteristic of RxNorm. For example, "po tabs" -> "oral tablet"
 - `pds2rxnav.fraction`: what percentage of the PDS medication strings should be classified? Should be set to 100 for routine use. Lower percentages are for a faster development cycle.
 - `rxaui.asserted.strings.chunk.count`: when retrieving strings corresponding to RXAUIs via SQL, how many chunks of RXAUIs should be sent. (Should probably be changed to number of RXAUIs per chunk)
@@ -99,7 +109,7 @@ services:
 - `tune.rf`: **Not currently in use.** If additional tuning is desired, `tuning_followon.R` should be run after `rxnav_med_mapping_proximity_training_no_tuning.R`, and the optimal parameters like ntree, mtry and feature importance should be saved to this configuration file, `rxnav_med_mapping.yaml`.
 - `train.split`: after isolating some rows for coverage determination, what fraction of the search results should be used for training (vs testing/validation/performance passement.)
 - `target.col:` what should the random forest predict? One possibility is solely whether the RXCUI in a search result is identical with the latent RXCUI best describing a search input. The currently favored target is "RELA", or the relation that RXNORM knows exists between the RXCUI of the **searched** medication string and the RXCUI from each search result. If the two RXCUIs are identical, the RELA is overwritten with "identical". If RxNorm knows of no one-step relation between the searched and matched RXCUIs, "more distant" is overwritten.
-- `factor.levels`: a named dictionary of sorted lists for the acceptable levels of categorical predictors and targets (like RELA). Uncommon levels are omitted. Sorting is used to ensure that the numerical levels are consistent between the training data and the unknown input (for classification.) 
+- `factor.levels`: a named dictionary of sorted lists for the acceptable levels of categorical predictors and targets (like RELA). Uncommon levels are omitted. Sorting is used to ensure that the numerical levels are consistent between the training data and the unknown input (for classification.)
 - `important.features`: training features determined to have high importance by `tuning_followon.R`
 - `static.ntree`: optimal number of trees to predict before creating the ensemble forest, from `tuning_followon.R`
 - `static.mtry`: optimal number of features for training each tree. Can be determined with `tuning_followon.R`, but will be overridden to |important features| - 1 if that's lower
@@ -111,13 +121,33 @@ services:
 - `allowed.synonym.sources`: along with `excluded.term.types`, synonyms are generally excluded from the search results submitted for training the random forest classifier. Exceptions are mode for synonyms from these sources (SABs)
 - `final.predictions.writepath`: the search results and proximity classifications for the unknown medication strings will be written to this CSV file. These are the final results and include several QC columns, which are described below.
 
-## Columns in the output of the TMM search & classification
+## Running
+- Start RXB
+- Start any VPN/port forwarding necessary to connect to PDS
+
+### Train a TTM model
+
+- `$ Rscript rxnav_med_mapping_proximity_training_no_tuning.R`
+
+This trains a random forest classifier using training data from (*ADD: brief description of where the medication strings and rx mappings used to train the classifier are located.  Include description of any hardcoded filtering applied to get the final training set*).  It saves the model in (*ADD:filename/path/location of saved model*).
+
+### Classify medication strings (PDS `R_MEDICATION.FULL_NAME`s) with a trained TTM model
+
+- `$ Rscript rxnav_med_mapping_pds_proximity_classifier.R`
+
+This loads a model saved in (*ADD:filename/path/location of model*) and classifies the medication strings specified in (*ADD: brief description of where the medication strings that are being classified are located.  Include any hardcoded filtering/assumptions.*).  Generates output files in (*ADD:filename/path/location of output files*).
+
+### Generate Medication KnowledgeGraph
+(*ADD: Add instructions and brief description of the process to generate med knowledgegraph*)
+
+## Classification Output
+### Columns in the output of the TMM search & classification
 
 There are currently 53 columns
 
 Each row corresponds to one classified RxNav approximate search result. Up to two different strings can be submitted for each R_MEDICATION: a normalized version of the FULL_NAME and a lowercased version of the GENERIC_NAME, and up to 50 results can be returned for each API call.
 
-Any number of these columns could be included in a knowledge graph version of these results, or it could be culled row-wise for the most useful result for each R_MEDICATION. For example, any 'identical' classification, or the highest scoring classification across all of the various RxNorm relations. Most rows are 'more distant'. Those could be discarded for brevity or retained for QC. 
+Any number of these columns could be included in a knowledge graph version of these results, or it could be culled row-wise for the most useful result for each R_MEDICATION. For example, any 'identical' classification, or the highest scoring classification across all of the various RxNorm relations. Most rows are 'more distant'. Those could be discarded for brevity or retained for QC.
 
 - query.val: the string (from PDS R_MEDICATION) that was actually submitted to the RxNav approximate search API. (normalized FULL_NAME or lowercased GENERIC_NAME) See also xxx
 - STR.lc: lowercased version of the string hit by the RxNav approximate search API.
@@ -143,7 +173,7 @@ Any number of these columns could be included in a knowledge graph version of th
 - STR: raw string hit by the RxNav approximate search API.
 - query.source: indicates whether a normalized R_MEDICATION FULL_NAME or a lowercased GENERIC_NAME was submitted to the RxNav approximate search API
 
-### The next several columns are measures of [string distance](https://www.rdocumentation.org/packages/stringdist/versions/0.9.5.5/topics/stringdist-metrics)
+#### The next several columns are measures of [string distance](https://www.rdocumentation.org/packages/stringdist/versions/0.9.5.5/topics/stringdist-metrics)
 
 (Between the medication string **submitted** to the RxNav approximate search API `a` and a string **returned** by the API `b`). Some are integers from 0 to infinity and some are reals from 0.0 to 1.0. Lower numbers mean more similar strings.
 
@@ -152,9 +182,9 @@ Any number of these columns could be included in a knowledge graph version of th
 - qgram: qgram distance
 - cosine: cosine distance between the qgrams in `a` and the qgrams in `b`. More sensitive to differences in qgram repeats.
 - jaccard: jaccard distance between the qgrams in `a` and the qgrams in `b`. Less sensitive to differences in qgram repeats.
-- jw: See the documentation above. 
+- jw: See the documentation above.
 
-### Lengths of strings in characters and words
+#### Lengths of strings in characters and words
 
 - q.char: character length of query.val, the submitted string
 - q.words: number of words-like tokens in query.val, using count of space characters as a proxy. Queries have already been scrubbed of leading and training space as well as duplicate spaces and whitespace characters other than XXX
@@ -163,7 +193,7 @@ Any number of these columns could be included in a knowledge graph version of th
 
 ----
 
-- rf_responses: prediction from the random forest. Either the name of the RxNorm relation that links a RxNav approximate search result's RXCUI to the RXCUI that could best explain a R_MEDICATION 
+- rf_responses: prediction from the random forest. Either the name of the RxNorm relation that links a RxNav approximate search result's RXCUI to the RXCUI that could best explain a R_MEDICATION
 
 
 ### Probabilities that each row should be classified in any one of the following states
@@ -192,5 +222,3 @@ Besides 'identical to' and 'more distant', each of these is the probability that
 ----
 
 - override: whenever the RxNav approximate search result's score is 100, this is set to identical, regardless of rf_responses. Likewise, it is set to more distant when the score is 0. Otherwise, override is rf_responses
-
-
