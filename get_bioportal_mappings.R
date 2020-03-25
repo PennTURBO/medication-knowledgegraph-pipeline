@@ -1,12 +1,33 @@
 library(httr)
 library(jsonlite)
 library(config)
+library(rdflib)
+library(uuid)
 
-# try instantiating med maping RESULTS  with rdflib::as_rdf
+# try instantiating med maping RESULTS  with rdflib::as_rdf instead of robot?
 
 ####
 
-my.config <- config::get(file = "bioportal_mapping.yaml")
+# I've been using this with a same-host
+# bioportal virtual appliance
+# there's no error checking in place
+# might want to give other users the option for skipping the graphdb upload,
+# like jsut saving the triples and or the dataframe
+
+# # uploading/posting options
+# POST /rest/data/import/server/{repositoryID}
+# Import a server FILE into the repository
+#
+# POST /rest/data/import/upload/{repositoryID}/url
+# Import from data URL into the repository
+
+### using this, and puting a file in the body
+# POST /repositories/{repositoryID}/rdf-graphs/{graph}
+# Add STATEMENTS to a directly referenced named graph
+
+####
+
+my.config <- config::get(file = "get_bioportal_mappings.yaml")
 
 more.pages <- NA
 current.page <- NA
@@ -28,17 +49,14 @@ bp.mappings.to.minimal.df <- function(current.source.ontology) {
     setdiff(my.config$relevant.ontologies, current.source.ontology)
   
   print(paste0('Searching ', current.source.ontology, ' against: '))
-  print(value.added)
+  print(sort(value.added))
   
   value.added <-
-    paste0(my.config$my.base, '/ontologies/', value.added)
-  
-  
-  
-  # current.source.ontology <- 'DRON'
+    paste0(my.config$my.bioportal.api.base,
+           '/ontologies/',
+           value.added)
   
   while (more.pages) {
-    # current.page <- 1
     print(
       paste0(
         current.source.ontology,
@@ -52,7 +70,7 @@ bp.mappings.to.minimal.df <- function(current.source.ontology) {
     
     source.class.uri <-
       paste0(
-        my.config$my.base,
+        my.config$my.bioportal.api.base,
         '/ontologies/',
         current.source.ontology,
         '/mappings?apikey=',
@@ -92,11 +110,11 @@ bp.mappings.to.minimal.df <- function(current.source.ontology) {
     })
     inner.res <- do.call(rbind.data.frame, inner.res)
     inner.res$source.method <- mappings.result.source.methods
-    inner.res <- inner.res[inner.res$source.method == 'LOOM' , ]
+    inner.res <- inner.res[inner.res$source.method == 'LOOM' ,]
     inner.res <-
-      inner.res[as.character(inner.res$source.term) != as.character(inner.res$mapped.term),]
+      inner.res[as.character(inner.res$source.term) != as.character(inner.res$mapped.term), ]
     inner.res <-
-      inner.res[inner.res$mapped.ontology %in% value.added ,]
+      inner.res[inner.res$mapped.ontology %in% value.added , ]
     inner.res <-
       unique(inner.res[, c("source.term", "source.ontology", "mapped.term")])
     
@@ -115,19 +133,114 @@ bp.mappings.to.minimal.df <- function(current.source.ontology) {
 }
 
 per.source.results <-
-  lapply(my.config$my.source.ontolgies, function(current.outer) {
+  lapply(sort(my.config$my.source.ontolgies), function(current.outer) {
     temp <- bp.mappings.to.minimal.df(current.outer)
     return(temp)
   })
 
-per.source.results <- do.call(rbind.data.frame, per.source.results)
-per.source.results$inverse <- FALSE
+####
 
-inverse.results <- per.source.results[, c(3, 2, 1, 4)]
-colnames(inverse.results) <- colnames(per.source.results)
-inverse.results$inverse <- TRUE
+bound.source.results <-
+  do.call(rbind.data.frame, per.source.results)
+bound.source.results$inversed <- FALSE
 
-per.source.results <-
-  rbind.data.frame(per.source.results, inverse.results)
+inverse.results <- bound.source.results[, c(3, 2, 1, 4)]
+colnames(inverse.results) <- colnames(bound.source.results)
+inverse.results$inversed <- TRUE
 
-per.source.results <- unique(per.source.results[,c(1,3)])
+bound.source.results <-
+  rbind.data.frame(bound.source.results, inverse.results)
+
+# bound.source.results$source.term <-
+#   paste0('<', bound.source.results$source.term , '>')
+# bound.source.results$source.ontology <-
+#   paste0('<', bound.source.results$source.ontology , '>')
+# bound.source.results$mapped.term <-
+#   paste0('<', bound.source.results$mapped.term , '>')
+
+bound.source.results$uuid <-
+  uuid::UUIDgenerate(n = nrow(bound.source.results))
+
+colnames(bound.source.results) <-
+  gsub(
+    pattern = ".",
+    replacement = "_",
+    x = colnames(bound.source.results),
+    fixed = TRUE
+  )
+
+# # OOPS... doens't consistently recognize IRIs
+# # https://stackoverflow.com/questions/60853395/rdflibas-rdf-only-recognizes-some-iris
+# # otherwise...
+# # pretty fast
+# # simplify after loading into graphdb?
+# # really only care that X is mapped to Y, right?
+# # otherwise, we should probablya ssert a type for these things
+#
+# per.source.results.rdf <-
+#   rdflib::as_rdf(x = bound.source.results[1:2,c(1,2,4,5)],
+#                  prefix = my.config$my.prefix,
+#                  key = 'uuid')
+# rdf_serialize(rdf = per.source.results.rdf, doc = my.config$my.triples.destination)
+#
+# # http://pennturbo.org:7200
+# # med_mapping
+# # grep... see hayden's notes. for now use something like <>
+# # bioportal_mappings
+
+####
+
+succinct <-
+  unique(bound.source.results[, c("source_term", "mapped_term")])
+
+direct.rdf <- rdf()
+
+# only one minute for 83286 rows of 2 columns
+print(Sys.time())
+placeholder <-
+  apply(
+    X = succinct,
+    MARGIN = 1,
+    FUN = function(current.row) {
+      # print(current.row[['source_term']])
+      rdf_add(
+        rdf = direct.rdf,
+        subject = current.row[['source_term']],
+        predicate = "http://example.com/resource/bioportal_mapping",
+        object = current.row[['mapped_term']]
+      )
+    }
+  )
+print(Sys.time())
+
+rdf_serialize(rdf = direct.rdf, doc = my.config$my.triples.destination)
+
+post.dest <-
+  paste0(
+    my.config$my.graphdb.base,
+    '/repositories/',
+    my.config$my.selected.repo,
+    '/rdf-graphs/service?graph=',
+    URLencode(
+      paste0('http://example.com/resource/',
+             my.config$my.selected.graph),
+      reserved = TRUE
+    )
+  )
+
+print(post.dest)
+
+post.resp <-
+  httr::POST(
+    url = post.dest,
+    body = upload_file(my.config$my.triples.destination),
+    content_type(my.config$my.mappings.format),
+    authenticate(
+      my.config$my.graphdb.username,
+      my.config$my.graphdb.pw,
+      type = 'basic'
+    )
+  )
+
+print('Errors will be listed below:')
+print(rawToChar(post.resp$content))
