@@ -60,7 +60,7 @@ independently and appears to be a string correlate of the `identical` sensitivit
    TMM has been tested with `ojdbc8.jar` and `mysql-connector-java-8.0.19.jar`.  Downloading Oracle and MySQL JDBC driver may require an [Oracle account](https://profile.oracle.com/myprofile/account/create-account.jspx).
   - The Oracle 12c JDBC drivers can be found [here](https://www.oracle.com/database/technologies/jdbc-drivers-12c-downloads.html)
   - The MySQL driver can be found [here](https://dev.mysql.com/downloads/connector/j/)
-      - no MySQL server is required. TMM will make SQL queries against the MySQL database embedded in the RxNav-in-a-Box Container. (There are a few datatypes that are not accessible via REST APIs).
+      - no MySQL server is required. TMM will make SQL queries against the MySQL database embedded in the RxNav-in-a-Box Container. (There are a few datatypes which are not accessible via REST APIs).
 
 ### RxNav-in-a-Box
 
