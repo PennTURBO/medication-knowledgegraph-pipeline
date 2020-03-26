@@ -6,6 +6,7 @@ library(readr)
 library(stringr)
 library(stringdist)
 library(randomForest)
+library(dplyr)
 
 # train
 library(splitstackshape)
