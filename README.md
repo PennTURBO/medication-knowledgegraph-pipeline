@@ -60,7 +60,7 @@ independently and appears to be a string correlate of the `identical` sensitivit
    TMM has been tested with `ojdbc8.jar` and `mysql-connector-java-8.0.19.jar`.  Downloading Oracle and MySQL JDBC driver may require an [Oracle account](https://profile.oracle.com/myprofile/account/create-account.jspx).
   - The Oracle 12c JDBC drivers can be found [here](https://www.oracle.com/database/technologies/jdbc-drivers-12c-downloads.html)
   - The MySQL driver can be found [here](https://dev.mysql.com/downloads/connector/j/)
-- MySQL (? is a separate mySql instance necessary? Listed in the orignal prereqs, but doesn't seem to be used)
+      - no MySQL server is required. TMM will make SQL queries against the MySQL database embedded in the RxNav-in-a-Box Container. (There are a few datatypes that are not accessible via REST APIs).
 
 ### RxNav-in-a-Box
 
@@ -91,9 +91,14 @@ Copy `rx_med_mapping.yaml.template` to `rx_med_mapping.yaml` then modify the fil
 
 - Set `rxnav.mysql.port` and `rxnav.mysql.pw` to the exposed port (3307 in the case above) and root password for RXB's MySql server.
   - The root password is located in `mysql-secret.txt`
-- Set `pds.host`, `pds.port`, `pds.database`, `pds.user`, and `pds.pw` with the connection parameters for PDS (or any other RDBMS source of medication strings (**Question: Is this accurate? Can this currently be used with other RDBMS data sources?  Are references PDS schema hardcoded in the current scripts?**))
-
-- Several other parameters in put constrains on whether long queries should be repeated (vs reading from a cache saved to disk), what fraction of the available data are used for training and how the random forest is trained. These will be described in greater detail at a later date.
+- Set `pds.host`, `pds.port`, `pds.database`, `pds.user`, and `pds.pw` with the connection parameters for PDS (or any other RDBMS source of medication strings.
+    - TMM requires input as a four-columned data frame. Right now, it is obtained with a SQL query against the Penn Data Store. Reading it from a CSV file is an upcoming feature.
+        - source stable identifier for the medication (string, required)
+        - source name of medication (string, required)
+        - source generic name (string, optional)
+        - source count (numeric, strongly recommended)
+            - how common is this prescription? For example, for how many different people has it been ordered?
+- Several other parameters include constrains on whether long queries should be repeated (vs reading from a cache saved to disk), what fraction of the available data are used for training and how the random forest is trained. These will be described in greater detail at a later date.
 
 #### `rxnav_med_mapping.yaml` Parameters
 
