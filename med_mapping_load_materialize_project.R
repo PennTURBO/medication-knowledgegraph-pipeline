@@ -17,10 +17,12 @@ url.post.endpoint <-
   )
 
 update.endpoint <-
-  paste0(med.mapping.general.config$my.graphdb.base,
-         "/repositories/",
-         med.mapping.general.config$my.selected.repo,
-         "/statements")
+  paste0(
+    med.mapping.general.config$my.graphdb.base,
+    "/repositories/",
+    med.mapping.general.config$my.selected.repo,
+    "/statements"
+  )
 
 saved.authentication <-
   authenticate(
@@ -94,7 +96,7 @@ placeholder <-
 # last.post.status <- ''
 #
 # expectation <- NULL
-# 
+#
 # monitor.named.graphs()
 
 # when to weed out classiifcatiosn that point to an undefined rxcui?
@@ -106,19 +108,26 @@ placeholder <-
 sparql.list <-
   med.mapping.general.config$materializastion.projection.sparqls
 
-placeholder <- lapply(names(sparql.list), function(current.sparql.name) {
-  print(current.sparql.name)
-  innner.sparql <- sparql.list[[current.sparql.name]]
-  cat(innner.sparql)
-  cat('\n\n')
-  
-  post.res <- POST(update.endpoint,
-                   body = list(update = innner.sparql),
-                   saved.authentication)
-})
+placeholder <-
+  lapply(names(sparql.list), function(current.sparql.name) {
+    print(current.sparql.name)
+    innner.sparql <- sparql.list[[current.sparql.name]]
+    cat(innner.sparql)
+    cat('\n\n')
+    
+    post.res <- POST(update.endpoint,
+                     body = list(update = innner.sparql),
+                     saved.authentication)
+  })
 
 #  http://purl.obolibrary.org/obo/dron-rxnorm.owl not explicitly identified as an ontology
 
 # will probabaly need materialized cuis for ndf-rt (as a placeho,der for med-rt, etc.)
 
 # "transitive_massless_rolebearer"  could probably be refined... see http://purl.obolibrary.org/obo/CHEBI_10003
+
+# what about salt forms, isomers, etc?
+# conjugate acids/bases and has-part relatons may be useful
+
+# my.import.urls: {"http://purl.bioontology.org/ontology/MESH/":{"url":["http://data.bioontology.org/ontologies/MESH/submissions/19/download?apikey=9cf735c3-a44a-404f-8b2f-c49d48b2b8b2"],
+#   "format":["text/turtle"]}}

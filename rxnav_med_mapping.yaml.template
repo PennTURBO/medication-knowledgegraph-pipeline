@@ -1,4 +1,5 @@
 default:
+    # the TURBO medication mapper will add support for reading medications from a CSV file in late March or early April 2020
     pds.host: localhost
     pds.port: 7799
     pds.database: <SECRET>
@@ -8,7 +9,7 @@ default:
     reissue.pds.query: FALSE
     pds.rmedication.result.savepath: "pds_r_medications_results.Rdata"
     pds.rmedication.result.loadpath: "pds_r_medications_results.Rdata"
-    min.empi.count: 5
+    min.empi.count: 5000
     normalization.file: "med_name_normalization.csv"
     pds2rxnav.fraction: 1
     rxnav.api.address: localhost
@@ -16,7 +17,7 @@ default:
     rxnav.mysql.address: localhost
     rxnav.mysql.port: 3307
     rxnav.mysql.user: "root"
-    rxnav.mysql.pw: <SECRET>
+    rxnav.mysql.pw: "password"
     mysql.jdbc.path: "~/mysql-connector-java-8.0.19.jar"
     rxaui.asserted.strings.chunk.count: 3000
     approximate.row.count: 10000
@@ -46,4 +47,271 @@ default:
         - SU
         - SYGB
         - TMSY
+    # writing to RDF (Turtle) now, not CSV?
     final.predictions.writepath: "rxnav_medication_mapping_final_predictions.csv"
+    my.bioportal.api.base: 'http://192.168.0.233:8080'
+    my.source.ontolgies:
+        - 'RXNORM'
+        - 'DRON'
+    relevant.ontologies:
+        - 'RXNORM'
+        - 'DRON'
+        - 'CHEBI'
+    my.apikey: <SECRET>
+    my.pagesize: 5000
+    my.prefix: 'http://example.com/resource/bioportal_mapping/'
+    my.triples.destination: 'med_mapping_bioportal_mapping.ttl'
+    my.graphdb.base: 'http://pennturbo.org:7200'
+    my.selected.repo: 'med_mapping'
+    my.selected.graph: 'bioportal_mappings'
+    my.mappings.format: 'text/turtle'
+    my.graphdb.username: <SECRET>
+    my.graphdb.pw: <SECRET>
+    my.import.urls: {"http://purl.obolibrary.org/obo/dron.owl":{"url":["https://bitbucket.org/uamsdbmi/dron/raw/master/dron-full.owl"],"format":[""]},
+    "http://purl.obolibrary.org/obo/dron/dron-hand.owl":{"url":["https://bitbucket.org/uamsdbmi/dron/raw/master/dron-hand.owl"],"format":[""]},
+    "http://purl.obolibrary.org/obo/dron/dron-upper.owl":{"url":["https://bitbucket.org/uamsdbmi/dron/raw/master/dron-upper.owl"],"format":[""]},
+    "https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl":{"url":["https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl"],"format":[""]},
+    "http://purl.obolibrary.org/obo/dron/dron-ingredient.owl":{"url":["https://s3.amazonaws.com/drugontology/dron-ingredient.owl"],"format":[""]},
+    "http://purl.obolibrary.org/obo/dron-rxnorm.owl":{"url":["https://s3.amazonaws.com/drugontology/dron-rxnorm.owl"],"format":[""]},
+    "http://purl.bioontology.org/ontology/ATC/":{"url":["http://data.bioontology.org/ontologies/ATC/submissions/12/download?apikey=9cf735c3-a44a-404f-8b2f-c49d48b2b8b2"],"format":["text/turtle"]},
+    "http://purl.bioontology.org/ontology/VANDF/":{"url":["http://data.bioontology.org/ontologies/VANDF/submissions/15/download?apikey=9cf735c3-a44a-404f-8b2f-c49d48b2b8b2"],"format":["text/turtle"]},
+    "http://purl.obolibrary.org/obo/chebi.owl":{"url":["ftp://ftp.ebi.ac.uk/pub/databases/chebi/ontology/chebi.owl"],"format":[""]},
+    "http://purl.bioontology.org/ontology/RXNORM/":{"url":["http://data.bioontology.org/ontologies/RXNORM/submissions/18/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb"],"format":["text/turtle"]}}
+    materializastion.projection.sparqls:
+        turbo_med_mapping_hand: |
+            PREFIX owl: <http://www.w3.org/2002/07/owl#>
+            insert data {
+                graph <http://example.com/resource/turbo_med_mapping_hand> {
+                    <http://example.com/resource/reference_medications> a owl:Ontology .
+                    <http://example.com/resource/classified_search_results> a owl:Ontology .
+                    <http://purl.obolibrary.org/obo/dron/dron-rxnorm.owl> a owl:Ontology .
+                }
+            }
+        UNNECESSARYdeleteUselessNamedIndAssertions: |
+            delete {
+                ?s a <http://www.w3.org/2002/07/owl#NamedIndividual>
+            } where {
+                {
+                    graph <http://example.com/resource/classified_search_results> {
+                        ?s a <http://www.w3.org/2002/07/owl#NamedIndividual>
+                    }
+                } union  {
+                    graph <http://example.com/resource/reference_medications> {
+                        ?s a <http://www.w3.org/2002/07/owl#NamedIndividual>
+                    }
+                }
+            }
+        reference_medications_labels: |
+            PREFIX obo: <http://purl.obolibrary.org/obo/>
+            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+            insert {
+                graph <http://example.com/resource/reference_medications_labels> {
+                    ?s rdfs:label ?bound .
+                }
+            }
+            where {
+                graph <http://example.com/resource/reference_medications> {
+                    ?s a obo:PDRO_0000024 ;
+                       <http://example.com/resource/source_full_name> ?source_full_name .
+                    bind(concat(replace(str(?s), "http://example.com/resource/source_med_id/", ""), "|", ?source_full_name ) as ?bound)
+                }
+            }
+        classifications_labels: |
+            PREFIX obo: <http://purl.obolibrary.org/obo/>
+            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+            insert {
+                graph <http://example.com/resource/classifications_labels> {
+                    ?s rdfs:label ?bound .
+                }
+            }
+            where {
+                graph <http://example.com/resource/classified_search_results> {
+                    ?s a obo:OBI_0001909 ;
+                       <http://example.com/resource/query_val> ?query_val .
+                    bind(concat(?query_val, "|", replace(str(?s), "http://example.com.resource/", "")) as ?bound)
+                }
+            }
+        defined_in: |
+            PREFIX owl: <http://www.w3.org/2002/07/owl#>
+            insert {
+                graph <http://example.com/resource/defined_in> {
+                    ?s <http://example.com/resource/defined_in> ?g .
+                }
+            }
+            where {
+                graph ?g {
+                    ?s a ?c .
+                    filter (isuri(?s))
+                }
+                #    ?c a owl:Class
+            }
+        materialized_rxcui: |
+            PREFIX obo: <http://purl.obolibrary.org/obo/>
+            insert {
+                graph <http://example.com/resource/materialized_rxcui> {
+                    ?s <http://example.com/resource/materialized_rxcui> ?concat
+                }
+            } where {
+                {
+                    graph <http://purl.obolibrary.org/obo/dron/dron-ingredient.owl>
+                    {
+                        ?s obo:DRON_00010000 ?o .
+                    }
+                }
+                union
+                {
+                    graph <http://purl.obolibrary.org/obo/dron/dron-rxnorm.owl>
+                    {
+                        ?s obo:DRON_00010000 ?o .
+                    }
+                }
+                bind(uri(concat("http://purl.bioontology.org/ontology/RXNORM/",?o)) as ?concat)
+            }
+        transitively_materialized_dron_ingredient: |
+            PREFIX obo: <http://purl.obolibrary.org/obo/>
+            PREFIX owl: <http://www.w3.org/2002/07/owl#>
+            PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+            PREFIX ro: <http://www.obofoundry.org/ro/ro.owl#>
+            insert {
+                graph <http://example.com/resource/transitively_materialized_dron_ingredient> {
+                    ?dronsubprod <http://example.com/resource/transitively_materialized_dron_ingredient> ?droning .
+                }
+            }
+            where {
+                graph <http://purl.obolibrary.org/obo/dron/dron-ingredient.owl> {
+                    ?s a owl:Restriction ;
+                       owl:someValuesFrom ?droning ;
+                       owl:onProperty obo:BFO_0000071 .
+                    ?bt1 rdf:first ?s ;
+                         rdf:rest rdf:nil .
+                    ?bt2f a owl:Restriction ;
+                          owl:onProperty obo:BFO_0000053 ;
+                          owl:someValuesFrom obo:DRON_00000028 .
+                    ?bt2 rdf:rest ?bt1 ;
+                         rdf:first ?bt2f .
+                    ?bt3 rdf:rest ?bt2 ;
+                         rdf:first obo:OBI_0000576 .
+                    ?bt4 owl:intersectionOf ?bt3 ;
+                         rdf:type owl:Class .
+                    ?bt5 owl:someValuesFrom ?bt4 ;
+                         rdf:type owl:Restriction ;
+                         owl:onProperty ro:has_proper_part .
+                    ?dronprod rdfs:subClassOf ?bt5 ;
+                              a owl:Class .
+                }
+                ?dronsubprod rdfs:subClassOf* ?dronprod
+            }
+        transitively_materialized_drugrole: |
+            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+            insert {
+                graph <http://example.com/resource/transitively_materialized_drugrole> {
+                    ?nextdrugrole <http://example.com/resource/transitively_materialized_drugrole> ?subdrugrole .
+                }
+                
+            } where {
+                ?subdrugrole rdfs:subClassOf* <http://purl.obolibrary.org/obo/CHEBI_23888> .
+                ?nextdrugrole rdfs:subClassOf* ?subdrugrole .
+            }
+        transitive_role_of_class: |
+            PREFIX owl: <http://www.w3.org/2002/07/owl#>
+            PREFIX obo: <http://purl.obolibrary.org/obo/>
+            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+            insert {
+                graph <http://example.com/resource/transitive_role_of_class> {
+                    ?chebidrugsubclass <http://example.com/resource/transitive_role_of_class> ?superrole .
+                }
+            } where {
+                graph <http://example.com/resource/transitively_materialized_drugrole> {
+                    ?drugrole <http://example.com/resource/transitively_materialized_drugrole>* ?superrole .
+                }
+                graph obo:chebi.owl {
+                    ?restr a owl:Restriction ;
+                           owl:someValuesFrom ?drugrole ;
+                           owl:onProperty obo:RO_0000087 .
+                    ?chebidrugclass rdfs:subClassOf ?restr .
+                    ?chebidrugsubclass rdfs:subClassOf* ?chebidrugclass .
+                    filter(isuri(?chebidrugsubclass))
+                }
+            }
+        transitive_massless_rolebearer: |
+            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+            PREFIX : <http://purl.obolibrary.org/obo/dron.owl#>
+            insert {
+                graph <http://example.com/resource/transitive_massless_rolebearer> {
+                        ?chebinextsub <http://example.com/resource/transitive_massless_rolebearer> ?chebidrugclass .
+                }
+
+            }
+            where {
+                graph <http://example.com/resource/transitive_role_of_class> {
+                    ?chebidrugclass <http://example.com/resource/transitive_role_of_class> ?chebirole .
+                }
+                minus {
+                    graph <http://purl.obolibrary.org/obo/chebi.owl> {
+                        ?chebidrugclass <http://purl.obolibrary.org/obo/chebi/mass> ?mass .
+                    }
+                }
+                graph <http://purl.obolibrary.org/obo/chebi.owl> {
+                    ?chebidrugsubclass rdfs:subClassOf* ?chebidrugclass .
+                    ?chebinextsub rdfs:subClassOf* ?chebidrugsubclass .
+                }
+            }
+        materialize_cuis: |
+            insert {
+                graph <http://example.com/resource/cui> {
+                    ?materialized a <http://purl.obolibrary.org/obo/IAO_0000578> ;
+                                  <http://purl.obolibrary.org/obo/IAO_0000219> ?materialized .
+                }
+            }
+            where {
+                ?s <http://bioportal.bioontology.org/ontologies/umls/cui> ?cui .
+                bind(uri(concat("http://example.com/resource/cui/",?cui)) as ?materialized )
+            }
+    tasks:
+        - reference_medications
+        - classified_search_results
+reference_medications:
+    current.file.base.name: 'reference_medications'
+    my.numericals:
+        - source_count
+    my.class: 'http://purl.obolibrary.org/obo/PDRO_0000024'
+classified_search_results:
+    current.file.base.name: 'classified_search_results'
+    my.numericals:
+        - match_chars
+        - match_words
+        - query_chars
+        - query_words
+        - match_rank
+        - match_rxaui
+        - match_score
+        - prob_consists_of
+        - prob_constitutes
+        - prob_contained_in
+        - prob_contains
+        - prob_form_of
+        - prob_has_form
+        - prob_has_ingredient
+        - prob_has_part
+        - prob_has_quantified_form
+        - prob_has_tradename
+        - prob_identical
+        - prob_ingredient_of
+        - prob_inverse_isa
+        - prob_isa
+        - prob_more_distant
+        - prob_part_of
+        - prob_quantified_form_of
+        - prob_tradename_of
+        - rxaui_freq
+        - rxcui_freq
+        - sd_cosine
+        - sd_jaccard
+        - sd_jw
+        - sd_lcs
+        - sd_lv
+        - sd_qgram
+    my.class: 'http://purl.obolibrary.org/obo/OBI_0001909'
+
