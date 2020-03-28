@@ -1,5 +1,8 @@
 default:
     # the TURBO medication mapper will add support for reading medications from a CSV file in late March or early April 2020
+    # todo: should be more consistent about "reference medications" vs "source medications"
+    #    in graph names, R object, these YAML objects, documentation
+    # todo: add write and read paths for more of the "temp" files?
     pds.host: localhost
     pds.port: 7799
     pds.database: <SECRET>

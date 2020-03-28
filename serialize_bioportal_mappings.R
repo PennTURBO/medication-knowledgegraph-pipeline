@@ -27,7 +27,7 @@ library(uuid)
 
 ####
 
-my.config <- config::get(file = "get_bioportal_mappings.yaml")
+my.config <- config::get(file = "rxnav_med_mapping.yaml")
 
 more.pages <- NA
 current.page <- NA
@@ -213,34 +213,4 @@ placeholder <-
   )
 print(Sys.time())
 
-rdf_serialize(rdf = direct.rdf, doc = my.config$my.triples.destination)
-
-post.dest <-
-  paste0(
-    my.config$my.graphdb.base,
-    '/repositories/',
-    my.config$my.selected.repo,
-    '/rdf-graphs/service?graph=',
-    URLencode(
-      paste0('http://example.com/resource/',
-             my.config$my.selected.graph),
-      reserved = TRUE
-    )
-  )
-
-print(post.dest)
-
-post.resp <-
-  httr::POST(
-    url = post.dest,
-    body = upload_file(my.config$my.triples.destination),
-    content_type(my.config$my.mappings.format),
-    authenticate(
-      my.config$my.graphdb.username,
-      my.config$my.graphdb.pw,
-      type = 'basic'
-    )
-  )
-
-print('Errors will be listed below:')
-print(rawToChar(post.resp$content))
+rdf_serialize(rdf = direct.rdf, doc = my.config$bioportal.triples.destination)
