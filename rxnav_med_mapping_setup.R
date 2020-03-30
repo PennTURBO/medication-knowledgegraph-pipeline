@@ -7,6 +7,7 @@ library(stringr)
 library(stringdist)
 library(randomForest)
 library(dplyr)
+library(httr)
 
 # train
 library(splitstackshape)
@@ -164,6 +165,7 @@ bulk.rxaui.asserted.strings <-
 # for now, using complete.cases filter on all training and prediction data
 
 get.string.dist.mat <- function(two.string.cols) {
+  two.string.cols <- as.data.frame(two.string.cols)
   unique.string.combos <- unique(two.string.cols)
   distance.cols = c("lv", "lcs", "qgram", "cosine", "jaccard", "jw")
   distances <- lapply(distance.cols, function(one.meth) {

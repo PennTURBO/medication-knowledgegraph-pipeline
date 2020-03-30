@@ -39,6 +39,8 @@ aggregated.mapping <- data.frame()
 bp.mappings.to.minimal.df <- function(current.source.ontology) {
   # initialize global varaibles for while loop
   
+  # current.source.ontology <- 'ATC'
+  
   more.pages <<- TRUE
   current.page <<- 1
   next.page <<- 0
@@ -110,13 +112,17 @@ bp.mappings.to.minimal.df <- function(current.source.ontology) {
     })
     inner.res <- do.call(rbind.data.frame, inner.res)
     inner.res$source.method <- mappings.result.source.methods
-    inner.res <- inner.res[inner.res$source.method == 'LOOM' , ]
+    inner.res <-
+      inner.res[inner.res$source.method %in% my.config$aceepted.mapping.sources , ]
     inner.res <-
       inner.res[as.character(inner.res$source.term) != as.character(inner.res$mapped.term),]
     inner.res <-
       inner.res[inner.res$mapped.ontology %in% value.added ,]
     inner.res <-
-      unique(inner.res[, c("source.term", "source.ontology", "mapped.term")])
+      unique(inner.res[, c("source.term",
+                           "source.ontology",
+                           "mapped.term",
+                           "source.method")])
     
     if (current.page == my.page.count) {
       more.pages <- FALSE
@@ -144,7 +150,7 @@ bound.source.results <-
   do.call(rbind.data.frame, per.source.results)
 bound.source.results$inversed <- FALSE
 
-inverse.results <- bound.source.results[, c(3, 2, 1, 4)]
+inverse.results <- bound.source.results[, c(3, 2, 1, 4, 5)]
 colnames(inverse.results) <- colnames(bound.source.results)
 inverse.results$inversed <- TRUE
 
@@ -190,8 +196,13 @@ colnames(bound.source.results) <-
 
 ####
 
+# could save bound.source.results, including source methods, to csv here
+
 succinct <-
   unique(bound.source.results[, c("source_term", "mapped_term")])
+
+succinct$source_term <- as.character(succinct$source_term)
+succinct$mapped_term <- as.character(succinct$mapped_term)
 
 direct.rdf <- rdf()
 
@@ -213,4 +224,5 @@ placeholder <-
   )
 print(Sys.time())
 
-rdf_serialize(rdf = direct.rdf, doc = my.config$bioportal.triples.destination)
+rdf_serialize(rdf = direct.rdf,
+              doc = my.config$bioportal.triples.destination)

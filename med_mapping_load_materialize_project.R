@@ -1,5 +1,6 @@
 library(config)
 library(jsonlite)
+library(httr)
 
 med.mapping.general.config <-
   config::get(file = 'rxnav_med_mapping.yaml')
@@ -164,6 +165,10 @@ update.endpoint <-
     med.mapping.general.config$my.selected.repo,
     "/statements"
   )
+
+
+###
+
 
 saved.authentication <-
   authenticate(

@@ -1,8 +1,4 @@
 default:
-    # the TURBO medication mapper will add support for reading medications from a CSV file in late March or early April 2020
-    # todo: should be more consistent about "reference medications" vs "source medications"
-    #    in graph names, R object, these YAML objects, documentation
-    # todo: add write and read paths for more of the "temp" files?
     pds.host: localhost
     pds.port: 7799
     pds.database: <SECRET>
@@ -10,18 +6,22 @@ default:
     pds.pw: <SECRET>
     oracle.jdbc.path: "~/ojdbc8.jar"
     reissue.pds.query: FALSE
-    pds.rmedication.result.savepath: "pds_r_medications_results.Rdata"
-    pds.rmedication.result.loadpath: "pds_r_medications_results.Rdata"
-    min.empi.count: 5000
+    #
+    pds.rmedication.result.savepath: "pds_r_medications_results.csv"
+    pds.rmedication.result.loadpath: "pds_r_medications_results.csv"
+    #
+    min.empi.count: 50
     normalization.file: "med_name_normalization.csv"
     pds2rxnav.fraction: 1
+    #
     rxnav.api.address: localhost
     rxnav.api.port: 4000
     rxnav.mysql.address: localhost
     rxnav.mysql.port: 3307
-    rxnav.mysql.user: "root"
-    rxnav.mysql.pw: "password"
+    rxnav.mysql.user: <SECRET>
+    rxnav.mysql.pw: <SECRET>
     mysql.jdbc.path: "~/mysql-connector-java-8.0.19.jar"
+    #
     rxaui.asserted.strings.chunk.count: 3000
     approximate.row.count: 10000
     approximate.max.chars: 100
@@ -50,24 +50,29 @@ default:
         - SU
         - SYGB
         - TMSY
-    # writing to RDF (Turtle) now, not CSV?
     final.predictions.writepath: "rxnav_medication_mapping_final_predictions.csv"
     my.bioportal.api.base: 'http://192.168.0.233:8080'
     my.source.ontolgies:
-        - 'RXNORM'
-        - 'DRON'
-    relevant.ontologies:
-        - 'RXNORM'
-        - 'DRON'
+        - 'ATC'
         - 'CHEBI'
+        - 'DRON'
+        - 'NDFRT'
+        - 'RXNORM'
+    relevant.ontologies:
+        - 'ATC'
+        - 'CHEBI'
+        - 'DRON'
+        - 'NDFRT'
+        - 'RXNORM'
+    aceepted.mapping.sources:
+        - 'CUI'
+        - 'LOOM'
     my.apikey: <SECRET>
     my.pagesize: 5000
-    my.prefix: 'http://example.com/resource/bioportal_mapping/'
-    my.triples.destination: 'med_mapping_bioportal_mapping.ttl'
-    my.graphdb.base: 'http://pennturbo.org:7200'
-    my.selected.repo: 'med_mapping'
-    my.selected.graph: 'bioportal_mappings'
-    my.mappings.format: 'text/turtle'
+    # my.prefix: 'http://example.com/resource/bioportal_mapping/'
+    bioportal.triples.destination: 'med_mapping_bioportal_mapping.ttl'
+    my.graphdb.base: 'http://turbo-prd-db01.pmacs.upenn.edu:7200'
+    my.selected.repo: 'med_mapping_pop_some_first'
     my.graphdb.username: <SECRET>
     my.graphdb.pw: <SECRET>
     my.import.urls: {"http://purl.obolibrary.org/obo/dron.owl":{"url":["https://bitbucket.org/uamsdbmi/dron/raw/master/dron-full.owl"],"format":[""]},
@@ -75,11 +80,23 @@ default:
     "http://purl.obolibrary.org/obo/dron/dron-upper.owl":{"url":["https://bitbucket.org/uamsdbmi/dron/raw/master/dron-upper.owl"],"format":[""]},
     "https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl":{"url":["https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl"],"format":[""]},
     "http://purl.obolibrary.org/obo/dron/dron-ingredient.owl":{"url":["https://s3.amazonaws.com/drugontology/dron-ingredient.owl"],"format":[""]},
-    "http://purl.obolibrary.org/obo/dron-rxnorm.owl":{"url":["https://s3.amazonaws.com/drugontology/dron-rxnorm.owl"],"format":[""]},
-    "http://purl.bioontology.org/ontology/ATC/":{"url":["http://data.bioontology.org/ontologies/ATC/submissions/12/download?apikey=9cf735c3-a44a-404f-8b2f-c49d48b2b8b2"],"format":["text/turtle"]},
-    "http://purl.bioontology.org/ontology/VANDF/":{"url":["http://data.bioontology.org/ontologies/VANDF/submissions/15/download?apikey=9cf735c3-a44a-404f-8b2f-c49d48b2b8b2"],"format":["text/turtle"]},
-    "http://purl.obolibrary.org/obo/chebi.owl":{"url":["ftp://ftp.ebi.ac.uk/pub/databases/chebi/ontology/chebi.owl"],"format":[""]},
-    "http://purl.bioontology.org/ontology/RXNORM/":{"url":["http://data.bioontology.org/ontologies/RXNORM/submissions/18/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb"],"format":["text/turtle"]}}
+    "http://purl.obolibrary.org/obo/dron-rxnorm.owl":{"url":["https://s3.amazonaws.com/drugontology/dron-rxnorm.owl"],"format":[""]}}
+#    my.import.files: {"http://purl.bioontology.org/ontology/ATC/":{"url":["http://data.bioontology.org/ontologies/ATC/submissions/12/download?apikey=9cf735c3-a44a-404f-8b2f-c49d48b2b8b2"],"format":["text/turtle"]},
+#    "http://purl.bioontology.org/ontology/VANDF/":{"url":["http://data.bioontology.org/ontologies/VANDF/submissions/15/download?apikey=9cf735c3-a44a-404f-8b2f-c49d48b2b8b2"],"format":["text/turtle"]},
+#    "http://purl.obolibrary.org/obo/chebi.owl":{"url":["ftp://ftp.ebi.ac.uk/pub/databases/chebi/ontology/chebi.owl"],"format":[""]},
+#    "http://purl.bioontology.org/ontology/RXNORM/":{"url":["http://data.bioontology.org/ontologies/RXNORM/submissions/18/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb"],"format":["text/turtle"]}}
+    my.import.files: {"http://purl.bioontology.org/ontology/ATC/":{"local.file":["/Users/markampa/med_mapping/extras/ATC.ttl"],"format":["text/turtle"]},
+    "http://purl.bioontology.org/ontology/NDFRT/":{"local.file":["/Users/markampa/med_mapping/extras/NDFRT.ttl"],"format":["text/turtle"]},
+    "http://purl.obolibrary.org/obo/chebi.owl":{"local.file":["/Users/markampa/med_mapping/extras/chebi.owl.gz"],"format":["application/rdf+xml"]},
+    "http://example.com/resource/bioportal_mappings":{"local.file":["/Users/markampa/med_mapping/med_mapping_bioportal_mapping.ttl"],"format":["text/turtle"]},
+    "http://purl.bioontology.org/ontology/RXNORM/":{"local.file":["/Users/markampa/med_mapping/extras/RXNORM.ttl.gz"],"format":["text/turtle"]}}
+#    my.import.files: {"http://purl.bioontology.org/ontology/ATC/":{"local.file":["/Users/markampa/med_mapping/extras/ATC.ttl"],"format":["text/turtle"]},
+#    "http://purl.bioontology.org/ontology/VANDF/":{"local.file":["/Users/markampa/med_mapping/extras/VANDF.ttl"],"format":["text/turtle"]},
+#    "http://purl.obolibrary.org/obo/chebi.owl":{"local.file":["/Users/markampa/med_mapping/extras/chebi.owl.gz"],"format":["application/rdf+xml"]},
+#    "http://purl.bioontology.org/ontology/SNOMED/":{"local.file":["/Users/markampa/med_mapping/extras/SNOMEDCT_2019AB_codes.ttl.gz"],"format":["text/turtle"]},
+#    "http://example.com/resource/bioportal_mappings":{"local.file":["/Users/markampa/med_mapping/extras/SNOMEDCT_2019AB_codes.ttl.gz"],"format":["text/turtle"]},
+#    "http://purl.bioontology.org/ontology/RXNORM/":{"local.file":["/Users/markampa/med_mapping/extras/RXNORM.ttl.gz"],"format":["text/turtle"]}}
+    monitor.pause.seconds: 30
     materializastion.projection.sparqls:
         turbo_med_mapping_hand: |
             PREFIX owl: <http://www.w3.org/2002/07/owl#>
@@ -88,6 +105,7 @@ default:
                     <http://example.com/resource/reference_medications> a owl:Ontology .
                     <http://example.com/resource/classified_search_results> a owl:Ontology .
                     <http://purl.obolibrary.org/obo/dron/dron-rxnorm.owl> a owl:Ontology .
+                    <http://example.com/resource/bioportal_mappings> a owl:Ontology .
                 }
             }
         UNNECESSARYdeleteUselessNamedIndAssertions: |
@@ -265,7 +283,7 @@ default:
             insert {
                 graph <http://example.com/resource/cui> {
                     ?materialized a <http://purl.obolibrary.org/obo/IAO_0000578> ;
-                                  <http://purl.obolibrary.org/obo/IAO_0000219> ?materialized .
+                                  <http://purl.obolibrary.org/obo/IAO_0000219> ?s .
                 }
             }
             where {

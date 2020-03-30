@@ -1,10 +1,10 @@
 original,more_generic,robot,graphs,base
 uuids,classification_uuid,ID,classified_search_results,
-FK_MEDICATION_ID,source_med_id,AI mydata:source_id_uri,reference_medications;classified_search_results,http://example.com/resource/source_med_id/
+MEDICATION_ID,source_med_id,AI mydata:source_id_uri,reference_medications;classified_search_results,http://example.com/resource/source_med_id/
 FULL_NAME,source_full_name,A mydata:source_full_name,reference_medications,
 GENERIC_NAME,source_generic_name,A mydata:source_generic_name,reference_medications,
 RXNORM,source_rxcui,AI mydata:source_rxcui,reference_medications,http://purl.bioontology.org/ontology/RXNORM/
-EMPI_COUNT,source_count,AT mydata:source_count^^xsd:int,reference_medications,
+MEDICATION_COUNT,source_count,AT mydata:source_count^^xsd:int,reference_medications,
 pds.rxn.annotated,source_has_rxcui,AT mydata:source_has_rxcui^^xsd:boolean,reference_medications,
 normalized,source_normalized_full_name,A mydata:source_normalized_full_name,reference_medications,
 query.source,query_source,AI mydata:query_source,classified_search_results,http://example.com/resource/query_source/

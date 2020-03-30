@@ -1,87 +1,127 @@
 # assumes this script has been launched from the current working directory that contains
 #  rxnav_med_mapping_setup.R, rxnav_med_mapping.yaml
 
-# insert settings into repo?!
-
 source("rxnav_med_mapping_setup.R")
 
-if (config$reissue.pds.query) {
-  # VPN and tunnel may be required
-  # set that up outside of this script
-  pdsDriver <-
-    JDBC(driverClass = "oracle.jdbc.OracleDriver",
-         classPath = config$oracle.jdbc.path)
+instantiate.and.upload <- function(current.task) {
+  print(current.task)
   
-  pds.con.string <- paste0(
-    "jdbc:oracle:thin:@//",
-    config$pds.host,
-    ":",
-    config$pds.port,
-    "/",
-    config$pds.database
-  )
+  more.specific <-
+    config::get(file = "rxnav_med_mapping.yaml", config = current.task)
   
-  pdsConnection <-
-    dbConnect(pdsDriver,
-              pds.con.string,
-              config$pds.user,
-              config$pds.pw)
+  predlist <- colnames(body[2:ncol(body)])
+  print(predlist)
   
-  my.query <- "
-  SELECT
-  om.FK_MEDICATION_ID ,
-  rm.FULL_NAME , rm.GENERIC_NAME,
-  rm.RXNORM ,
-  COUNT(DISTINCT pe.EMPI) AS empi_count
-  FROM
-  mdm.ORDER_MED om
-  JOIN mdm.R_MEDICATION rm ON
-  om.FK_MEDICATION_ID = rm.PK_MEDICATION_ID
-  JOIN mdm.PATIENT_ENCOUNTER pe ON
-  om.FK_PATIENT_ENCOUNTER_ID = pe.PK_PATIENT_ENCOUNTER_ID
-  GROUP BY
-  om.FK_MEDICATION_ID ,
-  rm.FULL_NAME , rm.GENERIC_NAME,
-  rm.RXNORM"
+  current.model.rdf <- rdflib::rdf()
   
-  print(Sys.time())
-  timed.system <- system.time(pds.r.medications.results <-
-                                dbGetQuery(pdsConnection, my.query))
-  print(Sys.time())
-  print(timed.system)
+  placeholder <-
+    apply(
+      X = body,
+      MARGIN = 1,
+      FUN = function(current_row) {
+        innerph <- lapply(predlist, function(current.pred) {
+          rdflib::rdf_add(
+            rdf = current.model.rdf,
+            subject = current_row[[1]],
+            predicate = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            object = more.specific$my.class
+          )
+          temp <- current_row[[current.pred]]
+          if (nchar(temp) > 0) {
+            # print(paste0(current.pred, ':', temp))
+            if (current.pred %in% more.specific$my.numericals) {
+              temp <- as.numeric(temp)
+            }
+            rdflib::rdf_add(
+              rdf = current.model.rdf,
+              subject = current_row[[1]],
+              predicate = paste0('http://example.com/resource/', current.pred),
+              object = temp
+            )
+          }
+        })
+      }
+    )
   
-  # Close connection
-  dbDisconnect(pdsConnection)
+  rdf.file <- paste0(current.task, '.ttl')
   
-  save(pds.r.medications.results,
-       file = config$pds.rmedication.result.savepath)
-} else {
-  load(config$pds.rmedication.result.loadpath)
+  rdflib::rdf_serialize(rdf = current.model.rdf,
+                        doc = rdf.file,
+                        format = "turtle")
+  
+  post.dest <-
+    paste0(
+      more.specific$my.graphdb.base,
+      '/repositories/',
+      more.specific$my.selected.repo,
+      '/rdf-graphs/service?graph=',
+      URLencode(
+        paste0('http://example.com/resource/',
+               current.task),
+        reserved = TRUE
+      )
+    )
+  
+  print(post.dest)
+  
+  post.resp <-
+    httr::POST(
+      url = post.dest,
+      body = upload_file(rdf.file),
+      content_type(more.specific$my.mappings.format),
+      authenticate(
+        more.specific$my.graphdb.username,
+        more.specific$my.graphdb.pw,
+        type = 'basic'
+      )
+    )
+  
+  print('Errors will be listed below:')
+  print(rawToChar(post.resp$content))
+  
 }
 
-pds.r.medications.results$pds.rxn.annotated <-
-  !is.na(pds.r.medications.results$RXNORM)
+####
+
+# source.medications <-
+#   read.table(
+#     config$source.medications.loadpath,
+#     header = TRUE,
+#     sep = "|",
+#     # quote = TRUE,
+#     row.names = FALSE
+#   )
+
+source.medications <- read_delim(
+  config$source.medications.loadpath,
+  "|",
+  escape_double = FALSE,
+  trim_ws = TRUE
+)
+
+source.medications$pds.rxn.annotated <-
+  !is.na(source.medications$RXNORM)
 
 # ~ 900k r-medications,
 # but only ~250k that have an order/encounter link to a patient with an EMPI
 
 # # destructive (changing would require rerunning query or load
-pds.r.medications.results <-
-  pds.r.medications.results[pds.r.medications.results$EMPI_COUNT >= config$min.empi.count , ]
+source.medications <-
+  source.medications[source.medications$MEDICATION_COUNT >= config$min.empi.count ,]
 
-### what's the relationship between the likelihood of an rxnorm annotation and the # of patients receiving an order?
-
-ggplot(
-  pds.r.medications.results,
-  aes(
-    x = EMPI_COUNT + 0.01,
-    color = pds.rxn.annotated,
-    fill = pds.rxn.annotated
-  )
-) + geom_histogram(alpha = 0.1) + scale_x_log10() + scale_y_sqrt()
-
-
-# likelihood is consistent across patient frequencies
+# ### what's the relationship between the likelihood of an rxnorm annotation and the # of patients receiving an order?
+#
+# ggplot(
+#   source.medications,
+#   aes(
+#     x = MEDICATION_COUNT + 0.01,
+#     color = pds.rxn.annotated,
+#     fill = pds.rxn.annotated
+#   )
+# ) + geom_histogram(alpha = 0.1) + scale_x_log10() + scale_y_sqrt()
+#
+#
+# # likelihood is consistent across patient frequencies
 
 ####
 
@@ -115,100 +155,99 @@ normalization.rules.res$replacement[is.na(normalization.rules.res$replacement)] 
 normalization.rules <- normalization.rules.res$replacement
 names(normalization.rules) <- normalization.rules.res$pattern
 
-pds.r.medications.results$normalized <-
-  tolower(pds.r.medications.results$FULL_NAME)
-pds.r.medications.results$normalized[is.na(pds.r.medications.results$normalized)] <-
+source.medications$normalized <-
+  tolower(source.medications$FULL_NAME)
+source.medications$normalized[is.na(source.medications$normalized)] <-
   ""
 
-pds.r.medications.results$GENERIC_NAME.lc <-
-  tolower(pds.r.medications.results$GENERIC_NAME)
-pds.r.medications.results$GENERIC_NAME.lc[is.na(pds.r.medications.results$GENERIC_NAME.lc)] <-
+source.medications$GENERIC_NAME.lc <-
+  tolower(source.medications$GENERIC_NAME)
+source.medications$GENERIC_NAME.lc[is.na(source.medications$GENERIC_NAME.lc)] <-
   ""
 
 # does the order of applying the normalizations matter?
 # applying longest ones first
 # use some kind of automated synonym discovery, like phrase2vec?
-pds.r.medications.results$normalized <-
-  stringr::str_replace_all(pds.r.medications.results$normalized, normalization.rules)
+source.medications$normalized <-
+  stringr::str_replace_all(source.medications$normalized, normalization.rules)
 
-
-###
+####
 
 # eliminate initial space
 # also remove initial punct?
 
-pds.r.medications.results$normalized <-
+source.medications$normalized <-
   gsub(pattern = "^\\W+",
        replacement = "",
-       x = pds.r.medications.results$normalized)
+       x = source.medications$normalized)
 
-pds.r.medications.results$normalized <-
+source.medications$normalized <-
   gsub(
     pattern = "_",
     replacement = " ",
-    x = pds.r.medications.results$normalized,
+    x = source.medications$normalized,
     fixed = TRUE
   )
 
-pds.r.medications.results$normalized <-
+source.medications$normalized <-
   gsub(
     pattern = "(",
     replacement = " ",
-    x = pds.r.medications.results$normalized,
+    x = source.medications$normalized,
     fixed = TRUE
   )
 
-pds.r.medications.results$normalized <-
+source.medications$normalized <-
   gsub(
     pattern = ")",
     replacement = " ",
-    x = pds.r.medications.results$normalized,
+    x = source.medications$normalized,
     fixed = TRUE
   )
 
-pds.r.medications.results$normalized <-
+source.medications$normalized <-
   gsub(
     pattern = "&",
     replacement = " ",
-    x = pds.r.medications.results$normalized,
+    x = source.medications$normalized,
     fixed = TRUE
   )
 
-pds.r.medications.results$normalized <-
+source.medications$normalized <-
   gsub(
     pattern = "=",
     replacement = " ",
-    x = pds.r.medications.results$normalized,
+    x = source.medications$normalized,
     fixed = TRUE
   )
 
 # run-on correction
-pds.r.medications.results$normalized <-
+source.medications$normalized <-
   gsub(
     "(\\d)([^ \\.0123456789])",
     replacement = "\\1 \\2",
-    x = pds.r.medications.results$normalized,
+    x = source.medications$normalized,
     fixed = FALSE
   )
 
 # eliminate trailing space
 # also remove trailing punct ??
-pds.r.medications.results$normalized <-
+source.medications$normalized <-
   gsub(pattern = "\\W+$",
        replacement = "",
-       x = pds.r.medications.results$normalized)
+       x = source.medications$normalized)
 
 
 # extra spaces
-pds.r.medications.results$normalized <- gsub(pattern = " +",
-                                             replacement = " ",
-                                             x = pds.r.medications.results$normalized)
+source.medications$normalized <- gsub(pattern = " +",
+                                      replacement = " ",
+                                      x = source.medications$normalized)
 
 # extra any-whitespaces
-pds.r.medications.results$normalized <-
+source.medications$normalized <-
   gsub(pattern = "\\s+",
        replacement = " ",
-       x = pds.r.medications.results$normalized)
+       x = source.medications$normalized)
 
 ###
 
@@ -219,26 +258,29 @@ pds.r.medications.results$normalized <-
 # query.list <-
 #   sort(unique(
 #     c(
-#       pds.r.medications.results$normalized[pds.r.medications.results$EMPI_COUNT > config$min.empi.count &
-#                                              !(is.na(pds.r.medications.results$normalized)) &
-#                                              nchar(pds.r.medications.results$normalized) > 0],
-#       pds.r.medications.results$GENERIC_NAME.lc[pds.r.medications.results$EMPI_COUNT > config$min.empi.count &
-#                                                   !(is.na(pds.r.medications.results$normalized)) &
-#                                                   nchar(pds.r.medications.results$GENERIC_NAME.lc) > 0]
+#       source.medications$normalized[source.medications$MEDICATION_COUNT > config$min.empi.count &
+#                                              !(is.na(source.medications$normalized)) &
+#                                              nchar(source.medications$normalized) > 0],
+#       source.medications$GENERIC_NAME.lc[source.medications$MEDICATION_COUNT > config$min.empi.count &
+#                                                   !(is.na(source.medications$normalized)) &
+#                                                   nchar(source.medications$GENERIC_NAME.lc) > 0]
 #     )
 #   ))
 
 query.list <-
   sort(unique(
     c(
-      pds.r.medications.results$normalized[!(is.na(pds.r.medications.results$normalized)) &
-                                             nchar(pds.r.medications.results$normalized) > 0],
-      pds.r.medications.results$GENERIC_NAME.lc[!(is.na(pds.r.medications.results$normalized)) &
-                                                  nchar(pds.r.medications.results$GENERIC_NAME.lc) > 0]
+      source.medications$normalized[!(is.na(source.medications$normalized)) &
+                                      nchar(source.medications$normalized) > 0],
+      source.medications$GENERIC_NAME.lc[!(is.na(source.medications$normalized)) &
+                                           nchar(source.medications$GENERIC_NAME.lc) > 0]
     )
   ))
 
+begin.time <- Sys.time()
 approximate.term.res <- bulk.approximateTerm(query.list)
+end.time <- Sys.time()
+print(end.time - begin.time)
 
 ###
 
@@ -265,7 +307,7 @@ approximate.with.original <-
 
 pds.full_name.approximate <-
   left_join(
-    x = pds.r.medications.results,
+    x = source.medications,
     y = approximate.with.original,
     by = c("normalized" = "query"),
     suffixes = c(".q", ".sr")
@@ -279,7 +321,7 @@ pds.full_name.approximate$query.val <-
 
 pds.generic_name.approximate <-
   inner_join(
-    x = pds.r.medications.results,
+    x = source.medications,
     y = approximate.with.original,
     by = c("GENERIC_NAME.lc" = "query"),
     suffixes = c(".q", ".sr")
@@ -292,6 +334,8 @@ pds.generic_name.approximate$query.val <-
 
 pds.approximately <-
   rbind.data.frame(pds.full_name.approximate, pds.generic_name.approximate)
+
+####
 
 string.dist.mat.res <-
   get.string.dist.mat(pds.approximately[, c("query.val", "STR.lc")])
@@ -368,8 +412,8 @@ ignore.cols <-
     "STR.sr",
     "SUPPRESS",
     "TTY.q",
-    "EMPI_COUNT",
-    "FK_MEDICATION_ID",
+    "MEDICATION_COUNT",
+    "MEDICATION_ID",
     "FULL_NAME",
     "GENERIC_NAME",
     "GENERIC_NAME.lc",
@@ -394,14 +438,14 @@ print(dput(sort(setdiff(
 ))))
 print(sort(table(accounted.cols)))
 
-###
+####
 
 load(config$rf.model.savepath)
 
 ####
 
 temp <-
-  pds.approximate.original.dists
+  as.data.frame(pds.approximate.original.dists)
 
 placeholder <-
   lapply(names(config$factor.levels), function(current.factor) {
@@ -435,12 +479,12 @@ temp$GENERIC_NAME[is.na(temp$GENERIC_NAME)] <- ''
 temp$GENERIC_NAME[is.na(temp$GENERIC_NAME)] <- ''
 
 # get before and after counts
-pre <- unique(temp$FK_MEDICATION_ID)
-temp <- temp[complete.cases(temp),]
-post <- unique(temp$FK_MEDICATION_ID)
+pre <- unique(temp$MEDICATION_ID)
+temp <- temp[complete.cases(temp), ]
+post <- unique(temp$MEDICATION_ID)
 lost <- setdiff(pre, post)
 lost <-
-  pds.approximate.original.dists[pds.approximate.original.dists$FK_MEDICATION_ID %in% lost , ]
+  pds.approximate.original.dists[pds.approximate.original.dists$MEDICATION_ID %in% lost ,]
 
 print(Sys.time())
 timed.system <- system.time(rf_responses <-
@@ -465,10 +509,13 @@ performance.frame$override[performance.frame$score == 0] <-
   "more distant"
 table(performance.frame$override)
 
-all.keys <- unique(pds.r.medications.results$FK_MEDICATION_ID)
+
+####
+
+all.keys <- unique(source.medications$MEDICATION_ID)
 
 covered.keys <-
-  unique(performance.frame$FK[performance.frame$rf_responses != "more distant"])
+  unique(performance.frame$MEDICATION_ID[performance.frame$rf_responses != "more distant"])
 
 coverage <- length(covered.keys) / length(all.keys)
 
@@ -478,17 +525,17 @@ uncovered.keys <- setdiff(all.keys, covered.keys)
 
 # save for followup?
 uncovered.frame <-
-  pds.approximate.original.dists[pds.approximate.original.dists$FK_MEDICATION_ID %in% uncovered.keys ,]
+  pds.approximate.original.dists[pds.approximate.original.dists$MEDICATION_ID %in% uncovered.keys , ]
 
 ###
 
 classification.res.tidied <-
   performance.frame[, c(
-    "FK_MEDICATION_ID",
+    "MEDICATION_ID",
     "FULL_NAME",
     "GENERIC_NAME",
     "RXNORM",
-    "EMPI_COUNT",
+    "MEDICATION_COUNT",
     "pds.rxn.annotated",
     "normalized",
     "query.source",
@@ -534,126 +581,200 @@ classification.res.tidied <-
     "override"
   )]
 
+classification.res.tidied <- unique(classification.res.tidied)
+
+# now get rxcuis with labels in repo
+# this should go into setup
+
+select.endpoint <-
+  paste0(config$my.graphdb.base,
+         "/repositories/",
+         config$my.selected.repo)
+
+saved.authentication <-
+  authenticate(config$my.graphdb.username,
+               config$my.graphdb.pw,
+               type = "basic")
+
+# print(select.endpoint)
+
+my.query <- 'PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+select distinct ?rxcui_with_rxaui_with_skos_notation
+where {
+graph <http://purl.bioontology.org/ontology/RXNORM/> {
+?s <http://purl.bioontology.org/ontology/RXNORM/RXAUI> ?rxaui ;
+skos:notation ?rxcui_with_rxaui_with_skos_notation .
+}
+}'
+
+result.list <- httr::GET(
+  url = paste0(
+    config$my.graphdb.base,
+    "/repositories/",
+    config$my.selected.repo
+  ),
+  query = list(query = my.query),
+  saved.authentication
+)
+
+temp <- jsonlite::fromJSON(rawToChar(result.list$content))
+rxnorm.entities.in.repo <-
+  as.numeric(unique(
+    temp$results$bindings$rxcui_with_rxaui_with_skos_notation$value
+  ))
+
+classification.res.tidied.inactive.rxcui <-
+  classification.res.tidied[!(classification.res.tidied$rxcui %in% rxnorm.entities.in.repo), ]
+
+classification.res.tidied <-
+  classification.res.tidied[classification.res.tidied$rxcui %in% rxnorm.entities.in.repo, ]
+
 #### need to put soemthing in place that picks best search results
 #### in the context of wheter the rxnorm term is defined
 
-# classification.res.tidied.id <-
-#   classification.res.tidied[classification.res.tidied$override == "identical", ]
-# best.identical <-
-#   aggregate(
-#     classification.res.tidied.id$identical,
-#     list(classification.res.tidied.id$FK_MEDICATION_ID),
-#     FUN = max
-#   )
-# colnames(best.identical) <- c("FK_MEDICATION_ID", "identical")
-# classification.res.tidied.id <-
-#   base::merge(classification.res.tidied.id, best.identical)
-#
+classification.res.tidied.id <-
+  classification.res.tidied[classification.res.tidied$override == "identical",]
+best.identical <-
+  aggregate(
+    classification.res.tidied.id$identical,
+    list(classification.res.tidied.id$MEDICATION_ID),
+    FUN = max
+  )
+colnames(best.identical) <- c("MEDICATION_ID", "identical")
+classification.res.tidied.id <-
+  base::merge(classification.res.tidied.id, best.identical)
+
 # classification.res.tidied.onehop <-
 #   classification.res.tidied[(
 #     classification.res.tidied$override != "identical" &
 #       classification.res.tidied$override != "more distant" &
 #       (
 #         !(
-#           classification.res.tidied$FK_MEDICATION_ID %in% classification.res.tidied.id$FK_MEDICATION_ID
+#           classification.res.tidied$MEDICATION_ID %in% classification.res.tidied.id$MEDICATION_ID
 #         )
 #       )
 #   ) ,]
-#
-# probs.matrix <- classification.res.tidied.onehop[, c(
-#   "consists_of",
-#   "constitutes",
-#   "contained_in",
-#   "contains",
-#   "form_of",
-#   "has_form",
-#   "has_ingredient",
-#   "has_part",
-#   "has_quantified_form",
-#   "has_tradename",
-#   "ingredient_of",
-#   "inverse_isa",
-#   "isa",
-#   "part_of",
-#   "quantified_form_of",
-#   "tradename_of"
-# )]
-# probs.matrix.rowmax <-
-#   apply(X = probs.matrix, MARGIN = 1, FUN = max)
-# classification.res.tidied.onehop <-
-#   cbind.data.frame(classification.res.tidied.onehop, probs.matrix.rowmax)
-#
-# best.onehop <-
-#   aggregate(
-#     classification.res.tidied.onehop$probs.matrix.rowmax,
-#     list(classification.res.tidied.onehop$FK_MEDICATION_ID),
-#     FUN = max
-#   )
-# colnames(best.onehop) <-
-#   c("FK_MEDICATION_ID", "probs.matrix.rowmax")
-# classification.res.tidied.onehop <-
-#   base::merge(classification.res.tidied.onehop, best.onehop)
-#
-# classification.res.tidied.md <-
-#   classification.res.tidied[classification.res.tidied$override == "more distant" &
-#                               (
-#                                 !(
-#                                   classification.res.tidied$FK_MEDICATION_ID %in% classification.res.tidied.id$FK_MEDICATION_ID
-#                                 )
-#                               ) &
-#                               (
-#                                 !(
-#                                   classification.res.tidied$FK_MEDICATION_ID %in% classification.res.tidied.onehop$FK_MEDICATION_ID
-#                                 )
-#                               ) , ]
-#
-# probs.matrix <- classification.res.tidied.md[, c(
-#   "consists_of",
-#   "constitutes",
-#   "contained_in",
-#   "contains",
-#   "form_of",
-#   "has_form",
-#   "has_ingredient",
-#   "has_part",
-#   "has_quantified_form",
-#   "has_tradename",
-#   "ingredient_of",
-#   "inverse_isa",
-#   "isa",
-#   "part_of",
-#   "quantified_form_of",
-#   "tradename_of"
-# )]
-# probs.matrix.rowmax <-
-#   apply(X = probs.matrix, MARGIN = 1, FUN = max)
-# classification.res.tidied.md <-
-#   cbind.data.frame(classification.res.tidied.md, probs.matrix.rowmax)
-#
-# best.md <-
-#   aggregate(
-#     classification.res.tidied.md$probs.matrix.rowmax,
-#     list(classification.res.tidied.md$FK_MEDICATION_ID),
-#     FUN = max
-#   )
-# colnames(best.md) <- c("FK_MEDICATION_ID", "probs.matrix.rowmax")
-# classification.res.tidied.md <-
-#   base::merge(classification.res.tidied.md, best.md)
-#
-# shared.cols <-
-#   intersect(
-#     colnames(classification.res.tidied.onehop),
-#     colnames(classification.res.tidied.md)
-#   )
-# shared.cols <-
-#   intersect(shared.cols, colnames(classification.res.tidied.id))
-#
-# classification.res.tidied <-
-#   rbind.data.frame(
-#     classification.res.tidied.id[, shared.cols],
-#     classification.res.tidied.onehop[, shared.cols],
-#     classification.res.tidied.md[, shared.cols]
-#   )
+
+# actually keep one-hops as long as their best prob is as high as or higher than the identical prob
+
+classification.res.tidied.onehop <-
+  classification.res.tidied[(
+    classification.res.tidied$override != "identical" &
+      classification.res.tidied$override != "more distant"
+  ) , ]
+
+probs.matrix <- classification.res.tidied.onehop[, c(
+  "consists_of",
+  "constitutes",
+  "contained_in",
+  "contains",
+  "form_of",
+  "has_form",
+  "has_ingredient",
+  "has_part",
+  "has_quantified_form",
+  "has_tradename",
+  "ingredient_of",
+  "inverse_isa",
+  "isa",
+  "part_of",
+  "quantified_form_of",
+  "tradename_of"
+)]
+probs.matrix.rowmax <-
+  apply(X = probs.matrix, MARGIN = 1, FUN = max)
+classification.res.tidied.onehop <-
+  cbind.data.frame(classification.res.tidied.onehop, probs.matrix.rowmax)
+
+best.onehop <-
+  aggregate(
+    classification.res.tidied.onehop$probs.matrix.rowmax,
+    list(classification.res.tidied.onehop$MEDICATION_ID),
+    FUN = max
+  )
+colnames(best.onehop) <-
+  c("MEDICATION_ID", "probs.matrix.rowmax")
+classification.res.tidied.onehop <-
+  base::merge(classification.res.tidied.onehop, best.onehop)
+
+id.scoreonly <-
+  unique(classification.res.tidied.id[, c('MEDICATION_ID', 'identical')])
+oh.scoreonly <-
+  unique(classification.res.tidied.onehop[, c('MEDICATION_ID', 'probs.matrix.rowmax')])
+
+equal.or.better.Q <-
+  base::merge(id.scoreonly, oh.scoreonly, all = TRUE)
+equal.or.better.Q$identical[is.na(equal.or.better.Q$identical)] <- 0
+equal.or.better.Q$probs.matrix.rowmax[is.na(equal.or.better.Q$probs.matrix.rowmax)] <-
+  0
+equal.or.better.Q <-
+  equal.or.better.Q[equal.or.better.Q$probs.matrix.rowmax >= equal.or.better.Q$identical ,]
+
+classification.res.tidied.onehop <-
+  classification.res.tidied.onehop[classification.res.tidied.onehop$MEDICATION_ID %in% equal.or.better.Q$MEDICATION_ID ,]
+
+####
+
+classification.res.tidied.md <-
+  classification.res.tidied[classification.res.tidied$override == "more distant" &
+                              (
+                                !(
+                                  classification.res.tidied$MEDICATION_ID %in% classification.res.tidied.id$MEDICATION_ID
+                                )
+                              ) &
+                              (
+                                !(
+                                  classification.res.tidied$MEDICATION_ID %in% classification.res.tidied.onehop$MEDICATION_ID
+                                )
+                              ) ,]
+
+probs.matrix <- classification.res.tidied.md[, c(
+  "consists_of",
+  "constitutes",
+  "contained_in",
+  "contains",
+  "form_of",
+  "has_form",
+  "has_ingredient",
+  "has_part",
+  "has_quantified_form",
+  "has_tradename",
+  "ingredient_of",
+  "inverse_isa",
+  "isa",
+  "part_of",
+  "quantified_form_of",
+  "tradename_of"
+)]
+probs.matrix.rowmax <-
+  apply(X = probs.matrix, MARGIN = 1, FUN = max)
+classification.res.tidied.md <-
+  cbind.data.frame(classification.res.tidied.md, probs.matrix.rowmax)
+
+best.md <-
+  aggregate(
+    classification.res.tidied.md$probs.matrix.rowmax,
+    list(classification.res.tidied.md$MEDICATION_ID),
+    FUN = max
+  )
+colnames(best.md) <- c("MEDICATION_ID", "probs.matrix.rowmax")
+classification.res.tidied.md <-
+  base::merge(classification.res.tidied.md, best.md)
+
+shared.cols <-
+  intersect(
+    colnames(classification.res.tidied.onehop),
+    colnames(classification.res.tidied.md)
+  )
+shared.cols <-
+  intersect(shared.cols, colnames(classification.res.tidied.id))
+
+classification.res.tidied <-
+  rbind.data.frame(
+    classification.res.tidied.id[, shared.cols],
+    classification.res.tidied.onehop[, shared.cols],
+    classification.res.tidied.md[, shared.cols]
+  )
 
 ####
 
@@ -665,7 +786,7 @@ classification.res.tidied <-
 
 ####
 
-med_map_csv_cols <- read_csv("med_map_csv_cols.csv")
+med_map_csv_cols <- read_csv(config$per.task.columns)
 
 # source_meds;classified_results
 
@@ -712,111 +833,36 @@ placeholder <-
 # would theoretically be better to iterate over that
 # but will use  hard-coded names as special actions for now
 
-keepers <-
-  med_map_csv_cols$more_generic %in% setdiff(graphs.cols[['classified_results']], "source_has_rxcui")
-body <- unique(classification.res.tidied[, keepers])
+# keepers <-
+#   med_map_csv_cols$more_generic %in% setdiff(graphs.cols[['classified_search_results']], "source_has_rxcui")
+# body <- unique(classification.res.tidied[, keepers])
+#
+# # should really extract this from source.medications
+#
+# keepers <-
+#   med_map_csv_cols$more_generic %in% setdiff(graphs.cols[['classified_search_results']], "source_has_rxcui")
+# # ROBOT is interpreting both FALSE and TRUE as 'false'^^xsd:boolean
+#
+#
+# body <- unique(classification.res.tidied[, keepers])
+# # # WHOA THIS GOT LOST SOMEWHERE
+# # body$source_rxcui[body$source_rxcui == 'http://purl.bioontology.org/ontology/RXNORM/'] <-
+# #   ''
 
-# should really extract this from pds.r.medications.results
 
-keepers <-
-  med_map_csv_cols$more_generic %in% setdiff(graphs.cols[['source_meds']], "source_has_rxcui")
-# ROBOT is interpreting both FALSE and TRUE as 'false'^^xsd:boolean
-
-body <- unique(classification.res.tidied[, keepers])
-body$source_rxcui[body$source_rxcui == 'http://purl.bioontology.org/ontology/RXNORM/'] <-
-  ''
-
-library(httr)
-my.config <- config::get(file = "get_bioportal_mappings.yaml")
+# my.config <- config::get(file = "get_bioportal_mappings.yaml")
 
 # > print(predlist)
 # [1] "source_med_id"               "source_full_name"            "source_generic_name"         "source_rxcui"
 # [5] "source_count"                "source_normalized_full_name"
 
-instantiate.and.upload <- function(current.task) {
-  print(current.task)
-  more.specific <-
-    config::get(file = "get_bioportal_mappings.yaml", config = current.task)
-  
-  predlist <- colnames(body[2:ncol(body)])
-  print(predlist)
-  
-  current.model.rdf <- rdflib::rdf()
-  
-  placeholder <-
-    apply(
-      X = body,
-      MARGIN = 1,
-      FUN = function(current_row) {
-        innerph <- lapply(predlist, function(current.pred) {
-          rdflib::rdf_add(
-            rdf = current.model.rdf,
-            subject = current_row[[1]],
-            predicate = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-            object = more.specific$my.class
-          )
-          temp <- current_row[[current.pred]]
-          if (nchar(temp) > 0) {
-            # print(paste0(current.pred, ':', temp))
-            if (current.pred %in% more.specific$my.numericals) {
-              temp <- as.numeric(temp)
-            }
-            rdflib::rdf_add(
-              rdf = current.model.rdf,
-              subject = current_row[[1]],
-              predicate = paste0('http://example.com/resource/', current.pred),
-              object = temp
-            )
-          }
-        })
-      }
-    )
-  
-  rdf.file <- paste0(current.task, '.ttl')
-  
-  rdflib::rdf_serialize(rdf = current.model.rdf,
-                        doc = rdf.file,
-                        format = "turtle")
-  
-  post.dest <-
-    paste0(
-      my.config$my.graphdb.base,
-      '/repositories/',
-      my.config$my.selected.repo,
-      '/rdf-graphs/service?graph=',
-      URLencode(
-        paste0('http://example.com/resource/',
-               current.task),
-        reserved = TRUE
-      )
-    )
-  
-  print(post.dest)
-  
-  post.resp <-
-    httr::POST(
-      url = post.dest,
-      body = upload_file(rdf.file),
-      content_type(my.config$my.mappings.format),
-      authenticate(
-        my.config$my.graphdb.username,
-        my.config$my.graphdb.pw,
-        type = 'basic'
-      )
-    )
-  
-  print('Errors will be listed below:')
-  print(rawToChar(post.resp$content))
-  
-}
-
-
 ####
 
-# 90 munutes for all search resukts, not filtered by best identical score etc.
+# 90 minutes for all search results, not filtered by best identical score etc.
 
-# why do i that way? need to see if search result's rxcui is in the rxnorm rdf
+# why do I that way? need to see if search result's rxcui is in the RxNorm RDF
 # we have loaded into the repo
+
 
 current.task <- 'classified_search_results'
 
@@ -842,5 +888,6 @@ body <- unique(classification.res.tidied[, keepers])
 body$source_rxcui[body$source_rxcui == 'http://purl.bioontology.org/ontology/RXNORM/'] <-
   ''
 
+print(Sys.time())
 instantiate.and.upload(current.task)
-
+print(Sys.time())

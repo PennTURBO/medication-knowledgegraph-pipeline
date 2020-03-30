@@ -1,5 +1,9 @@
 # TURBO Medication Mapping
 
+
+
+_This document is primarily concerned with training a classification model and then applying that to search results over previously unclassified medication strings. Additional scripts can be run after that to connect the RxCUI outputs from the classification to classes of and roles for medications. This is currently documented in the less formal [role_class_materialization.md](role_class_materialization.md) but will be merged into this document soon._
+
 ## Introduction
 
 The PennTURBO medication mapper (TMM) takes strings describing medications or medication orders and predicts RxNorm terms, specifically RXCUIs, with the same meaning. TMM can tolerate a wide range of specificity, e.g. "acetaminophen" vs "500 mg Tylenol oral tablets", but it is not intended to parse medication phrases out of longer narratives.
@@ -10,9 +14,9 @@ This document provides some brief background with performance metrics, explains 
 
 TMM is written in R and has been tested with version 3.6.2 on a 32 GB MacBook Pro. Besides R and a handful of libraries (including rJava, and therefore a JRE), the only requirement is the RxNav-in-a-box (RXB) Docker Container, Docker itself, and a slight modification to the dockerfile. (TMM has been tested with Docker Desktop community edition 2.2.0.3 and the January, 2020 RXB. This author has found that API requests to other versions of RXB, including February 2020, return no responses.) Training on (or classifying over) hundreds of thousands of medication strings will likely require more RAM and/or docker tuning.
 
-TMM uses the approach of training a random forest classifier to inspect medication search results and classify them as **identical** to the latent meaning, **related** by one named, _allowable_, RxNorm relation, or **more distant**. Then the unknown strings are searched using the same method and classified with the previously mentioned random forest. **Identical** predictions can be taken as is, **more distant** predictions should be discarded, and **related** predictions should be spot checked.
+TMM uses the approach of training a random forest classifier to inspect medication search results and classify them as **identical** to the latent meaning, **related** by one named, _allowable_, RxNorm relation, or **more distant**. Then the unknown strings are searched using the same method and classified with the previously mentioned random forest.  The prioritization and filtering of these classifications is discussed further below.
 
-When the classifier is trained on 10,000 known medication string/RXCUI pairs, the ability to predict the **identical** and **more distant** cases is very good. When the classifier determines that there is one **relation** between the RXCUI returned by a search engine and the RXCUI that would best describe the unknown medication string, there can be some ambiguity about what the true relation is. Specifically, while the specificity for these non-identical but directly-adjacent cases tend to be in the 0.90s, the sensitivity can be lower than 0.50. Training over the previously mentioned volume of data takes less than one hour.
+ When the classifier is trained on 10,000 known medication string/RXCUI pairs, the ability to predict the **identical** and **more distant** cases is very good. When the classifier determines that there is one **relation** between the RXCUI returned by a search engine and the RXCUI that would best describe the unknown medication string, there can be some ambiguity about what the true relation is. Specifically, while the specificity for these non-identical but directly-adjacent cases tend to be in the 0.90s, the sensitivity can be lower than 0.50. Training over the previously mentioned volume of data takes less than one hour.
 
 ```
  Class: identical
@@ -29,7 +33,7 @@ Specificity     0.8013
 The coverage, or ability to provide something other than a 'more distant' result for each PDS R_MEDICATION is assessed
 independently and appears to be a string correlate of the `identical` sensitivity and the 'more distant' specificity.
 
-**Latest coverage: 0.89**
+**Latest coverage: 0.85**
 
 ## Prerequisites
 ### Training and Classification R Scripts
@@ -55,12 +59,21 @@ independently and appears to be a string correlate of the `identical` sensitivit
 
     rJava can be more difficult to install and auto-configure, compared to other R packages. If this is an absolute blocker, RJDBC could probably be replaced with RODBC, along with corresponding code changes.
 
-- Oracle and MySql JDBC Drivers
+- MySQL JDBC Driver
 
-   TMM has been tested with `ojdbc8.jar` and `mysql-connector-java-8.0.19.jar`.  Downloading Oracle and MySQL JDBC driver may require an [Oracle account](https://profile.oracle.com/myprofile/account/create-account.jspx).
-  - The Oracle 12c JDBC drivers can be found [here](https://www.oracle.com/database/technologies/jdbc-drivers-12c-downloads.html)
-  - The MySQL driver can be found [here](https://dev.mysql.com/downloads/connector/j/)
-      - no MySQL server is required. TMM will make SQL queries against the MySQL database embedded in the RxNav-in-a-Box Container. (There are a few datatypes which are not accessible via REST APIs).
+  -  TMM has been tested with `mysql-connector-java-8.0.19.jar`. Downloading Oracle and MySQL JDBC driver may require an [Oracle account](https://profile.oracle.com/myprofile/account/create-account.jspx). The MySQL driver can be found [here](https://dev.mysql.com/downloads/connector/j/).
+    - no MySQL server is required. TMM will make SQL queries against the MySQL database embedded in the RxNav-in-a-Box Container. (There are a few datatypes which are not accessible via REST APIs).
+
+-  Oracle JDBC Driver (optional)
+
+  - If run on a computer with the necessary network and database configuration, `pds_r_medication_sql_select.R` can pull medication names, etc., from the Penn Data Store and save them in a pipe-delimited file (`source.medications.savepath`) with the following columns:
+    - MEDICATION_ID
+    - FULL_NAME
+    - GENERIC_NAME (optional)
+    - RXNORM (an optional RxCUI asserted by the source)
+    - MEDICATION_COUNT (some measure of how frequently this mediation is ordered, like unique patient count. optional. optional but recommended).
+  - TMM can also read medication data from a file of the same format (`source.medications.loadpath`), even if it is created by some other method.
+  - TMM has been tested with `ojdbc8.jar` . Downloading Oracle and MySQL JDBC driver may require an [Oracle account](https://profile.oracle.com/myprofile/account/create-account.jspx). The Oracle 12c JDBC drivers can be found [here](https://www.oracle.com/database/technologies/jdbc-drivers-12c-downloads.html).
 
 ### RxNav-in-a-Box
 
@@ -82,25 +95,21 @@ services:
   rxnav_db:
     ports:
     - "3307:3306"
- ```
+```
 
 ### Create the configuration file for the training and testing scripts
 `rxnav_med_mapping.yaml` is the default name of configuration file needed for the training and classification scripts, template named `rx_med_mapping.yaml.template` is provided.  The scripts should be run from the same folder as the config file.  (They could be modified to take a configuration path as a command line argument. Note: no file-missing or database-unavailable tests are present in the current scripts.) Other files required by TMM are specified in the configuration file and can reside elsewhere.  
 
 Copy `rx_med_mapping.yaml.template` to `rx_med_mapping.yaml` then modify the file:
 
-- Set `rxnav.mysql.port` and `rxnav.mysql.pw` to the exposed port (3307 in the case above) and root password for RXB's MySql server.
+- Set `rxnav.mysql.port` and `rxnav.mysql.pw` to the exposed port (3307 in the case above) and root password for RXB's MySQL server.
   - The root password is located in `mysql-secret.txt`
-- Set `pds.host`, `pds.port`, `pds.database`, `pds.user`, and `pds.pw` with the connection parameters for PDS (or any other RDBMS source of medication strings.
-    - TMM requires input as a four-columned data frame. Right now, it is obtained with a SQL query against the Penn Data Store. Reading it from a CSV file is an upcoming feature.
-        - source stable identifier for the medication (string, required)
-        - source name of medication (string, required)
-        - source generic name (string, optional)
-        - source count (numeric, strongly recommended)
-            - how common is this prescription? For example, for how many different people has it been ordered?
-- Several other parameters include constrains on whether long queries should be repeated (vs reading from a cache saved to disk), what fraction of the available data are used for training and how the random forest is trained. These will be described in greater detail at a later date.
+- Set `pds.host`, `pds.port`, `pds.database`, `pds.user`, and `pds.pw` with the connection parameters for the Penn Data Store, if it going to be the source of medication data. In any case, subsequent steps will read medication data from `xxx`
+- Other parameters include constraints on whether long queries should be repeated (vs reading from a cache saved to disk), what fraction of the available data are used for training and how the random forest is trained. These will be described in greater detail at a later date.
 
 #### `rxnav_med_mapping.yaml` Parameters
+
+**MAM TODO: This needs updating**
 
 - `reissue.pds.query`: read medication strings live from PDS, or from `pds.rmedication.result.loadpath`
     - If the query is repeated, the results will be saved to `pds.rmedication.result.savepath`
@@ -134,13 +143,66 @@ Copy `rx_med_mapping.yaml.template` to `rx_med_mapping.yaml` then modify the fil
 
 - `$ Rscript rxnav_med_mapping_proximity_training_no_tuning.R`
 
-This trains a random forest classifier using training data from (*ADD: brief description of where the medication strings and rx mappings used to train the classifier are located.  Include description of any hardcoded filtering applied to get the final training set*).  It saves the model in (*ADD:filename/path/location of saved model*).
+This trains a random forest classifier using training and validation data from the RxNav-in-a-Box (RXB) Container. No additional data is required. In brief, this script retrieves seed medication strings and RxCUIs from RXB, then uses the RxNav approximate search API to searches them against all medications known to RXB, requesting 50 (currently hardcoded) results. That's a large enough set that some of the results will be just right, some will be off by one semantic hop (ingredient of, brand of, etc.) and some will be more distantly removed from the truth. The relations between the seeds and the search results are already known to RxNorm and are used as the training labels. The trained RF model is saved to a file determined by configuration parameter `rf.model.savepath`.
 
-### Classify medication strings (PDS `R_MEDICATION.FULL_NAME`s) with a trained TTM model
+Sensitivity and specificity metrics for each class are saved to `testing.confusion.writepath`. Note: the label for all classifications is set to 'identical' if the RxNav approximate search score is 100, and the label is set to 'more distant' is the score is 0 for the assessment.
+
+In general, the sensitivity and specificity for 'identical' are over 0.9, as is the sensitivity for 'more distant' and the specificity for the other relations. However, the specificity for 'more distant' is generally lower and the sensitivity for the other relations varies from 0.9s to 0.5 or below.
+
+### Classify medication strings (such as PDS `R_MEDICATION.FULL_NAME`s) with a trained TTM model
 
 - `$ Rscript rxnav_med_mapping_pds_proximity_classifier.R`
 
-This loads a model saved in (*ADD:filename/path/location of model*) and classifies the medication strings specified in (*ADD: brief description of where the medication strings that are being classified are located.  Include any hardcoded filtering/assumptions.*).  Generates output files in (*ADD:filename/path/location of output files*).
+This loads a model whose filesystem location is determined by  `rf.model.loadpath`. The location of the medication names to be classified is determined by `source.medications.loadpath`. The source medication strings are tidied.
+
+- by removing some punctuation and collapsing multiple whitespaces
+
+- and according to rules in `normalization.file`, removing source specific tokens or replacing with the corresponding tokens in RxNorm where possible.
+
+The source medications are then put through the same approximate search that was used in the training phase. Normalized FULL_NAMEs and lower-cased GENERIC_NAMES are submitted for each medication if possible.
+
+The RxNav approximate search only returns
+
+- RxCUI
+- RxAUI
+- Score
+- Rank
+
+So the label for each RxAUI, along with some source and type data, are retrieved from the RXB with a SQL query. At this point, it is possible to generate additional training features expected by the Random Forest model, by calculating several string distances between the input medication name and the RxAUI's label, etc.
+
+Numerical features are explicitly asserted as such, and factor (nominal) features are re-leveled to match the expectations of the Random Forest model. Then the search results and additional features are submitted to the Random Forest classifier. Approximate search results with scores of 100 or 0 are reclassified in the same way that the training data was modified before performance assessment.
+
+The classifications, which started as up to 50 search results for each source medication, are filtered as follows:
+
+- all results for which the predicted RxCUI is not present in the latest RxNorm RDF from BioPortal are removed. These cases are isolated but not saved to a file at this point. This removal does not appear to lower the coverage discussed below.
+- all 'identical' results are retained.
+- all off-by-one relation results are retained if there was no 'identical' match for a given source medication, or if the off-by-one classification's Random Forest  probability is equal to or greater than the 'identical' result.
+- for each source medication, if there is no 'identical' or off-by-one result, the one or more best  'more distant' results are retained. "Best" is defined as having a Random Forest  probability, for any predication other than 'more distant' that is equal to the highest non-'more distant' probability for that source medication.
+
+Two kinds of coverage-effecting problems are addressed at this point:
+
+1. source medications that were lost because they generated zero matches from the RxNav approximate search
+2. source medications that are uncovered: they did obtain approximate search results, but all were classified as 'more distant'
+
+A coverage value is calculated and printed, and lost and uncovered data frames are created. These are not currently saved to the filesystem, but that functionality will be added to the script.
+
+UUIDs are generated for each of the retained classified search results. The results are split into two data frames (possibly with some shared columns). See the CSV file named in `per.task.columns`, along with the two YAML blocks named in `tasks`
+
+- Source/reference medications (IDs, labels, etc.)
+- Classified search results, including the source medication's ID.
+
+Finally, the two data frames are converted to RDF within the R script, saved to files, and posted to a GraphDB triplestore.
+
+Relevant settings include
+
+- my.graphdb.base
+- my.selected.repo
+- my.graphdb.username
+- my.graphdb.pw
+
+The RDF files and the GraphDB named graph will be named after the `tasks` 
+
+
 
 ### Generate Medication KnowledgeGraph
 (*ADD: Add instructions and brief description of the process to generate med knowledgegraph*)
@@ -227,3 +289,4 @@ Besides 'identical to' and 'more distant', each of these is the probability that
 ----
 
 - override: whenever the RxNav approximate search result's score is 100, this is set to identical, regardless of rf_responses. Likewise, it is set to more distant when the score is 0. Otherwise, override is rf_responses
+
