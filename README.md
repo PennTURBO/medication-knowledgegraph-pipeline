@@ -86,9 +86,11 @@ independently and appears to be a string correlate of the `identical` sensitivit
 
 ## Configuration
 
-The current classifier assumes that the unknowns will come from the Penn Data Store clinical warehouse at the University of Pennsylvania's Healthcare system. The script could be modified to take input from other sources. In the current state, PDS credentials are required, possibly along with a VPN connection and/or port forwarding. Those database and networking concerns are left to the reader.
+All configurations for this project are taken from rxnav_med_mapping.yaml. A template, rxnav_med_mapping.yaml.template is provided in the GitHub repo.
 
-### Expose RXB's MySQL port
+If the source medications are to be retrieved from a limited-access clinical data warehouse like the Penn Data Store, then credentials will probably be required, possibly along with a VPN connection and/or port forwarding. Those database and networking concerns are left to the reader.
+
+### Expose the RxNav-in-a-Box MySQL port
 Before starting RXB, modify `docker-compose.yml` by **adding** a port mapping as below:
 ```
 services:
@@ -204,11 +206,42 @@ The RDF files and the GraphDB named graph will be named after the `tasks`
 
 
 
-### Generate Medication KnowledgeGraph
-(*ADD: Add instructions and brief description of the process to generate med knowledgegraph*)
+### Assemble a Medication Knowledge Graph
+1. install and populate a local NCBO BioPortal Appliance
+   1. TMM and the TURBO clinical labs mapping depend on BioPortal methods for discovering equivalencies between terms in different ontologies/RDF models. Theoretically, most of the [API calls](http://data.bioontology.org/documentation) could be run against the [public endpoint](https://bioportal.bioontology.org/), but that would be slow and vulnerable to HTTP timeouts and errors, etc.
+   2. NCBO also offers a [BioPortal appliance](https://www.bioontology.org/wiki/Category:NCBO_Virtual_Appliance) that can be run on AWS or under local virtualization. I have been using VirtualBox. The BioPortal appliance page has instructions for requesting access to the appliance image, as well as hardware requirements. I had difficulties importing the v2.5 ODF into VirtualBox for Mac, so I have been using v2.4.
+   3. Roughly, the post-download steps are
+      1. download and install a virtualization engine like VirtualBox or VMWare Player, if they're not already available
+      2. import the ODF image with the virtualization engine
+      3. launch the appliance and go though some one-time configuration
+   4. The VirtualBox appliance must be populated with relevant biomedical ontologies and RDF data models. Most of those can be imported directly from the public BioPortal. The right-hand API key portion of the URLs is not stable across versions. A URL with a guest API key is always available at the ontology's BioPortal home page, or the ontologies can be retrieved with an [individual’s permanent API key](https://bioportal.bioontology.org/help#Getting_an_API_key). For TMM, the necessary ontologies include:
+      1. [ATC](http://data.bioontology.org/ontologies/ATC/submissions/12/download?apikey=9cf735c3-a44a-404f-8b2f-c49d48b2b8b2)
+      2. [ChEBI](http://data.bioontology.org/ontologies/CHEBI/download?apikey=9cf735c3-a44a-404f-8b2f-c49d48b2b8b2&download_format=rdf)
+      3. [DrOn](http://data.bioontology.org/ontologies/DRON/download?apikey=9cf735c3-a44a-404f-8b2f-c49d48b2b8b2&download_format=rdf)
+      4. NDF-RT (to be loaded from a file. see below.)
+      5. [RxNorm](http://data.bioontology.org/ontologies/RXNORM/submissions/18/download?apikey=9cf735c3-a44a-404f-8b2f-c49d48b2b8b2)
+      6. [UMLS Semantic Types, "TTY"](http://data.bioontology.org/ontologies/STY/submissions/14/download?apikey=9cf735c3-a44a-404f-8b2f-c49d48b2b8b2)
+   5. I have been loading them interactively by 
+      1. visiting the (local/virtual) web interface
+      2. logging in
+      3. clicking on the **Browse** or **Ontologies** link in the upper left (depending on the version)
+      4. clicking the pale blue **Submit New Ontology** button in the upper left quadrant of the screen
+      5. Filling in the required information on two screens. The Name and Acronym fields on the **Submit New Ontology** page can be based on the analogous ontology summary pages at the public BioPortal web site, as can several of the fields on the subsequent **Add New Submission** page. *Details will be provided soon.*
+      6. Most of the required ontologies/RDF content can be loaded from public BioPortal or OBO foundry URLs. I have been habitually checking those URLs for redirects and importing the true destination URL, not the advertised/human friendly/stable URLs. **For DrOn**, use the RDF/XML link on the Public BioPortal page, not the OWL link, which is just a list of imports. I am including **NDF-RT** in the local BioPortal mappings, but the public BioPortal doesn't provide a download link for NDF-RT anymore, nor for its replacement MED-RT. I haven’t been able to extract either from recent UMLS downloads either. Therefore it has to be loaded from a May, 2019 file. *Details will be provided soon.*
+   6. BioPortal also has an [OntologySubmission](http://data.bioontology.org/documentation#OntologySubmission) API method. I don't have any experience with that yet. 
+   7. The BioPortal appliance has to do a lot of parsing and indexing before the mappings against a new submission are ready, but it doesn’t seem like much CPU every gets used. It's on a cron job, but I make sure to leave the virtual machine running overnight, with the host configure not to enter a sleep state.
+2. Run `serialize_bioportal_mappings.R` to obtain an RDF mappings file, specified in config parameter `bioportal.triples.destination`
+3. Run `pds_r_medication_sql_select.R` or otherwise create a source medication input file. 
+4. Train the classfifier (if necessary) and run the classification. See above.
+5. Run `med_mapping_load_materialize_project.R` to load the search result classifications, the BioPortal mappings, and additional ontologies/RDF models into a Graph DB repository. This script also transitively materializes ingredient and role relationships within DrOn and ChEBI, but does not project any of that knowledge onto terms in other graphs like ATC, NDF-RT, RxNorm, etc.
+6. Ensure that a Solr server is running at the address specified in `rxnav_med_mapping.yaml`, with the specified document core created. Some brief notes on these steps are included as comments in `sparql_mm_kb_labels_to_solr.R`, which should be run next.
+7. Sample code for querying the Solr core, with the query parsed as a bag of words and with fuzzy misspelling tolerance enabled can be found in `all_fuzzy_solr_label_to_iri.R`
+
 
 ## Classification Output
 ### Columns in the output of the TMM search & classification
+
+**MAM TODO: This needs updating**
 
 There are currently 53 columns
 
@@ -254,7 +287,7 @@ Any number of these columns could be included in a knowledge graph version of th
 #### Lengths of strings in characters and words
 
 - q.char: character length of query.val, the submitted string
-- q.words: number of words-like tokens in query.val, using count of space characters as a proxy. Queries have already been scrubbed of leading and training space as well as duplicate spaces and whitespace characters other than XXX
+- q.words: number of words-like tokens in query.val, using count of space characters as a proxy. Queries have already been scrubbed of leading and training space, duplicate spaces and whitespace characters, and most punctuation.
 - sr.char: character length of STR, the string returned by the RxNav approximate search API.
 - sr.words: word count for STR
 

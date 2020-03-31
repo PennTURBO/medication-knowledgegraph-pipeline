@@ -65,4 +65,5 @@ options(width = 160)
 
 print(paste0("Actually searched for ",fuzzied))
 
-head(as.data.frame(my.solr.result))
+print(as.data.frame(my.solr.result))
+
