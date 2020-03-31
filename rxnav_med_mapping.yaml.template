@@ -1,26 +1,70 @@
 default:
+    #### <SECRET>
     pds.host: localhost
     pds.port: 7799
     pds.database: <SECRET>
     pds.user: <SECRET>
     pds.pw: <SECRET>
-    oracle.jdbc.path: "~/ojdbc8.jar"
-    reissue.pds.query: FALSE
-    #
-    pds.rmedication.result.savepath: "pds_r_medications_results.csv"
-    pds.rmedication.result.loadpath: "pds_r_medications_results.csv"
-    #
-    min.empi.count: 50
-    normalization.file: "med_name_normalization.csv"
-    pds2rxnav.fraction: 1
     #
     rxnav.api.address: localhost
     rxnav.api.port: 4000
-    rxnav.mysql.address: localhost
-    rxnav.mysql.port: 3307
+    #
     rxnav.mysql.user: <SECRET>
     rxnav.mysql.pw: <SECRET>
+    rxnav.mysql.address: localhost
+    rxnav.mysql.port: 3307
+    #
+    my.bioportal.api.base: 'http://192.168.0.233:8080'
+    my.apikey: <SECRET>
+    #
+    my.graphdb.base: <SECRET>
+    my.selected.repo: 'med_mapping_min_30_patients'
+    my.graphdb.username: <SECRET>
+    my.graphdb.pw: <SECRET>
+    #
+    med.map.kb.solr.host: <SECRET>
+    med.map.kb.solr.port: '8983'
+    med.map.kb.solr.core: 'med_mapping_kb_labels'
+    ####
+    oracle.jdbc.path: "~/ojdbc8.jar"
     mysql.jdbc.path: "~/mysql-connector-java-8.0.19.jar"
+    #reissue.pds.query: FALSE
+    #
+    source.medications.savepath: "source_medications.txt"
+    source.medications.loadpath: "source_medications.txt"
+    #
+    min.empi.count: 30
+    normalization.file: "med_name_normalization.csv"
+    # pds2rxnav.fraction: 1
+    #
+    med.map.kb.solr.population.sparql: |
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+        PREFIX obo: <http://purl.obolibrary.org/obo/>
+        prefix bp: <http://purl.bioontology.org/ontology/>
+        select
+        distinct (?s as ?mediri) (?p as ?labelpred) (?normlab as ?medlabel)
+        where {
+        values ?g {
+        <http://purl.obolibrary.org/obo/chebi.owl>
+        <http://purl.bioontology.org/ontology/RXNORM/>
+        <http://purl.obolibrary.org/obo/dron-rxnorm.owl>
+        <http://purl.bioontology.org/ontology/NDFRT/>
+        <http://purl.bioontology.org/ontology/ATC/>
+        <http://purl.obolibrary.org/obo/dron/dron-ingredient.owl>
+        <http://purl.obolibrary.org/obo/dron/dron-upper.owl>
+        <http://purl.obolibrary.org/obo/dron/dron-hand.owl>
+        }
+        graph ?g {
+        values ?p {
+        rdfs:label  skos:prefLabel skos:altLabel obo:IAO_0000118
+        }
+        ?s ?p ?o .
+        bind(lcase(str(?o)) as ?normlab)
+        }
+        }
+        #group by ?g
+        #order by desc (count(distinct ?s))
     #
     rxaui.asserted.strings.chunk.count: 3000
     approximate.row.count: 10000
@@ -51,7 +95,6 @@ default:
         - SYGB
         - TMSY
     final.predictions.writepath: "rxnav_medication_mapping_final_predictions.csv"
-    my.bioportal.api.base: 'http://192.168.0.233:8080'
     my.source.ontolgies:
         - 'ATC'
         - 'CHEBI'
@@ -67,14 +110,10 @@ default:
     aceepted.mapping.sources:
         - 'CUI'
         - 'LOOM'
-    my.apikey: <SECRET>
     my.pagesize: 5000
     # my.prefix: 'http://example.com/resource/bioportal_mapping/'
     bioportal.triples.destination: 'med_mapping_bioportal_mapping.ttl'
-    my.graphdb.base: 'http://turbo-prd-db01.pmacs.upenn.edu:7200'
-    my.selected.repo: 'med_mapping_pop_some_first'
-    my.graphdb.username: <SECRET>
-    my.graphdb.pw: <SECRET>
+    #my.graphdb.base: 'http://turbo-prd-db01.pmacs.upenn.edu:7200'
     my.import.urls: {"http://purl.obolibrary.org/obo/dron.owl":{"url":["https://bitbucket.org/uamsdbmi/dron/raw/master/dron-full.owl"],"format":[""]},
     "http://purl.obolibrary.org/obo/dron/dron-hand.owl":{"url":["https://bitbucket.org/uamsdbmi/dron/raw/master/dron-hand.owl"],"format":[""]},
     "http://purl.obolibrary.org/obo/dron/dron-upper.owl":{"url":["https://bitbucket.org/uamsdbmi/dron/raw/master/dron-upper.owl"],"format":[""]},
@@ -89,6 +128,8 @@ default:
     "http://purl.bioontology.org/ontology/NDFRT/":{"local.file":["/Users/markampa/med_mapping/extras/NDFRT.ttl"],"format":["text/turtle"]},
     "http://purl.obolibrary.org/obo/chebi.owl":{"local.file":["/Users/markampa/med_mapping/extras/chebi.owl.gz"],"format":["application/rdf+xml"]},
     "http://example.com/resource/bioportal_mappings":{"local.file":["/Users/markampa/med_mapping/med_mapping_bioportal_mapping.ttl"],"format":["text/turtle"]},
+    "http://example.com/resource/reference_medications":{"local.file":["/Users/markampa/med_mapping/reference_medications_from_robot.ttl"],"format":["text/turtle"]},
+    "http://example.com/resource/classified_search_results":{"local.file":["/Users/markampa/med_mapping/classified_search_results_from_robot.ttl"],"format":["text/turtle"]},
     "http://purl.bioontology.org/ontology/RXNORM/":{"local.file":["/Users/markampa/med_mapping/extras/RXNORM.ttl.gz"],"format":["text/turtle"]}}
 #    my.import.files: {"http://purl.bioontology.org/ontology/ATC/":{"local.file":["/Users/markampa/med_mapping/extras/ATC.ttl"],"format":["text/turtle"]},
 #    "http://purl.bioontology.org/ontology/VANDF/":{"local.file":["/Users/markampa/med_mapping/extras/VANDF.ttl"],"format":["text/turtle"]},
@@ -108,7 +149,7 @@ default:
                     <http://example.com/resource/bioportal_mappings> a owl:Ontology .
                 }
             }
-        UNNECESSARYdeleteUselessNamedIndAssertions: |
+        deleteUselessNamedIndAssertions: |
             delete {
                 ?s a <http://www.w3.org/2002/07/owl#NamedIndividual>
             } where {
@@ -290,6 +331,7 @@ default:
                 ?s <http://bioportal.bioontology.org/ontologies/umls/cui> ?cui .
                 bind(uri(concat("http://example.com/resource/cui/",?cui)) as ?materialized )
             }
+    per.task.columns: 'med_map_csv_cols.csv'
     tasks:
         - reference_medications
         - classified_search_results

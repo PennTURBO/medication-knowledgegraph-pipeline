@@ -219,11 +219,11 @@ Any number of these columns could be included in a knowledge graph version of th
 - query.val: the string (from PDS R_MEDICATION) that was actually submitted to the RxNav approximate search API. (normalized FULL_NAME or lowercased GENERIC_NAME) See also xxx
 - STR.lc: lowercased version of the string hit by the RxNav approximate search API.
 - normalized: FULL_NAMEs in which source-specific language has been either scrubbed or replaced with RxNorm language with eh same meaning ("po tabs" -> "oral tablet")
-- FK_MEDICATION_ID: actually the PK of a R_MEDICATION (but accessed via a join from ORDER_MED)
+- MEDICATION_ID: actually the PK of a R_MEDICATION (but accessed via a join from ORDER_MED)
 - FULL_NAME: raw value from R_MEDICATION
 - GENERIC_NAME: raw value from R_MEDICATION
 - RXNORM: raw value from R_MEDICATION. These are often wrong, in the sense that they don't represent all of the knowledge in the FULL_NAME. The way in which information is lost or altered is inconsistent.
-- EMPI_COUNT: proxy for the number of patients who received an order for this R_MEDICATION. Assuming one unique and singular EMPI per patient.
+- MEDICATION_COUNT: proxy for the number of patients who received an order for this R_MEDICATION. Assuming one unique and singular EMPI per patient.
 - pds.rxn.annotated: is R_MEDICATION.RXNORM non-NULL/non-empty/non-zero
 - GENERIC_NAME.lc: lowercased GENERIC_NAME with no other normalization
 - rxaui: RXAUI for strings returned by the RxNav approximate search API. More granular than the rxcui from the same API, due to the fact that RxNorm models knowledge from each upstream provider as atoms and then aggregates to RXCUIs with the same meaning.

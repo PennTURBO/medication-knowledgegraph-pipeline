@@ -4,28 +4,11 @@ library(config)
 library(rdflib)
 library(uuid)
 
-# try instantiating med maping RESULTS  with rdflib::as_rdf instead of robot?
-
-####
-
 # I've been using this with a same-host
 # bioportal virtual appliance
 # there's no error checking in place
-# might want to give other users the option for skipping the graphdb upload,
-# like jsut saving the triples and or the dataframe
 
-# # uploading/posting options
-# POST /rest/data/import/server/{repositoryID}
-# Import a server FILE into the repository
-#
-# POST /rest/data/import/upload/{repositoryID}/url
-# Import from data URL into the repository
-
-### using this, and puting a file in the body
-# POST /repositories/{repositoryID}/rdf-graphs/{graph}
-# Add STATEMENTS to a directly referenced named graph
-
-####
+source("rxnav_med_mapping_setup.R")
 
 my.config <- config::get(file = "rxnav_med_mapping.yaml")
 
@@ -38,9 +21,7 @@ aggregated.mapping <- data.frame()
 
 bp.mappings.to.minimal.df <- function(current.source.ontology) {
   # initialize global varaibles for while loop
-  
-  # current.source.ontology <- 'ATC'
-  
+
   more.pages <<- TRUE
   current.page <<- 1
   next.page <<- 0
@@ -157,6 +138,7 @@ inverse.results$inversed <- TRUE
 bound.source.results <-
   rbind.data.frame(bound.source.results, inverse.results)
 
+# # some tools like ROBOT need IRIs that are already wrapped in angle backets 
 # bound.source.results$source.term <-
 #   paste0('<', bound.source.results$source.term , '>')
 # bound.source.results$source.ontology <-
@@ -175,24 +157,20 @@ colnames(bound.source.results) <-
     fixed = TRUE
   )
 
-# # OOPS... doens't consistently recognize IRIs
+# # OOPS the efficient "rdflib::as_rdf" doesn’t consistently recognize IRIs
 # # https://stackoverflow.com/questions/60853395/rdflibas-rdf-only-recognizes-some-iris
-# # otherwise...
-# # pretty fast
-# # simplify after loading into graphdb?
-# # really only care that X is mapped to Y, right?
-# # otherwise, we should probablya ssert a type for these things
+# # otherwise it's pretty fast
+# # it creates reified datastructures (mappings)
+# # that could be simplified after loading into GraphDB
+# # we really only care that X is mapped to Y, right?
+# # otherwise, we should probably assert a type for these things
 #
 # per.source.results.rdf <-
 #   rdflib::as_rdf(x = bound.source.results[1:2,c(1,2,4,5)],
 #                  prefix = my.config$my.prefix,
 #                  key = 'uuid')
 # rdf_serialize(rdf = per.source.results.rdf, doc = my.config$my.triples.destination)
-#
-# # http://pennturbo.org:7200
-# # med_mapping
-# # grep... see hayden's notes. for now use something like <>
-# # bioportal_mappings
+
 
 ####
 

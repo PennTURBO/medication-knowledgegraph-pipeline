@@ -3,94 +3,23 @@
 
 source("rxnav_med_mapping_setup.R")
 
-instantiate.and.upload <- function(current.task) {
-  print(current.task)
-  
-  more.specific <-
-    config::get(file = "rxnav_med_mapping.yaml", config = current.task)
-  
-  predlist <- colnames(body[2:ncol(body)])
-  print(predlist)
-  
-  current.model.rdf <- rdflib::rdf()
-  
-  placeholder <-
-    apply(
-      X = body,
-      MARGIN = 1,
-      FUN = function(current_row) {
-        innerph <- lapply(predlist, function(current.pred) {
-          rdflib::rdf_add(
-            rdf = current.model.rdf,
-            subject = current_row[[1]],
-            predicate = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-            object = more.specific$my.class
-          )
-          temp <- current_row[[current.pred]]
-          if (nchar(temp) > 0) {
-            # print(paste0(current.pred, ':', temp))
-            if (current.pred %in% more.specific$my.numericals) {
-              temp <- as.numeric(temp)
-            }
-            rdflib::rdf_add(
-              rdf = current.model.rdf,
-              subject = current_row[[1]],
-              predicate = paste0('http://example.com/resource/', current.pred),
-              object = temp
-            )
-          }
-        })
-      }
-    )
-  
-  rdf.file <- paste0(current.task, '.ttl')
-  
-  rdflib::rdf_serialize(rdf = current.model.rdf,
-                        doc = rdf.file,
-                        format = "turtle")
-  
-  post.dest <-
-    paste0(
-      more.specific$my.graphdb.base,
-      '/repositories/',
-      more.specific$my.selected.repo,
-      '/rdf-graphs/service?graph=',
-      URLencode(
-        paste0('http://example.com/resource/',
-               current.task),
-        reserved = TRUE
-      )
-    )
-  
-  print(post.dest)
-  
-  post.resp <-
-    httr::POST(
-      url = post.dest,
-      body = upload_file(rdf.file),
-      content_type(more.specific$my.mappings.format),
-      authenticate(
-        more.specific$my.graphdb.username,
-        more.specific$my.graphdb.pw,
-        type = 'basic'
-      )
-    )
-  
-  print('Errors will be listed below:')
-  print(rawToChar(post.resp$content))
-  
+post.res <- POST(update.endpoint,
+                 body = list(update = 'clear all'),
+                 saved.authentication)
+
+not.empty.yet <- TRUE
+
+while(not.empty.yet) {
+  context.report <- get.context.report()
+  if(is.null(context.report)) {
+    break
+  }
+  print("Still need to clear:")
+  print(context.report)
+  sleep(config$monitor.pause.seconds)
 }
 
 ####
-
-# source.medications <-
-#   read.table(
-#     config$source.medications.loadpath,
-#     header = TRUE,
-#     sep = "|",
-#     # quote = TRUE,
-#     row.names = FALSE
-#   )
 
 source.medications <- read_delim(
   config$source.medications.loadpath,
@@ -107,10 +36,9 @@ source.medications$pds.rxn.annotated <-
 
 # # destructive (changing would require rerunning query or load
 source.medications <-
-  source.medications[source.medications$MEDICATION_COUNT >= config$min.empi.count ,]
+  source.medications[source.medications$MEDICATION_COUNT >= config$min.empi.count , ]
 
-# ### what's the relationship between the likelihood of an rxnorm annotation and the # of patients receiving an order?
-#
+## what's the relationship between the likelihood of an rxnorm annotation and the # of patients receiving an order?
 # ggplot(
 #   source.medications,
 #   aes(
@@ -122,10 +50,9 @@ source.medications <-
 #
 #
 # # likelihood is consistent across patient frequencies
-
 ####
 
-# normalize UPHS lexical peculiarities
+# normalize source (UPHS) lexical peculiarities
 
 normalization.rules.res <-
   read_csv(config$normalization.file)
@@ -141,11 +68,11 @@ normalization.rules.res$wc <- nchar(normalization.rules.res$ws) + 1
 normalization.rules.res$replacement[is.na(normalization.rules.res$replacement)] <-
   ""
 normalization.rules.res <-
-  normalization.rules.res[normalization.rules.res$confidence == "high" , ]
+  normalization.rules.res[normalization.rules.res$confidence == "high" ,]
 normalization.rules.res <-
   normalization.rules.res[order(normalization.rules.res$wc,
                                 normalization.rules.res$char,
-                                decreasing = TRUE), ]
+                                decreasing = TRUE),]
 
 normalization.rules.res$pattern <-
   paste("\\b", normalization.rules.res$pattern, "\\b", sep = "")
@@ -165,8 +92,7 @@ source.medications$GENERIC_NAME.lc <-
 source.medications$GENERIC_NAME.lc[is.na(source.medications$GENERIC_NAME.lc)] <-
   ""
 
-# does the order of applying the normalizations matter?
-# applying longest ones first
+# applying longest normalizastions first
 # use some kind of automated synonym discovery, like phrase2vec?
 source.medications$normalized <-
   stringr::str_replace_all(source.medications$normalized, normalization.rules)
@@ -221,6 +147,40 @@ source.medications$normalized <-
     fixed = TRUE
   )
 
+
+source.medications$normalized <-
+  gsub(
+    pattern = "'",
+    replacement = "",
+    x = source.medications$normalized,
+    fixed = TRUE
+  )
+
+source.medications$normalized <-
+  gsub(
+    pattern = '"',
+    replacement = "",
+    x = source.medications$normalized,
+    fixed = TRUE
+  )
+
+source.medications$GENERIC_NAME.lc <-
+  gsub(
+    pattern = "'",
+    replacement = "",
+    x = source.medications$GENERIC_NAME.lc,
+    fixed = TRUE
+  )
+
+source.medications$GENERIC_NAME.lc <-
+  gsub(
+    pattern = '"',
+    replacement = "",
+    x = source.medications$GENERIC_NAME.lc,
+    fixed = TRUE
+  )
+
+
 # run-on correction
 source.medications$normalized <-
   gsub(
@@ -255,17 +215,6 @@ source.medications$normalized <-
 # may not apply to input sources other than PDS?
 # not currently requiring that PDS r_medications
 # are annotated with a current single ingredient rxcui
-# query.list <-
-#   sort(unique(
-#     c(
-#       source.medications$normalized[source.medications$MEDICATION_COUNT > config$min.empi.count &
-#                                              !(is.na(source.medications$normalized)) &
-#                                              nchar(source.medications$normalized) > 0],
-#       source.medications$GENERIC_NAME.lc[source.medications$MEDICATION_COUNT > config$min.empi.count &
-#                                                   !(is.na(source.medications$normalized)) &
-#                                                   nchar(source.medications$GENERIC_NAME.lc) > 0]
-#     )
-#   ))
 
 query.list <-
   sort(unique(
@@ -480,11 +429,11 @@ temp$GENERIC_NAME[is.na(temp$GENERIC_NAME)] <- ''
 
 # get before and after counts
 pre <- unique(temp$MEDICATION_ID)
-temp <- temp[complete.cases(temp), ]
+temp <- temp[complete.cases(temp),]
 post <- unique(temp$MEDICATION_ID)
 lost <- setdiff(pre, post)
 lost <-
-  pds.approximate.original.dists[pds.approximate.original.dists$MEDICATION_ID %in% lost ,]
+  pds.approximate.original.dists[pds.approximate.original.dists$MEDICATION_ID %in% lost , ]
 
 print(Sys.time())
 timed.system <- system.time(rf_responses <-
@@ -525,7 +474,7 @@ uncovered.keys <- setdiff(all.keys, covered.keys)
 
 # save for followup?
 uncovered.frame <-
-  pds.approximate.original.dists[pds.approximate.original.dists$MEDICATION_ID %in% uncovered.keys , ]
+  pds.approximate.original.dists[pds.approximate.original.dists$MEDICATION_ID %in% uncovered.keys ,]
 
 ###
 
@@ -583,13 +532,28 @@ classification.res.tidied <-
 
 classification.res.tidied <- unique(classification.res.tidied)
 
+# load rxnorm into repo (assume from file)
+
+temp.name <- 'http://purl.bioontology.org/ontology/RXNORM/'
+last.post.time <- Sys.time()
+placeholder <- import.from.local.file(
+  temp.name,
+  config$my.import.files[[temp.name]]$local.file,
+  config$my.import.files[[temp.name]]$format
+)
+
+last.post.status <- 'Loaded RxNorm'
+expectation <- temp.name
+monitor.named.graphs()
+
 # now get rxcuis with labels in repo
 # this should go into setup
 
-select.endpoint <-
-  paste0(config$my.graphdb.base,
-         "/repositories/",
-         config$my.selected.repo)
+# # already defined in rxnav_med_mapping_setup.R
+# select.endpoint <-
+#   paste0(config$my.graphdb.base,
+#          "/repositories/",
+#          config$my.selected.repo)
 
 saved.authentication <-
   authenticate(config$my.graphdb.username,
@@ -624,16 +588,13 @@ rxnorm.entities.in.repo <-
   ))
 
 classification.res.tidied.inactive.rxcui <-
-  classification.res.tidied[!(classification.res.tidied$rxcui %in% rxnorm.entities.in.repo), ]
+  classification.res.tidied[!(classification.res.tidied$rxcui %in% rxnorm.entities.in.repo),]
 
 classification.res.tidied <-
-  classification.res.tidied[classification.res.tidied$rxcui %in% rxnorm.entities.in.repo, ]
-
-#### need to put soemthing in place that picks best search results
-#### in the context of wheter the rxnorm term is defined
+  classification.res.tidied[classification.res.tidied$rxcui %in% rxnorm.entities.in.repo,]
 
 classification.res.tidied.id <-
-  classification.res.tidied[classification.res.tidied$override == "identical",]
+  classification.res.tidied[classification.res.tidied$override == "identical", ]
 best.identical <-
   aggregate(
     classification.res.tidied.id$identical,
@@ -644,24 +605,13 @@ colnames(best.identical) <- c("MEDICATION_ID", "identical")
 classification.res.tidied.id <-
   base::merge(classification.res.tidied.id, best.identical)
 
-# classification.res.tidied.onehop <-
-#   classification.res.tidied[(
-#     classification.res.tidied$override != "identical" &
-#       classification.res.tidied$override != "more distant" &
-#       (
-#         !(
-#           classification.res.tidied$MEDICATION_ID %in% classification.res.tidied.id$MEDICATION_ID
-#         )
-#       )
-#   ) ,]
-
 # actually keep one-hops as long as their best prob is as high as or higher than the identical prob
 
 classification.res.tidied.onehop <-
   classification.res.tidied[(
     classification.res.tidied$override != "identical" &
       classification.res.tidied$override != "more distant"
-  ) , ]
+  ) ,]
 
 probs.matrix <- classification.res.tidied.onehop[, c(
   "consists_of",
@@ -708,10 +658,10 @@ equal.or.better.Q$identical[is.na(equal.or.better.Q$identical)] <- 0
 equal.or.better.Q$probs.matrix.rowmax[is.na(equal.or.better.Q$probs.matrix.rowmax)] <-
   0
 equal.or.better.Q <-
-  equal.or.better.Q[equal.or.better.Q$probs.matrix.rowmax >= equal.or.better.Q$identical ,]
+  equal.or.better.Q[equal.or.better.Q$probs.matrix.rowmax >= equal.or.better.Q$identical , ]
 
 classification.res.tidied.onehop <-
-  classification.res.tidied.onehop[classification.res.tidied.onehop$MEDICATION_ID %in% equal.or.better.Q$MEDICATION_ID ,]
+  classification.res.tidied.onehop[classification.res.tidied.onehop$MEDICATION_ID %in% equal.or.better.Q$MEDICATION_ID , ]
 
 ####
 
@@ -726,7 +676,7 @@ classification.res.tidied.md <-
                                 !(
                                   classification.res.tidied$MEDICATION_ID %in% classification.res.tidied.onehop$MEDICATION_ID
                                 )
-                              ) ,]
+                              ) , ]
 
 probs.matrix <- classification.res.tidied.md[, c(
   "consists_of",
@@ -833,24 +783,7 @@ placeholder <-
 # would theoretically be better to iterate over that
 # but will use  hard-coded names as special actions for now
 
-# keepers <-
-#   med_map_csv_cols$more_generic %in% setdiff(graphs.cols[['classified_search_results']], "source_has_rxcui")
-# body <- unique(classification.res.tidied[, keepers])
-#
 # # should really extract this from source.medications
-#
-# keepers <-
-#   med_map_csv_cols$more_generic %in% setdiff(graphs.cols[['classified_search_results']], "source_has_rxcui")
-# # ROBOT is interpreting both FALSE and TRUE as 'false'^^xsd:boolean
-#
-#
-# body <- unique(classification.res.tidied[, keepers])
-# # # WHOA THIS GOT LOST SOMEWHERE
-# # body$source_rxcui[body$source_rxcui == 'http://purl.bioontology.org/ontology/RXNORM/'] <-
-# #   ''
-
-
-# my.config <- config::get(file = "get_bioportal_mappings.yaml")
 
 # > print(predlist)
 # [1] "source_med_id"               "source_full_name"            "source_generic_name"         "source_rxcui"
@@ -858,36 +791,105 @@ placeholder <-
 
 ####
 
-# 90 minutes for all search results, not filtered by best identical score etc.
+classification.res.tidied$source_rxcui[classification.res.tidied$source_rxcui ==
+                                         'http://purl.bioontology.org/ontology/RXNORM/'] <-
+  ''
 
-# why do I that way? need to see if search result's rxcui is in the RxNorm RDF
-# we have loaded into the repo
+# 90 minutes for rdflib::add... instantiating all search results, not filtered by best identical score etc.
 
+
+# refactor
 
 current.task <- 'classified_search_results'
+more.specific <-
+  config::get(file = "rxnav_med_mapping.yaml", config = current.task)
 
 keepers <-
   med_map_csv_cols$more_generic %in% setdiff(graphs.cols[[current.task]], "source_has_rxcui")
 
 body <- unique(classification.res.tidied[, keepers])
-body[, 1] <- as.character(body[, 1])
+pre.robot <- colnames(body)
+class.col <- rep(more.specific$my.class, nrow(body))
+body <- cbind.data.frame(class.col, body)
+pre.robot <- colnames(body)
+print(pre.robot)
 
-print(Sys.time())
-instantiate.and.upload(current.task)
-print(Sys.time())
+robot.line <-
+  med_map_csv_cols$robot[med_map_csv_cols$more_generic %in% pre.robot]
+robot.line[1] <- 'ID'
+robot.line <-
+  c('TYPE', robot.line)
+
+print(robot.line)
+
+body[] <- lapply(body[], as.character)
+
+body <- rbind.data.frame(robot.line, body)
+names(body) <- pre.robot
+write.table(
+  x = body,
+  file = paste0(current.task, '_for_robot.tsv'),
+  append = FALSE,
+  quote = FALSE,
+  sep = '\t',
+  row.names = FALSE,
+  col.names = TRUE
+)
+
+# keepers <-
+#   med_map_csv_cols$more_generic %in% setdiff(graphs.cols[[current.task]], "source_has_rxcui")
+# 
+# body <- unique(classification.res.tidied[, keepers])
+# body[, 1] <- as.character(body[, 1])
+# 
+# print(Sys.time())
+# instantiate.and.upload(current.task)
+# print(Sys.time())
 
 ####
 
 current.task <- 'reference_medications'
+more.specific <-
+  config::get(file = "rxnav_med_mapping.yaml", config = current.task)
 
 keepers <-
   med_map_csv_cols$more_generic %in% setdiff(graphs.cols[[current.task]], "source_has_rxcui")
 
 body <- unique(classification.res.tidied[, keepers])
+pre.robot <- colnames(body)
+class.col <- rep(more.specific$my.class, nrow(body))
+body <- cbind.data.frame(class.col, body)
 
-body$source_rxcui[body$source_rxcui == 'http://purl.bioontology.org/ontology/RXNORM/'] <-
-  ''
+pre.robot <- colnames(body)
+print(pre.robot)
 
-print(Sys.time())
-instantiate.and.upload(current.task)
-print(Sys.time())
+robot.line <-
+  med_map_csv_cols$robot[med_map_csv_cols$more_generic %in% pre.robot]
+robot.line[1] <- 'ID'
+robot.line <-
+  c('TYPE', robot.line)
+
+print(robot.line)
+
+body[] <- lapply(body[], as.character)
+
+body <- rbind.data.frame(robot.line, body)
+names(body) <- pre.robot
+
+# hardcoded so that yaml file doesn't need to be parsed in order to create robot bash script
+write.table(
+  x = body,
+  file = paste0(current.task, '_for_robot.tsv'),
+  append = FALSE,
+  quote = FALSE,
+  sep = '\t',
+  row.names = FALSE,
+  col.names = TRUE
+)
+
+# print(Sys.time())
+# instantiate.and.upload(current.task)
+# print(Sys.time())
+
+
+# now run commands in 

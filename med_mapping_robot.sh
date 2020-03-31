@@ -4,8 +4,8 @@ robot -vvv template \
 --prefix "obo: http://purl.obolibrary.org/obo/"  \
 --prefix  "mydata: http://example.com/resource/" \
 --input minimal_templating_ontology.ttl  \
---template rxnav_medication_mapping_final_predictions.csv \
---output classification_res_tidied_no_objprops.ttl
+--template reference_medications_for_robot.tsv \
+--output reference_medications_from_robot.ttl
 
 
 # source_meds.csv is currently hardcoded in the R classification script
@@ -14,6 +14,6 @@ robot -vvv template \
 --prefix "obo: http://purl.obolibrary.org/obo/"  \
 --prefix  "mydata: http://example.com/resource/" \
 --input minimal_templating_ontology.ttl  \
---template source_meds.csv \
---output source_meds.ttl
+--template classified_search_results_for_robot.tsv \
+--output classified_search_results_from_robot.ttl
 
