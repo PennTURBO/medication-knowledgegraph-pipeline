@@ -2,19 +2,33 @@
 
 
 
-_This document is primarily concerned with training a classification model and then applying that to search results over previously unclassified medication strings. Additional scripts can be run after that to connect the RxCUI outputs from the classification to classes of and roles for medications. This is currently documented in the less formal [role_class_materialization.md](role_class_materialization.md) but will be merged into this document soon._
-
 ## Introduction
 
 The PennTURBO medication mapper (TMM) takes strings describing medications or medication orders and predicts RxNorm terms, specifically RXCUIs, with the same meaning. TMM can tolerate a wide range of specificity, e.g. "acetaminophen" vs "500 mg Tylenol oral tablets", but it is not intended to parse medication phrases out of longer narratives.
+
+Additionally
+
+- it creates an RDF knowledgeable containing links between the source medications and entities from
+      - RxNorm
+      - DrOn
+      - ChEBI
+      - ATC
+      - NDF-RT
+- it populates a Solr core with the labels and URIs of the entities in the ontologies and RDF data models above
+
+That makes it possible to 
+
+- search for an ingredient, product, medicinal role, or other class and obtain relevant IRIs
+- navigate from one or more of those IRIs to related source medications
+- the identifiers for the source medications can then be used to search for patients, in some other EHR-like system, for patients who received orders for medications with a semantic link to the initial search terms
 
 This document provides some brief background with performance metrics, explains how to run the software components, and then provides more detailed information about the mechanism/strategy.
 
 ## Background
 
-TMM is written in R and has been tested with version 3.6.2 on a 32 GB MacBook Pro. Besides R and a handful of libraries (including rJava, and therefore a JRE), the only requirement is the RxNav-in-a-box (RXB) Docker Container, Docker itself, and a slight modification to the dockerfile. (TMM has been tested with Docker Desktop community edition 2.2.0.3 and the January, 2020 RXB. This author has found that API requests to other versions of RXB, including February 2020, return no responses.) Training on (or classifying over) hundreds of thousands of medication strings will likely require more RAM and/or docker tuning.
+TMM is written in R and has been tested with version 3.6.2 on a 32 GB MacBook Pro. Besides R and a handful of libraries (including rJava, and therefore a JRE), the only requirement for the prediction phase is the RxNav-in-a-box (RXB) Docker Container, Docker itself, and a slight modification to the dockerfile. (TMM has been tested with Docker Desktop community edition 2.2.0.3 and the January, 2020 RXB. This author has found that API requests to other versions of RXB, including February 2020, return no responses.) Training on (or classifying over) hundreds of thousands of medication strings will likely require more RAM and/or docker tuning.
 
-TMM uses the approach of training a random forest classifier to inspect medication search results and classify them as **identical** to the latent meaning, **related** by one named, _allowable_, RxNorm relation, or **more distant**. Then the unknown strings are searched using the same method and classified with the previously mentioned random forest.  The prioritization and filtering of these classifications is discussed further below.
+TMM uses the approach of training a random forest classifier to inspect medication search results and classify them as **identical** to the latent meaning, **related** by one named, _allowable_, RxNorm relation, or **more distant**. Then the unknown strings are searched using the same method and classified with the previously mentioned random forest. The prioritization and filtering of these classifications is discussed further below.
 
  When the classifier is trained on 10,000 known medication string/RXCUI pairs, the ability to predict the **identical** and **more distant** cases is very good. When the classifier determines that there is one **relation** between the RXCUI returned by a search engine and the RXCUI that would best describe the unknown medication string, there can be some ambiguity about what the true relation is. Specifically, while the specificity for these non-identical but directly-adjacent cases tend to be in the 0.90s, the sensitivity can be lower than 0.50. Training over the previously mentioned volume of data takes less than one hour.
 
@@ -33,47 +47,53 @@ Specificity     0.8013
 The coverage, or ability to provide something other than a 'more distant' result for each PDS R_MEDICATION is assessed
 independently and appears to be a string correlate of the `identical` sensitivity and the 'more distant' specificity.
 
-**Latest coverage: 0.85**
+**Latest coverage: 0.83**
 
 ## Prerequisites
 ### Training and Classification R Scripts
-- [R Interpreter](https://cran.r-project.org/)
-  - Install R libraries in an interactive R session with `install.packages(<"package1">, <"package2">,...,<"packageN">)`
-      - RJDBC
-      - ROCR
-      - caret
-      - config
-      - ggplot2
-      - randomForest
-      - readr
-      - splitstackshape
-      - stringdist
-      - stringr
+[R Interpreter](https://cran.r-project.org/)
+- Install R libraries in an interactive R session with `install.packages(<"package1">, <"package2">,...,<"packageN">)`
+       - caret
+       - config
+       - dplyr
+       - httr
+       - jsonlite
+       - randomForest
+       - readr
+       - Rdflib
+       - RJDBC
+       - ROCR
+       - solrium
+       - splitstackshape
+       - stringdist
+       - stringr
+       - uuid
 
-  - RJDBC requires the rJava R library, which requires a JRE. TMM has been tested with
+    possibly `ggplot2` 
 
-    ```
-    Java(TM) SE Runtime Environment (build 1.8.0_241-b07)
-    Java HotSpot(TM) 64-Bit Server VM (build 25.241-b07, mixed mode)
-    ```
+- RJDBC requires the rJava R library, which requires a JRE. TMM has been tested with
 
-    rJava can be more difficult to install and auto-configure, compared to other R packages. If this is an absolute blocker, RJDBC could probably be replaced with RODBC, along with corresponding code changes.
+  ```
+  Java(TM) SE Runtime Environment (build 1.8.0_241-b07)
+  Java HotSpot(TM) 64-Bit Server VM (build 25.241-b07, mixed mode)
+  ```
 
-- MySQL JDBC Driver
+  rJava can be more difficult to install and auto-configure, compared to other R packages. If this is an absolute blocker, RJDBC could probably be replaced with RODBC, along with corresponding code changes.
 
-  -  TMM has been tested with `mysql-connector-java-8.0.19.jar`. Downloading Oracle and MySQL JDBC driver may require an [Oracle account](https://profile.oracle.com/myprofile/account/create-account.jspx). The MySQL driver can be found [here](https://dev.mysql.com/downloads/connector/j/).
-    - no MySQL server is required. TMM will make SQL queries against the MySQL database embedded in the RxNav-in-a-Box Container. (There are a few datatypes which are not accessible via REST APIs).
+MySQL JDBC Driver
 
--  Oracle JDBC Driver (optional)
+- TMM has been tested with `mysql-connector-java-8.0.19.jar`. Downloading Oracle and MySQL JDBC driver may require an [Oracle account](https://profile.oracle.com/myprofile/account/create-account.jspx). The MySQL driver can be found [here](https://dev.mysql.com/downloads/connector/j/).
+  - no MySQL server is required. TMM will make SQL queries against the MySQL database embedded in the RxNav-in-a-Box Container. (There are a few datatypes which are not accessible via REST APIs).
 
-  - If run on a computer with the necessary network and database configuration, `pds_r_medication_sql_select.R` can pull medication names, etc., from the Penn Data Store and save them in a pipe-delimited file (`source.medications.savepath`) with the following columns:
-    - MEDICATION_ID
-    - FULL_NAME
-    - GENERIC_NAME (optional)
-    - RXNORM (an optional RxCUI asserted by the source)
-    - MEDICATION_COUNT (some measure of how frequently this mediation is ordered, like unique patient count. optional. optional but recommended).
-  - TMM can also read medication data from a file of the same format (`source.medications.loadpath`), even if it is created by some other method.
-  - TMM has been tested with `ojdbc8.jar` . Downloading Oracle and MySQL JDBC driver may require an [Oracle account](https://profile.oracle.com/myprofile/account/create-account.jspx). The Oracle 12c JDBC drivers can be found [here](https://www.oracle.com/database/technologies/jdbc-drivers-12c-downloads.html).
+Oracle JDBC Driver (optional)
+
+- If run on a computer with the necessary network and database configuration, `pds_r_medication_sql_select.R` can pull medication names, etc., from the Penn Data Store and save them in a pipe-delimited file (`source.medications.savepath`) with the following columns:
+  - MEDICATION_ID
+  - FULL_NAME
+  - GENERIC_NAME (optional)
+  - RXNORM (an optional RxCUI asserted by the source)
+  - MEDICATION_COUNT (some measure of how frequently this mediation is ordered, like unique patient count. optional. optional but recommended).
+- TMM can also read medication data from a file of the same format (`source.medications.loadpath`), even if it is created by some other method. TMM has been tested with `ojdbc8.jar` . Downloading Oracle and MySQL JDBC driver may require an [Oracle account](https://profile.oracle.com/myprofile/account/create-account.jspx). The Oracle 12c JDBC drivers can be found [here](https://www.oracle.com/database/technologies/jdbc-drivers-12c-downloads.html).
 
 ### RxNav-in-a-Box
 
@@ -86,7 +106,7 @@ independently and appears to be a string correlate of the `identical` sensitivit
 
 ## Configuration
 
-All configurations for this project are taken from rxnav_med_mapping.yaml. A template, rxnav_med_mapping.yaml.template is provided in the GitHub repo.
+All configurations for this project are taken from `rxnav_med_mapping.yaml`. A template, `rxnav_med_mapping.yaml.template` is provided in the GitHub repo.
 
 If the source medications are to be retrieved from a limited-access clinical data warehouse like the Penn Data Store, then credentials will probably be required, possibly along with a VPN connection and/or port forwarding. Those database and networking concerns are left to the reader.
 
@@ -100,7 +120,7 @@ services:
 ```
 
 ### Create the configuration file for the training and testing scripts
-`rxnav_med_mapping.yaml` is the default name of configuration file needed for the training and classification scripts, template named `rx_med_mapping.yaml.template` is provided.  The scripts should be run from the same folder as the config file.  (They could be modified to take a configuration path as a command line argument. Note: no file-missing or database-unavailable tests are present in the current scripts.) Other files required by TMM are specified in the configuration file and can reside elsewhere.  
+`rxnav_med_mapping.yaml` is the default name of configuration file needed for the training and classification scripts, template named `rx_med_mapping.yaml.template` is provided. The scripts should be run from the same folder as the config file. (They could be modified to take a configuration path as a command line argument. Note: no file-missing or database-unavailable tests are present in the current scripts.) Other files required by TMM are specified in the configuration file and can reside elsewhere. 
 
 Copy `rx_med_mapping.yaml.template` to `rx_med_mapping.yaml` then modify the file:
 
@@ -149,13 +169,13 @@ This trains a random forest classifier using training and validation data from t
 
 Sensitivity and specificity metrics for each class are saved to `testing.confusion.writepath`. Note: the label for all classifications is set to 'identical' if the RxNav approximate search score is 100, and the label is set to 'more distant' is the score is 0 for the assessment.
 
-In general, the sensitivity and specificity for 'identical' are over 0.9, as is the sensitivity for 'more distant' and the specificity for the other relations. However, the specificity for 'more distant' is generally lower and the sensitivity for the other relations varies from 0.9s to 0.5 or below.
+In general, the sensitivity and specificity for 'identical' are roughly 0.9, as is the sensitivity for 'more distant' and the specificity for the other relations. However, the specificity for 'more distant' is generally lower and the sensitivity for the other relations varies from 0.9s to 0.5 or below.
 
 ### Classify medication strings (such as PDS `R_MEDICATION.FULL_NAME`s) with a trained TTM model
 
 - `$ Rscript rxnav_med_mapping_pds_proximity_classifier.R`
 
-This loads a model whose filesystem location is determined by  `rf.model.loadpath`. The location of the medication names to be classified is determined by `source.medications.loadpath`. The source medication strings are tidied.
+This loads a model whose filesystem location is determined by `rf.model.loadpath`. The location of the medication names to be classified is determined by `source.medications.loadpath`. The source medication strings are tidied.
 
 - by removing some punctuation and collapsing multiple whitespaces
 
@@ -178,13 +198,13 @@ The classifications, which started as up to 50 search results for each source me
 
 - all results for which the predicted RxCUI is not present in the latest RxNorm RDF from BioPortal are removed. These cases are isolated but not saved to a file at this point. This removal does not appear to lower the coverage discussed below.
 - all 'identical' results are retained.
-- all off-by-one relation results are retained if there was no 'identical' match for a given source medication, or if the off-by-one classification's Random Forest  probability is equal to or greater than the 'identical' result.
-- for each source medication, if there is no 'identical' or off-by-one result, the one or more best  'more distant' results are retained. "Best" is defined as having a Random Forest  probability, for any predication other than 'more distant' that is equal to the highest non-'more distant' probability for that source medication.
+- all off-by-one relation results are retained if there was no 'identical' match for a given source medication, or if the off-by-one classification's Random Forest probability is equal to or greater than the 'identical' result.
+- for each source medication, if there is no 'identical' or off-by-one result, the one or more best 'more distant' results are retained. "Best" is defined as having a Random Forest probability, for any predication other than 'more distant' that is equal to the highest non-'more distant' probability for that source medication.
 
 Two kinds of coverage-effecting problems are addressed at this point:
 
 1. source medications that were lost because they generated zero matches from the RxNav approximate search
-2. source medications that are uncovered: they did obtain approximate search results, but all were classified as 'more distant'
+2. source medications that are uncovered: they **did** obtain approximate search results, but all were classified as 'more distant'
 
 A coverage value is calculated and printed, and lost and uncovered data frames are created. These are not currently saved to the filesystem, but that functionality will be added to the script.
 
@@ -193,49 +213,39 @@ UUIDs are generated for each of the retained classified search results. The resu
 - Source/reference medications (IDs, labels, etc.)
 - Classified search results, including the source medication's ID.
 
-Finally, the two data frames are converted to RDF within the R script, saved to files, and posted to a GraphDB triplestore.
-
-Relevant settings include
-
-- my.graphdb.base
-- my.selected.repo
-- my.graphdb.username
-- my.graphdb.pw
-
-The RDF files and the GraphDB named graph will be named after the `tasks` 
-
-
+The two data frames are saved as CSV files in the directory where the classification script was launched, with names based on the `tasks`. They have two rows of headers and should be converted to RDF triples with [ROBOT's template command](http://robot.obolibrary.org/template). `med_mapping_robot.sh` and is provided as a Bash wrapper for the two ROBOT conversions, but the ROBOT jar must be downloaded separately. 
 
 ### Assemble a Medication Knowledge Graph
 1. install and populate a local NCBO BioPortal Appliance
-   1. TMM and the TURBO clinical labs mapping depend on BioPortal methods for discovering equivalencies between terms in different ontologies/RDF models. Theoretically, most of the [API calls](http://data.bioontology.org/documentation) could be run against the [public endpoint](https://bioportal.bioontology.org/), but that would be slow and vulnerable to HTTP timeouts and errors, etc.
-   2. NCBO also offers a [BioPortal appliance](https://www.bioontology.org/wiki/Category:NCBO_Virtual_Appliance) that can be run on AWS or under local virtualization. I have been using VirtualBox. The BioPortal appliance page has instructions for requesting access to the appliance image, as well as hardware requirements. I had difficulties importing the v2.5 ODF into VirtualBox for Mac, so I have been using v2.4.
-   3. Roughly, the post-download steps are
-      1. download and install a virtualization engine like VirtualBox or VMWare Player, if they're not already available
-      2. import the ODF image with the virtualization engine
-      3. launch the appliance and go though some one-time configuration
-   4. The VirtualBox appliance must be populated with relevant biomedical ontologies and RDF data models. Most of those can be imported directly from the public BioPortal. The right-hand API key portion of the URLs is not stable across versions. A URL with a guest API key is always available at the ontology's BioPortal home page, or the ontologies can be retrieved with an [individual’s permanent API key](https://bioportal.bioontology.org/help#Getting_an_API_key). For TMM, the necessary ontologies include:
-      1. [ATC](http://data.bioontology.org/ontologies/ATC/submissions/12/download?apikey=9cf735c3-a44a-404f-8b2f-c49d48b2b8b2)
-      2. [ChEBI](http://data.bioontology.org/ontologies/CHEBI/download?apikey=9cf735c3-a44a-404f-8b2f-c49d48b2b8b2&download_format=rdf)
-      3. [DrOn](http://data.bioontology.org/ontologies/DRON/download?apikey=9cf735c3-a44a-404f-8b2f-c49d48b2b8b2&download_format=rdf)
-      4. NDF-RT (to be loaded from a file. see below.)
-      5. [RxNorm](http://data.bioontology.org/ontologies/RXNORM/submissions/18/download?apikey=9cf735c3-a44a-404f-8b2f-c49d48b2b8b2)
-      6. [UMLS Semantic Types, "TTY"](http://data.bioontology.org/ontologies/STY/submissions/14/download?apikey=9cf735c3-a44a-404f-8b2f-c49d48b2b8b2)
-   5. I have been loading them interactively by 
-      1. visiting the (local/virtual) web interface
-      2. logging in
-      3. clicking on the **Browse** or **Ontologies** link in the upper left (depending on the version)
-      4. clicking the pale blue **Submit New Ontology** button in the upper left quadrant of the screen
-      5. Filling in the required information on two screens. The Name and Acronym fields on the **Submit New Ontology** page can be based on the analogous ontology summary pages at the public BioPortal web site, as can several of the fields on the subsequent **Add New Submission** page. *Details will be provided soon.*
-      6. Most of the required ontologies/RDF content can be loaded from public BioPortal or OBO foundry URLs. I have been habitually checking those URLs for redirects and importing the true destination URL, not the advertised/human friendly/stable URLs. **For DrOn**, use the RDF/XML link on the Public BioPortal page, not the OWL link, which is just a list of imports. I am including **NDF-RT** in the local BioPortal mappings, but the public BioPortal doesn't provide a download link for NDF-RT anymore, nor for its replacement MED-RT. I haven’t been able to extract either from recent UMLS downloads either. Therefore it has to be loaded from a May, 2019 file. *Details will be provided soon.*
-   6. BioPortal also has an [OntologySubmission](http://data.bioontology.org/documentation#OntologySubmission) API method. I don't have any experience with that yet. 
-   7. The BioPortal appliance has to do a lot of parsing and indexing before the mappings against a new submission are ready, but it doesn’t seem like much CPU every gets used. It's on a cron job, but I make sure to leave the virtual machine running overnight, with the host configure not to enter a sleep state.
+   - TMM and the TURBO clinical labs mapping depend on BioPortal methods for discovering equivalencies between terms in different ontologies/RDF models. Theoretically, most of the [API calls](http://data.bioontology.org/documentation) could be run against the [public endpoint](https://bioportal.bioontology.org/), but that would be slow and vulnerable to HTTP timeouts and errors, etc.
+   - NCBO also offers a [BioPortal appliance](https://www.bioontology.org/wiki/Category:NCBO_Virtual_Appliance) that can be run on AWS or under local virtualization. I have been using VirtualBox. The BioPortal appliance page has instructions for requesting access to the appliance image, as well as hardware requirements. I had difficulties importing the v2.5 ODF into VirtualBox for Mac, so I have been using v2.4.
+   - Roughly, the post-download steps are
+      - download and install a virtualization engine like VirtualBox or VMWare Player, if they're not already available
+      - import the ODF image with the virtualization engine
+      - launch the appliance and go though some one-time configuration
+   - The VirtualBox appliance must be populated with relevant biomedical ontologies and RDF data models. Most of those can be imported directly from the public BioPortal. The right-hand API key portion of the URLs is not stable across versions. A URL with a guest API key is always available at the ontology's BioPortal home page, or the ontologies can be retrieved with an [individual’s permanent API key](https://bioportal.bioontology.org/help#Getting_an_API_key). For TMM, the necessary ontologies include:
+      - [ATC](http://data.bioontology.org/ontologies/ATC/submissions/12/download?apikey=9cf735c3-a44a-404f-8b2f-c49d48b2b8b2)
+      - [ChEBI](http://data.bioontology.org/ontologies/CHEBI/download?apikey=9cf735c3-a44a-404f-8b2f-c49d48b2b8b2&download_format=rdf)
+      - [DrOn](http://data.bioontology.org/ontologies/DRON/download?apikey=9cf735c3-a44a-404f-8b2f-c49d48b2b8b2&download_format=rdf)
+      - NDF-RT (to be loaded from a file. see below.)
+      - [RxNorm](http://data.bioontology.org/ontologies/RXNORM/submissions/18/download?apikey=9cf735c3-a44a-404f-8b2f-c49d48b2b8b2)
+      - [UMLS Semantic Types, "TTY"](http://data.bioontology.org/ontologies/STY/submissions/14/download?apikey=9cf735c3-a44a-404f-8b2f-c49d48b2b8b2)
+   - I have been loading the ontologies interactively. See also potential alternative API method below.
+      - visit the (local/virtual) web interface
+      - log in
+      - click on the **Browse** or **Ontologies** link in the upper left (depending on the version)
+      - click the pale blue **Submit New Ontology** button in the upper left quadrant of the screen
+      - Fill in the required information on two screens. The Name and Acronym fields on the **Submit New Ontology** page can be based on the analogous ontology summary pages at the public BioPortal web site, as can several of the fields on the subsequent **Add New Submission** page. *Details will be provided soon.*
+      - Most of the required ontologies/RDF content can be loaded from public BioPortal or OBO foundry URLs. I have been habitually checking those URLs for redirects and importing the true destination URL, not the advertised/human friendly/stable URLs. **For DrOn**, use the RDF/XML link on the Public BioPortal page, not the OWL link, which is just a list of imports. I am including **NDF-RT** in the local BioPortal mappings, but the public BioPortal doesn't provide a download link for NDF-RT anymore, nor for its replacement [MED-RT](https://evs.nci.nih.gov/ftp1/MED-RT/Introduction%20to%20MED-RT.pdf). I haven’t been able to extract either from recent UMLS downloads either. Therefore it has to be loaded from a May, 2019 file. *Details will be provided soon.*
+   - BioPortal also has an [OntologySubmission](http://data.bioontology.org/documentation#OntologySubmission) API method. I don't have any experience with that yet. 
+   - The BioPortal appliance has to perform parsing and indexing before the mappings for new submission are ready. Those tasks are part of an every-five-minutes cron job. The indexing doesn't seem to take much CPU activity, but it can be several hours before the mappings are ready. I make sure to leave the virtual machine running overnight, with the host configured to not enter a sleep state.
 2. Run `serialize_bioportal_mappings.R` to obtain an RDF mappings file, specified in config parameter `bioportal.triples.destination`
 3. Run `pds_r_medication_sql_select.R` or otherwise create a source medication input file. 
-4. Train the classfifier (if necessary) and run the classification. See above.
-5. Run `med_mapping_load_materialize_project.R` to load the search result classifications, the BioPortal mappings, and additional ontologies/RDF models into a Graph DB repository. This script also transitively materializes ingredient and role relationships within DrOn and ChEBI, but does not project any of that knowledge onto terms in other graphs like ATC, NDF-RT, RxNorm, etc.
-6. Ensure that a Solr server is running at the address specified in `rxnav_med_mapping.yaml`, with the specified document core created. Some brief notes on these steps are included as comments in `sparql_mm_kb_labels_to_solr.R`, which should be run next.
+4. Train the classfifier (if necessary) and run the classification. Use ROBOT to convert the two CSV files from the classifier into RDF. See above.
+5. Run `med_mapping_load_materialize_project.R` to load the classification output, the BioPortal mappings, and additional ontologies/RDF models into a Graph DB repository. This script also transitively materializes ingredient and role relationships within DrOn and ChEBI, but does not project any of that knowledge onto terms in other graphs like ATC, NDF-RT, RxNorm, etc. (despite the name).
+6. Ensure that a Solr server is running at the address specified in `rxnav_med_mapping.yaml`, with the specified document core available. Some brief notes on these steps are included as comments in `sparql_mm_kb_labels_to_solr.R`, which should be run next. It starts by clearing the named core.
 7. Sample code for querying the Solr core, with the query parsed as a bag of words and with fuzzy misspelling tolerance enabled can be found in `all_fuzzy_solr_label_to_iri.R`
+8. *Sample SPARQL queries for navigating from IRIs identified by Solr to source medications are being developed.*
 
 
 ## Classification Output
@@ -310,16 +320,18 @@ Besides 'identical to' and 'more distant', each of these is the probability that
 - has_part
 - has_quantified_form
 - has_tradename
-- identical: probability that a R_MEDICATION's most representative RXCUI and a RxNav approximate search result's RXCUI are identical... an exact match, with no loss or addition of knowledge
+- identical
+  - probability that a R_MEDICATION's most representative RXCUI and a RxNav approximate search result's RXCUI are identical... an exact match, with no loss or addition of knowledge
 - ingredient_of
 - inverse_isa
 - isa
-- more distant: probability that there is more than one semantic hop between a R_MEDICATION's most representative RXCUI and a RxNav approximate search result's RXCUI. From TMM's perspective, the search result is wrong.
+- more distant:
+  - probability that there is more than one semantic hop between a R_MEDICATION's most representative RXCUI and a RxNav approximate search result's RXCUI. Frequently these results are still useful, but TMM considers them to be of the lowest veracity.
 - part_of
 - quantified_form_of
 - tradename_of
 
 ----
 
-- override: whenever the RxNav approximate search result's score is 100, this is set to identical, regardless of rf_responses. Likewise, it is set to more distant when the score is 0. Otherwise, override is rf_responses
+- override: whenever the RxNav approximate search result's score is 100, this is set to identical, regardless of `rf_responses`. Likewise, it is set to more distant when the score is 0. Otherwise, `override` retains the value of `rf_responses`.
 
