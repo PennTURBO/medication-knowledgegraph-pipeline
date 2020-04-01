@@ -35,10 +35,8 @@ http://`<`solraddress`>`:8983/solr/med_mapping_kb_labels/select?fl=mediri,labelp
 ```
 
 
-
-One route, in unoptimized SPARQL, for finding medication orders that include an ingredient with an **antitussive role**, according to ChEBI:
-
 ####  Q1 (ChEBI role)
+_One route, in unoptimized SPARQL, for finding medication orders that include an ingredient with an **antitussive role**, according to ChEBI_
 
 ```SPARQL
 PREFIX obo: <http://purl.obolibrary.org/obo/>
@@ -61,8 +59,6 @@ where {
     ?dron_chebi_ing mydata:transitive_role_of_class ?drugrole .
 }
 ```
-
-
 
 Why `?prob_more_distant < 0.06`
 
