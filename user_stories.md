@@ -4,7 +4,7 @@
 
 ### Solr search
 
-http://<solraddress>:8983/solr/med_mapping_kb_labels/select?fl=mediri,labelpred,medlabel,score&q=medlabel:antiussive~&rows=3
+http://`<`solraddress`>`:8983/solr/med_mapping_kb_labels/select?fl=mediri,labelpred,medlabel,score&q=medlabel:antiussive~&rows=3
 
 ```json
 {
@@ -96,7 +96,7 @@ where {
 
 Note: not using the fuzzy spelling `~` operator with the row limit of 3 here. It brings terms like "nystatin oral capsule [bio-statin]", with multiple `*statin*` tokens, up to the top. In that case, "statin" CHEBI:87631 appears 8th in the list.
 
-http://<solraddress>:8983/solr/med_mapping_kb_labels/select?fl=mediri,labelpred,medlabel,score&q=medlabel:(statin)&rows=3
+http://`<`solraddress`>`:8983/solr/med_mapping_kb_labels/select?fl=mediri,labelpred,medlabel,score&q=medlabel:(statin)&rows=3
 
 ```json
 {
