@@ -179,7 +179,7 @@ where {
 
 ## What if a user searches for "rosuvastatin" 
 
-There are ingredient terms from 
+There are equally good ingredient terms from multiple terminologies
 
 - CHEBI:38545, defined in http://purl.obolibrary.org/obo/chebi.owl
   - dextromethorphan ([CHEBI:4470](https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI%3A4470)) ingredient style query returns nothing
