@@ -64,6 +64,24 @@ where {
 
 
 
+Why `?prob_more_distant < 0.06`
+
+The random forest knows of ~ 18 classes, including 
+
+- identical
+- more distant
+- ingredient of, etc.
+
+A "random" score for `more distant` would be ~ 1/18 or ~ 0.06
+
+_RxCUI associations with source medications have already gone through one round of quality filtering, but it's not uncommon for a source medication to still have RxCUI associations. All of those RxCUI associations may have the same RxCUI value, but sometimes there are multiple associated RxCUI values. Even then, they seem to be semantically very close. Nonetheless,  I'm still thinking of finding additionally ways to get a single consensus RxCUI, and to build a direct relationship between the source/reference medication and the RxCUI. That would eliminate the need for traversing the classified search result entities._
+
+
+
+----
+
+
+
 The same query can be easily modified to look for orders including a known **antitussive ChEBI ingredient**, like dextromethorphan ([CHEBI:4470](https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI%3A4470))
 
 #### Q2 (ChEBI ingredient)
@@ -268,7 +286,7 @@ where {
     ?dronprod mydata:transitively_materialized_dron_ingredient ?d_c_bp_mapping .
     ?dronprod mydata:bioportal_mapping ?match_rxcui .
     ?match_rxcui mydata:defined_in <http://purl.bioontology.org/ontology/RXNORM/> .
-    # or materialized rxnorm    
+    # or materialized RxNorm    
 graph mydata:classified_search_results {
 ?classified_search_res a obo:OBI_0001909 ;
                                mydata:prob_more_distant ?prob_more_distant ;
