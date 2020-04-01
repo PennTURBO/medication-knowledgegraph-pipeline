@@ -280,6 +280,10 @@ graph mydata:classified_search_results {
 }
 ```
 
-In addition to using two BioPortal mappings, traversing from DrOn to RxNorm over materialized_rxcui is currently another solution. I may remove that graph and the materialized CUI denotations in the future,  since the BioPortal mappings have good coverage and are semantically simplest. (On the other hand, setting up the BioPortal Virtual Machine is one of the more complex steps in TMM.) Note: the materialized CUI denotations don't provide links to DrOn or ChEBI, only between ULS components like RxNorm, ATC and NDF-RT.
+In addition to using two BioPortal mappings, traversing from DrOn to RxNorm over materialized_rxcui is currently another solution. I may remove that graph and the materialized CUI denotations in the future,  since the BioPortal mappings have good coverage and are semantically simplest. 
+
+On the other hand, setting up the BioPortal Virtual Machine is one of the more complex steps in TMM.
+
+Note that the materialized CUI denotations don't provide links to DrOn or ChEBI, only between ULS components like RxNorm, ATC and NDF-RT.
 
 Also, chains of RxNorm relations can relate a RxNorm ingredient to the RxNorm products that are usually the match end of the classification process, analogously to the transitively materialized DrOn ingredient relations. The RxNorm chains  are highly variable in composition and length. I haven't yet determined which offers better coverage.
