@@ -182,8 +182,8 @@ where {
 There are equally good ingredient terms from multiple terminologies
 
 - CHEBI:38545, defined in http://purl.obolibrary.org/obo/chebi.owl
-  - dextromethorphan ([CHEBI:4470](https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI%3A4470)) ingredient style query returns nothing
-  - therefore, rosuvastatin containing drugs won't show up in a **Q3 ChEBI class** query
+  - **Q1** ingredient query returns nothing
+  - therefore, rosuvastatin containing drugs won't show up in a **Q3 ChEBI class** query either
 - DRON:00018679 from http://purl.obolibrary.org/obo/dron/dron-ingredient.owl
   - DrOn usually imports ChEBI terms for ingredients but has authored a few of its own
   - substituting DRON:00018679 does return source medications
