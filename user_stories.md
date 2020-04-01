@@ -76,13 +76,9 @@ A "random" score for `more distant` would be ~ 1/18 or ~ 0.06
 
 _RxCUI associations with source medications have already gone through one round of quality filtering, but it's not uncommon for a source medication to still have RxCUI associations. All of those RxCUI associations may have the same RxCUI value, but sometimes there are multiple associated RxCUI values. Even then, they seem to be semantically very close. Nonetheless,  I'm still thinking of finding additionally ways to get a single consensus RxCUI, and to build a direct relationship between the source/reference medication and the RxCUI. That would eliminate the need for traversing the classified search result entities._
 
-
-
 ----
 
-
-
-The same query can be easily modified to look for orders including a known **antitussive ChEBI ingredient**, like dextromethorphan ([CHEBI:4470](https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI%3A4470))
+**Q1** can be easily modified to look for orders including a known **antitussive ChEBI ingredient**, like dextromethorphan ([CHEBI:4470](https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI%3A4470))
 
 #### Q2 (ChEBI ingredient)
 
@@ -105,10 +101,6 @@ where {
     ?bioportal_mapping mydata:transitively_materialized_dron_ingredient ?dron_chebi_ing .
 }
 ```
-
-
-
-
 
 ## User is interested in patients with orders for drugs in the "statin" class
 
@@ -169,8 +161,6 @@ where {
     ?dron_chebi_ing mydata:transitive_massless_rolebearer ?drugclass
 }
 ```
-
-
 
 - *what about macrolide antibiotics?* http://purl.obolibrary.org/obo/CHEBI_25105
 - No mass is asserted for that term. It's a subclass of [macrolide, CHEBI:25106 ](http://purl.obolibrary.org/obo/CHEBI_25106) and the restriction below.
@@ -267,11 +257,7 @@ http://<solraddress>:8983/solr/med_mapping_kb_labels/select?fl=mediri,labelpred,
   }}
 ```
 
-
-
 #### Q4: User asks for ChEBI ingredient, but DrOn models that ingredients with a DrOn native term. Connect with additional BioPortal mappings.
-
-
 
 ```SPARQL
 PREFIX obo: <http://purl.obolibrary.org/obo/>
@@ -297,8 +283,6 @@ graph mydata:classified_search_results {
     bind(replace(str(?source_id_uri), "http://example.com/resource/source_med_id/", "") as ?source_med_id)
 }
 ```
-
-
 
 In addition to using two BioPortal mappings, traversing from DrOn to RxNorm over materialized_rxcui is currently another solution. I may remove that graph and the materialized CUI denotations in the future,  since the BioPortal mappings have good coverage and are semantically simplest. (On the other hand, setting up the BioPortal Virtual Machine is one of the more complex steps in TMM.) Note: the materialized CUI denotations don't provide links to DrOn or ChEBI, only between ULS components like RxNorm, ATC and NDF-RT.
 
