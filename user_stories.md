@@ -300,7 +300,7 @@ Also, chains of RxNorm relations can relate a RxNorm ingredient to a RxNorm prod
 
 Several hits are available from NDF-RT, but not from ChEBI. (Roles like SNRI aren't expected in DrOn or RxNorm.) Do they all have the same meaning? 
 
-Here we also retreive the `prefLabel` to help the user see that SNRI can be interpreted in at least two ways. The user would presumably choose NDFRT:N0000175749
+Here we also retrieve the `prefLabel` to help the user see that SNRI can be interpreted in at least two ways. The user would presumably choose NDFRT:N0000175749
 
 ```json
 {
@@ -420,6 +420,5 @@ where {
 ```
 
 
-
-*With more logical ordering and named-graph contartains,  this query is written better than the previous ones.*
+*With more logical ordering and named-graph constraints,  this query is written better than the previous ones.*
 
