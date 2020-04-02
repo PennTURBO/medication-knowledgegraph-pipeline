@@ -4,7 +4,7 @@
 
 ### Solr search
 
-http://`<`solraddress`>`:8983/solr/med_mapping_kb_labels/select?fl=mediri,labelpred,medlabel,score&q=medlabel:antiussive~&rows=3
+> http://`<`solraddress`>`:8983/solr/med_mapping_kb_labels/select?fl=mediri,labelpred,medlabel,score&q=medlabel:antiussive~&rows=3
 
 ```json
 {
@@ -70,7 +70,7 @@ The random forest knows of ~ 18 classes, including
 
 A "random" score for `more distant` would be ~ 1/18 or ~ 0.06
 
-_RxCUI associations with source medications have already gone through one round of quality filtering, but it's not uncommon for a source medication to still have RxCUI associations. All of those RxCUI associations may have the same RxCUI value, but sometimes there are multiple associated RxCUI values. Even then, they seem to be semantically very close. Nonetheless,  I'm still thinking of finding additionally ways to get a single consensus RxCUI, and to build a direct relationship between the source/reference medication and the RxCUI. That would eliminate the need for traversing the classified search result entities._
+_RxCUI associations with source medications have already gone through one round of quality filtering, but it's not uncommon for a source medication to still have multiple RxCUI associations. All of those RxCUI associations may have the same RxCUI value, but occasionally there are multiple associated RxCUI values. Even then, they seem to be semantically very close. Nonetheless,  I'm still thinking of finding additionally ways to get a single consensus RxCUI, and to build a direct relationship between the source/reference medication and the RxCUI. That would eliminate the need for traversing the classified search result entities._
 
 ----
 
@@ -102,7 +102,7 @@ where {
 
 Note: not using the fuzzy spelling `~` operator with the row limit of 3 here. It brings terms like "nystatin oral capsule [bio-statin]", with multiple `*statin*` tokens, up to the top. In that case, "statin" CHEBI:87631 appears 8th in the list.
 
-http://`<`solraddress`>`:8983/solr/med_mapping_kb_labels/select?fl=mediri,labelpred,medlabel,score&q=medlabel:(statin)&rows=3
+> http://`<`solraddress`>`:8983/solr/med_mapping_kb_labels/select?fl=mediri,labelpred,medlabel,score&q=medlabel:(statin)&rows=3
 
 ```json
 {
@@ -158,10 +158,13 @@ where {
 }
 ```
 
-- *what about macrolide antibiotics?* http://purl.obolibrary.org/obo/CHEBI_25105
-- No mass is asserted for that term. It's a subclass of [macrolide, CHEBI:25106 ](http://purl.obolibrary.org/obo/CHEBI_25106) and the restriction below.
-- erythromycins ([CHEBI:23953](https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI%3A23953)) 'is a' [rdfs:subClassOf] macrolide antibiotic ([CHEBI:25105](https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI%3A25105))
-- maybe no orders for erythromycins etc.?
+- why didn't I get any orders for macrolide antibiotics with the same kind of search?
+-  http://purl.obolibrary.org/obo/CHEBI_25105
+- No mass is asserted for that term (good in this case). 
+- It's a subclass of [macrolide, CHEBI:25106 ](http://purl.obolibrary.org/obo/CHEBI_25106) and the role restriction below (required in this case)
+- CHEBI:2682, "amphotericin B" is a subclass of macrolide (structurally streaking)
+- CHEBI is an indirect subclass of [obo:CHEBI_33281](http://pennturbo.org:7200/resource?uri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FCHEBI_33281)  [antimicrobial agent](http://purl.obolibrary.org/obo/CHEBI_33281) via CHEBI:87113 - antibiotic antifungal drug
+- Maybe there's no explicit chain of statements that amphotericin B is a macrolide antibiotic? Requires OWL reasoning?
 
 
 
@@ -188,7 +191,7 @@ There are equally good ingredient terms from multiple terminologies
 - ATC
 - NDF-RT
 
-http://<solraddress>:8983/solr/med_mapping_kb_labels/select?fl=mediri,labelpred,medlabel,score&q=medlabel:(rosuvastatin)&rows=10
+> http://`<`solraddress`>`:8983/solr/med_mapping_kb_labels/select?fl=mediri,labelpred,medlabel,score&q=medlabel:(rosuvastatin)&rows=10
 
 ```json
 {
@@ -253,7 +256,7 @@ http://<solraddress>:8983/solr/med_mapping_kb_labels/select?fl=mediri,labelpred,
   }}
 ```
 
-#### Q4: User asks for ChEBI ingredient, but DrOn models that ingredients with a DrOn native term. Connect with additional BioPortal mappings.
+#### Q4: User asks for ChEBI ingredient, but DrOn models that ingredient with its own DrOn-native term. Connect them with additional BioPortal mappings.
 
 ```SPARQL
 PREFIX obo: <http://purl.obolibrary.org/obo/>
@@ -286,4 +289,108 @@ On the other hand, setting up the BioPortal Virtual Machine is one of the more c
 
 Note that the materialized CUI denotations don't provide links to DrOn or ChEBI, only between ULS components like RxNorm, ATC and NDF-RT.
 
-Also, chains of RxNorm relations can relate a RxNorm ingredient to the RxNorm products that are usually the match end of the classification process, analogously to the transitively materialized DrOn ingredient relations. The RxNorm chains  are highly variable in composition and length. I haven't yet determined which offers better coverage.
+Also, chains of RxNorm relations can relate a RxNorm ingredient to a RxNorm product, which is usually the match end of the classification process, as an alternative to the transitively materialized DrOn ingredient relations. However, the RxNorm chains  are highly variable in composition and length. I haven't yet determined which offers better coverage.
+
+
+
+## User interested in patients with orders for serotonin and norepinephrine reuptake inhibitors. Searches for `SNRI`.
+
+> http://`<`solraddress`>`:8983/solr/med_mapping_kb_labels/select?fl=mediri,labelpred,medlabel,score&q=medlabel:(SNRI~)&rows=10
+
+Several hits from NDF-RT, but not from ChEBI. (Roles like SNRI aren't expected in DrOn or RxNorm.) Do they all have the same meaning? *(Maybe we should include the preferred label in each Solr "document"? Otherwise, and additional Solr, SPARQL or Neo4J query will be required.)* See below.
+
+
+
+```json
+{
+  "responseHeader":{
+    "status":0,
+    "QTime":0,
+    "params":{
+      "q":"medlabel:(SNRI~)",
+      "fl":"mediri,labelpred,medlabel,score",
+      "rows":"10"}},
+  "response":{"numFound":842,"start":0,"maxScore":10.882717,"docs":[
+      {
+        "mediri":["http://purl.bioontology.org/ontology/NDFRT/N0000175749"],
+        "labelpred":["http://www.w3.org/2004/02/skos/core#altLabel"],
+        "medlabel":["snri"],
+        "score":10.882717},
+      {
+        "mediri":["http://purl.bioontology.org/ontology/NDFRT/N0000175695"],
+        "labelpred":["http://www.w3.org/2004/02/skos/core#altLabel"],
+        "medlabel":["snri"],
+        "score":10.882717},
+      {
+        "mediri":["http://purl.bioontology.org/ontology/NDFRT/N0000175696"],
+        "labelpred":["http://www.w3.org/2004/02/skos/core#altLabel"],
+        "medlabel":["ssri"],
+        "score":8.162038},
+      {
+        "mediri":["http://purl.bioontology.org/ontology/NDFRT/N0000175464"],
+        "labelpred":["http://www.w3.org/2004/02/skos/core#altLabel"],
+        "medlabel":["hiv-1 nnrti and nrti"],
+        "score":7.6165004},
+      {
+        "mediri":["http://purl.bioontology.org/ontology/RXNORM/220049"],
+        "labelpred":["http://www.w3.org/2004/02/skos/core#prefLabel"],
+        "medlabel":["stri-dex"],
+        "score":7.3717256},
+      {
+        "mediri":["http://purl.bioontology.org/ontology/NDFRT/N0000175749"],
+        "labelpred":["http://www.w3.org/2004/02/skos/core#altLabel"],
+        "medlabel":["serotonin and norepinephrine reuptake inhibitor (snri)"],
+        "score":7.084904},
+      {
+        "mediri":["http://purl.bioontology.org/ontology/RXNORM/220050"],
+        "labelpred":["http://www.w3.org/2004/02/skos/core#prefLabel"],
+        "medlabel":["stri-dex clear gel"],
+        "score":6.1757555},
+      {
+        "mediri":["http://purl.bioontology.org/ontology/RXNORM/1295895"],
+        "labelpred":["http://www.w3.org/2004/02/skos/core#prefLabel"],
+        "medlabel":["stri-dex soap product"],
+        "score":6.1757555},
+      {
+        "mediri":["http://purl.bioontology.org/ontology/RXNORM/1296422"],
+        "labelpred":["http://www.w3.org/2004/02/skos/core#prefLabel"],
+        "medlabel":["stri-dex topical product"],
+        "score":6.1757555},
+      {
+        "mediri":["http://purl.bioontology.org/ontology/NDFRT/N0000175696"],
+        "labelpred":["http://www.w3.org/2004/02/skos/core#altLabel"],
+        "medlabel":["serotonin reuptake inhibitor (ssri)"],
+        "score":6.1757555}]
+  }}
+```
+
+
+
+Get the preferred labels for the two entities with alternative labels of "snri":
+
+> http://`<`solraddress`>`:8983/solr/med_mapping_kb_labels/select?fl=mediri,labelpred,medlabel,score&q=(mediri:N0000175749 OR mediri:N0000175695) AND (labelpred:label OR labelpred:prefLabel)
+
+```json
+{
+  "responseHeader":{
+    "status":0,
+    "QTime":0,
+    "params":{
+      "q":"(mediri:N0000175749 OR mediri:N0000175695) AND (labelpred:label OR labelpred:prefLabel)",
+      "fl":"mediri,labelpred,medlabel,score"}},
+  "response":{"numFound":2,"start":0,"maxScore":11.843203,"docs":[
+      {
+        "mediri":["http://purl.bioontology.org/ontology/NDFRT/N0000175749"],
+        "labelpred":["http://www.w3.org/2004/02/skos/core#prefLabel"],
+        "medlabel":["serotonin and norepinephrine reuptake inhibitor [epc]"],
+        "score":11.843203},
+      {
+        "mediri":["http://purl.bioontology.org/ontology/NDFRT/N0000175695"],
+        "labelpred":["http://www.w3.org/2004/02/skos/core#prefLabel"],
+        "medlabel":["norepinephrine reuptake inhibitor [epc]"],
+        "score":11.843203}]
+  }}
+```
+
+
+... user would presumably choose NDFRT:N0000175749
