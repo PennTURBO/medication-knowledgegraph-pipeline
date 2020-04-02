@@ -371,3 +371,55 @@ Here we also retreive the `prefLabel` to help the user see that SNRI can be inte
   }}
 ```
 
+
+
+### Q5: NDF-RT role
+
+```SPARQL
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX mydata: <http://example.com/resource/>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+select 
+distinct ?ndfrt_class ?source_id_uri ?source_med_id ?prob_more_distant ?match_rxcui ?ndfrt_ing ?chebi_ing ?dron_prod
+where {
+    values ?ndfrt_class {
+        <http://purl.bioontology.org/ontology/NDFRT/N0000175749>
+    }
+    graph <http://purl.bioontology.org/ontology/NDFRT/> {
+        ?ndfrt_ing rdfs:subClassOf ?ndfrt_class .
+    }
+    graph mydata:bioportal_mappings {
+        ?ndfrt_ing mydata:bioportal_mapping ?chebi_ing
+    }
+    # or could require that it's defined in obo:chebi.owl
+    # see RxNorm example below
+    # these improve performance
+    graph obo:chebi.owl {
+        ?chebi_ing a owl:Class
+    }
+    graph <http://example.com/resource/transitively_materialized_dron_ingredient> {
+        ?dron_prod mydata:transitively_materialized_dron_ingredient ?chebi_ing .
+    }
+    graph mydata:bioportal_mappings {
+        ?dron_prod mydata:bioportal_mapping ?match_rxcui .
+    }
+    graph mydata:defined_in {
+        ?match_rxcui mydata:defined_in <http://purl.bioontology.org/ontology/RXNORM/>
+    }
+    graph mydata:classified_search_results {
+        ?classified_search_res a obo:OBI_0001909 ;
+                               mydata:prob_more_distant ?prob_more_distant ;
+                               mydata:match_rxcui ?match_rxcui ;
+                               mydata:source_id_uri ?source_id_uri .
+    }
+    filter( ?prob_more_distant < 0.06 )
+    bind(replace(str(?source_id_uri), "http://example.com/resource/source_med_id/", "") as ?source_med_id)
+}
+```
+
+
+
+*With more logical ordering and named-graph contartains,  this query is written better than the previous ones.*
+
