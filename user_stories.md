@@ -36,7 +36,7 @@
 
 
 ####  Q1 (ChEBI role)
-_One route, in unoptimized SPARQL, for finding medication orders that include an ingredient with an **antitussive role**, according to ChEBI_
+_Here's one route, in unoptimized SPARQL, for finding medication orders that include an ingredient with an **antitussive role**, according to ChEBI_
 
 ```SPARQL
 PREFIX obo: <http://purl.obolibrary.org/obo/>
@@ -100,7 +100,7 @@ where {
 
 ## User is interested in patients with orders for drugs in the "statin" class
 
-Note: not using the fuzzy spelling `~` operator with the row limit of 3 here. It brings terms like "nystatin oral capsule [bio-statin]", with multiple `*statin*` tokens, up to the top. In that case, "statin" CHEBI:87631 appears 8th in the list.
+Note: I'm not using the fuzzy spelling `~` operator with the row limit of 3 here. It brings terms like "nystatin oral capsule [bio-statin]", with multiple `*statin*` tokens, up to the top. In that case, "statin" CHEBI:87631 appears 8th in the list.
 
 > http://`<`solraddress`>`:8983/solr/med_mapping_kb_labels/select?fl=mediri,labelpred,medlabel,score&q=medlabel:(statin)&rows=3
 
@@ -158,8 +158,9 @@ where {
 }
 ```
 
-- why didn't I get any orders for macrolide antibiotics with the same kind of search?
--  http://purl.obolibrary.org/obo/CHEBI_25105
+#### why didn't I get any orders for 'macrolide antibiotic's with the Q3 query style?
+
+-  macrolide antibiotic = http://purl.obolibrary.org/obo/CHEBI_25105
 - No mass is asserted for that term (good in this case). 
 - It's a subclass of [macrolide, CHEBI:25106 ](http://purl.obolibrary.org/obo/CHEBI_25106) and the role restriction below (required in this case)
 - CHEBI:2682, "amphotericin B" is a subclass of macrolide (structurally streaking)
@@ -297,7 +298,7 @@ Also, chains of RxNorm relations can relate a RxNorm ingredient to a RxNorm prod
 
 > http://`<`solraddress`>`:8983/solr/med_mapping_kb_labels/select?fl=mediri,labelpred,medlabel,score&q=medlabel:(SNRI~)&rows=10
 
-Several hits from NDF-RT, but not from ChEBI. (Roles like SNRI aren't expected in DrOn or RxNorm.) Do they all have the same meaning? *(Maybe we should include the preferred label in each Solr "document"? Otherwise, and additional Solr, SPARQL or Neo4J query will be required.)* See below.
+Several hits are available from NDF-RT, but not from ChEBI. (Roles like SNRI aren't expected in DrOn or RxNorm.) Do they all have the same meaning? *(Maybe we should include the preferred label in each Solr "document"? Otherwise, and additional Solr, SPARQL or Neo4J query will be required.)* See below.
 
 
 
