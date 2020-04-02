@@ -296,102 +296,78 @@ Also, chains of RxNorm relations can relate a RxNorm ingredient to a RxNorm prod
 
 ## User interested in patients with orders for serotonin and norepinephrine reuptake inhibitors. Searches for `SNRI`.
 
-> http://`<`solraddress`>`:8983/solr/med_mapping_kb_labels/select?fl=mediri,labelpred,medlabel,score&q=medlabel:(SNRI~)&rows=10
+> http://`<`solraddress`>`:8983/solr/med_mapping_kb_labels/select?fl=mediri,labelpred,medlabel,prefLabel,score&q=medlabel:(SNRI~)&rows=10
 
-Several hits are available from NDF-RT, but not from ChEBI. (Roles like SNRI aren't expected in DrOn or RxNorm.) Do they all have the same meaning? *(Maybe we should include the preferred label in each Solr "document"? Otherwise, and additional Solr, SPARQL or Neo4J query will be required.)* See below.
+Several hits are available from NDF-RT, but not from ChEBI. (Roles like SNRI aren't expected in DrOn or RxNorm.) Do they all have the same meaning? 
 
-
+Here we also retreive the `prefLabel` to help the user see that SNRI can be interpreted in at least two ways. The user would presumably choose NDFRT:N0000175749
 
 ```json
 {
   "responseHeader":{
     "status":0,
-    "QTime":0,
+    "QTime":10,
     "params":{
       "q":"medlabel:(SNRI~)",
-      "fl":"mediri,labelpred,medlabel,score",
+      "fl":"mediri,labelpred,medlabel,prefLabel,score",
       "rows":"10"}},
-  "response":{"numFound":842,"start":0,"maxScore":10.882717,"docs":[
+  "response":{"numFound":839,"start":0,"maxScore":10.892033,"docs":[
       {
         "mediri":["http://purl.bioontology.org/ontology/NDFRT/N0000175749"],
         "labelpred":["http://www.w3.org/2004/02/skos/core#altLabel"],
         "medlabel":["snri"],
-        "score":10.882717},
+        "prefLabel":["serotonin and norepinephrine reuptake inhibitor [epc]"],
+        "score":10.892033},
       {
         "mediri":["http://purl.bioontology.org/ontology/NDFRT/N0000175695"],
         "labelpred":["http://www.w3.org/2004/02/skos/core#altLabel"],
         "medlabel":["snri"],
-        "score":10.882717},
+        "prefLabel":["norepinephrine reuptake inhibitor [epc]"],
+        "score":10.892033},
       {
         "mediri":["http://purl.bioontology.org/ontology/NDFRT/N0000175696"],
         "labelpred":["http://www.w3.org/2004/02/skos/core#altLabel"],
         "medlabel":["ssri"],
-        "score":8.162038},
+        "prefLabel":["serotonin reuptake inhibitor [epc]"],
+        "score":8.169024},
       {
         "mediri":["http://purl.bioontology.org/ontology/NDFRT/N0000175464"],
         "labelpred":["http://www.w3.org/2004/02/skos/core#altLabel"],
         "medlabel":["hiv-1 nnrti and nrti"],
-        "score":7.6165004},
+        "prefLabel":["human immunodeficiency virus 1 non-nucleoside and nucleoside analog reverse transcriptase inhibitor [epc]"],
+        "score":7.623132},
       {
         "mediri":["http://purl.bioontology.org/ontology/RXNORM/220049"],
         "labelpred":["http://www.w3.org/2004/02/skos/core#prefLabel"],
         "medlabel":["stri-dex"],
-        "score":7.3717256},
+        "score":7.3780704},
       {
         "mediri":["http://purl.bioontology.org/ontology/NDFRT/N0000175749"],
         "labelpred":["http://www.w3.org/2004/02/skos/core#altLabel"],
         "medlabel":["serotonin and norepinephrine reuptake inhibitor (snri)"],
-        "score":7.084904},
+        "prefLabel":["serotonin and norepinephrine reuptake inhibitor [epc]"],
+        "score":7.0910897},
       {
         "mediri":["http://purl.bioontology.org/ontology/RXNORM/220050"],
         "labelpred":["http://www.w3.org/2004/02/skos/core#prefLabel"],
         "medlabel":["stri-dex clear gel"],
-        "score":6.1757555},
+        "score":6.1811156},
       {
         "mediri":["http://purl.bioontology.org/ontology/RXNORM/1295895"],
         "labelpred":["http://www.w3.org/2004/02/skos/core#prefLabel"],
         "medlabel":["stri-dex soap product"],
-        "score":6.1757555},
+        "score":6.1811156},
       {
         "mediri":["http://purl.bioontology.org/ontology/RXNORM/1296422"],
         "labelpred":["http://www.w3.org/2004/02/skos/core#prefLabel"],
         "medlabel":["stri-dex topical product"],
-        "score":6.1757555},
+        "score":6.1811156},
       {
         "mediri":["http://purl.bioontology.org/ontology/NDFRT/N0000175696"],
         "labelpred":["http://www.w3.org/2004/02/skos/core#altLabel"],
         "medlabel":["serotonin reuptake inhibitor (ssri)"],
-        "score":6.1757555}]
+        "prefLabel":["serotonin reuptake inhibitor [epc]"],
+        "score":6.1811156}]
   }}
 ```
 
-
-
-Get the preferred labels for the two entities with alternative labels of "snri":
-
-> http://`<`solraddress`>`:8983/solr/med_mapping_kb_labels/select?fl=mediri,labelpred,medlabel,score&q=(mediri:N0000175749 OR mediri:N0000175695) AND (labelpred:label OR labelpred:prefLabel)
-
-```json
-{
-  "responseHeader":{
-    "status":0,
-    "QTime":0,
-    "params":{
-      "q":"(mediri:N0000175749 OR mediri:N0000175695) AND (labelpred:label OR labelpred:prefLabel)",
-      "fl":"mediri,labelpred,medlabel,score"}},
-  "response":{"numFound":2,"start":0,"maxScore":11.843203,"docs":[
-      {
-        "mediri":["http://purl.bioontology.org/ontology/NDFRT/N0000175749"],
-        "labelpred":["http://www.w3.org/2004/02/skos/core#prefLabel"],
-        "medlabel":["serotonin and norepinephrine reuptake inhibitor [epc]"],
-        "score":11.843203},
-      {
-        "mediri":["http://purl.bioontology.org/ontology/NDFRT/N0000175695"],
-        "labelpred":["http://www.w3.org/2004/02/skos/core#prefLabel"],
-        "medlabel":["norepinephrine reuptake inhibitor [epc]"],
-        "score":11.843203}]
-  }}
-```
-
-
-... user would presumably choose NDFRT:N0000175749
