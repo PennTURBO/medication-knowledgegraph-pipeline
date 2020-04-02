@@ -1,44 +1,29 @@
 ## Motivation: get more medical synonyms for Solr, but not formulae, etc.
 
-
-
 ```SPARQL
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
 PREFIX oboInOwl: <http://www.geneontology.org/formats/oboInOwl#>
-prefix bp: <http://purl.bioontology.org/ontology/>
-# this is skightly inefficient becasue the harmonized label 
-#   will only be relvant for altLabel or synonyms (if we use those)
-#   OR if we start using obo:IAO_0000118 alternative terms, which so far only seem applciable to upper ontology terms
-# oboInOwl:hasExactSynonym and/or oboInOwl:hasRelatedSynonym used in ChEBI
-#   but those include formaulas, smiles, inchis
-#   might need to check the source annotation
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 select
-distinct (?s as ?mediri) (?p as ?labelpred) (?normlab as ?medlabel) ?prefLabel
+(?as as ?mediri) (?ap as ?labelpred) ?source (lcase(str(?at)) as ?medlabel) (lcase(str(?rawLabel)) as ?prefLabel)
 where {
-    values ?g {
-        <http://purl.obolibrary.org/obo/chebi.owl>
-        <http://purl.bioontology.org/ontology/RXNORM/>
-        <http://purl.obolibrary.org/obo/dron-rxnorm.owl>
-        <http://purl.bioontology.org/ontology/NDFRT/>
-        <http://purl.bioontology.org/ontology/ATC/>
-        <http://purl.obolibrary.org/obo/dron/dron-ingredient.owl>
-        <http://purl.obolibrary.org/obo/dron/dron-upper.owl>
-        <http://purl.obolibrary.org/obo/dron/dron-hand.owl>
+    values ?ap {
+        oboInOwl:hasRelatedSynonym oboInOwl:hasExactSynonym
     }
-    graph ?g {
-        values ?p {
-            rdfs:label  skos:prefLabel skos:altLabel
-        }
-        ?s ?p ?o .
-        optional {
-            ?s skos:altLabel ?o .
-            ?s skos:prefLabel ?rawPrefLabel .
-            bind(lcase(str(?rawPrefLabel)) as ?prefLabel)
-#            filter(?o != ?prefLabel )
-        } 
-        bind(lcase(str(?o)) as ?normlab)
+    #  oboInOwl:hasDbXref can also be used as an annotated property 
+    #    (in addition to a source-attributing predicate)
+    # where do "band name" assertions come from?
+    values ?source {
+        "EuroFIR" "Beilstein" "FooDB" "EBI_Industry_Programme" "PubChem" "VSDB" "KEGG_DRUG" "WHO_MedNet" "DrugBank"
+    }
+    graph <http://purl.obolibrary.org/obo/chebi.owl> {
+        ?s a owl:Axiom ;
+           owl:annotatedTarget ?at ;
+           owl:annotatedProperty ?ap ;
+           oboInOwl:hasDbXref ?source ;
+           owl:annotatedSource ?as .
+        ?as rdfs:label ?rawLabel .
+        filter( (lcase(str(?rawLabel))) != (lcase(str(?at))))
     }
 }
 ```
