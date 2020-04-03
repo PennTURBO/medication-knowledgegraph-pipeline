@@ -294,6 +294,12 @@ Also, chains of RxNorm relations can relate a RxNorm ingredient to a RxNorm prod
 
 
 
+#### Opportunity: replace DrOn ingredients with ChEBI ingredients mapped by BioPortal
+
+#### Related: Check validity of RxNorm terms asserted by DrOn
+
+
+
 ## User interested in patients with orders for serotonin and norepinephrine reuptake inhibitors. Searches for `SNRI`.
 
 > http://`<`solraddress`>`:8983/solr/med_mapping_kb_labels/select?fl=mediri,labelpred,medlabel,prefLabel,score&q=medlabel:(SNRI~)&rows=10
@@ -422,3 +428,133 @@ where {
 
 *With more logical ordering and named-graph constraints,  this query is written better than the previous ones.*
 
+
+
+### Opiates
+
+The formal RDF & OWL semantics through ChEBI, DrOn and RxNorm are pretty simple here. The sample SPARQL queries above can be used to connect the relevant roles and classes to the relevant source medication orders.
+
+Helping the user do a fruitful Solr search for roles and classes will be more of a challenge here, so a little background information may be helpful in designing positive and negative test cases for the software. 
+
+The terms opiate, opioid, and narcotic are related but not completely interchangeable. Clinicians, pharmacologists and regulatory agencies frequently favor one term over the others. 
+
+According to Wikipedia
+
+- an opiate is a compound that can be derived from opium, which is extracted from the opium poppy 
+
+- an opioid is any substance that can bind to opioid receptor proteins, like you would find on the surface of human neurons
+
+
+The term "narcotic" has the most ambiguous meaning.
+
+Opioids can agonize opioid receptors, which could lead to euphoria and analgesia, or they can block/antagonize the receptors. Naloxone is used as a blocker to reverse the respiratory depression associated with overdose.
+
+Some pharmacological authorities focus on the subtype of opioid receptor that a compound predominantly binds to. Compounds agonizing mu receptors are especially useful for analgesia. Compounds binding to kappa receptors also cause analgesia, but have hallucinations or even dysphoria as possible side effects.
+
+Analgesia is not the only medicinal use of opioids: the compound loperamide is used orally to treat diarrhea, without causing euphoria.
+
+The meaning of "opiate", "opioid" or "narcotic" is clearer when combined with an  application or mechanism. This Solr query
+
+> http://`<`solraddress`>`:8983/solr/med_mapping_kb_labels/select?fl=mediri,labelpred,medlabel,score,source&q=medlabel:(opiate opioid narcotic analgesic -non)
+
+gives a good score to "opioid analgesic" (CHEBI:35482 and NDFRT:N0000175440), and also to "narcotic antitussive" (NDFRT:N0000175795, like codeine), but not to CHEBI:35481, "non-narcotic analgesic". CHEBI:35482 could be used in a Q1 style SPARQL query, and NDFRT:N0000175440 could be used in a Q5 query.
+
+
+
+```SPARQL
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX mydata: <http://example.com/resource/>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+select 
+distinct 
+?drugrole ?chebi_ing ?dron_prod ?match_rxcui ?prob_more_distant ?source_id_uri ?source_med_id  ?source_med_id 
+where {
+    values ?drugrole {
+        <http://purl.obolibrary.org/obo/CHEBI_35482>
+    }
+    graph mydata:transitive_role_of_class {
+        ?chebi_ing mydata:transitive_role_of_class ?drugrole .
+    }
+    graph mydata:transitively_materialized_dron_ingredient {
+        ?dron_prod mydata:transitively_materialized_dron_ingredient ?chebi_ing .
+    }
+    graph mydata:bioportal_mappings {
+        ?match_rxcui mydata:bioportal_mapping ?dron_prod .
+    }
+    graph <http://purl.bioontology.org/ontology/RXNORM/> {
+        ?match_rxcui a owl:Class
+    }
+    graph mydata:classified_search_results {
+        ?classified_search_res a obo:OBI_0001909 ;
+                               mydata:prob_more_distant ?prob_more_distant ;
+                               mydata:match_rxcui ?match_rxcui ;
+                               mydata:source_id_uri ?source_id_uri .
+    }
+    filter( ?prob_more_distant < 0.06 )
+    bind(replace(str(?source_id_uri), "http://example.com/resource/source_med_id/", "") as ?source_med_id)
+}
+```
+
+
+
+Different Solr queries
+
+> http://`<`solraddress`>`:8983/solr/med_mapping_kb_labels/select?fl=mediri,labelpred,medlabel,score,source&q=medlabel:(opiod agonists)
+
+picks up some additional NDF-RT classes.
+
+http://`<`solraddress`>`:8983/solr/med_mapping_kb_labels/select?fl=mediri,labelpred,medlabel,score,source&q=medlabel:(mu binding)
+
+picks up DRON:00000036, "function-inhibiting mu receptor binding disposition". I haven't provided any examples of traversing over DrOn dispositions yet because DrOn only contains ~ 35 as of April 2020.
+
+
+
+```SPARQL
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+select 
+distinct ?s (lcase(str(?l)) as ?label)
+where {
+    values ?g {
+        <http://purl.obolibrary.org/obo/dron/dron-hand.owl> 
+        <http://purl.obolibrary.org/obo/dron/dron-ingredient.owl>
+        <http://purl.obolibrary.org/obo/dron/dron-upper.owl>
+        
+    }
+    graph ?g {
+        ?s rdfs:subClassOf* obo:BFO_0000016
+    }
+    ?s rdfs:label ?l .
+}
+```
+
+
+
+## User interested in patients with orders for "z-drugs"
+
+A class with the right members, (indirectly) like obo:CHEBI_10125 "zolpidem", exists: 
+
+http://purl.bioontology.org/ontology/UATC/N05CF "benzodiazepine related hypnotics and sedatives"
+
+But it can’t be found with Solr (or any text search engine for that matter)
+
+If the user searched for "benzodiazepine related hypnotics and sedatives" and ticked off ATC:N05CF, the following SPARQL query would find source orders
+
+
+
+```SPARQL
+
+```
+
+
+
+#### Opportunity: 
+
+- add a "z-drugs" synonym for UATC:N05CF in the Solr collection (uncoupled from the TURBO ontology?!)
+- assert a synonym in a TURBO named graph
+- create a disposition in DrOn and add the synonym "z-drug"
+- use something like RxNav's "classes that contain" feature to discover a class by example
+
+
+
+Related/also potentially uncoupled from ontology: adding mappings to BioPortal VM
