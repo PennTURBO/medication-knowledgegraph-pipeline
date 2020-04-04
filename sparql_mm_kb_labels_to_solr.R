@@ -47,6 +47,7 @@ mm.kb.solr.client$delete_by_query(name = config$med.map.kb.solr.core, query = "*
 
 # many of the next steps take several minutes each
 
+# refactor
 # query medmapping repo for selected labels from selected graphs
 med_labels <- httr::GET(
   url = paste0(
@@ -64,7 +65,8 @@ med_labels <- med_labels$results$bindings
 med_labels <-
   cbind.data.frame(med_labels$mediri$value,
                    med_labels$labelpred$value,
-                   med_labels$medlabel$value)
+                   med_labels$medlabel$value,
+                   med_labels$prefLabel$value)
 
 # beautify column labels
 temp <-
@@ -78,3 +80,43 @@ colnames(med_labels) <- temp
 
 # post data frame from sparql label query to Solr core
 mm.kb.solr.client$add(med_labels, config$med.map.kb.solr.core)
+
+
+#
+
+med_labels <- httr::GET(
+  url = paste0(
+    config$my.graphdb.base,
+    "/repositories/",
+    config$my.selected.repo
+  ),
+  query = list(query = config$chebi.synonym.solr.population.sparql),
+  saved.authentication
+)
+
+# convert binary JSON SPARQL results to a minimal dataframe
+med_labels <- jsonlite::fromJSON(rawToChar(med_labels$content))
+med_labels <- med_labels$results$bindings
+
+# keepers <- grepl(pattern = "value", x = )
+med_labels <-
+  cbind.data.frame(med_labels$mediri$value,
+                   med_labels$labelpred$value,
+                   med_labels$medlabel$value,
+                   med_labels$prefLabel$value,
+                   med_labels$source$value)
+
+# beautify column labels
+temp <-
+  gsub(pattern = '\\$value$',
+       replacement = '',
+       x = colnames(med_labels))
+temp <- gsub(pattern = '^.*\\$',
+             replacement = '',
+             x = temp)
+colnames(med_labels) <- temp
+
+# post data frame from sparql label query to Solr core
+mm.kb.solr.client$add(med_labels, config$med.map.kb.solr.core)
+
+

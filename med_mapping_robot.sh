@@ -3,7 +3,6 @@ robot -vvv template \
 --prefix "xsd: http://www.w3.org/2001/XMLSchema#" \
 --prefix "obo: http://purl.obolibrary.org/obo/"  \
 --prefix  "mydata: http://example.com/resource/" \
---input minimal_templating_ontology.ttl  \
 --template reference_medications_for_robot.tsv \
 --output reference_medications_from_robot.ttl
 
@@ -13,7 +12,6 @@ robot -vvv template \
 --prefix "xsd: http://www.w3.org/2001/XMLSchema#" \
 --prefix "obo: http://purl.obolibrary.org/obo/"  \
 --prefix  "mydata: http://example.com/resource/" \
---input minimal_templating_ontology.ttl  \
 --template classified_search_results_for_robot.tsv \
 --output classified_search_results_from_robot.ttl
 

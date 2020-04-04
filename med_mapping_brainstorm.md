@@ -34,7 +34,7 @@
   - [ ] still haven't taken any action about the apparent ceiling on the number of approximate match API calls from R script to RxNav in a box.
 
   - [ ] would be nice to use R rdflib's as rdf function. see stack overflow issue.
-- [ ] **add RxNorm types to RxCUIs (from RxNav MySQL?)**
+- [x] **add RxNorm types to RxCUIs (from RxNav MySQL?)**
 - [ ] normalize mydata:bioportal_mappings graph with mydata:bioportal_mapping predicate
 - [x] more aggressive consensus building when multiple classified search results could be reasonably associated with a source medication. **See below**
   
