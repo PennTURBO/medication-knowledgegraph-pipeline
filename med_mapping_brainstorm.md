@@ -3,9 +3,6 @@
 
 
 - [ ] Make images of visual graphs corresponding to user stories
-- [x] check defined in/is an ontology relationships
-  - [x] also get versions
-  - [ ] **now reconcile**
 - [ ] confirm PDS R_MEDICATION PKs being used as stable PKs
 - [ ] add the PKs as properties of the source medications? (As opposed to just being the RHS of the IRIs)
 - [ ] make a sample, non-PDS input file
@@ -26,23 +23,33 @@
   - [ ] **examine DrOn native ingredient that don't have mappings**
 - [ ] Add source medications to Solr?
 - [ ] **Keep yaml template up to date**
-- [ ] **remove minimal templating ontology invocation from ROBOT shell script** and confirm it still works!
+- [x] **remove minimal templating ontology invocation from ROBOT shell script** and confirm it still works!
 - [ ] use TURBO or OBO predicates for source/reference medications and classified search results, not `mydata:`
 - [x] create direct relationship between source medication and RxCUI
 - [ ] run classification again with lower min (EMPI) count... 20? 10?
-
   - [ ] still haven't taken any action about the apparent ceiling on the number of approximate match API calls from R script to RxNav in a box.
-
   - [ ] would be nice to use R rdflib's as rdf function. see stack overflow issue.
 - [x] **add RxNorm types to RxCUIs (from RxNav MySQL?)**
 - [ ] normalize mydata:bioportal_mappings graph with mydata:bioportal_mapping predicate
 - [x] more aggressive consensus building when multiple classified search results could be reasonably associated with a source medication. **See below**
-  
   - [ ] maybe the direct relationships will make this moot
   - [ ] take a vote?
   - [ ] weight scores by classified semantic distance and sum?
   - [ ] lowest common subsumer?
 
+
+### check defined in/is an ontology relationships	
+
+- [x] also get versions
+- [ ] **now reconcile**
+	- [ ] ATC graph should be renamed http://purl.bioontology.org/ontology/UATC/
+	- [ ] **obo:dron-rxnorm.owl** graph should be renamed  **dron:dron-rxnorm.owl]**
+		- [ ] error in upload configuration?
+		- [ ] check mydata:turbo_med_mapping_hand
+	- [ ] can robot templating assert the ontology name? 
+		- [ ] probably use an input "ontology" file and a merge parameter?
+	- [ ] mydata:reference_medications (source meds)  
+	- [ ] mydata:classified_search_results
 
 
 ## Consensus by sum of identical scores
@@ -60,7 +67,7 @@ select
 # but which aren't defined in the loaded RxNorm RDF model
 ?sourcemed (count(distinct ?match_rxcui ) as ?count)
 where {
-    # also cource_count, source_full_name, source_normalized_full_name. source_generic_name?
+    # also source_count, source_full_name, source_normalized_full_name. source_generic_name?
     graph mydata:reference_medications {
         ?sourcemed a obo:PDRO_0000024 .
     }
@@ -298,8 +305,6 @@ where {
 }
 group by ?chebimapped
 ```
-
-
 
 > Showing results from 1 to 2 of 2. Query took 4.4s, minutes ago.
 
@@ -600,16 +605,6 @@ order by desc (count( ?s))
 | [obo:chebi.owl](http://pennturbo.org:7200/resource?uri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2Fchebi.owl) | [rdf:type](http://pennturbo.org:7200/resource?uri=http%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23type) | [owl:Ontology](http://pennturbo.org:7200/resource?uri=http%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23Ontology) | [obo:chebi.owl](http://pennturbo.org:7200/resource?uri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2Fchebi.owl) |
 | [obo:dron.owl](http://pennturbo.org:7200/resource?uri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2Fdron.owl) | [rdf:type](http://pennturbo.org:7200/resource?uri=http%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23type) | [owl:Ontology](http://pennturbo.org:7200/resource?uri=http%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23Ontology) | [obo:dron.owl](http://pennturbo.org:7200/resource?uri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2Fdron.owl) |
 | [rxnorm:](http://pennturbo.org:7200/resource?uri=http%3A%2F%2Fpurl.bioontology.org%2Fontology%2FRXNORM%2F) | [rdf:type](http://pennturbo.org:7200/resource?uri=http%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23type) | [owl:Ontology](http://pennturbo.org:7200/resource?uri=http%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23Ontology) | [rxnorm:](http://pennturbo.org:7200/resource?uri=http%3A%2F%2Fpurl.bioontology.org%2Fontology%2FRXNORM%2F) |
-
-- ATC graph should be renamed http://purl.bioontology.org/ontology/UATC/
-- **[obo:dron-rxnorm.owl](http://pennturbo.org:7200/resource?uri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2Fdron-rxnorm.owl)**  graph should be renamed  **[dron:dron-rxnorm.owl](http://pennturbo.org:7200/resource?uri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2Fdron%2Fdron-rxnorm.owl)**  
-  - error in upload configuration?
-- check mydata:turbo_med_mapping_hand
-- can robot templating assert the ontology name? 
-  - mydata:reference_medications (source meds)  
-  - mydata:classified_search_results
-
-
 
 ----
 

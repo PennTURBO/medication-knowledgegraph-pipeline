@@ -1,5 +1,5 @@
 default:
-    #### <SECRET>
+    # <SECRET>
     pds.host: localhost
     pds.port: 7799
     pds.database: <SECRET>
@@ -18,14 +18,14 @@ default:
     my.apikey: <SECRET>
     #
     my.graphdb.base: <SECRET>
-    my.selected.repo: 'med_mapping_min_30_patients'
+    my.selected.repo: <SECRET>
     my.graphdb.username: <SECRET>
     my.graphdb.pw: <SECRET>
     #
     med.map.kb.solr.host: <SECRET>
     med.map.kb.solr.port: '8983'
     med.map.kb.solr.core: 'med_mapping_kb_labels'
-    ####
+    #
     oracle.jdbc.path: "~/ojdbc8.jar"
     mysql.jdbc.path: "~/mysql-connector-java-8.0.19.jar"
     #reissue.pds.query: FALSE
@@ -41,30 +41,67 @@ default:
         PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
         PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
         PREFIX obo: <http://purl.obolibrary.org/obo/>
+        PREFIX oboInOwl: <http://www.geneontology.org/formats/oboInOwl#>
         prefix bp: <http://purl.bioontology.org/ontology/>
+        # this is skightly inefficient becasue the harmonized label 
+        #   will only be relvant for altLabel or synonyms (if we use those)
+        #   OR if we start using obo:IAO_0000118 alternative terms, which so far only seem applciable to upper ontology terms
+        # oboInOwl:hasExactSynonym and/or oboInOwl:hasRelatedSynonym used in ChEBI
+        #   but those include formaulas, smiles, inchis
+        #   might need to check the source annotation
         select
-        distinct (?s as ?mediri) (?p as ?labelpred) (?normlab as ?medlabel)
+        distinct (?s as ?mediri) (?p as ?labelpred) (?normlab as ?medlabel) ?prefLabel
         where {
-        values ?g {
-        <http://purl.obolibrary.org/obo/chebi.owl>
-        <http://purl.bioontology.org/ontology/RXNORM/>
-        <http://purl.obolibrary.org/obo/dron-rxnorm.owl>
-        <http://purl.bioontology.org/ontology/NDFRT/>
-        <http://purl.bioontology.org/ontology/ATC/>
-        <http://purl.obolibrary.org/obo/dron/dron-ingredient.owl>
-        <http://purl.obolibrary.org/obo/dron/dron-upper.owl>
-        <http://purl.obolibrary.org/obo/dron/dron-hand.owl>
+            values ?g {
+                <http://purl.obolibrary.org/obo/chebi.owl>
+                <http://purl.bioontology.org/ontology/RXNORM/>
+                <http://purl.obolibrary.org/obo/dron-rxnorm.owl>
+                <http://purl.bioontology.org/ontology/NDFRT/>
+                <http://purl.bioontology.org/ontology/ATC/>
+                <http://purl.obolibrary.org/obo/dron/dron-ingredient.owl>
+                <http://purl.obolibrary.org/obo/dron/dron-upper.owl>
+                <http://purl.obolibrary.org/obo/dron/dron-hand.owl>
+            }
+            graph ?g {
+                values ?p {
+                    rdfs:label  skos:prefLabel skos:altLabel
+                }
+                ?s ?p ?o .
+                optional {
+                    ?s skos:altLabel ?o .
+                    ?s skos:prefLabel ?rawPrefLabel .
+                    bind(lcase(str(?rawPrefLabel)) as ?prefLabel)
+        #            filter(?o != ?prefLabel )
+                } 
+                bind(lcase(str(?o)) as ?normlab)
+            }
         }
-        graph ?g {
-        values ?p {
-        rdfs:label  skos:prefLabel skos:altLabel obo:IAO_0000118
+    chebi.synonym.solr.population.sparql: |
+        PREFIX owl: <http://www.w3.org/2002/07/owl#>
+        PREFIX oboInOwl: <http://www.geneontology.org/formats/oboInOwl#>
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        select
+        (?as as ?mediri) (?ap as ?labelpred) ?source (lcase(str(?at)) as ?medlabel) (lcase(str(?rawLabel)) as ?prefLabel)
+        where {
+            values ?ap {
+                oboInOwl:hasRelatedSynonym oboInOwl:hasExactSynonym
+            }
+            #  oboInOwl:hasDbXref can also be used as an annotated property 
+            #    (in addition to a source-attributing predicate)
+            # where do "band name" assertions come from?
+            values ?source {
+                "EuroFIR" "Beilstein" "FooDB" "EBI_Industry_Programme" "PubChem" "VSDB" "KEGG_DRUG" "WHO_MedNet" "DrugBank"
+            }
+            graph <http://purl.obolibrary.org/obo/chebi.owl> {
+                ?s a owl:Axiom ;
+                   owl:annotatedTarget ?at ;
+                   owl:annotatedProperty ?ap ;
+                   oboInOwl:hasDbXref ?source ;
+                   owl:annotatedSource ?as .
+                ?as rdfs:label ?rawLabel .
+                filter( (lcase(str(?rawLabel))) != (lcase(str(?at))))
+            }
         }
-        ?s ?p ?o .
-        bind(lcase(str(?o)) as ?normlab)
-        }
-        }
-        #group by ?g
-        #order by desc (count(distinct ?s))
     #
     rxaui.asserted.strings.chunk.count: 3000
     approximate.row.count: 10000
@@ -331,6 +368,52 @@ default:
                 ?s <http://bioportal.bioontology.org/ontologies/umls/cui> ?cui .
                 bind(uri(concat("http://example.com/resource/cui/",?cui)) as ?materialized )
             }
+        fewer_directer_mappings: |
+        PREFIX mydata: <http://example.com/resource/>
+        PREFIX obo: <http://purl.obolibrary.org/obo/>
+        insert {
+            graph mydata:elected_mapping {
+                ?wasinner mydata:elected_mapping ?outermrxc
+            }
+        }
+        where 
+        {
+            {
+                select
+                (?innersm as ?wasinner) ?outermrxc ?innerpimax (sum(?outerpi) as ?outersum) 
+                where {
+                    graph mydata:classified_search_results {
+                        ?doublecheck mydata:source_id_uri ?innersm ;
+                                     mydata:prob_identical ?outerpi ;
+                                     mydata:match_rxcui ?outermrxc .
+                    }
+                    {
+                        select (?sourcemed as ?innersm) (max(?pisum) as ?innerpimax) 
+                        where
+                        {
+                            select ?sourcemed ?match_rxcui (sum( ?prob_identical ) as ?pisum)
+                            where {
+                                graph mydata:reference_medications {
+                                    ?sourcemed a obo:PDRO_0000024 ;
+                                               mydata:source_count ?source_count .
+                                }
+                                graph mydata:classified_search_results {
+                                    ?classified_search_result mydata:source_id_uri ?sourcemed ;
+                                                              mydata:prob_more_distant ?prob_more_distant ;
+                                                              mydata:prob_identical ?prob_identical ;
+                                                              mydata:match_rxcui ?match_rxcui .
+                                }
+                            }
+                            group by ?sourcemed ?match_rxcui
+                            order by desc (sum( ?prob_identical ))
+                        }
+                        group by ?sourcemed 
+                    }
+                }
+                group by ?innersm ?innerpimax ?outermrxc
+            }
+            filter(?innerpimax = ?outersum) 
+        }
     per.task.columns: 'med_map_csv_cols.csv'
     tasks:
         - reference_medications
