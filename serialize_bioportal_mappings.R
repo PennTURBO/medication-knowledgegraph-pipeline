@@ -4,7 +4,7 @@
 
 source("rxnav_med_mapping_setup.R")
 
-# my.config <- config::get(file = "rxnav_med_mapping.yaml")
+my.config <- config::get(file = "rxnav_med_mapping.yaml")
 
 more.pages <- NA
 current.page <- NA
@@ -15,7 +15,7 @@ aggregated.mapping <- data.frame()
 
 bp.mappings.to.minimal.df <- function(current.source.ontology) {
   # initialize global varaibles for while loop
-
+  
   more.pages <<- TRUE
   current.page <<- 1
   next.page <<- 0
@@ -23,13 +23,13 @@ bp.mappings.to.minimal.df <- function(current.source.ontology) {
   aggregated.mapping <<- data.frame()
   
   value.added <-
-    setdiff(config$relevant.ontologies, current.source.ontology)
+    setdiff(my.config$relevant.ontologies, current.source.ontology)
   
   print(paste0('Searching ', current.source.ontology, ' against: '))
   print(sort(value.added))
   
   value.added <-
-    paste0(config$my.bioportal.api.base,
+    paste0(my.config$my.bioportal.api.base,
            '/ontologies/',
            value.added)
   
@@ -47,13 +47,13 @@ bp.mappings.to.minimal.df <- function(current.source.ontology) {
     
     source.class.uri <-
       paste0(
-        config$my.bioportal.api.base,
+        my.config$my.bioportal.api.base,
         '/ontologies/',
         current.source.ontology,
         '/mappings?apikey=',
-        config$my.apikey,
+        my.config$my.apikey,
         '&pagesize=',
-        config$my.pagesize,
+        my.config$my.pagesize,
         '&page=',
         current.page
       )
@@ -88,11 +88,11 @@ bp.mappings.to.minimal.df <- function(current.source.ontology) {
     inner.res <- do.call(rbind.data.frame, inner.res)
     inner.res$source.method <- mappings.result.source.methods
     inner.res <-
-      inner.res[inner.res$source.method %in% config$aceepted.mapping.sources , ]
+      inner.res[inner.res$source.method %in% my.config$aceepted.mapping.sources ,]
     inner.res <-
-      inner.res[as.character(inner.res$source.term) != as.character(inner.res$mapped.term),]
+      inner.res[as.character(inner.res$source.term) != as.character(inner.res$mapped.term), ]
     inner.res <-
-      inner.res[inner.res$mapped.ontology %in% value.added ,]
+      inner.res[inner.res$mapped.ontology %in% value.added , ]
     inner.res <-
       unique(inner.res[, c("source.term",
                            "source.ontology",
@@ -114,7 +114,7 @@ bp.mappings.to.minimal.df <- function(current.source.ontology) {
 }
 
 per.source.results <-
-  lapply(sort(config$my.source.ontolgies), function(current.outer) {
+  lapply(sort(my.config$my.source.ontolgies), function(current.outer) {
     temp <- bp.mappings.to.minimal.df(current.outer)
     return(temp)
   })
@@ -132,7 +132,7 @@ inverse.results$inversed <- TRUE
 bound.source.results <-
   rbind.data.frame(bound.source.results, inverse.results)
 
-# # some tools like ROBOT need IRIs that are already wrapped in angle backets 
+# # some tools like ROBOT need IRIs that are already wrapped in angle backets
 # bound.source.results$source.term <-
 #   paste0('<', bound.source.results$source.term , '>')
 # bound.source.results$source.ontology <-
@@ -161,9 +161,9 @@ colnames(bound.source.results) <-
 #
 # per.source.results.rdf <-
 #   rdflib::as_rdf(x = bound.source.results[1:2,c(1,2,4,5)],
-#                  prefix = config$my.prefix,
+#                  prefix = my.config$my.prefix,
 #                  key = 'uuid')
-# rdf_serialize(rdf = per.source.results.rdf, doc = config$my.triples.destination)
+# rdf_serialize(rdf = per.source.results.rdf, doc = my.config$my.triples.destination)
 
 
 ####
@@ -197,4 +197,4 @@ placeholder <-
 print(Sys.time())
 
 rdf_serialize(rdf = direct.rdf,
-              doc = config$bioportal.triples.destination)
+              doc = my.config$bioportal.triples.destination)
