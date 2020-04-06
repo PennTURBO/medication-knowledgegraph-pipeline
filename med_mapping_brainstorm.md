@@ -45,10 +45,30 @@
   - [ ] min.empi.count?
 
 - [ ] Make images of visual graphs corresponding to user stories. *Medium*.
-
 - [ ] confirm PDS R_MEDICATION PKs being used as stable PKs. *Discussion*.
-
 - [ ] **add the PKs as properties of the source medications? (As opposed to just being the RHS of the IRIs)**. *Easy*.
+
+```sparq
+PREFIX mydata: <http://example.com/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+insert {
+    graph <http://example.com/resource/source_med_id/> {
+        ?s skos:notation ?extracted_id
+    }
+} 
+where {
+    graph mydata:reference_medications {
+        ?s a obo:PDRO_0000024 .
+    }
+    bind(strafter(str(?s),"http://example.com/resource/source_med_id/") as ?extracted_id)
+}
+```
+
+> Added 54759 statements. Update took 1.5s, minutes ago.
+
+
 
 - [ ] make a sample, non-PDS input file. *Medium*.
 

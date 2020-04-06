@@ -14,11 +14,11 @@ default:
     rxnav.mysql.address: localhost
     rxnav.mysql.port: 3307
     #
-    my.bioportal.api.base: 'http://192.168.0.233:8080'
     my.apikey: <SECRET>
     #
+    #my.graphdb.base: 'http://pennturbo.org:7200'
     my.graphdb.base: <SECRET>
-    my.selected.repo: <SECRET>
+    my.selected.repo: 'med_mapping_dev'
     my.graphdb.username: <SECRET>
     my.graphdb.pw: <SECRET>
     #
@@ -401,6 +401,22 @@ default:
                 }
                 filter(?innerpimax = ?outersum) 
             }
+        standalone_srouce_med_ids: |
+            PREFIX mydata: <http://example.com/resource/>
+            PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+            PREFIX obo: <http://purl.obolibrary.org/obo/>
+            PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+            insert {
+                graph <http://example.com/resource/source_med_id/> {
+                    ?s skos:notation ?extracted_id
+                }
+            } 
+            where {
+                graph mydata:reference_medications {
+                    ?s a obo:PDRO_0000024 .
+                }
+                bind(strafter(str(?s),"http://example.com/resource/source_med_id/") as ?extracted_id)
+        }
     per.task.columns: 'med_map_csv_cols.csv'
     tasks:
         - reference_medications
