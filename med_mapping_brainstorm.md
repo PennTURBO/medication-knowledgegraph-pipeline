@@ -4,7 +4,7 @@
 
 *What about **importance**?*
 
-- [ ] Start compressing ttl files before sending to graphdb over 
+- [ ] Start compressing ttl files before sending to graphdb over network
 
 ```bash
 1187698125 Apr  5 09:27 classified_search_results_from_robot.ttl
@@ -18,43 +18,31 @@
 
 
 
-- [ ] the following scripts could proably all be combined into one for conveniance
+- [ ] the following scripts have been combined into `med_mapping_load_materialize_etc.R` but not tested yet
 
-- `serialize_bioportal_mappings.R`
 - `med_mapping_load_materialize_project.R`
 - `afterthoughts.R`
 - `sparql_mm_kb_labels_to_solr.R`
 
 
 
-- [ ] add yaml parsing to robot sh wrapper, so tsv and ttl files doen't ahve to be hardcoded
+- [ ] add yaml parsing to robot sh wrapper, so TSV and TTL files doen't ahve to be hardcoded
 
 - [ ] discover more normalizable abbreviations with somethings like phrase2vec, over a large **clinical** corpus? *Complex*.
-
-  - [ ] review notes from DLM's MS student
+- [ ] review notes from DLM's MS student
   - [ ] insulin syringe needles
   - [ ] CBC
   - [ ] home nursing
-
 - [ ] add two-hop classicization’s to classifier. *complex*.
 
   - [ ] important for understanding "coverage"
   - [ ] coverage correlates with min count
-
 - [ ] Prioritize fullname search results over generics? *Medium*.
-
-- [ ] **insert triples about mapping process into triplestore. which params?** which graph? which parameters? *Easy*.
-
+- [ ] **insert triples about mapping process into triplestore. which params?** which graph? which parameters? *medium*.
   - [ ] Database etc connections? prob not
   - [ ] Filenames? any use in the absence of a hostname a full path? should the files be saved somewhere? what about the yaml file itself, stripped of sensitive info?
   - [ ] ntree and mtry?
   - [ ] min.empi.count?
-
-- [ ] **what's the distribution of ranks & scores for accepted classifications. (Final, in graph**). *Easy*.
-
-  - [ ] requires classified search results to still be present! could always load back in from ttl file.
-
-- [ ] **what's the distribution of match RxCUI ttys**? *Easy*.
 
 - [ ] Make images of visual graphs corresponding to user stories. *Medium*.
 
@@ -73,8 +61,6 @@
 - [ ] see if there’s anything worth keeping in the `extras` and `old` GitHub subdirectories. *Medium*.
 
 - [ ] add option for saving diagnostic data structures in R scripts. *medium*.
-
-  ----
 
   
 
@@ -97,17 +83,17 @@
 
 - [ ] **Keep yaml template up to date**
 
-- [x] **remove minimal templating ontology invocation from ROBOT shell script** and confirm it still works!
+- [x] remove minimal templating ontology invocation from ROBOT shell script and confirm it still works!
 
 - [ ] use TURBO or OBO predicates for source/reference medications and classified search results, not `mydata:`
 
 - [x] create direct relationship between source medication and RxCUI
 
-- [ ] run classification again with lower min (EMPI) count... 20? 10?
+- [x] run classification again with min (EMPI) count of 10
   - [ ] still haven't taken any action about the apparent ceiling on the number of approximate match API calls from R script to RxNav in a box.
   - [ ] would be nice to use R rdflib's as rdf function. see stack overflow issue.
   
-- [x] **add RxNorm types to RxCUIs (from RxNav MySQL?)**
+- [x] add RxNorm types to RxCUIs (from RxNav MySQL?)
 
 - [ ] normalize mydata:bioportal_mappings graph with mydata:bioportal_mapping predicate
 
@@ -118,7 +104,9 @@
   - [ ] lowest common subsumer?
 
 
-### check defined in/is an ontology relationships   
+
+
+### check `defined_in`/`rdf:type owl:Ontology` relationships   
 
 - [x] also get versions
 - [ ] **now reconcile**
@@ -132,9 +120,9 @@
     - [ ] mydata:classified_search_results
 
 
-## Consensus by sum of identical scores
+## Consensus of med mappings by sum of identical scores
 
-### How many search results are available for each source medication
+### First:  How many search results are available for each source medication
 
 Remember, some filtering has already been applied in the R script.
 
@@ -200,6 +188,62 @@ where {
 }
 ```
 
+
+
+### Solr post-instal prerequisites
+
+```bash
+$ ~/solr-8.4.1/bin/solr start
+```
+
+
+
+> *** [WARN] *** Your open file limit is currently 2560.
+> It should be set to 65000 to avoid operational disruption.
+> If you no longer wish to see this warning, set SOLR_ULIMIT_CHECKS to false in your profile or solr.in.sh
+> *** [WARN] ***  Your Max Processes Limit is currently 5568.
+> It should be set to 65000 to avoid operational disruption.
+> If you no longer wish to see this warning, set SOLR_ULIMIT_CHECKS to false in your profile or solr.in.sh
+> Waiting up to 180 seconds to see Solr running on port 8983 [-]
+> Started Solr server on port 8983 (pid=33449). Happy searching!
+
+
+
+```bash
+$ ~/solr-8.4.1/bin/solr create_core -c <med.map.kb.solr.host from rxnav_med_mapping.yaml> 
+```
+
+
+
+### additional Solr notes
+
+- [ ] give the different authorities different weights?
+
+- [x] Core is cleared in R script before reloading
+
+  - [ ] delete core from command line?
+
+  ```bash
+  bin/Solr delete -c med_mapping_labels
+  ```
+
+  > Deleting core 'med_mapping_labels' using command:
+  > http://localhost:8983/solr/admin/cores?action=UNLOAD&core=med_mapping_labels&deleteIndex=true&deleteDataDir=true&deleteInstanceDir=true
+
+- [x] usage of ~ fuzzy operator shown in `all_fuzzy_solr_label_to_iri.R`
+
+  - [ ] also consider edgengrams (in query and index parsers)
+  - [ ] use these features? probsbaly not.
+    - [ ] mlt (more like this)
+    - [ ] Highlighting
+  - [ ] R facting example:
+
+  ```R
+  cli$facet("med_mapping_labels", params = list(q="*:*", facet.field='temp_normlab_value'),
+      callopts = list(verbose = TRUE))
+  ```
+
+  
 
 ## r script ordering
 
