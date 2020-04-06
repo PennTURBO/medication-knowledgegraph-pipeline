@@ -28,14 +28,23 @@ default:
     #
     oracle.jdbc.path: "~/ojdbc8.jar"
     mysql.jdbc.path: "~/mysql-connector-java-8.0.19.jar"
-    #reissue.pds.query: FALSE
     #
     source.medications.savepath: "source_medications.txt"
     source.medications.loadpath: "source_medications.txt"
     #
-    min.empi.count: 30
     normalization.file: "med_name_normalization.csv"
-    # pds2rxnav.fraction: 1
+    #
+    min.empi.count: 10
+    rxaui.asserted.strings.chunk.count: 3000
+    approximate.row.count: 10000
+    approximate.max.chars: 100
+    tune.rf: FALSE
+    train.split: 0.7
+    static.ntree: 200
+    static.mtry: 11
+    coverage.check.fraction: 0.1
+    my.pagesize: 5000
+    monitor.pause.seconds: 30
     #
     med.map.kb.solr.population.sparql: |
         PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -103,18 +112,10 @@ default:
             }
         }
     #
-    rxaui.asserted.strings.chunk.count: 3000
-    approximate.row.count: 10000
-    approximate.max.chars: 100
-    tune.rf: FALSE
-    train.split: 0.7
     target.col: "RELA"
     factor.levels: {"TTY.sr": ["AB","BD","BN","BPCK","CD","CDA","CDC","CDD","CE","DF","DFG","DP","GN","GPCK","IN","MH","MIN","MS","MTH_RXN_BD","MTH_RXN_CD","MTH_RXN_CDC","MTH_RXN_DP","NM","PCE","PEP","PIN","PSN","RXN_IN","RXN_PT","SBD","SBDC","SBDF","SC","SCD","SCDC","SCDF","SY"], "SAB.sr": ["ATC","CVX","DRUGBANK","GS","MMSL","MMX","MSH","MTHSPL","NDDF","RXNORM","USP","VANDF"], "RELA": ["consists_of","constitutes","contained_in","contains","form_of","has_form","has_ingredient","has_part","has_quantified_form","has_tradename","identical","ingredient_of","inverse_isa","isa","more distant","part_of","quantified_form_of","tradename_of"]}
     important.features: ["TTY.sr","rank","jw","cosine","jaccard","q.char","qgram","rxcui.freq","score"]
-    static.ntree: 200
-    static.mtry: 11
     testing.confusion.writepath: "rxnav_medication_mapping_confusion.csv"
-    coverage.check.fraction: 0.1
     rf.model.savepath: "rxnav_med_mapping_rf.Rdata"
     rf.model.loadpath: "rxnav_med_mapping_rf.Rdata"
     allowed.synonym.sources: RXNORM
@@ -147,20 +148,13 @@ default:
     aceepted.mapping.sources:
         - 'CUI'
         - 'LOOM'
-    my.pagesize: 5000
-    # my.prefix: 'http://example.com/resource/bioportal_mapping/'
     bioportal.triples.destination: 'med_mapping_bioportal_mapping.ttl'
-    #my.graphdb.base: 'http://turbo-prd-db01.pmacs.upenn.edu:7200'
     my.import.urls: {"http://purl.obolibrary.org/obo/dron.owl":{"url":["https://bitbucket.org/uamsdbmi/dron/raw/master/dron-full.owl"],"format":[""]},
     "http://purl.obolibrary.org/obo/dron/dron-hand.owl":{"url":["https://bitbucket.org/uamsdbmi/dron/raw/master/dron-hand.owl"],"format":[""]},
     "http://purl.obolibrary.org/obo/dron/dron-upper.owl":{"url":["https://bitbucket.org/uamsdbmi/dron/raw/master/dron-upper.owl"],"format":[""]},
     "https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl":{"url":["https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl"],"format":[""]},
     "http://purl.obolibrary.org/obo/dron/dron-ingredient.owl":{"url":["https://s3.amazonaws.com/drugontology/dron-ingredient.owl"],"format":[""]},
     "http://purl.obolibrary.org/obo/dron-rxnorm.owl":{"url":["https://s3.amazonaws.com/drugontology/dron-rxnorm.owl"],"format":[""]}}
-#    my.import.files: {"http://purl.bioontology.org/ontology/ATC/":{"url":["http://data.bioontology.org/ontologies/ATC/submissions/12/download?apikey=9cf735c3-a44a-404f-8b2f-c49d48b2b8b2"],"format":["text/turtle"]},
-#    "http://purl.bioontology.org/ontology/VANDF/":{"url":["http://data.bioontology.org/ontologies/VANDF/submissions/15/download?apikey=9cf735c3-a44a-404f-8b2f-c49d48b2b8b2"],"format":["text/turtle"]},
-#    "http://purl.obolibrary.org/obo/chebi.owl":{"url":["ftp://ftp.ebi.ac.uk/pub/databases/chebi/ontology/chebi.owl"],"format":[""]},
-#    "http://purl.bioontology.org/ontology/RXNORM/":{"url":["http://data.bioontology.org/ontologies/RXNORM/submissions/18/download?apikey=8b5b7825-538d-40e0-9e9e-5ab9274a9aeb"],"format":["text/turtle"]}}
     my.import.files: {"http://purl.bioontology.org/ontology/ATC/":{"local.file":["/Users/markampa/med_mapping/extras/ATC.ttl"],"format":["text/turtle"]},
     "http://purl.bioontology.org/ontology/NDFRT/":{"local.file":["/Users/markampa/med_mapping/extras/NDFRT.ttl"],"format":["text/turtle"]},
     "http://purl.obolibrary.org/obo/chebi.owl":{"local.file":["/Users/markampa/med_mapping/extras/chebi.owl.gz"],"format":["application/rdf+xml"]},
@@ -168,13 +162,6 @@ default:
     "http://example.com/resource/reference_medications":{"local.file":["/Users/markampa/med_mapping/reference_medications_from_robot.ttl"],"format":["text/turtle"]},
     "http://example.com/resource/classified_search_results":{"local.file":["/Users/markampa/med_mapping/classified_search_results_from_robot.ttl"],"format":["text/turtle"]},
     "http://purl.bioontology.org/ontology/RXNORM/":{"local.file":["/Users/markampa/med_mapping/extras/RXNORM.ttl.gz"],"format":["text/turtle"]}}
-#    my.import.files: {"http://purl.bioontology.org/ontology/ATC/":{"local.file":["/Users/markampa/med_mapping/extras/ATC.ttl"],"format":["text/turtle"]},
-#    "http://purl.bioontology.org/ontology/VANDF/":{"local.file":["/Users/markampa/med_mapping/extras/VANDF.ttl"],"format":["text/turtle"]},
-#    "http://purl.obolibrary.org/obo/chebi.owl":{"local.file":["/Users/markampa/med_mapping/extras/chebi.owl.gz"],"format":["application/rdf+xml"]},
-#    "http://purl.bioontology.org/ontology/SNOMED/":{"local.file":["/Users/markampa/med_mapping/extras/SNOMEDCT_2019AB_codes.ttl.gz"],"format":["text/turtle"]},
-#    "http://example.com/resource/bioportal_mappings":{"local.file":["/Users/markampa/med_mapping/extras/SNOMEDCT_2019AB_codes.ttl.gz"],"format":["text/turtle"]},
-#    "http://purl.bioontology.org/ontology/RXNORM/":{"local.file":["/Users/markampa/med_mapping/extras/RXNORM.ttl.gz"],"format":["text/turtle"]}}
-    monitor.pause.seconds: 30
     materializastion.projection.sparqls:
         turbo_med_mapping_hand: |
             PREFIX owl: <http://www.w3.org/2002/07/owl#>
@@ -369,51 +356,51 @@ default:
                 bind(uri(concat("http://example.com/resource/cui/",?cui)) as ?materialized )
             }
         fewer_directer_mappings: |
-        PREFIX mydata: <http://example.com/resource/>
-        PREFIX obo: <http://purl.obolibrary.org/obo/>
-        insert {
-            graph mydata:elected_mapping {
-                ?wasinner mydata:elected_mapping ?outermrxc
-            }
-        }
-        where 
-        {
-            {
-                select
-                (?innersm as ?wasinner) ?outermrxc ?innerpimax (sum(?outerpi) as ?outersum) 
-                where {
-                    graph mydata:classified_search_results {
-                        ?doublecheck mydata:source_id_uri ?innersm ;
-                                     mydata:prob_identical ?outerpi ;
-                                     mydata:match_rxcui ?outermrxc .
-                    }
-                    {
-                        select (?sourcemed as ?innersm) (max(?pisum) as ?innerpimax) 
-                        where
-                        {
-                            select ?sourcemed ?match_rxcui (sum( ?prob_identical ) as ?pisum)
-                            where {
-                                graph mydata:reference_medications {
-                                    ?sourcemed a obo:PDRO_0000024 ;
-                                               mydata:source_count ?source_count .
-                                }
-                                graph mydata:classified_search_results {
-                                    ?classified_search_result mydata:source_id_uri ?sourcemed ;
-                                                              mydata:prob_more_distant ?prob_more_distant ;
-                                                              mydata:prob_identical ?prob_identical ;
-                                                              mydata:match_rxcui ?match_rxcui .
-                                }
-                            }
-                            group by ?sourcemed ?match_rxcui
-                            order by desc (sum( ?prob_identical ))
-                        }
-                        group by ?sourcemed 
-                    }
+            PREFIX mydata: <http://example.com/resource/>
+            PREFIX obo: <http://purl.obolibrary.org/obo/>
+            insert {
+                graph mydata:elected_mapping {
+                    ?wasinner mydata:elected_mapping ?outermrxc
                 }
-                group by ?innersm ?innerpimax ?outermrxc
             }
-            filter(?innerpimax = ?outersum) 
-        }
+            where 
+            {
+                {
+                    select
+                    (?innersm as ?wasinner) ?outermrxc ?innerpimax (sum(?outerpi) as ?outersum) 
+                    where {
+                        graph mydata:classified_search_results {
+                            ?doublecheck mydata:source_id_uri ?innersm ;
+                                         mydata:prob_identical ?outerpi ;
+                                         mydata:match_rxcui ?outermrxc .
+                        }
+                        {
+                            select (?sourcemed as ?innersm) (max(?pisum) as ?innerpimax) 
+                            where
+                            {
+                                select ?sourcemed ?match_rxcui (sum( ?prob_identical ) as ?pisum)
+                                where {
+                                    graph mydata:reference_medications {
+                                        ?sourcemed a obo:PDRO_0000024 ;
+                                                   mydata:source_count ?source_count .
+                                    }
+                                    graph mydata:classified_search_results {
+                                        ?classified_search_result mydata:source_id_uri ?sourcemed ;
+                                                                  mydata:prob_more_distant ?prob_more_distant ;
+                                                                  mydata:prob_identical ?prob_identical ;
+                                                                  mydata:match_rxcui ?match_rxcui .
+                                    }
+                                }
+                                group by ?sourcemed ?match_rxcui
+                                order by desc (sum( ?prob_identical ))
+                            }
+                            group by ?sourcemed 
+                        }
+                    }
+                    group by ?innersm ?innerpimax ?outermrxc
+                }
+                filter(?innerpimax = ?outersum) 
+            }
     per.task.columns: 'med_map_csv_cols.csv'
     tasks:
         - reference_medications

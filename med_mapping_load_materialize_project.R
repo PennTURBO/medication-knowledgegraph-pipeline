@@ -86,4 +86,3 @@ placeholder <-
                      body = list(update = innner.sparql),
                      saved.authentication)
   })
-

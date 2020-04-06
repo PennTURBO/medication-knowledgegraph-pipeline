@@ -9,9 +9,9 @@ post.res <- POST(update.endpoint,
 
 not.empty.yet <- TRUE
 
-while(not.empty.yet) {
+while (not.empty.yet) {
   context.report <- get.context.report()
-  if(is.null(context.report)) {
+  if (is.null(context.report)) {
     break
   }
   print("Still need to clear:")
@@ -36,7 +36,7 @@ source.medications$pds.rxn.annotated <-
 
 # # destructive (changing would require rerunning query or load
 source.medications <-
-  source.medications[source.medications$MEDICATION_COUNT >= config$min.empi.count , ]
+  source.medications[source.medications$MEDICATION_COUNT >= config$min.empi.count ,]
 
 ## what's the relationship between the likelihood of an rxnorm annotation and the # of patients receiving an order?
 # ggplot(
@@ -68,11 +68,11 @@ normalization.rules.res$wc <- nchar(normalization.rules.res$ws) + 1
 normalization.rules.res$replacement[is.na(normalization.rules.res$replacement)] <-
   ""
 normalization.rules.res <-
-  normalization.rules.res[normalization.rules.res$confidence == "high" ,]
+  normalization.rules.res[normalization.rules.res$confidence == "high" , ]
 normalization.rules.res <-
   normalization.rules.res[order(normalization.rules.res$wc,
                                 normalization.rules.res$char,
-                                decreasing = TRUE),]
+                                decreasing = TRUE), ]
 
 normalization.rules.res$pattern <-
   paste("\\b", normalization.rules.res$pattern, "\\b", sep = "")
@@ -429,11 +429,11 @@ temp$GENERIC_NAME[is.na(temp$GENERIC_NAME)] <- ''
 
 # get before and after counts
 pre <- unique(temp$MEDICATION_ID)
-temp <- temp[complete.cases(temp),]
+temp <- temp[complete.cases(temp), ]
 post <- unique(temp$MEDICATION_ID)
 lost <- setdiff(pre, post)
 lost <-
-  pds.approximate.original.dists[pds.approximate.original.dists$MEDICATION_ID %in% lost , ]
+  pds.approximate.original.dists[pds.approximate.original.dists$MEDICATION_ID %in% lost ,]
 
 print(Sys.time())
 timed.system <- system.time(rf_responses <-
@@ -461,6 +461,7 @@ table(performance.frame$override)
 
 ####
 
+# SLOW NOW at min count = 10
 all.keys <- unique(source.medications$MEDICATION_ID)
 
 covered.keys <-
@@ -468,13 +469,16 @@ covered.keys <-
 
 coverage <- length(covered.keys) / length(all.keys)
 
+# coverage is explicitly: percent of source medications that have at least one non-more-distant predictions
+# but more distant may actually be acceptable!
+
 print(coverage)
 
 uncovered.keys <- setdiff(all.keys, covered.keys)
 
 # save for followup?
 uncovered.frame <-
-  pds.approximate.original.dists[pds.approximate.original.dists$MEDICATION_ID %in% uncovered.keys ,]
+  pds.approximate.original.dists[pds.approximate.original.dists$MEDICATION_ID %in% uncovered.keys , ]
 
 ###
 
@@ -532,15 +536,15 @@ classification.res.tidied <-
 
 classification.res.tidied <- unique(classification.res.tidied)
 
+# step above or belwo is slow with min count 10
+
 # load rxnorm into repo (assume from file)
 
 temp.name <- 'http://purl.bioontology.org/ontology/RXNORM/'
 last.post.time <- Sys.time()
-placeholder <- import.from.local.file(
-  temp.name,
-  config$my.import.files[[temp.name]]$local.file,
-  config$my.import.files[[temp.name]]$format
-)
+placeholder <- import.from.local.file(temp.name,
+                                      config$my.import.files[[temp.name]]$local.file,
+                                      config$my.import.files[[temp.name]]$format)
 
 last.post.status <- 'Loaded RxNorm'
 expectation <- temp.name
@@ -587,14 +591,16 @@ rxnorm.entities.in.repo <-
     temp$results$bindings$rxcui_with_rxaui_with_skos_notation$value
   ))
 
+####
+
 classification.res.tidied.inactive.rxcui <-
-  classification.res.tidied[!(classification.res.tidied$rxcui %in% rxnorm.entities.in.repo),]
+  classification.res.tidied[!(classification.res.tidied$rxcui %in% rxnorm.entities.in.repo), ]
 
 classification.res.tidied <-
-  classification.res.tidied[classification.res.tidied$rxcui %in% rxnorm.entities.in.repo,]
+  classification.res.tidied[classification.res.tidied$rxcui %in% rxnorm.entities.in.repo, ]
 
 classification.res.tidied.id <-
-  classification.res.tidied[classification.res.tidied$override == "identical", ]
+  classification.res.tidied[classification.res.tidied$override == "identical",]
 best.identical <-
   aggregate(
     classification.res.tidied.id$identical,
@@ -611,7 +617,7 @@ classification.res.tidied.onehop <-
   classification.res.tidied[(
     classification.res.tidied$override != "identical" &
       classification.res.tidied$override != "more distant"
-  ) ,]
+  ) , ]
 
 probs.matrix <- classification.res.tidied.onehop[, c(
   "consists_of",
@@ -658,10 +664,10 @@ equal.or.better.Q$identical[is.na(equal.or.better.Q$identical)] <- 0
 equal.or.better.Q$probs.matrix.rowmax[is.na(equal.or.better.Q$probs.matrix.rowmax)] <-
   0
 equal.or.better.Q <-
-  equal.or.better.Q[equal.or.better.Q$probs.matrix.rowmax >= equal.or.better.Q$identical , ]
+  equal.or.better.Q[equal.or.better.Q$probs.matrix.rowmax >= equal.or.better.Q$identical ,]
 
 classification.res.tidied.onehop <-
-  classification.res.tidied.onehop[classification.res.tidied.onehop$MEDICATION_ID %in% equal.or.better.Q$MEDICATION_ID , ]
+  classification.res.tidied.onehop[classification.res.tidied.onehop$MEDICATION_ID %in% equal.or.better.Q$MEDICATION_ID ,]
 
 ####
 
@@ -676,7 +682,7 @@ classification.res.tidied.md <-
                                 !(
                                   classification.res.tidied$MEDICATION_ID %in% classification.res.tidied.onehop$MEDICATION_ID
                                 )
-                              ) , ]
+                              ) ,]
 
 probs.matrix <- classification.res.tidied.md[, c(
   "consists_of",
@@ -838,10 +844,10 @@ write.table(
 
 # keepers <-
 #   med_map_csv_cols$more_generic %in% setdiff(graphs.cols[[current.task]], "source_has_rxcui")
-# 
+#
 # body <- unique(classification.res.tidied[, keepers])
 # body[, 1] <- as.character(body[, 1])
-# 
+#
 # print(Sys.time())
 # instantiate.and.upload(current.task)
 # print(Sys.time())
