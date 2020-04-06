@@ -379,7 +379,7 @@ Here we also retrieve the `prefLabel` to help the user see that SNRI can be inte
 
 
 
-### Q5: NDF-RT role
+### Q5: NDF-RT role (established pharmaceutical class)
 
 ```SPARQL
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -459,7 +459,7 @@ The meaning of "opiate", "opioid" or "narcotic" is clearer when combined with an
 
 gives a good score to "opioid analgesic" (CHEBI:35482 and NDFRT:N0000175440), and also to "narcotic antitussive" (NDFRT:N0000175795, like codeine), but not to CHEBI:35481, "non-narcotic analgesic". CHEBI:35482 could be used in a Q1 style SPARQL query, and NDFRT:N0000175440 could be used in a Q5 query.
 
-
+#### Older style
 
 ```SPARQL
 PREFIX obo: <http://purl.obolibrary.org/obo/>
@@ -492,6 +492,45 @@ where {
     }
     filter( ?prob_more_distant < 0.06 )
     bind(replace(str(?source_id_uri), "http://example.com/resource/source_med_id/", "") as ?source_med_id)
+}
+```
+
+
+
+#### New style as of 2020-04-06: materialized source med IDs & direct links to RxCUIs
+
+```SPARQL
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX mydata: <http://example.com/resource/>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX rxnorm: <http://purl.bioontology.org/ontology/RXNORM/>
+select 
+distinct 
+?drugrole ?chebi_ing ?dron_prod ?match_rxcui ?source_med  ?source_med_id
+where {
+    values ?drugrole {
+        obo:CHEBI_35482
+    }
+    graph mydata:transitive_role_of_class {
+        ?chebi_ing mydata:transitive_role_of_class ?drugrole .
+    }
+    graph mydata:transitively_materialized_dron_ingredient {
+        ?dron_prod mydata:transitively_materialized_dron_ingredient ?chebi_ing .
+    }
+    graph mydata:bioportal_mappings {
+        ?match_rxcui mydata:bioportal_mapping ?dron_prod .
+    }
+    graph rxnorm: {
+        ?match_rxcui a owl:Class
+    }
+    graph mydata:elected_mapping {
+        ?source_med mydata:elected_mapping ?match_rxcui
+    }
+    #    filter( ?prob_more_distant < 0.06 )
+    graph <http://example.com/resource/source_med_id/> {
+        ?source_med skos:notation ?source_med_id
+    }
 }
 ```
 
@@ -540,10 +579,37 @@ But it can’t be found with Solr (or any text search engine for that matter)
 
 If the user searched for "benzodiazepine related hypnotics and sedatives" and ticked off ATC:N05CF, the following SPARQL query would find source orders
 
+### This goes from the ATC class to ingredient orders
 
+Subsequent example queries will go to products (generic or branded)
 
 ```SPARQL
-
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX atc: <http://purl.bioontology.org/ontology/UATC/>
+PREFIX mydata: <http://example.com/resource/>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX rxnorm: <http://purl.bioontology.org/ontology/RXNORM/>
+select * where {
+    values ?atcclass {
+        atc:N05CF 
+    }
+    graph <http://purl.bioontology.org/ontology/ATC/> {
+        ?atcing rdfs:subClassOf ?atcclass
+    }
+    graph mydata:bioportal_mappings {
+        ?atcing mydata:bioportal_mapping ?rxning .
+    }
+    graph mydata:defined_in {
+        ?rxning mydata:defined_in rxnorm:
+    }
+    graph mydata:elected_mapping {
+        ?source_med mydata:elected_mapping ?rxning
+    }
+    graph <http://example.com/resource/source_med_id/> {
+        ?source_med skos:notation ?source_med_id
+    }
+} limit 100
 ```
 
 
