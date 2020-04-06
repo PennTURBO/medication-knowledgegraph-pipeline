@@ -18,6 +18,15 @@
 
 
 
+- [ ] the following scripts could proably all be combined into one for conveniance
+
+- `serialize_bioportal_mappings.R`
+- `med_mapping_load_materialize_project.R`
+- `afterthoughts.R`
+- `sparql_mm_kb_labels_to_solr.R`
+
+
+
 - [ ] add yaml parsing to robot sh wrapper, so tsv and ttl files doen't ahve to be hardcoded
 
 - [ ] discover more normalizable abbreviations with somethings like phrase2vec, over a large **clinical** corpus? *Complex*.
@@ -204,36 +213,32 @@ where {
     - `rxnav_med_mapping_setup.R`
         - never invoked directly. always invoked from the other R scripts.
         - uses config file `rxnav_med_mapping.yaml`
-        - requires SQL connection to PDS
     - `rxnav_med_mapping_proximity_training_no_tuning.R`
         - Required. probably doesn't need to be rerun that often.
+        - requires RxNav, preferably local container
     - `rxnav_med_mapping_tuneup_followon.R`
-        - Optional. Run interactively, or modify code. new setting should be entered into yaml config file.
+        - Optional. Run interactively, or modify code. new settings should be entered into `rxnav_med_mapping.yaml`.
 1. classification
     - `pds_r_medication_sql_select.R`
         - Optional
+        - requires SQL connection to PDS
     - `rxnav_med_mapping_pds_proximity_classifier.R`
         - requires RxNav, preferably local container
         - requires triplestore
         - clears repo
-        - generates two tsv outputs
+        - generates two TSV outputs in current working directory... for filenmaes, see `med_mapping_robot.sh`
 1. generate med mapping RDF
     - `med_mapping_robot.sh`
-        - Converts tsv from above into ttl
+        - Converts TSV from above into TTL
 1. post classification
     1. `serialize_bioportal_mappings.R`
         - required. probably doesn't need to be rerun that often. requires BioPortal connection, preferably local VM. BioPortal connection must be populated with certain ontologies. RDF models
-    1. med_mapping_load_materialize_project.R
-        - loads ttl results from previous steps
-    1. afterthoughts.R
-    1. sparql_mm_kb_labels_to_solr.R
-
-all_fuzzy_solr_label_to_iri.R
-just an example of querying Solr
+    1. `med_mapping_load_materialize_project.R`
+        - loads TTL results from previous steps
+    1. `afterthoughts.R`
+    1. `sparql_mm_kb_labels_to_solr.R`
 
 
 
-## placeholder for clinical labs
-
-- [ ] custom BioPortal mappings (esp. for LOINC bld->blood) ?
-- [ ] ...7
+- `all_fuzzy_solr_label_to_iri.R`
+  - just an example of querying Solr

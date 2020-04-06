@@ -1,3 +1,7 @@
+This is all backstory for `chebi.synonym.solr.population.sparql` in `rxnav_med_mapping.yaml`, which issues SPARQL queries to populate a Solr document core.
+
+
+
 ## Motivation: get more medical synonyms for Solr, but not formulae, etc.
 
 ```SPARQL
@@ -27,6 +31,7 @@ where {
     }
 }
 ```
+
 ## Approach
 
 ```SPARQL
