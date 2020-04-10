@@ -53,21 +53,21 @@ independently and appears to be a string correlate of the `identical` sensitivit
 ### Training and Classification R Scripts
 [R Interpreter](https://cran.r-project.org/)
 - Install R libraries in an interactive R session with `install.packages(<"package1">, <"package2">,...,<"packageN">)`
-       - caret
-       - config
-       - dplyr
-       - httr
-       - jsonlite
-       - randomForest
-       - readr
-       - Rdflib
-       - RJDBC
-       - ROCR
-       - solrium
-       - splitstackshape
-       - stringdist
-       - stringr
-       - uuid
+    - caret
+    - config
+    - dplyr
+    - httr
+    - jsonlite
+    - randomForest
+    - readr
+    - Rdflib
+    - RJDBC
+    - ROCR
+    - solrium
+    - splitstackshape
+    - stringdist
+    - stringr
+    - uuid
 
     possibly `ggplot2` 
 
