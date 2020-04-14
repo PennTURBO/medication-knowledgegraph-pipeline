@@ -1,8 +1,8 @@
-## How can we thematically tag entities in the med mapping graph?
+## How can we tag entities in the TURBO medication mapping graph based on their employment, or the way that they participate in paths?
 
-### 'Ingredients'
+### 'Ingredients' & 'Products' according to DrOn
 
-DrOn RxCUI assertions may be outdated up to 50% of the time
+*DrOn RxCUI assertions may be outdated up to 50% of the time*
 
 might be useful to think about
 
@@ -126,11 +126,7 @@ Thing
       - material entity
         - \+ [processed material](http://www.ontobee.org/ontology/DRON?iri=http://purl.obolibrary.org/obo/OBI_0000047)
 
-
-
-----
-
-
+## Worked discovery task
 
 ```SPARQL
 PREFIX owl: <http://www.w3.org/2002/07/owl#>
@@ -150,8 +146,8 @@ group by ?g
 
 
 >  Showing results from 1 to 6 of 6. Query took 1.6s, moments ago.
->
-> 
+
+
 
 | **g**                                                        | **count**             |
 | ------------------------------------------------------------ | --------------------- |
@@ -161,8 +157,6 @@ group by ?g
 | [obo:dron-rxnorm.owl](http://turbo-prd-db01.pmacs.upenn.edu:7200/resource?uri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2Fdron-rxnorm.owl) | 775    |
 | [obo:chebi.owl](http://turbo-prd-db01.pmacs.upenn.edu:7200/resource?uri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2Fchebi.owl) | 81459  |
 | [obo:dron/dron-ingredient.owl](http://turbo-prd-db01.pmacs.upenn.edu:7200/resource?uri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2Fdron%2Fdron-ingredient.owl) | 301585 |
-
-
 
 
 
@@ -499,6 +493,10 @@ group by ?defining_graph
 
 
 
+**Don't forget to add it to R script XXX**
+
+
+
 ## Ingredient count reality check
 
 
@@ -572,3 +570,151 @@ order by asc (?acting_count)
 | 21 | 2     |
 | 22 | 3     |
 | 23 | 2     |
+
+
+
+----
+
+
+
+```SPARQL
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX ro: <http://www.obofoundry.org/ro/ro.owl#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX mydata: <http://example.com/resource/>
+PREFIX oboInOwl: <http://www.geneontology.org/formats/oboInOwl#>
+insert {
+    graph mydata:employment {
+        ?subacting mydata:employment mydata:active_ingredient .
+#        ?annotation_axiom a owl:Axiom ;
+#                          owl:annotatedSource ?x ;
+#                          owl:annotatedProperty mydata:employment ;
+#                          owl:annotatedTarget mydata:hasactive_ingredient ;
+#                          oboInOwl:hasDbXref ?defining_graph .
+    }
+}
+where {
+    graph <http://purl.obolibrary.org/obo/dron/dron-ingredient.owl> {
+        ?r a owl:Restriction ;
+           owl:onProperty ro:has_proper_part ;
+           owl:someValuesFrom ?hpp_valsource .
+        ?hpp_valsource owl:intersectionOf ?hpp_intersection .
+        ?hpp_intersection rdf:first obo:OBI_0000576 ;
+                          rdf:rest ?sma_intersection .
+        ?sma_intersection  rdf:first ?sma_intersection_first ;
+                           rdf:rest ?acting_intersection .
+        ?sma_intersection_first a owl:Restriction ;
+                                owl:onProperty obo:BFO_0000053 ;
+                                owl:someValuesFrom obo:DRON_00000028 .
+        ?acting_intersection rdf:first ?acting_first ;
+                             rdf:rest rdf:nil .
+        ?acting_first  a owl:Restriction ;
+                       owl:onProperty obo:BFO_0000071 ;
+                       owl:someValuesFrom ?acting .
+    }
+    ?subacting rdfs:subClassOf* ?acting .
+    {
+        graph <http://purl.obolibrary.org/obo/dron/dron-ingredient.owl> {
+            ?acting a owl:Class .
+            bind(<http://purl.obolibrary.org/obo/dron/dron-ingredient.owl> as ?defining_graph)
+            bind(uuid() as ?annotation_axiom )
+        } 
+    } union     {
+        graph <http://purl.obolibrary.org/obo/chebi.owl> {
+            ?acting a owl:Class .
+            bind(<http://purl.obolibrary.org/obo/chebi.owl> as ?defining_graph)
+            bind(uuid() as ?annotation_axiom )
+        } 
+    } union     {
+        graph <http://purl.obolibrary.org/obo/dron/dron-hand.owl> {
+            ?acting a owl:Class .
+            bind(<http://purl.obolibrary.org/obo/dron/dron-hand.owl> as ?defining_graph)
+            bind(uuid() as ?annotation_axiom )
+        } 
+    }  
+}
+```
+
+> Added 5445 statements. Update took 10s, minutes ago.
+
+
+
+```SPARQL
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX ro: <http://www.obofoundry.org/ro/ro.owl#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX mydata: <http://example.com/resource/>
+PREFIX oboInOwl: <http://www.geneontology.org/formats/oboInOwl#>
+insert {
+    graph mydata:employment {
+        ?dronprod mydata:employment mydata:product .
+        #        ?prod_annotation_axiom a owl:Axiom ;
+        #                               owl:annotatedSource ?dronprod ;
+        #                               owl:annotatedProperty mydata:employment ;
+        #                               owl:annotatedTarget mydata:product ;
+        #                               oboInOwl:hasDbXref ?defining_graph .
+        ?subacting mydata:employment mydata:active_ingredient .
+#        ?acting_annotation_axiom a owl:Axiom ;
+#                                 owl:annotatedSource ?subacting ;
+#                                 owl:annotatedProperty mydata:employment ;
+#                                 owl:annotatedTarget mydata:active_ingredient ;
+#                                 oboInOwl:hasDbXref ?acting_defining_graph .
+    }
+}
+where {
+    graph <http://purl.obolibrary.org/obo/dron/dron-ingredient.owl> {
+        ?r a owl:Restriction ;
+           owl:onProperty ro:has_proper_part ;
+           owl:someValuesFrom ?hpp_valsource .
+        ?hpp_valsource owl:intersectionOf ?hpp_intersection .
+        ?hpp_intersection rdf:first obo:OBI_0000576 ;
+                          rdf:rest ?sma_intersection .
+        ?sma_intersection  rdf:first ?sma_intersection_first ;
+                           rdf:rest ?acting_intersection .
+        ?sma_intersection_first a owl:Restriction ;
+                                owl:onProperty obo:BFO_0000053 ;
+                                owl:someValuesFrom obo:DRON_00000028 .
+        ?acting_intersection rdf:first ?acting_first ;
+                             rdf:rest rdf:nil .
+        ?acting_first  a owl:Restriction ;
+                       owl:onProperty obo:BFO_0000071 ;
+                       owl:someValuesFrom ?acting .
+    }
+    {
+        graph <http://purl.obolibrary.org/obo/dron/dron-ingredient.owl> {
+            ?acting a owl:Class .
+            bind(<http://purl.obolibrary.org/obo/dron/dron-ingredient.owl> as ?acting_defining_graph)
+        } 
+    } union     {
+        graph <http://purl.obolibrary.org/obo/chebi.owl> {
+            ?acting a owl:Class .
+            bind(<http://purl.obolibrary.org/obo/chebi.owl> as ?acting_defining_graph)
+        } 
+    } union     {
+        graph <http://purl.obolibrary.org/obo/dron/dron-hand.owl> {
+            ?acting a owl:Class .
+            bind(<http://purl.obolibrary.org/obo/dron/dron-hand.owl> as ?acting_defining_graph)
+        } 
+    }  
+    ?dronprod rdfs:subClassOf* ?r .
+    ?subacting rdfs:subClassOf* ?acting .
+    # bind(uuid() as ?prod_annotation_axiom )    
+    # bind(uuid() as ?acting_annotation_axiom )
+}
+```
+
+> Added 118037 statements. Update took 1m 30s, minutes ago.
+
+
+
+owl:Axioms are asserted for each appearance of an active ingredient in a product. Do we need to assert the graph in which we determined that something was a product or ingredient? We already have defined_in triples?
+
+
+
+product doesn't distinguish between brand and generic
+
+nothing for RxNorm yet. intestinally holding off on ndfrt and atc
