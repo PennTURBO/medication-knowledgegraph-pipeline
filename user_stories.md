@@ -536,6 +536,48 @@ where {
 
 
 
+#### PDS SQL from source med IDs to person demographics
+
+The spurce med IDs from from the SAPRQL above!
+
+I'm showing gender, but this can easly be modified to get EMPIs
+
+```sql
+SELECT
+	PK_MEDICATION_ID ,
+	FULL_NAME ,
+	om.ORDER_NAME,
+	pe.GENDER_DESCRIPTION,
+	COUNT(1)
+FROM
+	MDM.R_MEDICATION rm
+JOIN ORDER_MED om ON
+	rm.PK_MEDICATION_ID = om.FK_MEDICATION_ID
+JOIN PATIENT_ENCOUNTER pe ON
+	pe.PK_PATIENT_ENCOUNTER_ID = om.FK_PATIENT_ENCOUNTER_ID
+WHERE
+	PK_MEDICATION_ID IN (
+102793 ,
+103171 ,
+103973 ,
+103987 ,
+104137 ,
+104194 ,
+104532 ,
+10475094 ,
+10478339 ,
+105361
+)
+GROUP BY
+	PK_MEDICATION_ID ,
+	FULL_NAME ,
+	om.ORDER_NAME,
+	pe.GENDER_DESCRIPTION
+
+```
+
+
+
 Different Solr queries
 
 > http://`<`solraddress`>`:8983/solr/med_mapping_kb_labels/select?fl=mediri,labelpred,medlabel,score,source&q=medlabel:(opiod agonists)
@@ -609,7 +651,7 @@ select * where {
     graph <http://example.com/resource/source_med_id/> {
         ?source_med skos:notation ?source_med_id
     }
-} limit 100
+} 
 ```
 
 
