@@ -903,3 +903,63 @@ order by desc (count(distinct ?s))
 Showing results from 1 to 690 of 690. Query took 3.2s, minutes ago.
 
 See `parent_roles_of_chebi_actings.csv`
+
+Merge in background role bearer count.
+
+```SPARQL
+PREFIX mydata: <http://example.com/resource/>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+select 
+#* 
+?supersource ?l (count(distinct ?s2) as ?count2)
+where {
+    graph obo:chebi.owl {
+        ?r2 a owl:Restriction ;
+            owl:onProperty obo:RO_0000087 ;
+            owl:someValuesFrom ?valsource .
+        ?s2 rdfs:subClassOf ?r2 .
+        ?valsource rdfs:subClassOf* ?supersource .
+        ?supersource rdfs:label ?l .
+    }
+}
+group by ?supersource ?l
+#order by desc (count(distinct ?s))
+```
+
+Add direct role assignments from above back in
+
+
+
+Result = spreadsheet XXX
+
+
+
+Here's a way to find some relevant subroles from the hand-curated roles found on active ingredients:
+
+
+
+```SPARQL
+PREFIX mydata: <http://example.com/resource/>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+select 
+distinct ?role ?rolelab
+where {
+    values ?valsource  {
+        obo:CHEBI_130181 obo:CHEBI_131699 obo:CHEBI_131770 obo:CHEBI_131787 obo:CHEBI_139503 obo:CHEBI_22333 obo:CHEBI_22586 obo:CHEBI_23018 obo:CHEBI_23354 obo:CHEBI_23357 obo:CHEBI_23366 obo:CHEBI_23888 obo:CHEBI_24020 obo:CHEBI_24621 obo:CHEBI_24869 obo:CHEBI_25435 obo:CHEBI_25491 obo:CHEBI_25728 obo:CHEBI_27026 obo:CHEBI_27314 obo:CHEBI_33229 obo:CHEBI_33280 obo:CHEBI_35195 obo:CHEBI_35221 obo:CHEBI_35522 obo:CHEBI_35530 obo:CHEBI_35544 obo:CHEBI_35569 obo:CHEBI_35660 obo:CHEBI_35856 obo:CHEBI_35941 obo:CHEBI_36413 obo:CHEBI_37153 obo:CHEBI_37670 obo:CHEBI_37699 obo:CHEBI_37700 obo:CHEBI_37733 obo:CHEBI_37886 obo:CHEBI_37887 obo:CHEBI_37890 obo:CHEBI_37955 obo:CHEBI_37956 obo:CHEBI_37961 obo:CHEBI_38157 obo:CHEBI_38161 obo:CHEBI_38215 obo:CHEBI_38234 obo:CHEBI_38324 obo:CHEBI_38325 obo:CHEBI_38462 obo:CHEBI_38623 obo:CHEBI_38632 obo:CHEBI_38633 obo:CHEBI_38637 obo:CHEBI_38706 obo:CHEBI_38808 obo:CHEBI_38809 obo:CHEBI_39000 obo:CHEBI_47958 obo:CHEBI_48001 obo:CHEBI_48279 obo:CHEBI_48561 obo:CHEBI_48578 obo:CHEBI_48873 obo:CHEBI_48876 obo:CHEBI_48878 obo:CHEBI_49020 obo:CHEBI_49103 obo:CHEBI_49159 obo:CHEBI_49200 obo:CHEBI_50103 obo:CHEBI_50112 obo:CHEBI_50113 obo:CHEBI_50114 obo:CHEBI_50137 obo:CHEBI_50183 obo:CHEBI_50188 obo:CHEBI_50218 obo:CHEBI_50276 obo:CHEBI_50390 obo:CHEBI_50502 obo:CHEBI_50509 obo:CHEBI_50510 obo:CHEBI_50566 obo:CHEBI_50568 obo:CHEBI_50629 obo:CHEBI_50630 obo:CHEBI_50683 obo:CHEBI_50696 obo:CHEBI_50745 obo:CHEBI_50750 obo:CHEBI_50781 obo:CHEBI_50790 obo:CHEBI_50837 obo:CHEBI_50844 obo:CHEBI_50902 obo:CHEBI_50904 obo:CHEBI_50905 obo:CHEBI_50908 obo:CHEBI_50910 obo:CHEBI_51060 obo:CHEBI_51065 obo:CHEBI_51373 obo:CHEBI_52209 obo:CHEBI_52210 obo:CHEBI_52290 obo:CHEBI_53559 obo:CHEBI_53756 obo:CHEBI_55322 obo:CHEBI_59282 obo:CHEBI_59517 obo:CHEBI_59826 obo:CHEBI_59897 obo:CHEBI_60186 obo:CHEBI_60311 obo:CHEBI_60605 obo:CHEBI_60606 obo:CHEBI_60643 obo:CHEBI_60798 obo:CHEBI_60807 obo:CHEBI_60832 obo:CHEBI_61015 obo:CHEBI_61016 obo:CHEBI_61115 obo:CHEBI_61908 obo:CHEBI_61951 obo:CHEBI_62488 obo:CHEBI_62872 obo:CHEBI_64571 obo:CHEBI_64909 obo:CHEBI_64911 obo:CHEBI_65023 obo:CHEBI_65259 obo:CHEBI_68495 obo:CHEBI_68563 obo:CHEBI_70727 obo:CHEBI_70781 obo:CHEBI_71232 obo:CHEBI_73240 obo:CHEBI_73263 obo:CHEBI_73333 obo:CHEBI_73913 obo:CHEBI_74213 obo:CHEBI_74234 obo:CHEBI_76779 obo:CHEBI_76797 obo:CHEBI_76932 obo:CHEBI_77194 obo:CHEBI_77255 obo:CHEBI_77402 obo:CHEBI_77748 obo:CHEBI_78444 obo:CHEBI_85234 obo:CHEBI_86385 obo:CHEBI_90414 obo:CHEBI_90415 obo:CHEBI_91079
+    }
+    graph obo:chebi.owl {
+?role rdfs:subClassOf* ?valsource ;
+                     rdfs:label ?rolelab .
+    }
+}
+
+```
+
+
+

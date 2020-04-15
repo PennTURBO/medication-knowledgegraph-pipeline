@@ -1,0 +1,1443 @@
+supersource,l,count2
+http://purl.obolibrary.org/obo/CHEBI_76924,plant metabolite,3091
+http://purl.obolibrary.org/obo/CHEBI_75763,eukaryotic metabolite,8432
+http://purl.obolibrary.org/obo/CHEBI_25212,metabolite,15044
+http://purl.obolibrary.org/obo/CHEBI_52206,biochemical role,16844
+http://purl.obolibrary.org/obo/CHEBI_24432,biological role,20455
+http://purl.obolibrary.org/obo/CHEBI_50906,role,22432
+http://purl.obolibrary.org/obo/CHEBI_140378,EC 1.1.1.37 (malate dehydrogenase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_76835,"EC 1.1.1.* (oxidoreductase acting on donor CH-OH group, NAD(+) or NADP(+) acceptor) inhibitor",54
+http://purl.obolibrary.org/obo/CHEBI_76726,EC 1.1.* (oxidoreductase acting on donor CH-OH group) inhibitor,56
+http://purl.obolibrary.org/obo/CHEBI_76725,EC 1.* (oxidoreductase) inhibitor,634
+http://purl.obolibrary.org/obo/CHEBI_23924,enzyme inhibitor,2212
+http://purl.obolibrary.org/obo/CHEBI_35222,inhibitor,2396
+http://purl.obolibrary.org/obo/CHEBI_35620,vasodilator agent,132
+http://purl.obolibrary.org/obo/CHEBI_35554,cardiovascular drug,397
+http://purl.obolibrary.org/obo/CHEBI_23888,drug,4637
+http://purl.obolibrary.org/obo/CHEBI_52217,pharmaceutical,4711
+http://purl.obolibrary.org/obo/CHEBI_33232,application,7120
+http://purl.obolibrary.org/obo/CHEBI_35674,antihypertensive agent,183
+http://purl.obolibrary.org/obo/CHEBI_38231,phytotoxin,51
+http://purl.obolibrary.org/obo/CHEBI_27026,toxin,155
+http://purl.obolibrary.org/obo/CHEBI_64909,poison,257
+http://purl.obolibrary.org/obo/CHEBI_67079,anti-inflammatory agent,581
+http://purl.obolibrary.org/obo/CHEBI_33281,antimicrobial agent,2089
+http://purl.obolibrary.org/obo/CHEBI_33282,antibacterial agent,678
+http://purl.obolibrary.org/obo/CHEBI_36047,antibacterial drug,307
+http://purl.obolibrary.org/obo/CHEBI_36043,antimicrobial drug,671
+http://purl.obolibrary.org/obo/CHEBI_35441,antiinfective agent,843
+http://purl.obolibrary.org/obo/CHEBI_59517,DNA synthesis inhibitor,36
+http://purl.obolibrary.org/obo/CHEBI_76932,pathway inhibitor,189
+http://purl.obolibrary.org/obo/CHEBI_22587,antiviral agent,370
+http://purl.obolibrary.org/obo/CHEBI_25442,mycotoxin,50
+http://purl.obolibrary.org/obo/CHEBI_76946,fungal metabolite,1505
+http://purl.obolibrary.org/obo/CHEBI_50183,P450 inhibitor,33
+http://purl.obolibrary.org/obo/CHEBI_76898,EC 1.14.14.1 (unspecific monooxygenase) inhibitor,33
+http://purl.obolibrary.org/obo/CHEBI_76838,"EC 1.14.14.* (oxidoreductase acting on paired donors, incorporating of 1 atom of oxygen, with reduced flavin or flavoprotein as one donor) inhibitor",45
+http://purl.obolibrary.org/obo/CHEBI_76741,"EC 1.14.* (oxidoreductase acting on paired donors, with incorporation or reduction of molecular oxygen) inhibitor",348
+http://purl.obolibrary.org/obo/CHEBI_35703,xenobiotic,360
+http://purl.obolibrary.org/obo/CHEBI_50750,EC 5.99.1.3 [DNA topoisomerase (ATP-hydrolysing)] inhibitor,38
+http://purl.obolibrary.org/obo/CHEBI_70727,topoisomerase inhibitor,71
+http://purl.obolibrary.org/obo/CHEBI_76830,EC 5.99.1.* (miscellaneous isomerase) inhibitor,71
+http://purl.obolibrary.org/obo/CHEBI_76697,EC 5.99.* (other isomerases) inhibitor,71
+http://purl.obolibrary.org/obo/CHEBI_75596,EC 5.* (isomerase) inhibitor,85
+http://purl.obolibrary.org/obo/CHEBI_53559,topoisomerase IV inhibitor,15
+http://purl.obolibrary.org/obo/CHEBI_78298,environmental contaminant,344
+http://purl.obolibrary.org/obo/CHEBI_51086,chemical role,1272
+http://purl.obolibrary.org/obo/CHEBI_33288,rodenticide,11
+http://purl.obolibrary.org/obo/CHEBI_25944,pesticide,953
+http://purl.obolibrary.org/obo/CHEBI_50249,anticoagulant,57
+http://purl.obolibrary.org/obo/CHEBI_50248,hematologic agent,146
+http://purl.obolibrary.org/obo/CHEBI_50390,EC 1.6.5.2 [NAD(P)H dehydrogenase (quinone)] inhibitor,7
+http://purl.obolibrary.org/obo/CHEBI_76866,EC 1.6.5.* (oxidoreductase acting on NADH or NADPH with a quinone or similar as acceptor) inhibitor,23
+http://purl.obolibrary.org/obo/CHEBI_76733,EC 1.6.* (oxidoreductase acting on NADH or NADPH) inhibitor,26
+http://purl.obolibrary.org/obo/CHEBI_55347,vitamin K antagonist,6
+http://purl.obolibrary.org/obo/CHEBI_48706,antagonist,428
+http://purl.obolibrary.org/obo/CHEBI_52210,pharmacological role,1741
+http://purl.obolibrary.org/obo/CHEBI_35610,antineoplastic agent,1589
+http://purl.obolibrary.org/obo/CHEBI_62868,hepatoprotective agent,55
+http://purl.obolibrary.org/obo/CHEBI_50267,protective agent,251
+http://purl.obolibrary.org/obo/CHEBI_68495,apoptosis inducer,241
+http://purl.obolibrary.org/obo/CHEBI_35718,antifungal agent,626
+http://purl.obolibrary.org/obo/CHEBI_48422,angiogenesis inhibitor,52
+http://purl.obolibrary.org/obo/CHEBI_50629,cyclooxygenase 2 inhibitor,83
+http://purl.obolibrary.org/obo/CHEBI_35544,EC 1.14.99.1 (prostaglandin-endoperoxide synthase) inhibitor,141
+http://purl.obolibrary.org/obo/CHEBI_76840,"EC 1.14.99.* (miscellaneous oxidoreductase acting on paired donors, with incorporation or reduction of molecular oxygen) inhibitor",143
+http://purl.obolibrary.org/obo/CHEBI_35623,anticonvulsant,84
+http://purl.obolibrary.org/obo/CHEBI_35488,central nervous system depressant,264
+http://purl.obolibrary.org/obo/CHEBI_35470,central nervous system drug,395
+http://purl.obolibrary.org/obo/CHEBI_76971,Escherichia coli metabolite,677
+http://purl.obolibrary.org/obo/CHEBI_76969,bacterial metabolite,1700
+http://purl.obolibrary.org/obo/CHEBI_75787,prokaryotic metabolite,1703
+http://purl.obolibrary.org/obo/CHEBI_75771,mouse metabolite,1632
+http://purl.obolibrary.org/obo/CHEBI_75768,mammalian metabolite,4069
+http://purl.obolibrary.org/obo/CHEBI_75767,animal metabolite,4576
+http://purl.obolibrary.org/obo/CHEBI_35941,serotonergic agonist,59
+http://purl.obolibrary.org/obo/CHEBI_48278,serotonergic drug,175
+http://purl.obolibrary.org/obo/CHEBI_35942,neurotransmitter agent,750
+http://purl.obolibrary.org/obo/CHEBI_38325,muscarinic agonist,12
+http://purl.obolibrary.org/obo/CHEBI_38324,cholinergic agonist,38
+http://purl.obolibrary.org/obo/CHEBI_38323,cholinergic drug,181
+http://purl.obolibrary.org/obo/CHEBI_38157,iron chelator,62
+http://purl.obolibrary.org/obo/CHEBI_38161,chelator,113
+http://purl.obolibrary.org/obo/CHEBI_52214,ligand,119
+http://purl.obolibrary.org/obo/CHEBI_61966,metabotropic glutamate receptor agonist,5
+http://purl.obolibrary.org/obo/CHEBI_48705,agonist,571
+http://purl.obolibrary.org/obo/CHEBI_72483,vesicular glutamate transport inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_91202,TGFbeta receptor antagonist,4
+http://purl.obolibrary.org/obo/CHEBI_137123,EC 2.7.11.30 (receptor protein serine/threonine kinase) inhibitor,5
+http://purl.obolibrary.org/obo/CHEBI_76812,EC 2.7.11.* (protein-serine/threonine kinase) inhibitor,152
+http://purl.obolibrary.org/obo/CHEBI_37699,protein kinase inhibitor,304
+http://purl.obolibrary.org/obo/CHEBI_76668,EC 2.7.* (P-containing group transferase) inhibitor,392
+http://purl.obolibrary.org/obo/CHEBI_71300,EC 2.* (transferase) inhibitor,577
+http://purl.obolibrary.org/obo/CHEBI_131787,dopamine receptor D2 antagonist,4
+http://purl.obolibrary.org/obo/CHEBI_37890,alpha-adrenergic antagonist,43
+http://purl.obolibrary.org/obo/CHEBI_37887,adrenergic antagonist,108
+http://purl.obolibrary.org/obo/CHEBI_48539,alpha-adrenergic drug,70
+http://purl.obolibrary.org/obo/CHEBI_37962,adrenergic agent,224
+http://purl.obolibrary.org/obo/CHEBI_48279,serotonergic antagonist,89
+http://purl.obolibrary.org/obo/CHEBI_59107,EC 3.4.24.* (metalloendopeptidase) inhibitor,20
+http://purl.obolibrary.org/obo/CHEBI_37670,protease inhibitor,113
+http://purl.obolibrary.org/obo/CHEBI_60258,EC 3.4.* (hydrolases acting on peptide bond) inhibitor,246
+http://purl.obolibrary.org/obo/CHEBI_76759,EC 3.* (hydrolase) inhibitor,787
+http://purl.obolibrary.org/obo/CHEBI_49159,leukotriene antagonist,9
+http://purl.obolibrary.org/obo/CHEBI_49020,hormone antagonist,85
+http://purl.obolibrary.org/obo/CHEBI_51061,hormone receptor modulator,123
+http://purl.obolibrary.org/obo/CHEBI_90710,receptor modulator,139
+http://purl.obolibrary.org/obo/CHEBI_65023,anti-asthmatic agent,51
+http://purl.obolibrary.org/obo/CHEBI_35221,antimetabolite,77
+http://purl.obolibrary.org/obo/CHEBI_36044,antiviral drug,105
+http://purl.obolibrary.org/obo/CHEBI_53756,HIV-1 reverse transcriptase inhibitor,43
+http://purl.obolibrary.org/obo/CHEBI_64947,anti-HIV-1 agent,108
+http://purl.obolibrary.org/obo/CHEBI_52629,EC 3.1.26.13 (retroviral ribonuclease H) inhibitor,47
+http://purl.obolibrary.org/obo/CHEBI_64946,anti-HIV agent,186
+http://purl.obolibrary.org/obo/CHEBI_76785,EC 3.1.26.* (endoribonucleases producing 5'-phosphomonoesters) inhibitor,47
+http://purl.obolibrary.org/obo/CHEBI_76760,EC 3.1.* (ester hydrolase) inhibitor,330
+http://purl.obolibrary.org/obo/CHEBI_35474,anxiolytic drug,55
+http://purl.obolibrary.org/obo/CHEBI_35473,tranquilizing drug,136
+http://purl.obolibrary.org/obo/CHEBI_35471,psychotropic drug,246
+http://purl.obolibrary.org/obo/CHEBI_35717,sedative,72
+http://purl.obolibrary.org/obo/CHEBI_61908,EC 1.14.13.39 (nitric oxide synthase) inhibitor,64
+http://purl.obolibrary.org/obo/CHEBI_76841,"EC 1.14.13.* (oxidoreductase acting on paired donors, incorporating 1 atom of oxygen, with NADH or NADPH as one donor) inhibitor",124
+http://purl.obolibrary.org/obo/CHEBI_76990,mycoestrogen,1
+http://purl.obolibrary.org/obo/CHEBI_50114,estrogen,68
+http://purl.obolibrary.org/obo/CHEBI_50112,sex hormone,252
+http://purl.obolibrary.org/obo/CHEBI_24621,hormone,348
+http://purl.obolibrary.org/obo/CHEBI_33280,molecular messenger,504
+http://purl.obolibrary.org/obo/CHEBI_101086,EC 5.4.99.7 (lanosterol synthase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_101090,EC 5.4.99.* (intramolecular transferase transferring other groups) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_76695,EC 5.4.* (intramolecular transferase) inhibitor,3
+http://purl.obolibrary.org/obo/CHEBI_23018,EC 4.2.1.1 (carbonic anhydrase) inhibitor,11
+http://purl.obolibrary.org/obo/CHEBI_76907,EC 4.2.1.* (hydro-lyases) inhibitor,15
+http://purl.obolibrary.org/obo/CHEBI_76712,EC 4.2.* (C-O lyase) inhibitor,15
+http://purl.obolibrary.org/obo/CHEBI_76710,EC 4.* (lyase) inhibitor,50
+http://purl.obolibrary.org/obo/CHEBI_39456,antiglaucoma drug,29
+http://purl.obolibrary.org/obo/CHEBI_66981,ophthalmology drug,33
+http://purl.obolibrary.org/obo/CHEBI_35498,diuretic,35
+http://purl.obolibrary.org/obo/CHEBI_35475,non-steroidal anti-inflammatory drug,159
+http://purl.obolibrary.org/obo/CHEBI_35472,anti-inflammatory drug,217
+http://purl.obolibrary.org/obo/CHEBI_35842,antirheumatic drug,186
+http://purl.obolibrary.org/obo/CHEBI_49167,anti-asthmatic drug,44
+http://purl.obolibrary.org/obo/CHEBI_64964,EC 1.13.11.34 (arachidonate 5-lipoxygenase) inhibitor,18
+http://purl.obolibrary.org/obo/CHEBI_76837,EC 1.13.11.* (oxidoreductase acting on single donors and incorporating 2 O atoms) inhibitor,72
+http://purl.obolibrary.org/obo/CHEBI_35856,lipoxygenase inhibitor,52
+http://purl.obolibrary.org/obo/CHEBI_76740,EC 1.13.* [oxidoreductase acting on single donors with incorporation of molecular oxygen (oxygenases)] inhibitor,72
+http://purl.obolibrary.org/obo/CHEBI_35476,antipsychotic agent,77
+http://purl.obolibrary.org/obo/CHEBI_37956,histamine antagonist,114
+http://purl.obolibrary.org/obo/CHEBI_37957,histaminergic drug,126
+http://purl.obolibrary.org/obo/CHEBI_48561,dopaminergic antagonist,61
+http://purl.obolibrary.org/obo/CHEBI_48560,dopaminergic agent,126
+http://purl.obolibrary.org/obo/CHEBI_48876,muscarinic antagonist,95
+http://purl.obolibrary.org/obo/CHEBI_48873,cholinergic antagonist,133
+http://purl.obolibrary.org/obo/CHEBI_50514,vasoconstrictor agent,43
+http://purl.obolibrary.org/obo/CHEBI_51373,GABA agonist,14
+http://purl.obolibrary.org/obo/CHEBI_51374,GABA agent,46
+http://purl.obolibrary.org/obo/CHEBI_67267,EC 2.5.1.59 (protein geranylgeranyltransferase type I) inhibitor,5
+http://purl.obolibrary.org/obo/CHEBI_76663,EC 2.5.1.* (non-methyl-alkyl or aryl transferase) inhibitor,57
+http://purl.obolibrary.org/obo/CHEBI_76834,EC 2.5.* (non-methyl-alkyl or aryl transferase) inhibitor,57
+http://purl.obolibrary.org/obo/CHEBI_22586,antioxidant,442
+http://purl.obolibrary.org/obo/CHEBI_38215,calcium channel blocker,45
+http://purl.obolibrary.org/obo/CHEBI_38808,calcium channel modulator,70
+http://purl.obolibrary.org/obo/CHEBI_38632,membrane transport modulator,261
+http://purl.obolibrary.org/obo/CHEBI_52208,biophysical role,308
+http://purl.obolibrary.org/obo/CHEBI_50925,EC 2.7.11.1 (non-specific serine/threonine protein kinase) inhibitor,39
+http://purl.obolibrary.org/obo/CHEBI_64932,cathepsin B inhibitor,10
+http://purl.obolibrary.org/obo/CHEBI_64152,cysteine protease inhibitor,27
+http://purl.obolibrary.org/obo/CHEBI_76796,EC 3.4.22.* (cysteine endopeptidase) inhibitor,30
+http://purl.obolibrary.org/obo/CHEBI_74925,EC 3.4.23.46 (memapsin 2) inhibitor,9
+http://purl.obolibrary.org/obo/CHEBI_76885,EC 3.4.23.* (aspartic endopeptidase) inhibitor,9
+http://purl.obolibrary.org/obo/CHEBI_50176,keratolytic drug,15
+http://purl.obolibrary.org/obo/CHEBI_50177,dermatologic drug,84
+http://purl.obolibrary.org/obo/CHEBI_48550,EC 1.1.1.21 (aldehyde reductase) inhibitor,20
+http://purl.obolibrary.org/obo/CHEBI_88188,drug allergen,92
+http://purl.obolibrary.org/obo/CHEBI_50904,allergen,314
+http://purl.obolibrary.org/obo/CHEBI_52209,aetiopathogenetic role,760
+http://purl.obolibrary.org/obo/CHEBI_38877,intravenous anaesthetic,19
+http://purl.obolibrary.org/obo/CHEBI_38869,general anaesthetic,37
+http://purl.obolibrary.org/obo/CHEBI_38867,anaesthetic,96
+http://purl.obolibrary.org/obo/CHEBI_102248,EC 1.14.11.29 (hypoxia-inducible factor-proline dioxygenase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_76902,"EC 1.14.11.* (oxidoreductase acting on paired donors, 2-oxoglutarate as one donor, incorporating 1 atom each of oxygen into both donors) inhibitor",6
+http://purl.obolibrary.org/obo/CHEBI_63726,neuroprotective agent,122
+http://purl.obolibrary.org/obo/CHEBI_131604,Mycoplasma genitalium metabolite,129
+http://purl.obolibrary.org/obo/CHEBI_50502,EC 2.5.1.15 (dihydropteroate synthase) inhibitor,14
+http://purl.obolibrary.org/obo/CHEBI_50903,carcinogenic agent,159
+http://purl.obolibrary.org/obo/CHEBI_102368,EC 2.6.1.40 [(R)-3-amino-2-methylpropionate--pyruvate transaminase] inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_76879,EC 2.6.1.* (transaminase) inhibitor,7
+http://purl.obolibrary.org/obo/CHEBI_76665,EC 2.6.* (nitrogenous group transferase) inhibitor,7
+http://purl.obolibrary.org/obo/CHEBI_49103,drug metabolite,144
+http://purl.obolibrary.org/obo/CHEBI_76967,human xenobiotic metabolite,604
+http://purl.obolibrary.org/obo/CHEBI_77746,human metabolite,2732
+http://purl.obolibrary.org/obo/CHEBI_76206,xenobiotic metabolite,878
+http://purl.obolibrary.org/obo/CHEBI_35480,analgesic,212
+http://purl.obolibrary.org/obo/CHEBI_27311,volatile oil component,99
+http://purl.obolibrary.org/obo/CHEBI_50902,genotoxin,191
+http://purl.obolibrary.org/obo/CHEBI_76956,Aspergillus metabolite,204
+http://purl.obolibrary.org/obo/CHEBI_50268,GABA modulator,19
+http://purl.obolibrary.org/obo/CHEBI_24850,insect attractant,14
+http://purl.obolibrary.org/obo/CHEBI_48318,fragrance,84
+http://purl.obolibrary.org/obo/CHEBI_59163,biomarker,50
+http://purl.obolibrary.org/obo/CHEBI_47867,indicator,175
+http://purl.obolibrary.org/obo/CHEBI_67200,provitamin A,3
+http://purl.obolibrary.org/obo/CHEBI_50188,provitamin,6
+http://purl.obolibrary.org/obo/CHEBI_83056,Daphnia magna metabolite,60
+http://purl.obolibrary.org/obo/CHEBI_83057,Daphnia metabolite,121
+http://purl.obolibrary.org/obo/CHEBI_83039,crustacean metabolite,123
+http://purl.obolibrary.org/obo/CHEBI_49201,anti-ulcer drug,39
+http://purl.obolibrary.org/obo/CHEBI_55324,gastrointestinal drug,35
+http://purl.obolibrary.org/obo/CHEBI_25512,neurotransmitter,21
+http://purl.obolibrary.org/obo/CHEBI_72575,alarm pheromone,6
+http://purl.obolibrary.org/obo/CHEBI_26013,pheromone,43
+http://purl.obolibrary.org/obo/CHEBI_26645,semiochemical,93
+http://purl.obolibrary.org/obo/CHEBI_35444,antinematodal drug,24
+http://purl.obolibrary.org/obo/CHEBI_25491,nematicide,62
+http://purl.obolibrary.org/obo/CHEBI_35443,anthelminthic drug,59
+http://purl.obolibrary.org/obo/CHEBI_35442,antiparasitic agent,361
+http://purl.obolibrary.org/obo/CHEBI_64915,antiplasmodial drug,188
+http://purl.obolibrary.org/obo/CHEBI_35820,antiprotozoal drug,297
+http://purl.obolibrary.org/obo/CHEBI_35469,antidepressant,103
+http://purl.obolibrary.org/obo/CHEBI_50218,EC 3.1.4.* (phosphoric diester hydrolase) inhibitor,35
+http://purl.obolibrary.org/obo/CHEBI_35625,EC 3.5.2.6 (beta-lactamase) inhibitor,12
+http://purl.obolibrary.org/obo/CHEBI_76808,EC 3.5.2.* (non-peptide cyclic amide C-N hydrolase) inhibitor,12
+http://purl.obolibrary.org/obo/CHEBI_76764,EC 3.5.* (hydrolases acting on non-peptide C-N bonds) inhibitor,79
+http://purl.obolibrary.org/obo/CHEBI_141153,quinone outside inhibitor,5
+http://purl.obolibrary.org/obo/CHEBI_24127,fungicide,285
+http://purl.obolibrary.org/obo/CHEBI_38499,mitochondrial cytochrome-bc1 complex inhibitor,29
+http://purl.obolibrary.org/obo/CHEBI_25355,mitochondrial respiratory-chain inhibitor,57
+http://purl.obolibrary.org/obo/CHEBI_38502,cytochrome-bc1 complex inhibitor,29
+http://purl.obolibrary.org/obo/CHEBI_38497,respiratory-chain inhibitor,63
+http://purl.obolibrary.org/obo/CHEBI_38496,electron-transport chain inhibitor,69
+http://purl.obolibrary.org/obo/CHEBI_33286,agrochemical,554
+http://purl.obolibrary.org/obo/CHEBI_50919,antiemetic,60
+http://purl.obolibrary.org/obo/CHEBI_85234,human blood serum metabolite,108
+http://purl.obolibrary.org/obo/CHEBI_76507,marine metabolite,367
+http://purl.obolibrary.org/obo/CHEBI_50113,androgen,164
+http://purl.obolibrary.org/obo/CHEBI_50646,bone density conservation agent,40
+http://purl.obolibrary.org/obo/CHEBI_75772,Saccharomyces cerevisiae metabolite,763
+http://purl.obolibrary.org/obo/CHEBI_50185,fatty acid synthesis inhibitor,8
+http://purl.obolibrary.org/obo/CHEBI_76976,bacterial xenobiotic metabolite,114
+http://purl.obolibrary.org/obo/CHEBI_84735,algal metabolite,121
+http://purl.obolibrary.org/obo/CHEBI_21241,vitamin C,3
+http://purl.obolibrary.org/obo/CHEBI_27314,water-soluble vitamin,19
+http://purl.obolibrary.org/obo/CHEBI_85046,skin lightening agent,7
+http://purl.obolibrary.org/obo/CHEBI_33229,vitamin,29
+http://purl.obolibrary.org/obo/CHEBI_64857,cosmetic,14
+http://purl.obolibrary.org/obo/CHEBI_27027,micronutrient,70
+http://purl.obolibrary.org/obo/CHEBI_33284,nutrient,83
+http://purl.obolibrary.org/obo/CHEBI_78295,food component,295
+http://purl.obolibrary.org/obo/CHEBI_52211,physiological role,295
+http://purl.obolibrary.org/obo/CHEBI_23354,coenzyme,31
+http://purl.obolibrary.org/obo/CHEBI_23357,cofactor,228
+http://purl.obolibrary.org/obo/CHEBI_63247,reducing agent,17
+http://purl.obolibrary.org/obo/CHEBI_64577,flour treatment agent,8
+http://purl.obolibrary.org/obo/CHEBI_64047,food additive,199
+http://purl.obolibrary.org/obo/CHEBI_77962,food antioxidant,12
+http://purl.obolibrary.org/obo/CHEBI_65255,food preservative,24
+http://purl.obolibrary.org/obo/CHEBI_64996,EC 1.13.11.33 (arachidonate 15-lipoxygenase) inhibitor,10
+http://purl.obolibrary.org/obo/CHEBI_65001,EC 3.1.1.3 (triacylglycerol lipase) inhibitor,11
+http://purl.obolibrary.org/obo/CHEBI_76773,EC 3.1.1.* (carboxylic ester hydrolase) inhibitor,215
+http://purl.obolibrary.org/obo/CHEBI_65256,antimicrobial food preservative,9
+http://purl.obolibrary.org/obo/CHEBI_74440,epidermal growth factor receptor antagonist,14
+http://purl.obolibrary.org/obo/CHEBI_64345,MALDI matrix material,11
+http://purl.obolibrary.org/obo/CHEBI_68494,apoptosis inhibitor,41
+http://purl.obolibrary.org/obo/CHEBI_77307,cardioprotective agent,27
+http://purl.obolibrary.org/obo/CHEBI_64049,food acidity regulator,16
+http://purl.obolibrary.org/obo/CHEBI_74783,astringent,20
+http://purl.obolibrary.org/obo/CHEBI_51039,dopamine uptake inhibitor,19
+http://purl.obolibrary.org/obo/CHEBI_33231,antitubercular agent,45
+http://purl.obolibrary.org/obo/CHEBI_64912,antimycobacterial drug,75
+http://purl.obolibrary.org/obo/CHEBI_47868,photosensitizing agent,31
+http://purl.obolibrary.org/obo/CHEBI_24527,herbicide,285
+http://purl.obolibrary.org/obo/CHEBI_26089,photosystem-II inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_26087,photosynthetic electron-transport chain inhibitor,6
+http://purl.obolibrary.org/obo/CHEBI_139492,sensitiser,17
+http://purl.obolibrary.org/obo/CHEBI_48425,topical anaesthetic,6
+http://purl.obolibrary.org/obo/CHEBI_36333,local anaesthetic,51
+http://purl.obolibrary.org/obo/CHEBI_59683,antipruritic drug,30
+http://purl.obolibrary.org/obo/CHEBI_78804,Caenorhabditis elegans metabolite,234
+http://purl.obolibrary.org/obo/CHEBI_78803,nematode metabolite,235
+http://purl.obolibrary.org/obo/CHEBI_35457,EC 3.4.15.1 (peptidyl-dipeptidase A) inhibitor,39
+http://purl.obolibrary.org/obo/CHEBI_76782,EC 3.4.15.* (peptidyl-dipeptidase) inhibitor,39
+http://purl.obolibrary.org/obo/CHEBI_35482,opioid analgesic,56
+http://purl.obolibrary.org/obo/CHEBI_55322,mu-opioid receptor agonist,31
+http://purl.obolibrary.org/obo/CHEBI_60606,opioid receptor agonist,38
+http://purl.obolibrary.org/obo/CHEBI_60599,mu-opioid agent,38
+http://purl.obolibrary.org/obo/CHEBI_60598,opioid agent,45
+http://purl.obolibrary.org/obo/CHEBI_60807,anaesthesia adjuvant,11
+http://purl.obolibrary.org/obo/CHEBI_60809,adjuvant,32
+http://purl.obolibrary.org/obo/CHEBI_72768,aryl hydrocarbon receptor agonist,8
+http://purl.obolibrary.org/obo/CHEBI_38317,EC 1.13.11.27 (4-hydroxyphenylpyruvate dioxygenase) inhibitor,16
+http://purl.obolibrary.org/obo/CHEBI_25435,mutagen,163
+http://purl.obolibrary.org/obo/CHEBI_50790,EC 1.14.14.14 (aromatase) inhibitor,11
+http://purl.obolibrary.org/obo/CHEBI_143231,carbohydrate allergen,30
+http://purl.obolibrary.org/obo/CHEBI_53000,epitope,644
+http://purl.obolibrary.org/obo/CHEBI_61115,EC 3.5.1.98 (histone deacetylase) inhibitor,38
+http://purl.obolibrary.org/obo/CHEBI_76807,EC 3.5.1.* (non-peptide linear amide C-N hydrolase) inhibitor,58
+http://purl.obolibrary.org/obo/CHEBI_145438,C-X-C chemokine receptor type 4 antagonist,2
+http://purl.obolibrary.org/obo/CHEBI_50847,immunological adjuvant,14
+http://purl.obolibrary.org/obo/CHEBI_50846,immunomodulator,109
+http://purl.obolibrary.org/obo/CHEBI_84087,human urinary metabolite,184
+http://purl.obolibrary.org/obo/CHEBI_35523,bronchodilator agent,63
+http://purl.obolibrary.org/obo/CHEBI_38070,anti-arrhythmia drug,72
+http://purl.obolibrary.org/obo/CHEBI_35640,adrenergic uptake inhibitor,28
+http://purl.obolibrary.org/obo/CHEBI_24020,fat-soluble vitamin,4
+http://purl.obolibrary.org/obo/CHEBI_63330,sodium-dependent Pi-transporter inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_59544,phosphoantigen,13
+http://purl.obolibrary.org/obo/CHEBI_59132,antigen,172
+http://purl.obolibrary.org/obo/CHEBI_82824,calpain inhibitor,6
+http://purl.obolibrary.org/obo/CHEBI_131186,IP3 receptor antagonist,2
+http://purl.obolibrary.org/obo/CHEBI_79085,potassium channel opener,4
+http://purl.obolibrary.org/obo/CHEBI_50510,potassium channel modulator,25
+http://purl.obolibrary.org/obo/CHEBI_60311,thyroid hormone,3
+http://purl.obolibrary.org/obo/CHEBI_73240,NF-kappaB inhibitor,42
+http://purl.obolibrary.org/obo/CHEBI_35337,central nervous system stimulant,25
+http://purl.obolibrary.org/obo/CHEBI_53121,adenosine A2A receptor antagonist,4
+http://purl.obolibrary.org/obo/CHEBI_71232,adenosine receptor antagonist,10
+http://purl.obolibrary.org/obo/CHEBI_63957,adenosine A1 receptor antagonist,4
+http://purl.obolibrary.org/obo/CHEBI_131359,adenosine A2B receptor agonist,1
+http://purl.obolibrary.org/obo/CHEBI_73311,adenosine receptor agonist,5
+http://purl.obolibrary.org/obo/CHEBI_50733,nutraceutical,72
+http://purl.obolibrary.org/obo/CHEBI_35225,buffer,33
+http://purl.obolibrary.org/obo/CHEBI_35223,catalyst,16
+http://purl.obolibrary.org/obo/CHEBI_74152,mordant,4
+http://purl.obolibrary.org/obo/CHEBI_50503,laxative,17
+http://purl.obolibrary.org/obo/CHEBI_86264,rat metabolite,145
+http://purl.obolibrary.org/obo/CHEBI_37335,MRI contrast agent,12
+http://purl.obolibrary.org/obo/CHEBI_37334,diagnostic imaging agent,47
+http://purl.obolibrary.org/obo/CHEBI_33295,diagnostic agent,82
+http://purl.obolibrary.org/obo/CHEBI_50509,potassium channel blocker,19
+http://purl.obolibrary.org/obo/CHEBI_35617,flavouring agent,101
+http://purl.obolibrary.org/obo/CHEBI_22333,alkylating agent,56
+http://purl.obolibrary.org/obo/CHEBI_85094,EC 2.7.11.11 (cAMP-dependent protein kinase) inhibitor,5
+http://purl.obolibrary.org/obo/CHEBI_131492,Wnt signalling activator,1
+http://purl.obolibrary.org/obo/CHEBI_35224,effector,26
+http://purl.obolibrary.org/obo/CHEBI_91092,EC 2.7.11.26 (tau-protein kinase) inhibitor,11
+http://purl.obolibrary.org/obo/CHEBI_131495,formyl peptide receptor agonist,1
+http://purl.obolibrary.org/obo/CHEBI_66900,prostaglandin receptor agonist,5
+http://purl.obolibrary.org/obo/CHEBI_48578,radical scavenger,111
+http://purl.obolibrary.org/obo/CHEBI_24852,insecticide,230
+http://purl.obolibrary.org/obo/CHEBI_131509,lysine-specific histone demethylase 1A inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_38623,EC 1.4.3.4 (monoamine oxidase) inhibitor,25
+http://purl.obolibrary.org/obo/CHEBI_76861,"EC 1.4.3.* (oxidoreductase acting on donor CH-NH2 group, oxygen as acceptor) inhibitor",28
+http://purl.obolibrary.org/obo/CHEBI_76730,EC 1.4.* (oxidoreductase acting on donor CH-NH2 group) inhibitor,31
+http://purl.obolibrary.org/obo/CHEBI_76595,nephroprotective agent,15
+http://purl.obolibrary.org/obo/CHEBI_65259,GABA antagonist,10
+http://purl.obolibrary.org/obo/CHEBI_86328,antifungal agrochemical,232
+http://purl.obolibrary.org/obo/CHEBI_131611,teichoic acid biosynthesis inhibitor,4
+http://purl.obolibrary.org/obo/CHEBI_131770,EC 3.6.3.49 (channel-conductance-controlling ATPase) inhibitor,3
+http://purl.obolibrary.org/obo/CHEBI_76895,EC 3.6.3.* (acid anhydride hydrolase catalysing transmembrane movement of substances) inhibitor,44
+http://purl.obolibrary.org/obo/CHEBI_73216,EC 3.6.* (hydrolases acting on acid anhydrides) inhibitor,78
+http://purl.obolibrary.org/obo/CHEBI_73335,ultraviolet filter,5
+http://purl.obolibrary.org/obo/CHEBI_52215,photochemical role,34
+http://purl.obolibrary.org/obo/CHEBI_35493,antipyretic,58
+http://purl.obolibrary.org/obo/CHEBI_50683,EC 1.5.1.3 (dihydrofolate reductase) inhibitor,17
+http://purl.obolibrary.org/obo/CHEBI_73913,antifolate,19
+http://purl.obolibrary.org/obo/CHEBI_76863,"EC 1.5.1.* (oxidoreductase acting on donor CH-NH group, NAD(+) or NADP(+) as acceptor) inhibitor",17
+http://purl.obolibrary.org/obo/CHEBI_76731,EC 1.5.* (oxidoreductase acting on donor CH-NH group) inhibitor,17
+http://purl.obolibrary.org/obo/CHEBI_131734,EC 2.7.11.20 (elongation factor 2 kinase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_50266,prodrug,172
+http://purl.obolibrary.org/obo/CHEBI_136859,pro-agent,213
+http://purl.obolibrary.org/obo/CHEBI_27780,detergent,14
+http://purl.obolibrary.org/obo/CHEBI_35195,surfactant,66
+http://purl.obolibrary.org/obo/CHEBI_63046,emulsifier,74
+http://purl.obolibrary.org/obo/CHEBI_35219,plant growth retardant,22
+http://purl.obolibrary.org/obo/CHEBI_26155,plant growth regulator,116
+http://purl.obolibrary.org/obo/CHEBI_39317,growth regulator,148
+http://purl.obolibrary.org/obo/CHEBI_62434,EC 2.7.10.1 (receptor protein-tyrosine kinase) inhibitor,42
+http://purl.obolibrary.org/obo/CHEBI_38637,tyrosine kinase inhibitor,107
+http://purl.obolibrary.org/obo/CHEBI_76817,EC 2.7.10.* (protein-tyrosine kinase) inhibitor,60
+http://purl.obolibrary.org/obo/CHEBI_131789,RUNX1 inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_131791,HIV-1 Tat inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_131790,melatonin receptor antagonist,1
+http://purl.obolibrary.org/obo/CHEBI_131795,dopamine receptor D1 agonist,2
+http://purl.obolibrary.org/obo/CHEBI_51065,dopamine agonist,33
+http://purl.obolibrary.org/obo/CHEBI_35526,hypoglycemic agent,99
+http://purl.obolibrary.org/obo/CHEBI_131844,EC 1.14.11.1 (gamma-butyrobetaine dioxygenase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_131961,"EC 1.13.11.11 (tryptophan 2,3-dioxygenase) inhibitor",1
+http://purl.obolibrary.org/obo/CHEBI_75047,B-Raf inhibitor,7
+http://purl.obolibrary.org/obo/CHEBI_79050,EC 3.4.22.52 (calpain-1) inhibitor,3
+http://purl.obolibrary.org/obo/CHEBI_82821,EC 3.4.22.53 (calpain-2) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_50141,bronchoconstrictor agent,7
+http://purl.obolibrary.org/obo/CHEBI_39208,antibiotic insecticide,4
+http://purl.obolibrary.org/obo/CHEBI_39215,antibiotic pesticide,6
+http://purl.obolibrary.org/obo/CHEBI_83762,"EC 3.2.1.28 (alpha,alpha-trehalase) inhibitor",3
+http://purl.obolibrary.org/obo/CHEBI_76789,EC 2.4.1.* (hexosyltransferase) inhibitor,17
+http://purl.obolibrary.org/obo/CHEBI_76662,EC 2.4.* (glycosyltransferase) inhibitor,35
+http://purl.obolibrary.org/obo/CHEBI_76617,EC 2.7.10.2 (non-specific protein-tyrosine kinase) inhibitor,18
+http://purl.obolibrary.org/obo/CHEBI_87183,STAT3 inhibitor,4
+http://purl.obolibrary.org/obo/CHEBI_138208,carotenoid biosynthesis inhibitor,23
+http://purl.obolibrary.org/obo/CHEBI_62872,EC 1.2.3.1 (aldehyde oxidase) inhibitor,5
+http://purl.obolibrary.org/obo/CHEBI_76853,EC 1.2.3.* (oxidoreductase acting on donor aldehyde/oxo group with oxygen as acceptor) inhibitor,5
+http://purl.obolibrary.org/obo/CHEBI_76727,EC 1.2.* (oxidoreductase acting on donor aldehyde/oxo group) inhibitor,16
+http://purl.obolibrary.org/obo/CHEBI_77255,EC 3.4.24.83 (anthrax lethal factor endopeptidase) inhibitor,6
+http://purl.obolibrary.org/obo/CHEBI_77745,EC 3.4.24.18 (meprin A) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_77747,EC 3.6.3.1 (phospholipid-translocating ATPase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_77748,EC 3.6.3.44 (xenobiotic-transporting ATPase) inhibitor,6
+http://purl.obolibrary.org/obo/CHEBI_73192,EC 1.3.3.4 (protoporphyrinogen oxidase) inhibitor,27
+http://purl.obolibrary.org/obo/CHEBI_76860,"EC 1.3.3.* (oxidoreductase acting on donor CH-CH group, oxygen as acceptor) inhibitor",27
+http://purl.obolibrary.org/obo/CHEBI_76729,EC 1.3.* (oxidoreductase acting on donor CH-CH group) inhibitor,70
+http://purl.obolibrary.org/obo/CHEBI_76811,EC 3.1.4.12 (sphingomyelin phosphodiesterase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_90714,retinoic acid receptor antagonist,5
+http://purl.obolibrary.org/obo/CHEBI_90708,retinoic acid receptor modulator,10
+http://purl.obolibrary.org/obo/CHEBI_90709,nuclear receptor modulator,10
+http://purl.obolibrary.org/obo/CHEBI_86327,antifungal drug,34
+http://purl.obolibrary.org/obo/CHEBI_90749,antidote to cyanide poisoning,5
+http://purl.obolibrary.org/obo/CHEBI_50247,antidote,33
+http://purl.obolibrary.org/obo/CHEBI_140399,specialised pro-resolving mediator,19
+http://purl.obolibrary.org/obo/CHEBI_62488,signalling molecule,45
+http://purl.obolibrary.org/obo/CHEBI_52290,mitogen,9
+http://purl.obolibrary.org/obo/CHEBI_70782,PPARalpha agonist,12
+http://purl.obolibrary.org/obo/CHEBI_70781,PPAR modulator,23
+http://purl.obolibrary.org/obo/CHEBI_22917,phytogenic insecticide,8
+http://purl.obolibrary.org/obo/CHEBI_83399,marine xenobiotic metabolite,105
+http://purl.obolibrary.org/obo/CHEBI_26841,synthetic auxin,30
+http://purl.obolibrary.org/obo/CHEBI_22676,auxin,37
+http://purl.obolibrary.org/obo/CHEBI_37848,plant hormone,75
+http://purl.obolibrary.org/obo/CHEBI_51217,fluorochrome,551
+http://purl.obolibrary.org/obo/CHEBI_51121,fluorescent dye,564
+http://purl.obolibrary.org/obo/CHEBI_37958,dye,695
+http://purl.obolibrary.org/obo/CHEBI_64571,NMDA receptor agonist,6
+http://purl.obolibrary.org/obo/CHEBI_50103,excitatory amino acid agonist,7
+http://purl.obolibrary.org/obo/CHEBI_82665,EC 2.7.11.22 (cyclin-dependent kinase) inhibitor,27
+http://purl.obolibrary.org/obo/CHEBI_64033,EC 3.5.1.99 (fatty acid amide hydrolase) inhibitor,4
+http://purl.obolibrary.org/obo/CHEBI_70774,capsaicin receptor antagonist,8
+http://purl.obolibrary.org/obo/CHEBI_35705,immunosuppressive agent,65
+http://purl.obolibrary.org/obo/CHEBI_132272,herbicide safener,7
+http://purl.obolibrary.org/obo/CHEBI_67114,ryanodine receptor agonist,7
+http://purl.obolibrary.org/obo/CHEBI_38809,ryanodine receptor modulator,12
+http://purl.obolibrary.org/obo/CHEBI_133811,EC 2.4.1.17 (glucuronosyltransferase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_132365,EC 1.14.11.2 (procollagen-proline dioxygenase) inhibitor,3
+http://purl.obolibrary.org/obo/CHEBI_132518,EC 3.2.1.23 (beta-galactosidase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_52424,EC 3.2.1.* (glycosidase) inhibitor,74
+http://purl.obolibrary.org/obo/CHEBI_76761,EC 3.2.* (glycosylase) inhibitor,74
+http://purl.obolibrary.org/obo/CHEBI_67232,"EC 3.2.1.10 (oligo-1,6-glucosidase) inhibitor",3
+http://purl.obolibrary.org/obo/CHEBI_50427,platelet aggregation inhibitor,94
+http://purl.obolibrary.org/obo/CHEBI_76988,xenoestrogen,13
+http://purl.obolibrary.org/obo/CHEBI_138015,endocrine disruptor,21
+http://purl.obolibrary.org/obo/CHEBI_35679,antilipemic drug,48
+http://purl.obolibrary.org/obo/CHEBI_39116,pyrethroid ester insecticide,40
+http://purl.obolibrary.org/obo/CHEBI_26413,pyrethroid insecticide,43
+http://purl.obolibrary.org/obo/CHEBI_39000,sodium channel modulator,70
+http://purl.obolibrary.org/obo/CHEBI_71692,insect repellent,12
+http://purl.obolibrary.org/obo/CHEBI_90713,retinoic acid receptor alpha antagonist,4
+http://purl.obolibrary.org/obo/CHEBI_50751,anti-estrogen,12
+http://purl.obolibrary.org/obo/CHEBI_22583,antifeedant,27
+http://purl.obolibrary.org/obo/CHEBI_36335,trypanocidal drug,40
+http://purl.obolibrary.org/obo/CHEBI_134182,platelet-activating factor receptor antagonist,4
+http://purl.obolibrary.org/obo/CHEBI_67239,EC 3.2.1.20 (alpha-glucosidase) inhibitor,36
+http://purl.obolibrary.org/obo/CHEBI_38633,sodium channel blocker,26
+http://purl.obolibrary.org/obo/CHEBI_50857,anti-allergic agent,70
+http://purl.obolibrary.org/obo/CHEBI_38462,EC 3.1.1.7 (acetylcholinesterase) inhibitor,151
+http://purl.obolibrary.org/obo/CHEBI_74518,anti-obesity agent,11
+http://purl.obolibrary.org/obo/CHEBI_48356,protic solvent,24
+http://purl.obolibrary.org/obo/CHEBI_39141,Bronsted acid,35
+http://purl.obolibrary.org/obo/CHEBI_48354,polar solvent,51
+http://purl.obolibrary.org/obo/CHEBI_37527,acid,44
+http://purl.obolibrary.org/obo/CHEBI_17891,donor,65
+http://purl.obolibrary.org/obo/CHEBI_46787,solvent,92
+http://purl.obolibrary.org/obo/CHEBI_75769,B vitamin,10
+http://purl.obolibrary.org/obo/CHEBI_132772,EC 3.6.5.5 (dynamin GTPase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_132771,EC 3.6.5.* (hydrolases acting on GTP; involved in cellular and subcellular movement) inhibitor,3
+http://purl.obolibrary.org/obo/CHEBI_50909,nephrotoxic agent,10
+http://purl.obolibrary.org/obo/CHEBI_51372,neuromuscular agent,96
+http://purl.obolibrary.org/obo/CHEBI_59997,EC 1.14.18.1 (tyrosinase) inhibitor,29
+http://purl.obolibrary.org/obo/CHEBI_76845,"EC 1.14.18.* (oxidoreductase acting on paired donors, miscellaneous compound as one donor, incorporating 1 atom of oxygen) inhibitor",29
+http://purl.obolibrary.org/obo/CHEBI_35497,androgen antagonist,19
+http://purl.obolibrary.org/obo/CHEBI_60575,phenoxy herbicide,31
+http://purl.obolibrary.org/obo/CHEBI_70722,EC 6.4.1.2 (acetyl-CoA carboxylase) inhibitor,26
+http://purl.obolibrary.org/obo/CHEBI_76824,EC 6.4.1.* (carboxylase) inhibitor,28
+http://purl.obolibrary.org/obo/CHEBI_75604,EC 6.4.* (C-C bond-forming ligase) inhibitor,28
+http://purl.obolibrary.org/obo/CHEBI_75603,EC 6.* (ligase) inhibitor,48
+http://purl.obolibrary.org/obo/CHEBI_70868,antileishmanial agent,38
+http://purl.obolibrary.org/obo/CHEBI_22180,EC 2.2.1.6 (acetolactate synthase) inhibitor,24
+http://purl.obolibrary.org/obo/CHEBI_76876,EC 2.2.1.* (transketolase/transaldolase) inhibitor,24
+http://purl.obolibrary.org/obo/CHEBI_76660,EC 2.2.* (aldehyde or ketone transferase) inhibitor,24
+http://purl.obolibrary.org/obo/CHEBI_136646,proherbicide,29
+http://purl.obolibrary.org/obo/CHEBI_136643,propesticide,40
+http://purl.obolibrary.org/obo/CHEBI_35530,beta-adrenergic antagonist,46
+http://purl.obolibrary.org/obo/CHEBI_48540,beta-adrenergic drug,89
+http://purl.obolibrary.org/obo/CHEBI_61016,angiotensin receptor antagonist,13
+http://purl.obolibrary.org/obo/CHEBI_50926,angiogenesis modulating agent,26
+http://purl.obolibrary.org/obo/CHEBI_85185,hepatitis C virus nonstructural protein 5A inhibitor,3
+http://purl.obolibrary.org/obo/CHEBI_132992,radiosensitizing agent,8
+http://purl.obolibrary.org/obo/CHEBI_76395,EC 2.3.1.48 (histone acetyltransferase) inhibitor,8
+http://purl.obolibrary.org/obo/CHEBI_76878,EC 2.3.1.* (acyltransferase transferring other than amino-acyl group) inhibitor,47
+http://purl.obolibrary.org/obo/CHEBI_76661,EC 2.3.* (acyltransferase) inhibitor,54
+http://purl.obolibrary.org/obo/CHEBI_64924,hepatitis C protease inhibitor,13
+http://purl.obolibrary.org/obo/CHEBI_64911,antimitotic,37
+http://purl.obolibrary.org/obo/CHEBI_79091,EC 2.7.11.24 (mitogen-activated protein kinase) inhibitor,43
+http://purl.obolibrary.org/obo/CHEBI_59174,hapten,119
+http://purl.obolibrary.org/obo/CHEBI_133016,5-hydroxytryptamine 2A receptor inverse agonist,2
+http://purl.obolibrary.org/obo/CHEBI_90847,inverse agonist,3
+http://purl.obolibrary.org/obo/CHEBI_133022,B-cell lymphoma 2 inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_133024,lymphocyte function-associated antigen-1 antagonist,1
+http://purl.obolibrary.org/obo/CHEBI_77495,bradykinin receptor agonist,6
+http://purl.obolibrary.org/obo/CHEBI_77496,bradykinin receptor B2 agonist,4
+http://purl.obolibrary.org/obo/CHEBI_133106,chemical hybridisation agent,5
+http://purl.obolibrary.org/obo/CHEBI_133190,fatty acid oxidation inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_24937,jasmonates,13
+http://purl.obolibrary.org/obo/CHEBI_134545,EC 1.8.1.4 (dihydrolipoyl dehydrogenase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_77402,EC 1.8.1.12 (trypanothione-disulfide reductase) inhibitor,7
+http://purl.obolibrary.org/obo/CHEBI_76869,"EC 1.8.1.* (oxidoreductase acting on sulfur group of donors, NAD(+) or NADP(+) as acceptor) inhibitor",9
+http://purl.obolibrary.org/obo/CHEBI_76735,EC 1.8.* (oxidoreductase acting on sulfur group of donors) inhibitor,10
+http://purl.obolibrary.org/obo/CHEBI_63958,cellulose synthesis inhibitor,7
+http://purl.obolibrary.org/obo/CHEBI_47958,nicotinic acetylcholine receptor agonist,26
+http://purl.obolibrary.org/obo/CHEBI_22153,acaricide,118
+http://purl.obolibrary.org/obo/CHEBI_38999,GABA-gated chloride channel antagonist,8
+http://purl.obolibrary.org/obo/CHEBI_37338,radioopaque medium,24
+http://purl.obolibrary.org/obo/CHEBI_82655,animal growth promotant,8
+http://purl.obolibrary.org/obo/CHEBI_133895,EC 2.5.1.46 (deoxyhypusine synthase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_39276,fumigant,13
+http://purl.obolibrary.org/obo/CHEBI_76797,EC 2.5.1.18 (glutathione transferase) inhibitor,7
+http://purl.obolibrary.org/obo/CHEBI_76968,fungal xenobiotic metabolite,20
+http://purl.obolibrary.org/obo/CHEBI_140602,Arabidopsis thaliana metabolite,36
+http://purl.obolibrary.org/obo/CHEBI_50406,probe,38
+http://purl.obolibrary.org/obo/CHEBI_64584,uremic toxin,10
+http://purl.obolibrary.org/obo/CHEBI_82933,gut flora metabolite,4
+http://purl.obolibrary.org/obo/CHEBI_77523,Maillard reaction product,19
+http://purl.obolibrary.org/obo/CHEBI_77521,thermal degradation product,19
+http://purl.obolibrary.org/obo/CHEBI_71476,EC 2.3.1.85 (fatty acid synthase) inhibitor,10
+http://purl.obolibrary.org/obo/CHEBI_136648,prosafener,1
+http://purl.obolibrary.org/obo/CHEBI_133878,neuropeptide Y receptor antagonist,2
+http://purl.obolibrary.org/obo/CHEBI_55350,neurokinin-1 receptor antagonist,8
+http://purl.obolibrary.org/obo/CHEBI_64697,acyl-CoA:cholesterol acyltransferase 2 inhibitor,7
+http://purl.obolibrary.org/obo/CHEBI_64696,EC 2.3.1.26 (sterol O-acyltransferase) inhibitor,20
+http://purl.obolibrary.org/obo/CHEBI_50912,cardiotoxic agent,6
+http://purl.obolibrary.org/obo/CHEBI_133891,salt-inducible kinase 2 inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_52726,proteasome inhibitor,24
+http://purl.obolibrary.org/obo/CHEBI_76964,Penicillium metabolite,116
+http://purl.obolibrary.org/obo/CHEBI_142782,TRPV channel modulator,3
+http://purl.obolibrary.org/obo/CHEBI_142783,TRP channel modulator,8
+http://purl.obolibrary.org/obo/CHEBI_26672,siderophore,38
+http://purl.obolibrary.org/obo/CHEBI_24028,iron(3+) chelator,41
+http://purl.obolibrary.org/obo/CHEBI_24874,iron ionophore,40
+http://purl.obolibrary.org/obo/CHEBI_24869,ionophore,60
+http://purl.obolibrary.org/obo/CHEBI_64953,anti-HSV-1 agent,17
+http://purl.obolibrary.org/obo/CHEBI_64952,anti-HSV agent,20
+http://purl.obolibrary.org/obo/CHEBI_78675,fundamental metabolite,156
+http://purl.obolibrary.org/obo/CHEBI_63248,oxidising agent,22
+http://purl.obolibrary.org/obo/CHEBI_50910,neurotoxin,77
+http://purl.obolibrary.org/obo/CHEBI_76413,greenhouse gas,8
+http://purl.obolibrary.org/obo/CHEBI_77853,persistent organic pollutant,28
+http://purl.obolibrary.org/obo/CHEBI_79314,flame retardant,11
+http://purl.obolibrary.org/obo/CHEBI_26348,prosthetic group,15
+http://purl.obolibrary.org/obo/CHEBI_134108,lipopolysaccharide biosynthesis inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_134109,EC 3.5.1.108 (UDP-3-O-acyl-N-acetylglucosamine deacetylase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_134173,antidote to barbiturate poisoning,1
+http://purl.obolibrary.org/obo/CHEBI_137079,eukaryotic initiation factor 4F inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_137401,capsaicin receptor agonist,1
+http://purl.obolibrary.org/obo/CHEBI_25078,luciferin,19
+http://purl.obolibrary.org/obo/CHEBI_52216,photobiochemical role,19
+http://purl.obolibrary.org/obo/CHEBI_136580,LRH-1 antagonist,1
+http://purl.obolibrary.org/obo/CHEBI_137566,EC 2.5.1.48 (cystathionine gamma-synthase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_63054,osteogenesis regulator,11
+http://purl.obolibrary.org/obo/CHEBI_88230,autophagy inhibitor,8
+http://purl.obolibrary.org/obo/CHEBI_48668,gamma-secretase modulator,3
+http://purl.obolibrary.org/obo/CHEBI_50664,matrix metalloproteinase inhibitor,12
+http://purl.obolibrary.org/obo/CHEBI_73336,vulnerary,11
+http://purl.obolibrary.org/obo/CHEBI_77161,Toll-like receptor 2 agonist,2
+http://purl.obolibrary.org/obo/CHEBI_137684,Papio hamadryas metabolite,158
+http://purl.obolibrary.org/obo/CHEBI_50748,antipsoriatic,12
+http://purl.obolibrary.org/obo/CHEBI_68844,phosphodiesterase IV inhibitor,6
+http://purl.obolibrary.org/obo/CHEBI_77758,"EC 3.1.4.53 (3',5'-cyclic-AMP phosphodiesterase) inhibitor",6
+http://purl.obolibrary.org/obo/CHEBI_50137,mu-opioid receptor antagonist,7
+http://purl.obolibrary.org/obo/CHEBI_60605,opioid receptor antagonist,10
+http://purl.obolibrary.org/obo/CHEBI_90755,antidote to opioid poisoning,4
+http://purl.obolibrary.org/obo/CHEBI_62913,EC 2.4.2.30 (NAD(+) ADP-ribosyltransferase) inhibitor,9
+http://purl.obolibrary.org/obo/CHEBI_76790,EC 2.4.2.* (pentosyltransferase) inhibitor,16
+http://purl.obolibrary.org/obo/CHEBI_71554,PPARgamma agonist,8
+http://purl.obolibrary.org/obo/CHEBI_35232,radiopharmaceutical,5
+http://purl.obolibrary.org/obo/CHEBI_35522,beta-adrenergic agonist,43
+http://purl.obolibrary.org/obo/CHEBI_37886,adrenergic agonist,68
+http://purl.obolibrary.org/obo/CHEBI_35524,sympathomimetic agent,43
+http://purl.obolibrary.org/obo/CHEBI_37337,ultrasound contrast agent,3
+http://purl.obolibrary.org/obo/CHEBI_38068,antimalarial,146
+http://purl.obolibrary.org/obo/CHEBI_51177,antitussive,33
+http://purl.obolibrary.org/obo/CHEBI_77884,EC 1.14.13.70 (sterol 14alpha-demethylase) inhibitor,49
+http://purl.obolibrary.org/obo/CHEBI_83734,sterol demethylation inhibitor,49
+http://purl.obolibrary.org/obo/CHEBI_83317,sterol biosynthesis inhibitor,69
+http://purl.obolibrary.org/obo/CHEBI_35481,non-narcotic analgesic,115
+http://purl.obolibrary.org/obo/CHEBI_49110,peripheral nervous system drug,25
+http://purl.obolibrary.org/obo/CHEBI_37336,radioactive imaging agent,9
+http://purl.obolibrary.org/obo/CHEBI_139566,Jacobaea metabolite,26
+http://purl.obolibrary.org/obo/CHEBI_136537,EC 2.4.2.8 (hypoxanthine phosphoribosyltransferase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_140160,Camellia sinensis metabolite,10
+http://purl.obolibrary.org/obo/CHEBI_66987,radiation protective agent,8
+http://purl.obolibrary.org/obo/CHEBI_140165,Brassica napus metabolite,37
+http://purl.obolibrary.org/obo/CHEBI_48887,bile acid metabolite,22
+http://purl.obolibrary.org/obo/CHEBI_52303,sterol methyltransferase inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_76871,EC 2.1.1.* (methyltransferases) inhibitor,16
+http://purl.obolibrary.org/obo/CHEBI_76655,EC 2.1.* (C1-transferase) inhibitor,18
+http://purl.obolibrary.org/obo/CHEBI_65053,EC 4.1.1.19 (arginine decarboxylase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_76906,EC 4.1.1.* (carboxy-lyase) inhibitor,15
+http://purl.obolibrary.org/obo/CHEBI_76711,EC 4.1.* (C-C lyase) inhibitor,15
+http://purl.obolibrary.org/obo/CHEBI_77023,EC 2.3.3.1 [citrate (Si)-synthase] inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_77022,EC 2.3.3.* (acyltransferase converting acyl to alkyl group on transfer) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_75324,excipient,4
+http://purl.obolibrary.org/obo/CHEBI_52943,carboxylic acid protecting group,2
+http://purl.obolibrary.org/obo/CHEBI_51087,protecting group,18
+http://purl.obolibrary.org/obo/CHEBI_139556,EC 4.1.1.17 (ornithine decarboxylase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_51371,muscle relaxant,91
+http://purl.obolibrary.org/obo/CHEBI_79093,EC 1.11.2.2 (myeloperoxidase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_79092,"EC 1.11.2.* (oxidoreductase with H2O2 as acceptor, incorporating 1 O atom into product) inhibitor",2
+http://purl.obolibrary.org/obo/CHEBI_76738,EC 1.11.* (oxidoreductase acting on peroxide as donors) inhibitor,7
+http://purl.obolibrary.org/obo/CHEBI_137114,bromodomain-containing protein 4 inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_84036,EC 3.4.24.24 (gelatinase A) inhibitor,4
+http://purl.obolibrary.org/obo/CHEBI_67126,colorimetric reagent,4
+http://purl.obolibrary.org/obo/CHEBI_33893,reagent,79
+http://purl.obolibrary.org/obo/CHEBI_73193,gibberellin biosynthesis inhibitor,7
+http://purl.obolibrary.org/obo/CHEBI_79056,plasticiser,11
+http://purl.obolibrary.org/obo/CHEBI_137514,TRPA1 channel agonist,3
+http://purl.obolibrary.org/obo/CHEBI_39442,fluorescent probe,29
+http://purl.obolibrary.org/obo/CHEBI_138380,RhoA inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_138381,RhoC inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_137736,anxiogenic,1
+http://purl.obolibrary.org/obo/CHEBI_138090,ATPase motor cytoplasmic dynein inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_23240,chromophore,10
+http://purl.obolibrary.org/obo/CHEBI_138014,EC 3.4.22.56 (caspase-3) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_67072,cannabinoid receptor agonist,4
+http://purl.obolibrary.org/obo/CHEBI_25747,oxidized luciferins,10
+http://purl.obolibrary.org/obo/CHEBI_138416,angiotensin receptor agonist,1
+http://purl.obolibrary.org/obo/CHEBI_51060,hormone agonist,16
+http://purl.obolibrary.org/obo/CHEBI_131809,SMO receptor agonist,4
+http://purl.obolibrary.org/obo/CHEBI_35204,tracer,6
+http://purl.obolibrary.org/obo/CHEBI_88355,alpha-secretase activator,2
+http://purl.obolibrary.org/obo/CHEBI_38503,EC 1.6.5.3 [NADH:ubiquinone reductase (H(+)-translocating)] inhibitor,16
+http://purl.obolibrary.org/obo/CHEBI_139180,nicotinic acid adenine dinucleotide phosphate receptor antagonist,1
+http://purl.obolibrary.org/obo/CHEBI_139109,IP3 receptor agonist,1
+http://purl.obolibrary.org/obo/CHEBI_76498,coral metabolite,63
+http://purl.obolibrary.org/obo/CHEBI_60643,NMDA receptor antagonist,34
+http://purl.obolibrary.org/obo/CHEBI_60798,excitatory amino acid antagonist,36
+http://purl.obolibrary.org/obo/CHEBI_77731,p53 activator,2
+http://purl.obolibrary.org/obo/CHEBI_139074,LIM kinase inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_138887,prostaglandin receptor antagonist,1
+http://purl.obolibrary.org/obo/CHEBI_77108,EC 1.1.1.141 [15-hydroxyprostaglandin dehydrogenase (NAD(+))] inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_79088,EC 3.4.24.35 (gelatinase B) inhibitor,4
+http://purl.obolibrary.org/obo/CHEBI_138921,EC 6.3.5.5 [carbamoyl-phosphate synthase (glutamine-hydrolysing)] inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_138920,EC 6.3.5.* (carbon-nitrogen ligases with glutamine as amido-N-donor) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_75600,EC 6.3.* (C-N bond-forming ligase) inhibitor,10
+http://purl.obolibrary.org/obo/CHEBI_138925,EC 6.3.4.2 [CTP synthase (glutamine hydrolyzing)] inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_138924,EC 6.3.4.* (other carbon--nitrogen ligases) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_138927,EC 6.3.5.3 (phosphoribosylformylglycinamidine synthase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_138928,EC 6.3.5.2 [GMP synthase (glutamine-hydrolysing)] inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_138931,glutamine antagonist,3
+http://purl.obolibrary.org/obo/CHEBI_138952,EC 2.4.2.14 (amidophosphoribosyltransferase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_138953,EC 6.3.5.1 [NAD(+) synthase (glutamine-hydrolysing)] inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_138956,EC 6.3.5.4 [asparagine synthase (glutamine-hydrolysing)] inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_60280,EC 3.5.1.2 (glutaminase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_138938,EC 4.1.1.39 (ribulose-bisphosphate carboxylase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_37733,EC 3.1.1.8 (cholinesterase) inhibitor,69
+http://purl.obolibrary.org/obo/CHEBI_138977,quorum sensing inhibitor,5
+http://purl.obolibrary.org/obo/CHEBI_139155,melanin-concentrating hormone receptor antagonist,2
+http://purl.obolibrary.org/obo/CHEBI_139503,vitamin D receptor agonist,5
+http://purl.obolibrary.org/obo/CHEBI_67231,EC 3.2.1.48 (sucrose alpha-glucosidase) inhibitor,3
+http://purl.obolibrary.org/obo/CHEBI_139084,cis-Golgi ArfGEF GBF inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_139044,thromboxane A2 agonist,1
+http://purl.obolibrary.org/obo/CHEBI_139055,PERK inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_35608,EC 3.1.3.48 (protein-tyrosine-phosphatase) inhibitor,15
+http://purl.obolibrary.org/obo/CHEBI_76775,EC 3.1.3.* (phosphoric monoester hydrolase) inhibitor,33
+http://purl.obolibrary.org/obo/CHEBI_35499,hallucinogen,15
+http://purl.obolibrary.org/obo/CHEBI_139153,EC 2.4.1.255 (protein O-GlcNAc transferase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_68481,mTOR inhibitor,14
+http://purl.obolibrary.org/obo/CHEBI_64018,protein kinase C agonist,9
+http://purl.obolibrary.org/obo/CHEBI_64106,protein kinase agonist,22
+http://purl.obolibrary.org/obo/CHEBI_139584,lysophosphatidic acid receptor 3 agonist,1
+http://purl.obolibrary.org/obo/CHEBI_70998,G-protein-coupled receptor agonist,4
+http://purl.obolibrary.org/obo/CHEBI_139246,peptide probe,4
+http://purl.obolibrary.org/obo/CHEBI_143204,peptide allergen,1
+http://purl.obolibrary.org/obo/CHEBI_140061,TRPV4 agonist,2
+http://purl.obolibrary.org/obo/CHEBI_139339,EC 1.14.17.1 (dopamine beta-monooxygenase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_139338,"EC 1.14.17.* (oxidoreductase acting on paired donors, with incorporation or reduction of molecular oxygen and with reduced ascorbate as one donor, and incorporation of one atom of oxygen) inhibitor",2
+http://purl.obolibrary.org/obo/CHEBI_139361,TRP channel blocker,5
+http://purl.obolibrary.org/obo/CHEBI_50469,EC 3.1.1.4 (phospholipase A2) inhibitor,9
+http://purl.obolibrary.org/obo/CHEBI_35206,isotopic tracer,1
+http://purl.obolibrary.org/obo/CHEBI_26115,phytoalexin,20
+http://purl.obolibrary.org/obo/CHEBI_76977,corticotropin-releasing factor receptor antagonist,3
+http://purl.obolibrary.org/obo/CHEBI_139609,survivin suppressant,1
+http://purl.obolibrary.org/obo/CHEBI_140190,calcium-dependent antibiotics,4
+http://purl.obolibrary.org/obo/CHEBI_64926,serine protease inhibitor,8
+http://purl.obolibrary.org/obo/CHEBI_68581,EC 3.4.21.6 (coagulation factor Xa) inhibitor,7
+http://purl.obolibrary.org/obo/CHEBI_5924,EC 3.4.21.* (serine endopeptidase) inhibitor,78
+http://purl.obolibrary.org/obo/CHEBI_65232,EC 3.4.21.5 (thrombin) inhibitor,12
+http://purl.obolibrary.org/obo/CHEBI_33287,fertilizer,17
+http://purl.obolibrary.org/obo/CHEBI_140489,tropomyosin-related kinase B receptor agonist,4
+http://purl.obolibrary.org/obo/CHEBI_78681,tropomyosin-related kinase B receptor antagonist,2
+http://purl.obolibrary.org/obo/CHEBI_140482,neurokinin-3 receptor antagonist,1
+http://purl.obolibrary.org/obo/CHEBI_55323,antidiarrhoeal drug,11
+http://purl.obolibrary.org/obo/CHEBI_63962,Hsp90 inhibitor,24
+http://purl.obolibrary.org/obo/CHEBI_76939,EC 3.6.4.10 (non-chaperonin molecular chaperone ATPase) inhibitor,24
+http://purl.obolibrary.org/obo/CHEBI_76938,EC 3.6.4.* (hydrolases acting on ATP; involved in cellular and subcellular movement) inhibitor,24
+http://purl.obolibrary.org/obo/CHEBI_75325,cathartic,8
+http://purl.obolibrary.org/obo/CHEBI_48878,nicotinic antagonist,17
+http://purl.obolibrary.org/obo/CHEBI_140701,secreted frizzled-related protein 1 inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_78031,Wnt signalling inhibitor,6
+http://purl.obolibrary.org/obo/CHEBI_145982,5-hydroxytryptamine 2A receptor agonist,3
+http://purl.obolibrary.org/obo/CHEBI_140921,Hedgehog signaling pathway inhibitor,6
+http://purl.obolibrary.org/obo/CHEBI_140922,glioma-associated oncogene inhibitor,4
+http://purl.obolibrary.org/obo/CHEBI_140982,neuropeptide FF receptor antagonist,2
+http://purl.obolibrary.org/obo/CHEBI_141000,neuropeptide FF receptor agonist,1
+http://purl.obolibrary.org/obo/CHEBI_141001,kisspeptin receptor agonist,1
+http://purl.obolibrary.org/obo/CHEBI_35569,alpha-adrenergic agonist,25
+http://purl.obolibrary.org/obo/CHEBI_77715,nasal decongestant,9
+http://purl.obolibrary.org/obo/CHEBI_136644,proinsecticide,9
+http://purl.obolibrary.org/obo/CHEBI_136647,proacaricide,4
+http://purl.obolibrary.org/obo/CHEBI_73267,oxidative phosphorylation inhibitor,4
+http://purl.obolibrary.org/obo/CHEBI_136645,profungicide,5
+http://purl.obolibrary.org/obo/CHEBI_141301,pronematicide,3
+http://purl.obolibrary.org/obo/CHEBI_142581,EC 4.1.1.15 (glutamate decarboxylase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_83741,phospholipid biosynthesis inhibitor,5
+http://purl.obolibrary.org/obo/CHEBI_73182,plant activator,7
+http://purl.obolibrary.org/obo/CHEBI_51076,antifouling biocide,10
+http://purl.obolibrary.org/obo/CHEBI_78606,Hsp70 inducer,2
+http://purl.obolibrary.org/obo/CHEBI_62803,fuel additive,6
+http://purl.obolibrary.org/obo/CHEBI_48358,polar aprotic solvent,21
+http://purl.obolibrary.org/obo/CHEBI_48357,aprotic solvent,21
+http://purl.obolibrary.org/obo/CHEBI_78760,EC 2.7.1.91 (sphingosine kinase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_76881,EC 2.7.1.* (phosphotransferases with an alcohol group as acceptor) inhibitor,40
+http://purl.obolibrary.org/obo/CHEBI_64133,EC 2.5.1.58 (protein farnesyltransferase) inhibitor,12
+http://purl.obolibrary.org/obo/CHEBI_67268,HIV-1 integrase inhibitor,22
+http://purl.obolibrary.org/obo/CHEBI_142184,5-hydroxytryptamine 2B receptor agonist,1
+http://purl.obolibrary.org/obo/CHEBI_142185,5-hydroxytryptamine 2C receptor agonist,1
+http://purl.obolibrary.org/obo/CHEBI_63490,explosive,26
+http://purl.obolibrary.org/obo/CHEBI_48675,antifibrinolytic drug,4
+http://purl.obolibrary.org/obo/CHEBI_48676,fibrin modulating drug,7
+http://purl.obolibrary.org/obo/CHEBI_76022,soluble guanylate cyclase activator,6
+http://purl.obolibrary.org/obo/CHEBI_142480,EC 1.14.14.94 (leukotriene-B4 20-monooxygenase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_142481,EC 1.14.15.3 (alkane 1-monooxygenase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_76843,"EC 1.14.15.* (oxidoreductase acting on paired donors, with reduced Fe-S protein as one donor, incorporating 1 O atom) inhibitor",3
+http://purl.obolibrary.org/obo/CHEBI_63047,food emulsifier,8
+http://purl.obolibrary.org/obo/CHEBI_49325,oral contraceptive,14
+http://purl.obolibrary.org/obo/CHEBI_49324,female contraceptive drug,16
+http://purl.obolibrary.org/obo/CHEBI_49323,contraceptive drug,22
+http://purl.obolibrary.org/obo/CHEBI_50689,reproductive control drug,35
+http://purl.obolibrary.org/obo/CHEBI_63951,estrogen receptor agonist,8
+http://purl.obolibrary.org/obo/CHEBI_142781,EC 2.5.1.117 (homogentisate solanesyltransferase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_142790,EC 3.3.2.10 (soluble epoxide hydrolase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_76762,EC 3.3.* (ether hydrolase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_24319,EC 6.3.1.2 (glutamate--ammonia ligase) inhibitor,6
+http://purl.obolibrary.org/obo/CHEBI_76823,EC 6.3.1.* (acid-ammonia/amine ligase) inhibitor,6
+http://purl.obolibrary.org/obo/CHEBI_83072,EC 1.3.5.1 [succinate dehydrogenase (quinone)] inhibitor,21
+http://purl.obolibrary.org/obo/CHEBI_77102,EC 1.3.5.* (oxidoreductase acting on CH-CH of donor with a quinone or related compound as acceptor) inhibitor,22
+http://purl.obolibrary.org/obo/CHEBI_143001,GABAB receptor agonist,1
+http://purl.obolibrary.org/obo/CHEBI_88285,EC 2.7.12.* [dual-specificity kinases (those acting on Ser/Thr and Tyr residues)] inhibitor,5
+http://purl.obolibrary.org/obo/CHEBI_37700,EC 2.7.11.13 (protein kinase C) inhibitor,20
+http://purl.obolibrary.org/obo/CHEBI_37153,EC 3.1.3.16 (phosphoprotein phosphatase) inhibitor,12
+http://purl.obolibrary.org/obo/CHEBI_144064,EC 1.14.15.6 cholesterol monooxygenase (side-chain-cleaving) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_37955,H1-receptor antagonist,75
+http://purl.obolibrary.org/obo/CHEBI_91016,GABAA receptor agonist,6
+http://purl.obolibrary.org/obo/CHEBI_72571,pro-angiogenic agent,3
+http://purl.obolibrary.org/obo/CHEBI_143828,EC 1.14.14.154 (sterol 14alpha-demethylase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_75282,ergosterol biosynthesis inhibitor,10
+http://purl.obolibrary.org/obo/CHEBI_76828,EC 5.1.1.* (racemases acting on amino acids and derivatives) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_76692,EC 5.1.* (racemase/epimerase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_72316,virulence factor,5
+http://purl.obolibrary.org/obo/CHEBI_143909,EC 2.7.1.40 (pyruvate kinase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_50276,EC 5.99.1.2 (DNA topoisomerase) inhibitor,30
+http://purl.obolibrary.org/obo/CHEBI_78361,lichen metabolite,8
+http://purl.obolibrary.org/obo/CHEBI_138880,autophagy inducer,5
+http://purl.obolibrary.org/obo/CHEBI_144387,EC 2.7.1.105 (6-phosphofructo-2-kinase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_75835,anti-anaemic agent,5
+http://purl.obolibrary.org/obo/CHEBI_144455,EC 3.1.1.64 (retinoid isomerohydrolase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_83157,EC 6.2.1.3 (long-chain-fatty-acid--CoA ligase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_83156,EC 6.2.1.* (acid-thiol ligase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_76707,EC 6.2.* (C-S bond-forming ligase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_26130,biological pigment,34
+http://purl.obolibrary.org/obo/CHEBI_144829,tumour antigen,1
+http://purl.obolibrary.org/obo/CHEBI_144895,C5a receptor antagonist,1
+http://purl.obolibrary.org/obo/CHEBI_144997,sphingosine-1-phosphate receptor 3 antagonist,2
+http://purl.obolibrary.org/obo/CHEBI_144987,sphingosine-1-phosphate receptor antagonist,2
+http://purl.obolibrary.org/obo/CHEBI_144998,sphingosine-1-phosphate receptor 1 antagonist,1
+http://purl.obolibrary.org/obo/CHEBI_144981,EC 3.6.5.2 (small monomeric GTPase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_50505,sweetening agent,26
+http://purl.obolibrary.org/obo/CHEBI_145047,antispermatogenic agent,8
+http://purl.obolibrary.org/obo/CHEBI_63674,EC 2.6.1.19 (4-aminobutyrate--2-oxoglutarate transaminase) inhibitor,3
+http://purl.obolibrary.org/obo/CHEBI_62215,allelochemical,11
+http://purl.obolibrary.org/obo/CHEBI_145253,hyaluronan synthesis inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_145410,EC 1.1.1.42 (isocitrate dehydrogenase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_145425,EC 2.7.11.21 (polo kinase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_61951,microtubule-destabilising agent,17
+http://purl.obolibrary.org/obo/CHEBI_60832,tubulin modulator,25
+http://purl.obolibrary.org/obo/CHEBI_66908,SMO receptor antagonist,4
+http://purl.obolibrary.org/obo/CHEBI_71212,prohormone,3
+http://purl.obolibrary.org/obo/CHEBI_37961,H2-receptor antagonist,9
+http://purl.obolibrary.org/obo/CHEBI_53784,antispasmodic drug,37
+http://purl.obolibrary.org/obo/CHEBI_137431,antihypotensive agent,3
+http://purl.obolibrary.org/obo/CHEBI_63562,glucocorticoid receptor agonist,6
+http://purl.obolibrary.org/obo/CHEBI_78547,protein kinase A agonist,2
+http://purl.obolibrary.org/obo/CHEBI_145807,forkhead box protein O1 inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_48001,protein synthesis inhibitor,40
+http://purl.obolibrary.org/obo/CHEBI_35660,HIV protease inhibitor,24
+http://purl.obolibrary.org/obo/CHEBI_63510,EC 3.6.3.9 (Na(+)/K(+)-transporting ATPase) inhibitor,13
+http://purl.obolibrary.org/obo/CHEBI_50913,fixative,5
+http://purl.obolibrary.org/obo/CHEBI_90172,c-Jun N-terminal kinase inhibitor,7
+http://purl.obolibrary.org/obo/CHEBI_66993,tocolytic agent,7
+http://purl.obolibrary.org/obo/CHEBI_23530,cytokinin,14
+http://purl.obolibrary.org/obo/CHEBI_53431,chain carrier,1
+http://purl.obolibrary.org/obo/CHEBI_17654,electron acceptor,3
+http://purl.obolibrary.org/obo/CHEBI_15339,acceptor,15
+http://purl.obolibrary.org/obo/CHEBI_50905,teratogenic agent,44
+http://purl.obolibrary.org/obo/CHEBI_77941,EC 3.5.1.4 (amidase) inhibitor,6
+http://purl.obolibrary.org/obo/CHEBI_62049,acyl donor,2
+http://purl.obolibrary.org/obo/CHEBI_49023,prostaglandin antagonist,6
+http://purl.obolibrary.org/obo/CHEBI_50630,cyclooxygenase 1 inhibitor,47
+http://purl.obolibrary.org/obo/CHEBI_77425,EC 1.1.1.188 (prostaglandin-F synthase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_63794,retinoid X receptor agonist,3
+http://purl.obolibrary.org/obo/CHEBI_67198,retinoic acid receptor agonist,6
+http://purl.obolibrary.org/obo/CHEBI_67199,AP-1 antagonist,5
+http://purl.obolibrary.org/obo/CHEBI_48360,amphiprotic solvent,2
+http://purl.obolibrary.org/obo/CHEBI_48359,protophilic solvent,2
+http://purl.obolibrary.org/obo/CHEBI_39142,Bronsted base,3
+http://purl.obolibrary.org/obo/CHEBI_22695,base,9
+http://purl.obolibrary.org/obo/CHEBI_77974,food packaging gas,8
+http://purl.obolibrary.org/obo/CHEBI_64570,EC 2.1.2.1 (glycine hydroxymethyltransferase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_76874,"EC 2.1.2.* (hydroxymethyl-, formyl- and related transferases) inhibitor",4
+http://purl.obolibrary.org/obo/CHEBI_50566,nitric oxide donor,12
+http://purl.obolibrary.org/obo/CHEBI_59740,nucleophilic reagent,3
+http://purl.obolibrary.org/obo/CHEBI_39144,Lewis base,5
+http://purl.obolibrary.org/obo/CHEBI_63156,EC 1.1.3.13 (alcohol oxidase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_76836,"EC 1.1.3.* (oxidoreductase acting on donor CH-OH group, oxygen as acceptor) inhibitor",1
+http://purl.obolibrary.org/obo/CHEBI_63157,EC 4.2.1.22 (cystathionine beta-synthase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_77090,EC 4.3.1.10 (serine-sulfate ammonia-lyase) inhibitor,3
+http://purl.obolibrary.org/obo/CHEBI_76832,EC 4.3.1.* (ammonia-lyase) inhibitor,11
+http://purl.obolibrary.org/obo/CHEBI_76713,EC 4.3.* (C-N lyase) inhibitor,11
+http://purl.obolibrary.org/obo/CHEBI_63158,EC 2.3.1.21 (carnitine O-palmitoyltransferase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_36063,oxytocic,10
+http://purl.obolibrary.org/obo/CHEBI_77881,EC 4.3.1.15 (diaminopropionate ammonia-lyase) inhibitor,3
+http://purl.obolibrary.org/obo/CHEBI_64588,glycine transporter 1 inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_85425,glycine transporter inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_64589,glycine receptor agonist,2
+http://purl.obolibrary.org/obo/CHEBI_76989,phytoestrogen,17
+http://purl.obolibrary.org/obo/CHEBI_25728,osmolyte,10
+http://purl.obolibrary.org/obo/CHEBI_131699,EC 2.7.7.7 (DNA-directed DNA polymerase) inhibitor,9
+http://purl.obolibrary.org/obo/CHEBI_38234,DNA polymerase inhibitor,19
+http://purl.obolibrary.org/obo/CHEBI_76815,EC 2.7.7.* (nucleotidyltransferase) inhibitor,26
+http://purl.obolibrary.org/obo/CHEBI_77119,EC 1.1.1.189 (prostaglandin-E2 9-reductase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_48407,antiparkinson drug,45
+http://purl.obolibrary.org/obo/CHEBI_66956,antidyskinesia agent,47
+http://purl.obolibrary.org/obo/CHEBI_78433,refrigerant,24
+http://purl.obolibrary.org/obo/CHEBI_62089,EC 1.4.7.1 [glutamate synthase (ferredoxin)] inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_77089,EC 2.5.1.49 (O-acetylhomoserine aminocarboxypropyltransferase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_76779,EC 3.4.21.26 (prolyl oligopeptidase) inhibitor,30
+http://purl.obolibrary.org/obo/CHEBI_78444,EC 3.1.1.1 (carboxylesterase) inhibitor,8
+http://purl.obolibrary.org/obo/CHEBI_83038,Daphnia galeata metabolite,9
+http://purl.obolibrary.org/obo/CHEBI_65207,vascular endothelial growth factor receptor antagonist,20
+http://purl.obolibrary.org/obo/CHEBI_48218,antiseptic drug,38
+http://purl.obolibrary.org/obo/CHEBI_48219,disinfectant,20
+http://purl.obolibrary.org/obo/CHEBI_52425,EC 3.2.1.18 (exo-alpha-sialidase) inhibitor,24
+http://purl.obolibrary.org/obo/CHEBI_84264,EC 3.5.1.19 (nicotinamidase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_145437,uncoupling protein inhibitor,3
+http://purl.obolibrary.org/obo/CHEBI_63332,EC 3.1.3.1 (alkaline phosphatase) inhibitor,7
+http://purl.obolibrary.org/obo/CHEBI_65056,EC 3.1.3.11 (fructose-bisphosphatase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_65057,adenosine A1 receptor agonist,2
+http://purl.obolibrary.org/obo/CHEBI_50908,hepatotoxic agent,45
+http://purl.obolibrary.org/obo/CHEBI_68612,EC 3.4.14.5 (dipeptidyl-peptidase IV) inhibitor,8
+http://purl.obolibrary.org/obo/CHEBI_76788,EC 3.4.14.* (dipeptidyl- and tripeptidyl-peptidases) inhibitor,9
+http://purl.obolibrary.org/obo/CHEBI_72854,"EC 1.13.11.52 (indoleamine 2,3-dioxygenase) inhibitor",2
+http://purl.obolibrary.org/obo/CHEBI_77110,EC 1.21.3.3 (reticuline oxidase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_77109,"EC 1.21.3.* (oxidoreductase acting on X-H and Y-H to form an X-Y bond, with oxygen as acceptor) inhibitor",1
+http://purl.obolibrary.org/obo/CHEBI_76748,EC 1.21.* (oxidoreductase acting on X-H and Y-H to form an X-Y bond) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_77111,EC 2.1.1.116 [3'-hydroxy-N-methyl-(S)-coclaurine 4'-O-methyltransferase] inhibitor,3
+http://purl.obolibrary.org/obo/CHEBI_77113,EC 2.7.11.10 (IkappaB kinase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_77115,EC 2.1.1.122 [(S)-tetrahydroprotoberberine N-methyltransferase] inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_39412,bridged diphenyl acaricide,2
+http://purl.obolibrary.org/obo/CHEBI_77034,mucolytic,9
+http://purl.obolibrary.org/obo/CHEBI_50696,EC 2.4.1.129 (peptidoglycan glycosyltransferase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_35230,fossil fuel,1
+http://purl.obolibrary.org/obo/CHEBI_33292,fuel,5
+http://purl.obolibrary.org/obo/CHEBI_50445,EC 3.5.4.4 (adenosine deaminase) inhibitor,6
+http://purl.obolibrary.org/obo/CHEBI_76809,EC 3.5.4.* (non-peptide cyclic amidine C-N hydrolase) inhibitor,7
+http://purl.obolibrary.org/obo/CHEBI_78947,archaeal metabolite,3
+http://purl.obolibrary.org/obo/CHEBI_132717,bleaching agent,9
+http://purl.obolibrary.org/obo/CHEBI_70770,Aurora kinase inhibitor,6
+http://purl.obolibrary.org/obo/CHEBI_77020,EC 1.10.99.2 [ribosyldihydronicotinamide dehydrogenase (quinone)] inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_77019,"EC 1.10.99.* (oxidoreductases acting on diphenols and related substances as donors, other acceptors) inhibitor",2
+http://purl.obolibrary.org/obo/CHEBI_76737,EC 1.10.* (oxidoreductase acting on diphenols and related substances as donors) inhibitor,4
+http://purl.obolibrary.org/obo/CHEBI_78691,EC 2.3.1.97 (glycylpeptide N-tetradecanoyltransferase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_145814,EC 1.2.1.12 (aspartate-semialdehyde dehydrogenase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_76852,EC 1.2.1.* (oxidoreductase acting on donor aldehyde/oxo group with NAD(+) or NADP(+) as acceptor) inhibitor,11
+http://purl.obolibrary.org/obo/CHEBI_66980,nootropic agent,4
+http://purl.obolibrary.org/obo/CHEBI_139512,EC 1.3.1.9 [enoyl-[acyl-carrier-protein] reductase (NADH)] inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_76857,"EC 1.3.1.* (oxidoreductase acting on donor CH-CH group, NAD(+) or NADP(+) as acceptor) inhibitor",18
+http://purl.obolibrary.org/obo/CHEBI_78017,food propellant,7
+http://purl.obolibrary.org/obo/CHEBI_76414,propellant,7
+http://purl.obolibrary.org/obo/CHEBI_38870,inhalation anaesthetic,11
+http://purl.obolibrary.org/obo/CHEBI_74529,antidote to paracetamol poisoning,4
+http://purl.obolibrary.org/obo/CHEBI_65064,EC 2.1.1.79 (cyclopropane-fatty-acyl-phospholipid synthase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_65065,EC 2.1.1.72 [site-specific DNA-methyltransferase (adenine-specific)] inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_136860,antidote to sarin poisoning,3
+http://purl.obolibrary.org/obo/CHEBI_50370,parasympatholytic,22
+http://purl.obolibrary.org/obo/CHEBI_50513,mydriatic agent,7
+http://purl.obolibrary.org/obo/CHEBI_35487,EC 1.2.1.3 [aldehyde dehydrogenase (NAD(+))] inhibitor,7
+http://purl.obolibrary.org/obo/CHEBI_48355,non-polar solvent,21
+http://purl.obolibrary.org/obo/CHEBI_62871,EC 4.3.1.24 (phenylalanine ammonia-lyase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_77194,EC 2.7.1.33 (pantothenate kinase) inhibitor,9
+http://purl.obolibrary.org/obo/CHEBI_35664,EC 1.1.1.34/EC 1.1.1.88 (hydroxymethylglutaryl-CoA reductase) inhibitor,9
+http://purl.obolibrary.org/obo/CHEBI_35821,anticholesteremic drug,24
+http://purl.obolibrary.org/obo/CHEBI_53746,EC 1.1.1.205 (IMP dehydrogenase) inhibitor,5
+http://purl.obolibrary.org/obo/CHEBI_23366,compatible osmolytes,4
+http://purl.obolibrary.org/obo/CHEBI_50504,osmotic diuretic,1
+http://purl.obolibrary.org/obo/CHEBI_77965,food anticaking agent,3
+http://purl.obolibrary.org/obo/CHEBI_77964,anticaking agent,3
+http://purl.obolibrary.org/obo/CHEBI_77966,food stabiliser,2
+http://purl.obolibrary.org/obo/CHEBI_77969,food humectant,3
+http://purl.obolibrary.org/obo/CHEBI_77968,humectant,3
+http://purl.obolibrary.org/obo/CHEBI_77970,food thickening agent,2
+http://purl.obolibrary.org/obo/CHEBI_78004,food bulking agent,1
+http://purl.obolibrary.org/obo/CHEBI_73181,EC 1.11.1.11 (L-ascorbate peroxidase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_75381,EC 1.11.1.* (peroxidases) inhibitor,5
+http://purl.obolibrary.org/obo/CHEBI_77182,food colouring,27
+http://purl.obolibrary.org/obo/CHEBI_59826,progestin,20
+http://purl.obolibrary.org/obo/CHEBI_50745,progestogen,21
+http://purl.obolibrary.org/obo/CHEBI_70709,progesterone receptor agonist,3
+http://purl.obolibrary.org/obo/CHEBI_78299,environmental food contaminant,2
+http://purl.obolibrary.org/obo/CHEBI_77971,raising agent,2
+http://purl.obolibrary.org/obo/CHEBI_59647,EC 2.3.1.50 (serine C-palmitoyltransferase) inhibitor,4
+http://purl.obolibrary.org/obo/CHEBI_71181,Sir2 inhibitor,4
+http://purl.obolibrary.org/obo/CHEBI_62873,odorant receptor agonist,2
+http://purl.obolibrary.org/obo/CHEBI_77118,EC 3.5.5.1 (nitrilase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_77117,EC 3.5.5.* (hydrolase acting on C-N bonds in nitriles) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_36413,anabolic agent,12
+http://purl.obolibrary.org/obo/CHEBI_131561,hyaluronic acid synthesis inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_64951,anti-HBV agent,14
+http://purl.obolibrary.org/obo/CHEBI_48353,serine proteinase inhibitor,4
+http://purl.obolibrary.org/obo/CHEBI_38500,EC 1.9.3.1 (cytochrome c oxidase) inhibitor,4
+http://purl.obolibrary.org/obo/CHEBI_76870,"EC 1.9.3.* (oxidoreductase acting on donor heme group, oxygen as acceptor) inhibitor",4
+http://purl.obolibrary.org/obo/CHEBI_76736,EC 1.9.* (oxidoreductase acting on donor heme group) inhibitor,4
+http://purl.obolibrary.org/obo/CHEBI_64763,EC 3.1.4.11 (phosphoinositide phospholipase C) inhibitor,3
+http://purl.obolibrary.org/obo/CHEBI_78016,food gelling agent,3
+http://purl.obolibrary.org/obo/CHEBI_38941,schistosomicide drug,10
+http://purl.obolibrary.org/obo/CHEBI_35684,antiplatyhelmintic drug,11
+http://purl.obolibrary.org/obo/CHEBI_73136,EC 1.1.1.184 [carbonyl reductase (NADPH)] inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_77703,EC 4.3.1.3 (histidine ammonia-lyase) inhibitor,4
+http://purl.obolibrary.org/obo/CHEBI_74213,EC 1.17.4.1 (ribonucleoside-diphosphate reductase) inhibitor,4
+http://purl.obolibrary.org/obo/CHEBI_76848,EC 1.17.4.* (oxidoreductase acting on CH or CH2 with a disulfide as acceptor) inhibitor,4
+http://purl.obolibrary.org/obo/CHEBI_76744,EC 1.17.* (oxidoreductase acting on CH or CH2) inhibitor,13
+http://purl.obolibrary.org/obo/CHEBI_64477,monolignol,3
+http://purl.obolibrary.org/obo/CHEBI_77326,androstane receptor agonist,1
+http://purl.obolibrary.org/obo/CHEBI_132710,xenoantigen,1
+http://purl.obolibrary.org/obo/CHEBI_38807,calcium channel agonist,7
+http://purl.obolibrary.org/obo/CHEBI_77035,expectorant,6
+http://purl.obolibrary.org/obo/CHEBI_64416,EC 1.3.1.43 (arogenate dehydrogenase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_67195,gap junctional intercellular communication inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_25605,nucleoside antibiotic,10
+http://purl.obolibrary.org/obo/CHEBI_76891,EC 3.4.11.14 (cytosol alanyl aminopeptidase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_76787,EC 3.4.11.* (aminopeptidase) inhibitor,4
+http://purl.obolibrary.org/obo/CHEBI_76893,EC 3.4.14.2 (dipeptidyl-peptidase II) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_75050,chromogenic compound,105
+http://purl.obolibrary.org/obo/CHEBI_50411,one-colour indicator,105
+http://purl.obolibrary.org/obo/CHEBI_50410,colour indicator,119
+http://purl.obolibrary.org/obo/CHEBI_50408,visual indicator,120
+http://purl.obolibrary.org/obo/CHEBI_50781,EC 1.3.1.22 [3-oxo-5alpha-steroid 4-dehydrogenase (NADP(+))] inhibitor,7
+http://purl.obolibrary.org/obo/CHEBI_24002,ethylene releasers,1
+http://purl.obolibrary.org/obo/CHEBI_138103,inorganic acid,9
+http://purl.obolibrary.org/obo/CHEBI_50855,antiatherogenic agent,3
+http://purl.obolibrary.org/obo/CHEBI_38147,cardiotonic drug,24
+http://purl.obolibrary.org/obo/CHEBI_15022,electron donor,13
+http://purl.obolibrary.org/obo/CHEBI_50671,antithyroid drug,6
+http://purl.obolibrary.org/obo/CHEBI_50684,cross-linking reagent,12
+http://purl.obolibrary.org/obo/CHEBI_78003,food bleaching agent,1
+http://purl.obolibrary.org/obo/CHEBI_23529,cytochrome-b6f complex inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_60788,affinity label,2
+http://purl.obolibrary.org/obo/CHEBI_24853,intercalator,15
+http://purl.obolibrary.org/obo/CHEBI_91141,EC 1.1.5.3 (glycerol-3-phosphate dehydrogenase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_91142,"EC 1.1.5.* (oxidoreductase acting on donor CH-OH group, quinone or similar compound as acceptor) inhibitor",1
+http://purl.obolibrary.org/obo/CHEBI_71178,EC 2.1.1.4 (acetylserotonin O-methyltransferase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_25573,nodulation factor,1
+http://purl.obolibrary.org/obo/CHEBI_60688,EC 4.2.1.20 (tryptophan synthase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_73191,abscisic acid receptor agonist,2
+http://purl.obolibrary.org/obo/CHEBI_49200,EC 3.6.3.10 (H(+)/K(+)-exchanging ATPase) inhibitor,11
+http://purl.obolibrary.org/obo/CHEBI_73214,EC 3.6.3.14 (H(+)-transporting two-sector ATPase) inhibitor,6
+http://purl.obolibrary.org/obo/CHEBI_88227,potassium ionophore,5
+http://purl.obolibrary.org/obo/CHEBI_33937,macronutrient,9
+http://purl.obolibrary.org/obo/CHEBI_26157,plant growth stimulator,2
+http://purl.obolibrary.org/obo/CHEBI_22309,alicyclic antibiotics,1
+http://purl.obolibrary.org/obo/CHEBI_50627,EC 3.2.1.1 (alpha-amylase) inhibitor,8
+http://purl.obolibrary.org/obo/CHEBI_37930,phenothiazine antipsychotic drug,19
+http://purl.obolibrary.org/obo/CHEBI_65190,first generation antipsychotic,36
+http://purl.obolibrary.org/obo/CHEBI_73966,nitric oxide synthase activator,2
+http://purl.obolibrary.org/obo/CHEBI_67105,insect sterilant,5
+http://purl.obolibrary.org/obo/CHEBI_23092,chemosterilant,5
+http://purl.obolibrary.org/obo/CHEBI_137626,EC 1.1.1.146 (11beta-hydroxysteroid dehydrogenase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_38155,phytosiderophore,2
+http://purl.obolibrary.org/obo/CHEBI_78592,vesicant,2
+http://purl.obolibrary.org/obo/CHEBI_38461,carbamate insecticide,24
+http://purl.obolibrary.org/obo/CHEBI_50643,EC 2.5.1.1 (dimethylallyltranstransferase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_20854,ATP synthase inhibitor,6
+http://purl.obolibrary.org/obo/CHEBI_59739,electrophilic reagent,3
+http://purl.obolibrary.org/obo/CHEBI_39143,Lewis acid,9
+http://purl.obolibrary.org/obo/CHEBI_82632,phytochrome chromophore,2
+http://purl.obolibrary.org/obo/CHEBI_59672,EC 2.4.1.16 (chitin synthase) inhibitor,4
+http://purl.obolibrary.org/obo/CHEBI_61015,nephrotoxin,12
+http://purl.obolibrary.org/obo/CHEBI_33904,molluscicide,9
+http://purl.obolibrary.org/obo/CHEBI_110725,EC 2.1.1.8 (histamine N-methyltransferase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_50949,serotonin uptake inhibitor,42
+http://purl.obolibrary.org/obo/CHEBI_75358,curing agent,2
+http://purl.obolibrary.org/obo/CHEBI_91085,collagen cross-linking inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_60901,EC 2.5.1.9 (riboflavin synthase) inhibitor,3
+http://purl.obolibrary.org/obo/CHEBI_73190,antimutagen,9
+http://purl.obolibrary.org/obo/CHEBI_35818,coccidiostat,6
+http://purl.obolibrary.org/obo/CHEBI_22986,calcium ionophore,3
+http://purl.obolibrary.org/obo/CHEBI_20569,EC 2.5.1.19 (3-phosphoshikimate 1-carboxyvinyltransferase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_77706,EC 3.4.19.3 (pyroglutamyl-peptidase I) inhibitor,3
+http://purl.obolibrary.org/obo/CHEBI_77705,EC 3.4.19.* (omega-peptidase) inhibitor,3
+http://purl.obolibrary.org/obo/CHEBI_50635,EC 3.5.1.5 (urease) inhibitor,4
+http://purl.obolibrary.org/obo/CHEBI_53142,P2Y2 receptor agonist,1
+http://purl.obolibrary.org/obo/CHEBI_50423,EC 1.6.3.1. [NAD(P)H oxidase (H2O2-forming)] inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_76867,EC 1.6.3.* (oxidoreductase acting on NADH or NADPH with oxygen as acceptor) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_91025,erythropoietin inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_63932,EC 1.14.16.2 (tyrosine 3-monooxygenase) inhibitor,3
+http://purl.obolibrary.org/obo/CHEBI_76847,"EC 1.14.16.* (oxidoreductase acting on paired donors, reduced pteridine as one donor, incorporating 1 atom of oxygen) inhibitor",3
+http://purl.obolibrary.org/obo/CHEBI_23582,defoliant,4
+http://purl.obolibrary.org/obo/CHEBI_33289,avicide,15
+http://purl.obolibrary.org/obo/CHEBI_51068,miotic,5
+http://purl.obolibrary.org/obo/CHEBI_74530,antidote to curare poisoning,4
+http://purl.obolibrary.org/obo/CHEBI_64176,H3-receptor antagonist,4
+http://purl.obolibrary.org/obo/CHEBI_90415,insulin secretagogue,7
+http://purl.obolibrary.org/obo/CHEBI_90414,secretagogue,7
+http://purl.obolibrary.org/obo/CHEBI_64933,melanin synthesis inhibitor,24
+http://purl.obolibrary.org/obo/CHEBI_59864,depigmentation drug,24
+http://purl.obolibrary.org/obo/CHEBI_91139,elastin-laminin receptor agonist,1
+http://purl.obolibrary.org/obo/CHEBI_35816,leprostatic drug,8
+http://purl.obolibrary.org/obo/CHEBI_37416,EC 2.7.7.6 (RNA polymerase) inhibitor,7
+http://purl.obolibrary.org/obo/CHEBI_77318,pregnane X receptor agonist,2
+http://purl.obolibrary.org/obo/CHEBI_83146,Daphnia tenebrosa metabolite,4
+http://purl.obolibrary.org/obo/CHEBI_38498,mitochondrial NADH:ubiquinone reductase inhibitor,9
+http://purl.obolibrary.org/obo/CHEBI_35634,EC 1.17.3.2 (xanthine oxidase) inhibitor,9
+http://purl.obolibrary.org/obo/CHEBI_76850,EC 1.17.3.* (oxidoreductase acting on CH or CH2 with oxygen as acceptor) inhibitor,9
+http://purl.obolibrary.org/obo/CHEBI_63963,metabotropic glutamate receptor antagonist,4
+http://purl.obolibrary.org/obo/CHEBI_90691,EC 5.3.1.1 (triose-phosphate isomerase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_90689,EC 5.3.1.* (intramolecular oxidoreductase interconverting aldoses and ketoses) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_76694,EC 5.3.* (intramolecular oxidoreductase) inhibitor,9
+http://purl.obolibrary.org/obo/CHEBI_77484,EC 1.1.1.25 (shikimate dehydrogenase) inhibitor,4
+http://purl.obolibrary.org/obo/CHEBI_77781,EC 1.14.13.181 (13-deoxydaunorubicin hydroxylase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_75599,EC 6.3.2.2 (glutamate--cysteine ligase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_59105,EC 6.3.2.* (acid--D-amino-acid ligase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_26088,photosystem-I inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_132608,TRPM4 channel inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_78379,EC 2.5.1.7 (UDP-N-acetylglucosamine 1-carboxyvinyltransferase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_62754,glycine receptor antagonist,2
+http://purl.obolibrary.org/obo/CHEBI_66991,sympatholytic agent,14
+http://purl.obolibrary.org/obo/CHEBI_64670,EC 1.8.1.9 (thioredoxin reductase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_61950,microtubule-stabilising agent,6
+http://purl.obolibrary.org/obo/CHEBI_64237,EC 2.7.8.15 (UDP-N-acetylglucosamine--dolichyl-phosphate N-acetylglucosaminephosphotransferase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_76816,EC 2.7.8.* (transferases for other substituted phosphate groups) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_83757,"EC 2.4.1.231 [alpha,alpha-trehalose phosphorylase (configuration-retaining)] inhibitor",2
+http://purl.obolibrary.org/obo/CHEBI_83760,"EC 2.4.1.64 (alpha,alpha-trehalose phosphorylase) inhibitor",2
+http://purl.obolibrary.org/obo/CHEBI_64995,EC 1.13.11.31 (arachidonate 12-lipoxygenase) inhibitor,3
+http://purl.obolibrary.org/obo/CHEBI_35841,uricosuric drug,6
+http://purl.obolibrary.org/obo/CHEBI_35845,gout suppressant,11
+http://purl.obolibrary.org/obo/CHEBI_35846,renal agent,10
+http://purl.obolibrary.org/obo/CHEBI_38060,triazine insecticide,1
+http://purl.obolibrary.org/obo/CHEBI_50507,appetite depressant,13
+http://purl.obolibrary.org/obo/CHEBI_50780,appetite regulator,15
+http://purl.obolibrary.org/obo/CHEBI_90318,EC 6.4.1.1 (pyruvate carboxylase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_62608,EC 4.2.1.3 (aconitate hydratase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_53353,GHB receptor agonist,1
+http://purl.obolibrary.org/obo/CHEBI_145515,GABAA receptor antagonist,1
+http://purl.obolibrary.org/obo/CHEBI_39259,pyrethroid ester acaricide,13
+http://purl.obolibrary.org/obo/CHEBI_73263,cyclooxygenase 3 inhibitor,5
+http://purl.obolibrary.org/obo/CHEBI_65191,second generation antipsychotic,19
+http://purl.obolibrary.org/obo/CHEBI_77608,loop diuretic,5
+http://purl.obolibrary.org/obo/CHEBI_59321,EC 4.1.1.28 (aromatic-L-amino-acid decarboxylase) inhibitor,4
+http://purl.obolibrary.org/obo/CHEBI_35678,histamine agonist,15
+http://purl.obolibrary.org/obo/CHEBI_59941,amphiphile,7
+http://purl.obolibrary.org/obo/CHEBI_60186,EC 3.6.3.8 (Ca(2+)-transporting ATPase) inhibitor,7
+http://purl.obolibrary.org/obo/CHEBI_59285,EC 1.14.13.132 (squalene monooxygenase) inhibitor,7
+http://purl.obolibrary.org/obo/CHEBI_50864,insulin-sensitizing drug,5
+http://purl.obolibrary.org/obo/CHEBI_59229,GnRH antagonist,2
+http://purl.obolibrary.org/obo/CHEBI_59010,antiseborrheic,6
+http://purl.obolibrary.org/obo/CHEBI_50568,"EC 3.1.4.17 (3',5'-cyclic-nucleotide phosphodiesterase) inhibitor",3
+http://purl.obolibrary.org/obo/CHEBI_59680,vasopressin receptor antagonist,2
+http://purl.obolibrary.org/obo/CHEBI_73333,scabicide,6
+http://purl.obolibrary.org/obo/CHEBI_50844,aldosterone antagonist,3
+http://purl.obolibrary.org/obo/CHEBI_50843,antimineralocorticoid,3
+http://purl.obolibrary.org/obo/CHEBI_49326,synthetic oral contraceptive,13
+http://purl.obolibrary.org/obo/CHEBI_50739,estrogen receptor modulator,9
+http://purl.obolibrary.org/obo/CHEBI_50792,estrogen receptor antagonist,6
+http://purl.obolibrary.org/obo/CHEBI_50837,estrogen antagonist,7
+http://purl.obolibrary.org/obo/CHEBI_78728,EC 1.3.1.72 (Delta(24)-sterol reductase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_50412,two-colour indicator,9
+http://purl.obolibrary.org/obo/CHEBI_77178,histological dye,176
+http://purl.obolibrary.org/obo/CHEBI_65265,antacid,6
+http://purl.obolibrary.org/obo/CHEBI_77567,eugeroic,3
+http://purl.obolibrary.org/obo/CHEBI_140535,TRPV1 agonist,4
+http://purl.obolibrary.org/obo/CHEBI_50407,acid-base indicator,11
+http://purl.obolibrary.org/obo/CHEBI_50241,cholinesterase reactivator,4
+http://purl.obolibrary.org/obo/CHEBI_50242,enzyme reactivator,4
+http://purl.obolibrary.org/obo/CHEBI_64054,delta-opioid receptor agonist,9
+http://purl.obolibrary.org/obo/CHEBI_60601,delta-opioid agent,12
+http://purl.obolibrary.org/obo/CHEBI_73296,cholecystokinin antagonist,7
+http://purl.obolibrary.org/obo/CHEBI_53659,EC 1.4.3.22 (diamine oxidase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_85540,thromboxane A2 antagonist,4
+http://purl.obolibrary.org/obo/CHEBI_74352,quinol oxidation site inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_59282,kappa-opioid receptor agonist,13
+http://purl.obolibrary.org/obo/CHEBI_60603,kappa-opioid agent,13
+http://purl.obolibrary.org/obo/CHEBI_59283,delta-opioid receptor antagonist,3
+http://purl.obolibrary.org/obo/CHEBI_50741,retinoic acid receptor alpha/beta agonist,2
+http://purl.obolibrary.org/obo/CHEBI_50691,abortifacient,8
+http://purl.obolibrary.org/obo/CHEBI_50788,EC 1.1.1.210 [3beta(or 20alpha)-hydroxysteroid dehydrogenase] inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_25943,pesticide synergist,1
+http://purl.obolibrary.org/obo/CHEBI_50533,protein denaturant,2
+http://purl.obolibrary.org/obo/CHEBI_38706,pediculicide,6
+http://purl.obolibrary.org/obo/CHEBI_77960,food firming agent,1
+http://purl.obolibrary.org/obo/CHEBI_134084,EC 1.15.1.1 (superoxide dismutase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_76742,EC 1.15.* (oxidoreductase acting on superoxide as acceptor) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_38634,voltage-gated sodium channel blocker,3
+http://purl.obolibrary.org/obo/CHEBI_35477,antimanic drug,7
+http://purl.obolibrary.org/obo/CHEBI_64370,glutamate transporter activator,1
+http://purl.obolibrary.org/obo/CHEBI_64371,neurotransmitter transporter modulator,1
+http://purl.obolibrary.org/obo/CHEBI_17499,hydrogen donor,3
+http://purl.obolibrary.org/obo/CHEBI_50927,angiogenesis inducing agent,1
+http://purl.obolibrary.org/obo/CHEBI_74236,polymerisation monomer,4
+http://purl.obolibrary.org/obo/CHEBI_84012,EC 4.2.1.94 (scytalone dehydratase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_71031,orphan drug,17
+http://purl.obolibrary.org/obo/CHEBI_145947,antiatherosclerotic agent,2
+http://purl.obolibrary.org/obo/CHEBI_24942,juvenile hormone mimic,5
+http://purl.obolibrary.org/obo/CHEBI_24851,insect growth regulator,16
+http://purl.obolibrary.org/obo/CHEBI_38956,ectoparasiticide,2
+http://purl.obolibrary.org/obo/CHEBI_91081,purinergic receptor P2X antagonist,2
+http://purl.obolibrary.org/obo/CHEBI_91079,purinergic receptor P2 antagonist,11
+http://purl.obolibrary.org/obo/CHEBI_26220,precocenes,4
+http://purl.obolibrary.org/obo/CHEBI_24941,juvenile hormone antagonists,4
+http://purl.obolibrary.org/obo/CHEBI_71173,H1-receptor agonist,1
+http://purl.obolibrary.org/obo/CHEBI_36051,antisyphilitic drug,2
+http://purl.obolibrary.org/obo/CHEBI_36050,antitreponemal drug,2
+http://purl.obolibrary.org/obo/CHEBI_36710,interferon inducer,1
+http://purl.obolibrary.org/obo/CHEBI_76926,EC 3.4.13.19 (membrane dipeptidase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_59499,EC 3.4.13.* (dipeptidase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_59897,EC 2.7.7.49 (RNA-directed DNA polymerase) inhibitor,10
+http://purl.obolibrary.org/obo/CHEBI_63114,sphingosine-1-phosphate receptor agonist,4
+http://purl.obolibrary.org/obo/CHEBI_63173,T-cell proliferation inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_68563,P2Y12 receptor antagonist,8
+http://purl.obolibrary.org/obo/CHEBI_60816,immunogen,4
+http://purl.obolibrary.org/obo/CHEBI_86430,EC 1.14.13.78 (ent-kaurene oxidase) inhibitor,3
+http://purl.obolibrary.org/obo/CHEBI_38456,ecdysone agonist,3
+http://purl.obolibrary.org/obo/CHEBI_39379,lepidopteran inhibitor of chitin biosynthesis,1
+http://purl.obolibrary.org/obo/CHEBI_23100,chitin synthesis inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_49205,CETP inhibitor,3
+http://purl.obolibrary.org/obo/CHEBI_38828,nonionic surfactant,19
+http://purl.obolibrary.org/obo/CHEBI_38849,blood substitute,10
+http://purl.obolibrary.org/obo/CHEBI_39011,Good's buffer substance,11
+http://purl.obolibrary.org/obo/CHEBI_25540,neonicotinoid insectide,8
+http://purl.obolibrary.org/obo/CHEBI_39217,antibiotic nematicide,1
+http://purl.obolibrary.org/obo/CHEBI_39216,antibiotic acaricide,1
+http://purl.obolibrary.org/obo/CHEBI_39277,fumigant insecticide,6
+http://purl.obolibrary.org/obo/CHEBI_39301,sulfite ester acaricide,1
+http://purl.obolibrary.org/obo/CHEBI_39316,mite growth regulator,5
+http://purl.obolibrary.org/obo/CHEBI_39318,tetrazine acaricide,1
+http://purl.obolibrary.org/obo/CHEBI_39351,pyrethroid ether insecticide,3
+http://purl.obolibrary.org/obo/CHEBI_39415,dinitrophenol insecticide,1
+http://purl.obolibrary.org/obo/CHEBI_39369,pyrethroid ether acaricide,1
+http://purl.obolibrary.org/obo/CHEBI_39378,homopteran inhibitor of chitin biosynthesis,1
+http://purl.obolibrary.org/obo/CHEBI_59745,chromatographic reagent,14
+http://purl.obolibrary.org/obo/CHEBI_64922,EC 3.4.21.37 (leukocyte elastase) inhibitor,5
+http://purl.obolibrary.org/obo/CHEBI_64297,reaction intermediate,1
+http://purl.obolibrary.org/obo/CHEBI_75380,EC 1.11.1.6 (catalase) inhibitor,3
+http://purl.obolibrary.org/obo/CHEBI_63090,EC 2.4.2.1 (purine-nucleoside phosphorylase) inhibitor,3
+http://purl.obolibrary.org/obo/CHEBI_78756,EC 2.5.1.6 (methionine adenosyltransferase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_71338,autoinducer,3
+http://purl.obolibrary.org/obo/CHEBI_72470,provitamin B1,1
+http://purl.obolibrary.org/obo/CHEBI_86029,liver X receptor agonist,1
+http://purl.obolibrary.org/obo/CHEBI_78548,adenylate cyclase agonist,1
+http://purl.obolibrary.org/obo/CHEBI_64102,AMPA receptor agonist,1
+http://purl.obolibrary.org/obo/CHEBI_146223,ryanodine receptor antagonist,1
+http://purl.obolibrary.org/obo/CHEBI_88048,cyanotoxin,7
+http://purl.obolibrary.org/obo/CHEBI_85049,EC 1.10.3.1 (catechol oxidase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_85048,EC 1.10.3.* (oxidoreductase acting on diphenols and related substances as donors with oxygen as acceptor) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_85050,EC 1.10.3.2 (laccase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_85051,"EC 1.13.11.24 (quercetin 2,3-dioxygenase) inhibitor",1
+http://purl.obolibrary.org/obo/CHEBI_85052,EC 1.4.3.3 (D-amino-acid oxidase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_132972,farnesoid X receptor agonist,1
+http://purl.obolibrary.org/obo/CHEBI_144097,EC 1.4.3.2 (L-amino-acid oxidase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_144099,EC 2.6.1.2 (alanine transaminase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_136984,EC 4.4.1.14 (1-aminocyclopropane-1-carboxylate synthase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_76831,EC 4.4.1.* (C-S lyase) inhibitor,5
+http://purl.obolibrary.org/obo/CHEBI_76714,EC 4.4.* (C-S lyase) inhibitor,5
+http://purl.obolibrary.org/obo/CHEBI_78024,EC 4.1.1.50 (adenosylmethionine decarboxylase) inhibitor,3
+http://purl.obolibrary.org/obo/CHEBI_76798,EC 1.14.15.4 (steroid 11beta-monooxygenase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_77654,EC 1.1.1.267 (1-deoxy-D-xylulose-5-phosphate reductoisomerase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_78366,EC 2.7.1.1 (hexokinase) inhibitor,4
+http://purl.obolibrary.org/obo/CHEBI_50916,lipid kinase inhibitor,24
+http://purl.obolibrary.org/obo/CHEBI_78377,EC 1.3.1.8 [acyl-CoA dehydrogenase (NADP(+))] inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_59727,vasopressin receptor agonist,3
+http://purl.obolibrary.org/obo/CHEBI_64338,K-ATP channel agonist,2
+http://purl.obolibrary.org/obo/CHEBI_130181,calmodulin antagonist,2
+http://purl.obolibrary.org/obo/CHEBI_136651,S100 calcium-binding protein B inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_63673,chemokine receptor 5 antagonist,5
+http://purl.obolibrary.org/obo/CHEBI_76648,fluorescence quencher,1
+http://purl.obolibrary.org/obo/CHEBI_82973,EC 3.4.24.11 (neprilysin) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_82974,EC 3.4.24.71 (endothelin-converting enzyme 1) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_86501,EC 1.14.13.97 (taurochenodeoxycholate 6alpha-hydroxylase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_86385,EC 5.3.3.5 (cholestenol Delta-isomerase) inhibitor,8
+http://purl.obolibrary.org/obo/CHEBI_86383,EC 5.3.3.* (intramolecular oxidase transposing C=C bonds) inhibitor,8
+http://purl.obolibrary.org/obo/CHEBI_72773,carotogenesis inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_72774,EC 1.3.99.29 [phytoene desaturase (zeta-carotene-forming)] inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_76859,"EC 1.3.99.* (oxidoreductase acting on donor CH-CH group, with other acceptors) inhibitor",1
+http://purl.obolibrary.org/obo/CHEBI_77024,EC 3.1.3.41 (4-nitrophenylphosphatase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_50444,adenosine phosphodiesterase inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_50269,EC 1.1.1.1 (alcohol dehydrogenase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_63923,sclerotherapy agent,2
+http://purl.obolibrary.org/obo/CHEBI_74136,lachrymator,5
+http://purl.obolibrary.org/obo/CHEBI_59844,antihyperplasia drug,3
+http://purl.obolibrary.org/obo/CHEBI_50184,ion transport inhibitor,3
+http://purl.obolibrary.org/obo/CHEBI_84799,EC 2.3.1.5 (arylamine N-acetyltransferase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_84800,EC 2.4.1.1 (glycogen phosphorylase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_84801,EC 2.7.1.127 (inositol-trisphosphate 3-kinase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_84802,EC 2.7.1.151 (inositol-polyphosphate multikinase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_84804,EC 2.7.4.6 (nucleoside-diphosphate kinase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_84803,EC 2.7.4.* (phosphotransferases with a phosphate group as acceptor) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_48406,EC 2.1.1.6 (catechol O-methyltransferase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_48525,calcimimetic,2
+http://purl.obolibrary.org/obo/CHEBI_73361,methionine aminopeptidase 2 inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_73360,EC 3.4.11.18 (methionyl aminopeptidase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_83074,kairomone,43
+http://purl.obolibrary.org/obo/CHEBI_70728,actin polymerisation inhibitor,11
+http://purl.obolibrary.org/obo/CHEBI_75190,"EC 5.4.3.2 (lysine 2,3-aminomutase) inhibitor",1
+http://purl.obolibrary.org/obo/CHEBI_76829,EC 5.4.3.* (intramolecular transferase transferring amino groups) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_55351,substance P receptor antagonist,1
+http://purl.obolibrary.org/obo/CHEBI_35211,radioactive label,1
+http://purl.obolibrary.org/obo/CHEBI_35209,label,1
+http://purl.obolibrary.org/obo/CHEBI_83319,EC 1.3.1.70 (Delta(14)-sterol reductase) inhibitor,5
+http://purl.obolibrary.org/obo/CHEBI_50382,EC 2.4.1.80 (ceramide glucosyltransferase) inhibitor,5
+http://purl.obolibrary.org/obo/CHEBI_50685,antitrichomonal drug,5
+http://purl.obolibrary.org/obo/CHEBI_50914,EC 2.7.1.137 (phosphatidylinositol 3-kinase) inhibitor,20
+http://purl.obolibrary.org/obo/CHEBI_90757,antidote to benzodiazepine poisoning,1
+http://purl.obolibrary.org/obo/CHEBI_51237,Grignard reagent,2
+http://purl.obolibrary.org/obo/CHEBI_51451,endothelin receptor antagonist,5
+http://purl.obolibrary.org/obo/CHEBI_51577,partial prostacyclin agonist,1
+http://purl.obolibrary.org/obo/CHEBI_66902,CFTR potentiator,4
+http://purl.obolibrary.org/obo/CHEBI_63060,phase-transfer catalyst,3
+http://purl.obolibrary.org/obo/CHEBI_72716,EC 2.3.2.13 (protein-glutamine gamma-glutamyltransferase) inhibitor,4
+http://purl.obolibrary.org/obo/CHEBI_76877,EC 2.3.2.* (aminoacyltransferase) inhibitor,5
+http://purl.obolibrary.org/obo/CHEBI_52271,squaraine dye,1
+http://purl.obolibrary.org/obo/CHEBI_52941,phosphate protecting group,1
+http://purl.obolibrary.org/obo/CHEBI_73352,protein-sequencing agent,1
+http://purl.obolibrary.org/obo/CHEBI_73354,EC 2.7.3.2 (creatine kinase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_76818,EC 2.7.3.* (phosphotransferases with a nitrogenous group as acceptor) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_73618,spectrophotometric reagent,1
+http://purl.obolibrary.org/obo/CHEBI_73623,tolerogen,1
+http://purl.obolibrary.org/obo/CHEBI_73668,peptide coupling reagent,2
+http://purl.obolibrary.org/obo/CHEBI_53337,tissue adhesive,2
+http://purl.obolibrary.org/obo/CHEBI_91015,corrosion inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_63533,gonadotropin releasing hormone agonist,6
+http://purl.obolibrary.org/obo/CHEBI_85384,GABA reuptake inhibitor,4
+http://purl.obolibrary.org/obo/CHEBI_13193,hydrogen acceptor,2
+http://purl.obolibrary.org/obo/CHEBI_77103,EC 1.3.5.2 [dihydroorotate dehydrogenase (quinone)] inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_77106,EC 1.10.2.2 (quinol--cytochrome-c reductase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_77105,EC 1.10.2.* (oxidoreductase acting on diphenols and related substances as donors with a cytochrome as acceptor) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_62609,EC 3.11.1.3 (phosphonopyruvate hydrolase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_76883,"EC 3.11.1.* (hydrolases acting on C-P bonds of phosphono-acetaldehyde, -acetate, or -pyruvate) inhibitor",1
+http://purl.obolibrary.org/obo/CHEBI_76770,EC 3.11.* (hydrolases acting on C-P bonds) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_71942,"EC 3.1.4.35 (3',5'-cyclic-GMP phosphodiesterase) inhibitor",4
+http://purl.obolibrary.org/obo/CHEBI_59752,bolaamphiphile,1
+http://purl.obolibrary.org/obo/CHEBI_60218,mimotope,20
+http://purl.obolibrary.org/obo/CHEBI_60646,chiral reagent,1
+http://purl.obolibrary.org/obo/CHEBI_50433,platelet glycoprotein-IIb/IIIa receptor antagonist,5
+http://purl.obolibrary.org/obo/CHEBI_60649,glucagon receptor antagonist,1
+http://purl.obolibrary.org/obo/CHEBI_59886,HIV fusion inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_61026,bile therapy drug,1
+http://purl.obolibrary.org/obo/CHEBI_78058,food antifoaming agent,1
+http://purl.obolibrary.org/obo/CHEBI_77973,antifoaming agent,1
+http://purl.obolibrary.org/obo/CHEBI_61774,inositol phosphorylceramide synthase inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_76960,Chaetomium metabolite,92
+http://purl.obolibrary.org/obo/CHEBI_62887,tankyrase inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_62914,axin stabilizer,2
+http://purl.obolibrary.org/obo/CHEBI_63064,crystallisation adjutant,4
+http://purl.obolibrary.org/obo/CHEBI_143252,ceramide allergen,5
+http://purl.obolibrary.org/obo/CHEBI_73416,CB1 receptor antagonist,2
+http://purl.obolibrary.org/obo/CHEBI_73413,cannabinoid receptor antagonist,2
+http://purl.obolibrary.org/obo/CHEBI_63146,insulin release inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_63175,peptidomimetic,12
+http://purl.obolibrary.org/obo/CHEBI_63457,fibroblast growth factor receptor antagonist,12
+http://purl.obolibrary.org/obo/CHEBI_63720,EC 2.1.1.45 (thymidylate synthase) inhibitor,4
+http://purl.obolibrary.org/obo/CHEBI_63721,EC 2.1.2.2 (phosphoribosylglycinamide formyltransferase) inhibitor,3
+http://purl.obolibrary.org/obo/CHEBI_63908,film-forming compound,1
+http://purl.obolibrary.org/obo/CHEBI_63936,alpha1B-adrenoceptor antagonist,1
+http://purl.obolibrary.org/obo/CHEBI_68542,EC 1.3.98.1 [dihydroorotate oxidase (fumarate)] inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_76858,"EC 1.3.98.* (oxidoreductase acting on donor CH-CH group, with other, known, acceptors) inhibitor",2
+http://purl.obolibrary.org/obo/CHEBI_68543,pyrimidine synthesis inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_64088,incretin mimetic,1
+http://purl.obolibrary.org/obo/CHEBI_71196,glucagon-like peptide-1 receptor agonist,4
+http://purl.obolibrary.org/obo/CHEBI_64105,protein kinase G agonist,2
+http://purl.obolibrary.org/obo/CHEBI_64154,H3-receptor agonist,4
+http://purl.obolibrary.org/obo/CHEBI_64155,H4-receptor agonist,4
+http://purl.obolibrary.org/obo/CHEBI_76940,EC 3.4.21.4 (trypsin) inhibitor,3
+http://purl.obolibrary.org/obo/CHEBI_64406,EC 3.4.22.38 (cathepsin K) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_64411,EC 2.5.1.29 (geranylgeranyl diphosphate synthase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_65254,LRH-1 agonist,1
+http://purl.obolibrary.org/obo/CHEBI_62530,EC 2.3.1.24 (sphingosine N-acyltransferase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_71168,HIV-1 maturation inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_76795,EC 3.4.22.36 (caspase-1) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_71951,EC 3.5.1.88 (peptide deformylase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_67189,EC 3.4.24.3 (microbial collagenase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_72294,nerve growth factor stimulator,4
+http://purl.obolibrary.org/obo/CHEBI_64949,anti-HIV-2 agent,6
+http://purl.obolibrary.org/obo/CHEBI_64943,EC 3.4.21.1 (chymotrypsin) inhibitor,13
+http://purl.obolibrary.org/obo/CHEBI_70821,cathepsin L (EC 3.4.22.15) inhibitor,6
+http://purl.obolibrary.org/obo/CHEBI_70822,EC 3.4.22.2 (papain) inhibitor,4
+http://purl.obolibrary.org/obo/CHEBI_64955,EC 3.2.1.166 (heparanase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_64919,EC 2.3.1.20 (diacylglycerol O-acyltransferase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_73196,EC 4.4.1.11 (methionine gamma-lyase) inhibitor,4
+http://purl.obolibrary.org/obo/CHEBI_76822,EC 3.2.1.31 (beta-glucuronidase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_64957,EC 3.4.21.39 (chymase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_64920,EC 6.5.1.1 [DNA ligase (ATP)] inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_76827,EC 6.5.1.* (DNA/RNA repair enzymes) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_75605,EC 6.5.* (phosphoric ester bond-forming ligase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_64954,anti-HSV-2 agent,1
+http://purl.obolibrary.org/obo/CHEBI_66894,erythropeotin receptor agonist,2
+http://purl.obolibrary.org/obo/CHEBI_67137,NMR shift reagent,1
+http://purl.obolibrary.org/obo/CHEBI_50779,appetite enhancer,2
+http://purl.obolibrary.org/obo/CHEBI_67230,EC 3.2.1.45 (glucosylceramidase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_78505,venom,3
+http://purl.obolibrary.org/obo/CHEBI_68509,glutathione depleting agent,1
+http://purl.obolibrary.org/obo/CHEBI_76973,Streptococcus pneumoniae metabolite,1
+http://purl.obolibrary.org/obo/CHEBI_68553,guanylate cyclase 2C agonist,1
+http://purl.obolibrary.org/obo/CHEBI_68557,bradykinin receptor antagonist,3
+http://purl.obolibrary.org/obo/CHEBI_68640,EC 1.14.99.9 (steroid 17alpha-monooxygenase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_35208,physical tracer,1
+http://purl.obolibrary.org/obo/CHEBI_78678,EC 4.6.1.2 (guanylate cyclase) inhibitor,3
+http://purl.obolibrary.org/obo/CHEBI_76716,EC 4.6.* (P-O lyase) inhibitor,5
+http://purl.obolibrary.org/obo/CHEBI_82891,glucocorticoid receptor antagonist,2
+http://purl.obolibrary.org/obo/CHEBI_72771,breast cancer resistance protein inhibitor,5
+http://purl.obolibrary.org/obo/CHEBI_70724,cell dedifferentiation agent,1
+http://purl.obolibrary.org/obo/CHEBI_70725,adenosine A3 receptor antagonist,1
+http://purl.obolibrary.org/obo/CHEBI_70817,EC 1.2.1.12 [glyceraldehyde-3-phosphate dehydrogenase (phosphorylating)] inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_70982,reactive oxygen species generator,1
+http://purl.obolibrary.org/obo/CHEBI_71014,AMPA receptor antagonist,2
+http://purl.obolibrary.org/obo/CHEBI_71027,progesterone receptor modulator,1
+http://purl.obolibrary.org/obo/CHEBI_71033,carbamylphosphate synthetase I activator,1
+http://purl.obolibrary.org/obo/CHEBI_71551,EC 3.5.1.23 (ceramidase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_72298,MTP inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_72311,glucagon-like peptide-2 receptor agonist,1
+http://purl.obolibrary.org/obo/CHEBI_35207,radioactive tracer,2
+http://purl.obolibrary.org/obo/CHEBI_22581,antiauxins,1
+http://purl.obolibrary.org/obo/CHEBI_73189,brassinosteroid biosynthesis inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_73273,sodium-glucose transport protein subtype 2 inhibitor,6
+http://purl.obolibrary.org/obo/CHEBI_73310,adenosine A2A receptor agonist,2
+http://purl.obolibrary.org/obo/CHEBI_73319,adenosine A3 receptor agonist,1
+http://purl.obolibrary.org/obo/CHEBI_73730,PPARbeta/delta agonist,2
+http://purl.obolibrary.org/obo/CHEBI_74914,microarray analysis reagent,2
+http://purl.obolibrary.org/obo/CHEBI_73911,vibriostatic agent,1
+http://purl.obolibrary.org/obo/CHEBI_74520,EC 1.1.1.44 (NADP(+)-dependent decarboxylating phosphogluconate dehydrogenase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_74570,EC 2.3.2.2 (gamma-glutamyltransferase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_74886,neoglycolipid probe,3
+http://purl.obolibrary.org/obo/CHEBI_74949,EC 3.1.27.3 (ribonuclease T1) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_76791,EC 3.1.27.* (endoribonucleases producing other than 5'-phosphomonoesters) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_78763,EC 2.7.11.18 (myosin-light-chain kinase) inhibitor,4
+http://purl.obolibrary.org/obo/CHEBI_75174,EC 2.5.1.21 (squalene synthase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_75414,platelet-activating factor receptor agonist,2
+http://purl.obolibrary.org/obo/CHEBI_75252,insulin-like growth factor receptor 1 antagonist,6
+http://purl.obolibrary.org/obo/CHEBI_75298,histamine releasing agent,1
+http://purl.obolibrary.org/obo/CHEBI_75416,EC 6.1.1.* (ligases forming aminoacyl tRNA and related compounds) inhibitor,7
+http://purl.obolibrary.org/obo/CHEBI_76706,EC 6.1.* (C-O bond-forming ligase) inhibitor,7
+http://purl.obolibrary.org/obo/CHEBI_75429,EC 1.4.4.2 [glycine dehydrogenase (aminomethyl-transferring)] inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_76862,"EC 1.4.4.* (oxidoreductase acting on donor CH-NH2 group, a disulfide as acceptor) inhibitor",1
+http://purl.obolibrary.org/obo/CHEBI_75495,EC 6.1.1.11 (serine--tRNA ligase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_75968,EC 6.3.2.19 (ubiquitin--protein ligase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_76219,fluorogen,1
+http://purl.obolibrary.org/obo/CHEBI_76531,odorant receptor antagonist,1
+http://purl.obolibrary.org/obo/CHEBI_76916,hyperglycemic agent,1
+http://purl.obolibrary.org/obo/CHEBI_76720,antisense oligonucleotide,7
+http://purl.obolibrary.org/obo/CHEBI_76998,aryl hydrocarbon receptor antagonist,1
+http://purl.obolibrary.org/obo/CHEBI_77324,UDP-glucuronosyltransferase activator,1
+http://purl.obolibrary.org/obo/CHEBI_78152,enzyme mimic,1
+http://purl.obolibrary.org/obo/CHEBI_78380,EC 3.5.4.1 (cytosine deaminase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_78384,EC 5.1.3.2 (UDP-glucose 4-epimerase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_78382,EC 5.1.3.* (racemases acting on carbohydrates and derivatives) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_77750,ATP/ADP translocase inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_77763,EC 1.2.1.88 (L-glutamate gamma-semialdehyde dehydrogenase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_77783,EC 1.14.13.67 (quinine 3-monooxygenase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_77953,EC 6.1.1.4 (leucine--tRNA ligase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_78009,Wiskott-Aldrich syndrome protein inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_78006,food colour retention agent,1
+http://purl.obolibrary.org/obo/CHEBI_78248,vitamin B1 antagonist,3
+http://purl.obolibrary.org/obo/CHEBI_78372,EC 3.1.1.5 (lysophospholipase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_78622,EC 2.7.11.31 {[hydroxymethylglutaryl-CoA reductase (NADPH)] kinase} inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_78623,bone morphogenetic protein receptor antagonist,2
+http://purl.obolibrary.org/obo/CHEBI_78926,survivin dimerisation modulator,1
+http://purl.obolibrary.org/obo/CHEBI_78928,EC 3.6.1.3 (adenosinetriphosphatase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_78927,EC 3.6.1.* (hydrolases acting on acid anhydrides in P-containing anhydrides) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_79046,melatonin receptor agonist,1
+http://purl.obolibrary.org/obo/CHEBI_83034,EC 4.1.2.27 (sphinganine-1-phosphate aldolase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_83035,EC 4.1.2.* (aldehyde-lyase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_50827,antiparathyroid drug,1
+http://purl.obolibrary.org/obo/CHEBI_79386,glycerophosphoinositol synthesis inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_79392,EC 6.1.1.2 (tryptophan--tRNA ligase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_85053,EC 2.7.11.31 {[hydroxymethylglutaryl-CoA reductase (NADPH)] kinase} activator,1
+http://purl.obolibrary.org/obo/CHEBI_138168,neuropeptide Y2 receptor agonist,1
+http://purl.obolibrary.org/obo/CHEBI_143003,EC 2.1.3.3 (ornithine carbamoyltransferase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_143002,EC 2.1.3.* (carboxy- and carbamoyltransferases) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_138390,EC 1.1.1.159 (7alpha-hydroxysteroid dehydrogenase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_83316,EC 1.14.13.72 (methylsterol monooxygenase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_36053,acaricide drug,1
+http://purl.obolibrary.org/obo/CHEBI_83296,orexin receptor antagonist,1
+http://purl.obolibrary.org/obo/CHEBI_83313,protease-activated receptor-1 antagonist,2
+http://purl.obolibrary.org/obo/CHEBI_82756,EC 6.1.1.12 (aspartate--tRNA ligase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_83799,nonstructural protein 5A inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_83075,Daphnia pulex metabolite,48
+http://purl.obolibrary.org/obo/CHEBI_90753,antidote to organophosphate poisoning,1
+http://purl.obolibrary.org/obo/CHEBI_83612,hepatic steatosis inducing agent,2
+http://purl.obolibrary.org/obo/CHEBI_83609,steatosis inducing agent,2
+http://purl.obolibrary.org/obo/CHEBI_84297,EC 3.4.21.64 (peptidase K) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_85011,EC 2.6.1.16 (glutamine--fructose-6-phosphate transaminase (isomerizing)) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_85424,glycine transporter 2 inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_85012,thrombopoietin receptor agonist,1
+http://purl.obolibrary.org/obo/CHEBI_85113,EC 2.7.11.12 (cGMP-dependent protein kinase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_85180,nonnucleoside hepatitis C virus polymerase inhibitor,3
+http://purl.obolibrary.org/obo/CHEBI_85618,"EC 2.5.1.31 {ditrans,polycis-undecaprenyl-diphosphate synthase [(2E,6E)-farnesyl-diphosphate specific]} inhibitor",1
+http://purl.obolibrary.org/obo/CHEBI_86010,EC 1.4.1.3 {glutamate dehydrogenase [NAD(P)(+)]} inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_86009,EC 1.4.1.* (oxidoreductase acting on donor CH-NH2 group; NAD(+) or NADP(+) as acceptor) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_86966,EC 3.4.21.92 (endopeptidase Clp) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_87588,Smad3 inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_87786,signal transducer and activator of transcription 5 protein inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_88286,EC 2.7.12.2 (mitogen-activated protein kinase kinase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_88295,G-protein-coupled receptor antagonist,1
+http://purl.obolibrary.org/obo/CHEBI_90113,EC 1.1.1.170 [3beta-hydroxysteroid-4alpha-carboxylate 3-dehydrogenase (decarboxylating)] inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_88336,retinoic acid receptor gamma agonist,1
+http://purl.obolibrary.org/obo/CHEBI_90190,EC 2.1.1.37 [DNA (cytosine-5-)-methyltransferase] inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_90375,Sir1 inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_90199,c-Met tyrosine kinase inhibitor,3
+http://purl.obolibrary.org/obo/CHEBI_90374,histone acetyltransferase activator,1
+http://purl.obolibrary.org/obo/CHEBI_90365,EC 4.6.1.1 (adenylate cyclase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_90285,EC 4.1.1.23 (orotidine-5'-phosphate decarboxylase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_90780,AKT1 kinase inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_90767,eukaryotic translation elongation factor 1alpha 1 inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_90742,retinoic acid receptor beta agonist,1
+http://purl.obolibrary.org/obo/CHEBI_90744,retinoic acid receptor gamma antagonist,1
+http://purl.obolibrary.org/obo/CHEBI_90846,liver X receptor inverse agonist,1
+http://purl.obolibrary.org/obo/CHEBI_90845,prostacyclin receptor agonist,2
+http://purl.obolibrary.org/obo/CHEBI_90878,EC 2.4.2.4 (thymidine phosphorylase) inhibitor,2
+http://purl.obolibrary.org/obo/CHEBI_90921,EC 1.8.5.4 (sulfide:quinone reductase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_90920,"EC 1.8.5.* (oxidoreductase acting on sulfur group donors, quinone or similar as acceptor) inhibitor",1
+http://purl.obolibrary.org/obo/CHEBI_90961,ERK dimerisation inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_90991,steroid receptor coactivator stimulator,1
+http://purl.obolibrary.org/obo/CHEBI_91189,VEGF activator,2
+http://purl.obolibrary.org/obo/CHEBI_91193,lysophosphatidic acid receptor antagonist,1
+http://purl.obolibrary.org/obo/CHEBI_91214,macrophage migration inhibitory factor inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_131794,EC 2.7.11.17 (Ca(2+)/calmodulin-dependent protein kinase) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_62915,sialyltransferase inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_76882,EC 2.4.99.* (glycosyltransferases transferring other glycosyl groups) inhibitor,1
+http://purl.obolibrary.org/obo/CHEBI_134083,hypoxia-inducible factor pathway activator,1
+http://purl.obolibrary.org/obo/CHEBI_74234,"EC 1.1.1.153 [sepiapterin reductase (L-erythro-7,8-dihydrobiopterin forming)] inhibitor",2
+http://purl.obolibrary.org/obo/CHEBI_65239,"EC 3.2.1.114 (mannosyl-oligosaccharide 1,3-1,6-alpha-mannosidase) inhibitor",1
+http://purl.obolibrary.org/obo/CHEBI_143130,impurity,1
+http://purl.obolibrary.org/obo/CHEBI_78059,food additive carrier,1
