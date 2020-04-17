@@ -35,6 +35,9 @@ print("Default file path set to:")
 print(getwd())
 
 config <- config::get(file = "rxnav_med_mapping.yaml")
+# 
+# med.mapping.general.config <-
+#   config::get(file = 'rxnav_med_mapping.yaml')
 
 chunk.vec <- function(vec, chunk.count) {
   split(vec, cut(seq_along(vec), chunk.count, labels = FALSE))
@@ -285,11 +288,9 @@ import.from.local.file <-
         url = post.dest,
         body = upload_file(some.local.file),
         content_type(some.rdf.format),
-        authenticate(
-          config$my.graphdb.username,
-          config$my.graphdb.pw,
-          type = 'basic'
-        )
+        authenticate(config$my.graphdb.username,
+                     config$my.graphdb.pw,
+                     type = 'basic')
       )
     
     print('Errors will be listed below:')
@@ -383,18 +384,55 @@ monitor.named.graphs <- function() {
     
     print(paste0("still waiting for: ", pending.graphs))
     
-    print(
-      paste0(
-        "Next check in ",
-        config$monitor.pause.seconds,
-        " seconds."
-      )
-    )
+    print(paste0("Next check in ",
+                 config$monitor.pause.seconds,
+                 " seconds."))
     
     Sys.sleep(config$monitor.pause.seconds)
     
   }
 }
+
+q2j2df <-
+  function(query,
+           endpoint = config$my.graphdb.base,
+           repo = config$my.selected.repo,
+           auth = saved.authentication) {
+    # query <- config$main.solr.query
+    
+    rdfres <- httr::GET(
+      url = paste0(endpoint,
+                   "/repositories/",
+                   repo),
+      query = list(query = query),
+      auth
+    )
+    
+    # convert binary JSON SPARQL results to a minimal dataframe
+    rdfres <-
+      jsonlite::fromJSON(rawToChar(rdfres$content))
+    rdfres <- rdfres$results$bindings
+    
+    
+    rdfres <-
+      do.call(what = cbind.data.frame, args = rdfres)
+    keepers <- colnames(rdfres)
+    keepers <- keepers[grepl(pattern = "value$", x = keepers)]
+    rdfres <- rdfres[, keepers]
+    
+    # beautify column labels
+    temp <-
+      gsub(pattern = '\\.value$',
+           replacement = '',
+           x = colnames(rdfres))
+    # temp <- gsub(pattern = '^.*\\$',
+    #              replacement = '',
+    #              x = temp)
+    colnames(rdfres) <- temp
+    
+    return(rdfres)
+    
+  }
 
 url.post.endpoint <-
   paste0(
@@ -405,12 +443,10 @@ url.post.endpoint <-
   )
 
 update.endpoint <-
-  paste0(
-    config$my.graphdb.base,
-    "/repositories/",
-    config$my.selected.repo,
-    "/statements"
-  )
+  paste0(config$my.graphdb.base,
+         "/repositories/",
+         config$my.selected.repo,
+         "/statements")
 
 select.endpoint <-
   paste0(config$my.graphdb.base,
@@ -422,11 +458,9 @@ select.endpoint <-
 
 
 saved.authentication <-
-  authenticate(
-    config$my.graphdb.username,
-    config$my.graphdb.pw,
-    type = "basic"
-  )
+  authenticate(config$my.graphdb.username,
+               config$my.graphdb.pw,
+               type = "basic")
 
 ####
 
