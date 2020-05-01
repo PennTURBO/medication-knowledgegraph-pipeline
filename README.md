@@ -9,11 +9,11 @@ The PennTURBO medication mapper (TMM) takes strings describing medications or me
 Additionally
 
 - it creates an RDF knowledgeable containing links between the source medications and entities from
-      - RxNorm
-      - DrOn
-      - ChEBI
-      - ATC
-      - NDF-RT
+    - RxNorm
+    - DrOn
+    - ChEBI
+    - ATC
+    - NDF-RT
 - it populates a Solr core with the labels and URIs of the entities in the ontologies and RDF data models above
 
 That makes it possible to 
