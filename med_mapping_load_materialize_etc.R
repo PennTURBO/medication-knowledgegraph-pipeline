@@ -1,23 +1,19 @@
-library(config)
-library(jsonlite)
-library(httr)
-
 source("rxnav_med_mapping_setup.R")
 
 # load public ontologies & RDF data sets
 # inspired by disease_diagnosis_dev.R
 # more refactoring (even package writing) opportunities
 
-####
+####    ####    ####    ####
 
 ### upload from file if upload from URL might fail
 # the name of the destination graph is part of the "endpoint URL"
 
-####
+####    ####    ####    ####
 
 # probably don't really need dron_chebi or dron_pro?
 
-import.urls <- med.mapping.general.config$my.import.urls
+import.urls <- config$my.import.urls
 import.names <- names(import.urls)
 context.report <- get.context.report()
 import.names <- setdiff(import.names, context.report)
@@ -31,7 +27,7 @@ placeholder <-
                     some.rdf.format)
   })
 
-import.files <- med.mapping.general.config$my.import.files
+import.files <- config$my.import.files
 import.names <- names(import.files)
 context.report <- get.context.report()
 import.names <- setdiff(import.names, context.report)
@@ -47,16 +43,7 @@ placeholder <-
   })
 
 # need to wait for imports to finish
-
-# dput(sort(context.report))
-# c("http://example.com/resource/bioportal_mappings", "http://example.com/resource/classified_search_results",
-#   "http://example.com/resource/reference_medications", "http://purl.bioontology.org/ontology/ATC/",
-#   "http://purl.bioontology.org/ontology/RXNORM/", "http://purl.bioontology.org/ontology/VANDF/",
-#   "http://purl.obolibrary.org/obo/chebi.owl", "http://purl.obolibrary.org/obo/dron-rxnorm.owl",
-#   "http://purl.obolibrary.org/obo/dron.owl", "http://purl.obolibrary.org/obo/dron/dron-hand.owl",
-#   "http://purl.obolibrary.org/obo/dron/dron-ingredient.owl", "http://purl.obolibrary.org/obo/dron/dron-upper.owl",
-#   "https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl"
-# )
+# file uploads may be synchronous blockers
 
 last.post.status <-
   'Multiple OBO and BioPortal/UMLS uploads from URLs '
@@ -66,11 +53,10 @@ expectation <- import.names
 
 monitor.named.graphs()
 
-# when to associate BioPortal-mapped ChEBI, DrOn and RxNorm terms
-# before any kind of propagation, right
+####    ####    ####    ####
 
 sparql.list <-
-  med.mapping.general.config$materializastion.projection.sparqls
+  config$materializastion.projection.sparqls
 
 placeholder <-
   lapply(names(sparql.list), function(current.sparql.name) {
@@ -84,7 +70,24 @@ placeholder <-
                      saved.authentication)
   })
 
-####
+####    ####    ####    ####
+
+# RxNorm TTY types, asserted as employment
+
+# i keep re-doing this thorugh other scripts
+rxnCon <-
+  dbConnect(
+    rxnDriver,
+    paste0(
+      "jdbc:mysql://",
+      config$rxnav.mysql.address,
+      ":",
+      config$rxnav.mysql.port
+    ),
+    config$rxnav.mysql.user,
+    config$rxnav.mysql.pw
+  )
+
 
 my.query <- "
 SELECT
@@ -115,34 +118,13 @@ tty.tab <-
   cbind.data.frame(names(tty.tab), as.numeric(tty.tab))
 names(tty.tab) <- c("TTY", "RXCUI.entries")
 
-write.csv(x = tty.tab,
-          file = 'rxn_tty_table.csv',
-          row.names = FALSE)
-
-# BN
-# BPCK
-# GPCK
-# IN
-# MIN
-# PIN
-# SBD
-# SBDC
-# SBDF
-# SBDG
-# SCD
-# SCDC
-# SCDF
-# SCDG
-
-
+# skip
 # DF
 # DFG
 # ET
 # PSN
 # SY
 # TMSY
-
-# SAB = 'RXNORM' and RXCUI  = '1119573'
 
 one.per <-
   rxcui_ttys[rxcui_ttys$TTY %in% c(
@@ -169,10 +151,6 @@ names(one.per.tab) <- c("RXCUI", "TTY.entries")
 
 print(table(one.per.tab$TTY.entries))
 
-# http://purl.bioontology.org/ontology/RXNORM/
-# http://example.com/resource/
-# http://www.w3.org/1999/02/22-rdf-syntax-ns#type
-
 one.per$RXCUI <-
   paste0('http://purl.bioontology.org/ontology/RXNORM/',
          one.per$RXCUI)
@@ -181,34 +159,31 @@ one.per$TTY <-
   paste0('http://example.com/resource/rxn_tty/', one.per$TTY)
 
 as.rdf <- as_rdf(x = one.per)
+
+# todo parmaterize this hardcoding
 rdf_serialize(rdf = as.rdf, doc = 'rxcui_ttys.ttl', format = 'turtle')
 
 
 post.res <- POST(
   update.endpoint,
-  body = list(update = 'clear graph <http://example.com/resource/rxn_tty_temp/>'),
+  body = list(update = 'clear graph <http://example.com/resource/rxn_tty_temp>'),
   saved.authentication
 )
-
-post.res <- POST(
-  update.endpoint,
-  body = list(update = 'clear graph <http://example.com/resource/rxn_tty/>'),
-  saved.authentication
-)
-
 
 placeholder <-
-  import.from.local.file('http://example.com/resource/rxn_tty_temp/',
+  import.from.local.file('http://example.com/resource/rxn_tty_temp',
                          'rxcui_ttys.ttl',
                          'text/turtle')
 
-rxn.tty.update <- 'insert {
-graph <http://example.com/resource/rxn_tty/> {
-?ruri a ?turi .
+# move the statement to the config file
+rxn.tty.update <- 'PREFIX mydata: <http://example.com/resource/>
+insert {
+graph mydata:employment {
+?ruri mydata:employment ?turi .
 }
 }
 where {
-graph <http://example.com/resource/rxn_tty_temp/> {
+graph <http://example.com/resource/rxn_tty_temp> {
 ?s <df:RXCUI> ?r ;
 <df:TTY> ?t .
 bind(iri(?r) as ?ruri)
@@ -224,32 +199,23 @@ post.res <- POST(update.endpoint,
 
 post.res <- POST(
   update.endpoint,
-  body = list(update = 'clear graph <http://example.com/resource/rxn_tty_temp/>'),
+  body = list(update = 'clear graph <http://example.com/resource/rxn_tty_temp>'),
   saved.authentication
 )
 
-post.res <- POST(
-  update.endpoint,
-  body = list(update = 'clear graph <http://example.com/resource/classified_search_results>'),
-  saved.authentication
-)
+if (FALSE) {
+  # this should probably be optional... it is verbose,
+  #   and the http://example.com/resource/elected_mapping replacement
+  #   is proabbply more useful in most circumstances
+  #   but it takes a long time to reload
+  post.res <- POST(
+    update.endpoint,
+    body = list(update = 'clear graph <http://example.com/resource/classified_search_results>'),
+    saved.authentication
+  )
+}
 
-
-post.res <- POST(
-  update.endpoint,
-  body = list(update = 'clear graph <http://example.com/resource/materialized_rxcui>'),
-  saved.authentication
-)
-
-
-post.res <- POST(
-  update.endpoint,
-  body = list(update = 'clear graph <http://example.com/resource/cui>'),
-  saved.authentication
-)
-
-
-####
+####    ####    ####    ####
 
 # Solr prerequisites
 # $ ~/solr-8.4.1/bin/solr start
@@ -264,96 +230,7 @@ post.res <- POST(
 #
 # $ ~/solr-8.4.1/bin/solr create_core -c <config$med.map.kb.solr.host>
 
-# create Solr client object
-mm.kb.solr.client <-
-  SolrClient$new(
-    host = config$med.map.kb.solr.host,
-    path = "search",
-    port = config$med.map.kb.solr.port
-  )
-
-# could also ping it
-print(mm.kb.solr.client)
-
-# clear the core!
-mm.kb.solr.client$delete_by_query(name = config$med.map.kb.solr.core, query = "*:*")
-
 # many of the next steps take several minutes each
-
-# # refactor
-# # query medmapping repo for selected labels from selected graphs
-# med_labels <- httr::GET(
-#   url = paste0(
-#     config$my.graphdb.base,
-#     "/repositories/",
-#     config$my.selected.repo
-#   ),
-#   query = list(query = config$med.map.kb.solr.population.sparql),
-#   saved.authentication
-# )
-#
-# # convert binary JSON SPARQL results to a minimal dataframe
-# med_labels <- jsonlite::fromJSON(rawToChar(med_labels$content))
-# med_labels <- med_labels$results$bindings
-# med_labels <-
-#   cbind.data.frame(
-#     med_labels$mediri$value,
-#     med_labels$labelpred$value,
-#     med_labels$medlabel$value,
-#     med_labels$prefLabel$value
-#   )
-#
-# # beautify column labels
-# temp <-
-#   gsub(pattern = '\\$value$',
-#        replacement = '',
-#        x = colnames(med_labels))
-# temp <- gsub(pattern = '^.*\\$',
-#              replacement = '',
-#              x = temp)
-# colnames(med_labels) <- temp
-
-# post data frame from sparql label query to Solr core
-# mm.kb.solr.client$add(med_labels, config$med.map.kb.solr.core)
-
-
-
-# med_labels <- httr::GET(
-#   url = paste0(
-#     config$my.graphdb.base,
-#     "/repositories/",
-#     config$my.selected.repo
-#   ),
-#   query = list(query = config$chebi.synonym.solr.population.sparql),
-#   saved.authentication
-# )
-#
-# # convert binary JSON SPARQL results to a minimal dataframe
-# med_labels <- jsonlite::fromJSON(rawToChar(med_labels$content))
-# med_labels <- med_labels$results$bindings
-#
-# # keepers <- grepl(pattern = "value", x = )
-# med_labels <-
-#   cbind.data.frame(
-#     med_labels$mediri$value,
-#     med_labels$labelpred$value,
-#     med_labels$medlabel$value,
-#     med_labels$prefLabel$value,
-#     med_labels$source$value
-#   )
-#
-# # beautify column labels
-# temp <-
-#   gsub(pattern = '\\$value$',
-#        replacement = '',
-#        x = colnames(med_labels))
-# temp <- gsub(pattern = '^.*\\$',
-#              replacement = '',
-#              x = temp)
-# colnames(med_labels) <- temp
-
-# post data frame from sparql label query to Solr core
-# mm.kb.solr.client$add(med_labels, config$med.map.kb.solr.core)
 
 ####    ####    ####    ####
 
@@ -363,6 +240,10 @@ system.time(main.solr.res <- q2j2df(query = config$main.solr.query))
 main.solr.res <-
   main.solr.res[, c("mediri", "medlabel", "definedin", "labelpred",  "employment")]
 
+main.solr.res$id <- main.solr.res$mediri
+
+# names(main.solr.res) <- c("id", "medlabel", "definedin", "labelpred",  "employment")
+
 main.solr.list <- do.call(function(...)
   Map(list, ...), main.solr.res)
 
@@ -371,19 +252,6 @@ main.solr.list <- do.call(function(...)
 system.time(rxn.alt.lab.solr.res <-
               q2j2df(query = config$rxn.alt.lab.solr.query))
 
-# updated sparql query makes the rows unique,
-#   removes alt label rows that are just case different from the rdf:lablel
-#   and doesn't return the predicate...
-#   so this column slice isn’t necessary
-# rxn.alt.lab.solr.res <-
-#   rxn.alt.lab.solr.res[, c("mediri", "medlabel")]
-
-# # temp <- table(rxn.alt.lab.solr.res$mediri.value)
-# # temp <- cbind.data.frame(names(temp), as.numeric(temp))
-#
-# # predicate always http://www.w3.org/2004/02/skos/core#altLabel
-# # 0 to inf synonym values
-
 unique.mediris <- unique(rxn.alt.lab.solr.res$mediri)
 
 # make free standing alternative label list
@@ -391,8 +259,6 @@ unique.mediris <- unique(rxn.alt.lab.solr.res$mediri)
 # refactor
 system.time(rxn.alt.lab.solr.list <-
               lapply(unique.mediris, function(current.mediri) {
-                # current.mediri <-
-                #   'http://purl.bioontology.org/ontology/RXNORM/836397'
                 temp <-
                   unique(rxn.alt.lab.solr.res$medlabel[rxn.alt.lab.solr.res$mediri == current.mediri])
                 # print(temp)
@@ -412,7 +278,8 @@ print(rxn.alt.lab.solr.list[['http://purl.bioontology.org/ontology/RXNORM/836397
 # have already filtered for ?l != ?synval
 # also removed IUPAC synonym types
 # should probably still filter on sources
-system.time(chebi.synonym.res <- q2j2df(query = config$chebi.synonym.query))
+system.time(chebi.synonym.res <-
+              q2j2df(query = config$chebi.synonym.query))
 
 chebi.synonym.res$synstrength <-
   sub(
@@ -446,10 +313,10 @@ chebi.synonym.res$syntype <-
 
 # # so far
 # http://turbo-prd-app01.pmacs.upenn.edu:8983/solr/listtest/select?q=*:*&wt=csv&rows=0&facet
-# labelpred,mediri,employment,medlabel,definedin,id,altLabels
-# medlabel,altLabels
+# labelpred,mediri,employment,medlabel,definedin,id,altlabels
+# medlabel,altlabels
 # http://turbo-prd-app01.pmacs.upenn.edu:8983/solr/listtest/select?q=medlabel:(acetaminophen%20codeine)
-# http://turbo-prd-app01.pmacs.upenn.edu:8983/solr/listtest/select?q=altLabels:(apap%20tramadol)
+# http://turbo-prd-app01.pmacs.upenn.edu:8983/solr/listtest/select?q=altlabels:(apap%20tramadol)
 # try edismax or allText?
 
 # for brand names
@@ -491,7 +358,7 @@ print(main.solr.list[['http://purl.bioontology.org/ontology/RXNORM/836397']])
 # may not like the fact that the outer list names are back-ticked URLs?
 # doesn't seem very fast anyway
 # i.e. takes a long time to deliver an error message
-# 
+#
 # print(Sys.time())
 # system.time(joined.lists <-
 #   list.join(main.solr.list, rxn.alt.lab.solr.list, mediri))
@@ -502,7 +369,7 @@ print(main.solr.list[['http://purl.bioontology.org/ontology/RXNORM/836397']])
 unique.mediris <- names(rxn.alt.lab.solr.list)
 print(Sys.time())
 system.time(lapply(unique.mediris, function(current.iri) {
-  main.solr.list[[current.iri]]$altLabels <<-
+  main.solr.list[[current.iri]]$altlabels <<-
     rxn.alt.lab.solr.list[[current.iri]]$altlabels
 }))
 
@@ -520,8 +387,8 @@ print(main.solr.list[['http://purl.obolibrary.org/obo/CHEBI_3611']])
 
 ####
 
-# take out teh harcoded settings, put them in the config file
-# remove the solr-related code above (connections and posts)
+# take out the hardcoded settings, put them in the config file
+# remove the Solr-related code above (connections and posts)
 
 mm.kb.solr.client <-
   SolrClient$new(
@@ -534,14 +401,21 @@ mm.kb.solr.client <-
 print(mm.kb.solr.client)
 
 # clear the core!
-mm.kb.solr.client$delete_by_query(name = 'listwithbrands', query = "*:*")
+mm.kb.solr.client$delete_by_query(name = config$med.map.kb.solr.core, query = "*:*")
 
 ####    ####    ####    ####
+
+print(length(main.solr.list))
 
 # ~ 1.5 hours
 print(Sys.time())
 system.time(lapply(main.solr.list, function(current.doc) {
-  mm.kb.solr.client$add(current.doc, 'listwithbrands', commit = FALSE)
+  print(current.doc)
+  if (nchar(current.doc$id) > 0) {
+    mm.kb.solr.client$add(current.doc, config$med.map.kb.solr.core, commit = FALSE)
+  }
   return()
 }))
-system.time(mm.kb.solr.client$commit('listwithbrands'))
+system.time(mm.kb.solr.client$commit(config$med.map.kb.solr.core))
+print(Sys.time())
+

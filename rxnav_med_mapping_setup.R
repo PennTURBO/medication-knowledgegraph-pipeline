@@ -469,6 +469,7 @@ rxnDriver <-
   JDBC(driverClass = "com.mysql.cj.jdbc.Driver",
        classPath = config$mysql.jdbc.path)
 
+# i keep re-doing this thorugh other scripts
 rxnCon <-
   dbConnect(
     rxnDriver,

@@ -62,14 +62,14 @@ where {
 }
 ```
 
-- [x] what's the distribution of match RxCUI ttys?
+- [x] what's the distribution of match RxCUI employments?
 
 ```SPARQL
 PREFIX mydata: <http://example.com/resource/>
 PREFIX rxnorm: <http://purl.bioontology.org/ontology/RXNORM/>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 select 
-?tty (count(distinct ?sourcemed ) as ?count)
+?employment (count(distinct ?sourcemed ) as ?count)
 where {
     graph mydata:elected_mapping {
         ?sourcemed mydata:elected_mapping ?matchrxn .
@@ -78,11 +78,11 @@ where {
         ?sourcemed mydata:defined_in mydata:reference_medications .
         ?matchrxn mydata:defined_in rxnorm:
     }
-    graph <http://example.com/resource/rxn_tty/> {
-        ?matchrxn rdf:type ?tty .
+    graph mydata:employment {
+        ?matchrxn mydata:employment ?employment .
     }
 }
-group by ?tty
+group by ?employment
 order by desc (count(distinct ?sourcemed ))
 ```
 

@@ -226,6 +226,7 @@ query.list <-
     )
   ))
 
+# ~ 45 minutes for XXX
 begin.time <- Sys.time()
 approximate.term.res <- bulk.approximateTerm(query.list)
 end.time <- Sys.time()
@@ -246,7 +247,8 @@ rxnCon <-
     config$rxnav.mysql.pw
   )
 
-# add some progress indication back in
+# two or three minutes
+# TODO add some progress indication back in
 rxaui.asserted.string.res <-
   bulk.rxaui.asserted.strings(approximate.term.res$rxaui,
                               chunk.count = config$rxaui.asserted.strings.chunk.count)
@@ -389,7 +391,7 @@ print(sort(table(accounted.cols)))
 
 ####
 
-load(config$rf.model.savepath)
+load(config$rf.model.loadpath)
 
 ####
 
@@ -536,7 +538,7 @@ classification.res.tidied <-
 
 classification.res.tidied <- unique(classification.res.tidied)
 
-# step above or belwo is slow with min count 10
+# step above or below is slow with min count 10
 
 # load rxnorm into repo (assume from file)
 
@@ -882,7 +884,9 @@ body[] <- lapply(body[], as.character)
 body <- rbind.data.frame(robot.line, body)
 names(body) <- pre.robot
 
-# hardcoded so that yaml file doesn't need to be parsed in order to create robot bash script
+# the filename below is monstly hardcoded so that the robot shell script
+# doesn't ahve to parse the yaml file 
+# I guess we could actually write the shell script IN this R script ?!
 write.table(
   x = body,
   file = paste0(current.task, '_for_robot.tsv'),
@@ -897,5 +901,9 @@ write.table(
 # instantiate.and.upload(current.task)
 # print(Sys.time())
 
+# now run med_mapping_robot.sh
+# which reads from and writes to completely hardcoded files/paths
 
-# now run commands in 
+# TODO add ontoolgy annotations to the two robot-created turtle files
+
+# and then XXX
