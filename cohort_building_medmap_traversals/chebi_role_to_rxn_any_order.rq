@@ -1,0 +1,91 @@
+PREFIX mydata: <http://example.com/resource/>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX rxnorm: <http://purl.bioontology.org/ontology/RXNORM/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+select 
+distinct ?order_id ?source_full_name
+where {
+    values ?chebirole {
+        obo:CHEBI_35482 
+    }
+    values ?role_employment {
+        mydata:curated_role
+    }
+    values ?role_definer {
+        obo:chebi.owl
+    }
+    graph mydata:employment {
+        ?chebirole mydata:employment ?role_employment .
+    }
+    graph mydata:defined_in {
+        ?chebirole mydata:defined_in ?role_definer .
+    }
+    graph mydata:transitive_role_of_class {
+        ?solr_mediri mydata:transitive_role_of_class ?chebirole .
+    }
+    values ?source_employment {
+        mydata:active_ingredient
+    }
+    values ?mapped_rxn_employment {
+        <http://example.com/resource/rxn_tty/IN>
+    }
+    values ?source_definer {
+        obo:chebi.owl
+    }
+    graph mydata:employment {
+        ?solr_mediri mydata:employment ?source_employment .
+    }
+    graph mydata:defined_in {
+        ?solr_mediri mydata:defined_in ?source_definer .
+    }
+    # for ChEBI/DrOn ingredient to rxnorm ingredient:
+    #   union together direct BioPortal mappings
+    #   with assertions from DrOn
+    {
+        {
+            graph mydata:bioportal_mapping {
+                ?solr_mediri mydata:bioportal_mapping ?mapped_rxn
+            }
+        } union {
+            graph ?g {
+                ?dronprod mydata:transitively_materialized_dron_ingredient ?solr_mediri
+            }
+            # add triples patterns about the ?dronprod's definer and employment?
+            graph mydata:bioportal_mapping {
+                ?dronprod mydata:bioportal_mapping ?mapped_rxn
+            }
+        }
+    }
+    graph mydata:employment {
+        ?mapped_rxn mydata:employment ?mapped_rxn_employment .
+    }
+    graph mydata:defined_in {
+        ?mapped_rxn mydata:defined_in rxnorm: .
+    }
+    graph rxnorm: {
+        ?mapped_rxn  (rxnorm:constitutes|rxnorm:contained_in|rxnorm:has_dose_form|rxnorm:has_doseformgroup|rxnorm:has_form|rxnorm:has_tradename|rxnorm:ingredient_of|rxnorm:ingredients_of|rxnorm:isa|rxnorm:part_of|rxnorm:precise_ingredient_of|rxnorm:quantified_form_of|rxnorm:reformulation_of)* ?rxnprod .
+    }
+    # find orders for the bare ingredient or products containing the ingredient
+    # probably won't find orders for a bare brand name
+    {
+        {
+            graph mydata:elected_mapping {
+                ?order mydata:elected_mapping ?mapped_rxn .
+            }
+        } union {
+            graph mydata:elected_mapping {
+                ?order mydata:elected_mapping ?rxnprod .
+            }
+        }
+    }
+    # get properties of the order
+    graph mydata:reference_medications {
+        ?order a obo:PDRO_0000024 ;
+               mydata:source_full_name ?source_full_name .
+    }
+    graph mydata:source_med_id  {
+        ?order skos:notation ?order_id .
+    }
+}
