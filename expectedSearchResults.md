@@ -15,3 +15,11 @@ http://purl.obolibrary.org/obo/CHEBI_35472 Label: anti-inflammatory
 Search Term: analgesic\
 Expected top result(s):\
 http://purl.obolibrary.org/obo/CHEBI_35480 Label: analgesic
+
+Search Term: meperidine\
+Expected top result(s):\
+http://purl.bioontology.org/ontology/RXNORM/6754 Label: meperidine
+
+Search Term: pethidine\
+Expected top result(s):\
+http://purl.bioontology.org/ontology/RXNORM/6754 Label: meperidine
