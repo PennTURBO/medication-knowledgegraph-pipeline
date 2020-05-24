@@ -57,6 +57,9 @@ bp.mappings.to.minimal.df <- function(current.source.ontology) {
         '&page=',
         current.page
       )
+    
+    print(source.class.uri)
+    
     mappings.result <- httr::GET(source.class.uri)
     mappings.result <- rawToChar(mappings.result$content)
     mappings.result <- jsonlite::fromJSON(mappings.result)
@@ -198,3 +201,6 @@ print(Sys.time())
 
 rdf_serialize(rdf = direct.rdf,
               doc = my.config$bioportal.triples.destination)
+
+# could save the image for later diagnostics
+# save.image("serialize_bioportal_mappings.Rdata")

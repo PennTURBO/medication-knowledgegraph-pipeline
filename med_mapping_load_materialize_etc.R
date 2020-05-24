@@ -42,6 +42,16 @@ placeholder <-
                            some.rdf.format)
   })
 
+# "/Users/markampa/cleanroom/med_mapping/classified_search_results_from_robot.ttl.zip"
+# "/Users/markampa/cleanroom/med_mapping/classified_search_results_from_robot.ttl"
+# "/Users/markampa/cleanroom/med_mapping/reference_medications_from_robot.ttl
+
+# import.from.local.file(
+#   some.graph.name = "http://example.com/resource/classified_search_results",
+#   some.local.file = "/Users/markampa/cleanroom/med_mapping/classified_search_results_from_robot.ttl",
+#   some.rdf.format = "text/turtle"
+# )
+
 # need to wait for imports to finish
 # file uploads may be synchronous blockers
 
@@ -240,44 +250,61 @@ system.time(main.solr.res <- q2j2df(query = config$main.solr.query))
 main.solr.res <-
   main.solr.res[, c("mediri", "medlabel", "definedin", "labelpred",  "employment")]
 
-main.solr.res$id <- main.solr.res$mediri
+colnames(main.solr.res) <-
+  c("id", "medlabel", "definedin", "labelpred", "employment")
+
+# main.solr.res$id <- main.solr.res$mediri
 
 # names(main.solr.res) <- c("id", "medlabel", "definedin", "labelpred",  "employment")
 
+# MAKE A MAIN LIST
 main.solr.list <- do.call(function(...)
   Map(list, ...), main.solr.res)
 
 ####
 
+# all alternative labels for SELECTED rxnorm employees
+
 system.time(rxn.alt.lab.solr.res <-
               q2j2df(query = config$rxn.alt.lab.solr.query))
 
-unique.mediris <- unique(rxn.alt.lab.solr.res$mediri)
+colnames(rxn.alt.lab.solr.res) <- c("medlabel",  "id")
+
+unique.medids <- unique(rxn.alt.lab.solr.res$id)
 
 # make free standing alternative label list
 # just a few seconds
 # refactor
+# MAKE A RXN PREFLAB LIST
 system.time(rxn.alt.lab.solr.list <-
-              lapply(unique.mediris, function(current.mediri) {
+              lapply(unique.medids, function(current.medid) {
                 temp <-
-                  unique(rxn.alt.lab.solr.res$medlabel[rxn.alt.lab.solr.res$mediri == current.mediri])
+                  unique(rxn.alt.lab.solr.res$medlabel[rxn.alt.lab.solr.res$id == current.medid])
                 # print(temp)
-                return(list(mediri = current.mediri,
+                return(list(id = current.medid,
                             altlabels = temp))
               }))
 
-names(rxn.alt.lab.solr.list) <- unique.mediris
+names(rxn.alt.lab.solr.list) <- unique.medids
 
-# print(unlist(rxn.alt.lab.solr.list[['http://purl.bioontology.org/ontology/RXNORM/836397']]))
-print(rxn.alt.lab.solr.list[['http://purl.bioontology.org/ontology/RXNORM/836397']])
+# # i stopped retreiving labels and synonyms/altlabels for rxnorm products for now
+# # print(unlist(rxn.alt.lab.solr.list[['http://purl.bioontology.org/ontology/RXNORM/836397']]))
+# print(rxn.alt.lab.solr.list[['http://purl.bioontology.org/ontology/RXNORM/836397']])
+
+# ####
 
 # don't really need to keep ?l (rdfs:label) or length
 # may want to filter on length... 2-40?
 # take a look at str distance between ?l and alt label value
-# is there some way to exclude foreign spellings
+
+# is there some way to exclude foreign spellings?
+
 # have already filtered for ?l != ?synval
+
 # also removed IUPAC synonym types
+# so there won't be any exact synonyms, only related?
 # should probably still filter on sources
+
 system.time(chebi.synonym.res <-
               q2j2df(query = config$chebi.synonym.query))
 
@@ -288,6 +315,15 @@ chebi.synonym.res$synstrength <-
     x = chebi.synonym.res$synstrength,
     fixed = TRUE
   )
+
+colnames(chebi.synonym.res) <-
+  c("synval",
+    "synstrength",
+    "synlen",
+    "syntype",
+    "id",
+    "synsource",
+    "l")
 
 chebi.synonym.res$synsource <-
   sub(
@@ -324,9 +360,15 @@ chebi.synonym.res$syntype <-
 # syntype === BRAND_NAME
 # synsource and synval come in pairs,
 #   but we could ignore source for now
-cs.bn <-
-  unique(chebi.synonym.res[!(is.na(chebi.synonym.res$syntype)) &
-                             chebi.synonym.res$syntype == 'BRAND_NAME' , c("mediri", "synval")])
+
+# cs.bn <-
+#   unique(chebi.synonym.res[!(is.na(chebi.synonym.res$syntype)) &
+#                              chebi.synonym.res$syntype == 'BRAND_NAME' , c("mediri", "synval")])
+
+chebi.selected.syns <-
+  unique(chebi.synonym.res[(!(is.na(chebi.synonym.res$syntype)) &
+                              chebi.synonym.res$syntype == 'BRAND_NAME') |
+                             chebi.synonym.res$synsource %in% c('KEGG_COMPOUND', 'KEGG_DRUG', 'DrugBank', 'UniProt') , c("id", "synval")])
 
 ## just skip these for now
 # cs.inn <-
@@ -334,22 +376,36 @@ cs.bn <-
 #                       chebi.synonym.res$syntype == 'INN' ,]
 # cs.other <- chebi.synonym.res[is.na(chebi.synonym.res$syntype), ]
 
+# # refactor
+# unique.mediris <- unique(cs.bn$mediri)
+# system.time(cs.bn.list <-
+#               lapply(unique.mediris, function(current.mediri) {
+#                 temp <-
+#                   unique(cs.bn$synval[cs.bn$mediri == current.mediri])
+#                 return(list(mediri = current.mediri,
+#                             brandnames = temp))
+#               }))
+#
+# names(cs.bn.list) <- unique.mediris
+
+
 # refactor
-unique.mediris <- unique(cs.bn$mediri)
-system.time(cs.bn.list <-
-              lapply(unique.mediris, function(current.mediri) {
+# MAKE A CHEBI SYN LIST
+unique.medids <- unique(chebi.selected.syns$id)
+system.time(chebi.selected.syns.list <-
+              lapply(unique.medids, function(current.medid) {
                 temp <-
-                  unique(cs.bn$synval[cs.bn$mediri == current.mediri])
-                return(list(mediri = current.mediri,
-                            brandnames = temp))
+                  unique(chebi.selected.syns$synval[chebi.selected.syns$id == current.medid])
+                return(list(id = current.medid,
+                            chebisyns = temp))
               }))
 
-names(cs.bn.list) <- unique.mediris
+names(chebi.selected.syns.list) <- unique.medids
 
 ####
 
-print(rxn.alt.lab.solr.list[['http://purl.bioontology.org/ontology/RXNORM/836397']])
-print(main.solr.list[['http://purl.bioontology.org/ontology/RXNORM/836397']])
+# print(rxn.alt.lab.solr.list[['http://purl.bioontology.org/ontology/RXNORM/836397']])
+# print(main.solr.list[['http://purl.bioontology.org/ontology/RXNORM/836397']])
 
 ####
 
@@ -365,25 +421,105 @@ print(main.solr.list[['http://purl.bioontology.org/ontology/RXNORM/836397']])
 
 ####
 
-# 300 seconds
-unique.mediris <- names(rxn.alt.lab.solr.list)
-print(Sys.time())
-system.time(lapply(unique.mediris, function(current.iri) {
-  main.solr.list[[current.iri]]$altlabels <<-
-    rxn.alt.lab.solr.list[[current.iri]]$altlabels
+# get and make a dron lab list
+
+# OR COULD DO A UNIQUE TERMS FIELD (INCLUDING MEDLABEL) AND A UNIQUE TOKENS FIELD
+
+
+system.time(
+  dron.additional.chebi.labels <-
+    q2j2df(query = config$dron.additional.chebi.label.query)
+)
+colnames(dron.additional.chebi.labels) <-
+  c('id', 'dron.for.chebi', 'dtich')
+dron.additional.chebi.labels <-
+  dron.additional.chebi.labels[, c('id', 'dron.for.chebi')]
+
+dron.solr.list <- do.call(function(...)
+  Map(list, ...), dron.additional.chebi.labels)
+
+chebi.ids <- names(chebi.selected.syns.list)
+dron.ids <- names(dron.solr.list)
+rxn.ids <- names(rxn.alt.lab.solr.list)
+
+needs.attention <- sort(unique(c(chebi.ids, dron.ids, rxn.ids)))
+
+system.time(lapply(needs.attention, function(current.id) {
+  medlablel <- tolower(main.solr.list[[current.id]][['medlabel']])
+  chebi.vals <-
+    sort(unique(tolower(unlist(
+      chebi.selected.syns.list[[current.id]][["chebisyns"]]
+    ))))
+  dron.vals <-
+    sort(unique(tolower(unlist(dron.solr.list[[current.id]][["dron.for.chebi"]]))))
+  rxn.vals <-
+    sort(unique(tolower(unlist(
+      rxn.alt.lab.solr.list[[current.id]][["altlabels"]]
+    ))))
+  # print(medlablel)
+  # print(chebi.vals)
+  # print(dron.vals)
+  # print(rxn.vals)
+  
+  # main.solr.list[[current.iri]]$altlabels <<-
+  #   rxn.alt.lab.solr.list[[current.iri]]$altlabels
+  propigate <-
+    unlist(sort(setdiff(
+      c(chebi.vals, dron.vals, rxn.vals), medlablel
+    )))
+  # return(propigate)
+  
+  main.solr.list[[current.id]]$extras <<- propigate
 }))
 
-print(main.solr.list[['http://purl.bioontology.org/ontology/RXNORM/836397']])
+main.solr.list[["http://purl.bioontology.org/ontology/RXNORM/5933"]]
 
-# almost instantaneous
-unique.mediris <- names(cs.bn.list)
-print(Sys.time())
-system.time(lapply(unique.mediris, function(current.iri) {
-  main.solr.list[[current.iri]]$brandnames <<-
-    cs.bn.list[[current.iri]]$brandnames
-}))
+# chebi.selected.syns.list[[1]]
+# "http://purl.obolibrary.org/obo/CHEBI_10100"
+# # chebisyns
+# 
+# dron.solr.list[[1]]
+# "http://purl.obolibrary.org/obo/CHEBI_15407"
+# # dron.for.chebi
+# 
+# rxn.alt.lab.solr.list[[1]]
+# "http://purl.bioontology.org/ontology/RXNORM/5933"
+# # altlabels
 
-print(main.solr.list[['http://purl.obolibrary.org/obo/CHEBI_3611']])
+# gather the ids of anything that has a dron label, chebi syn or rxn altlabel
+# loop over the main list
+# make a unique list of the lowercase extra terms
+# subtract the lowercased medlabe
+# assert the rest as extras
+
+# # 300 seconds
+# unique.mediris <- names(rxn.alt.lab.solr.list)
+# print(Sys.time())
+# system.time(lapply(unique.mediris, function(current.iri) {
+#   main.solr.list[[current.iri]]$altlabels <<-
+#     rxn.alt.lab.solr.list[[current.iri]]$altlabels
+# }))
+# 
+# print(main.solr.list[['http://purl.bioontology.org/ontology/RXNORM/836397']])
+# 
+# # # almost instantaneous
+# # unique.mediris <- names(cs.bn.list)
+# # print(Sys.time())
+# # system.time(lapply(unique.mediris, function(current.iri) {
+# #   main.solr.list[[current.iri]]$brandnames <<-
+# #     cs.bn.list[[current.iri]]$brandnames
+# # }))
+# 
+# 
+# # almost instantaneous
+# unique.mediris <- names(chebi.selected.syns.list)
+# print(Sys.time())
+# system.time(lapply(unique.mediris, function(current.iri) {
+#   main.solr.list[[current.iri]]$chebisyns <<-
+#     chebi.selected.syns.list[[current.iri]]$chebisyns
+# }))
+# 
+# print(main.solr.list[['http://purl.obolibrary.org/obo/CHEBI_3611']])
 
 ####
 
@@ -407,6 +543,9 @@ mm.kb.solr.client$delete_by_query(name = config$med.map.kb.solr.core, query = "*
 
 print(length(main.solr.list))
 
+main.solr.list <- list.sort(main.solr.list, "medlabel")
+list.order(main.solr.list, "medlabel")
+
 # ~ 1.5 hours
 print(Sys.time())
 system.time(lapply(main.solr.list, function(current.doc) {
@@ -419,3 +558,13 @@ system.time(lapply(main.solr.list, function(current.doc) {
 system.time(mm.kb.solr.client$commit(config$med.map.kb.solr.core))
 print(Sys.time())
 
+# coalesce the lower-cased, uniqfied(ChEBI synonyms (no longer sourced or types) and the RxNorm alternative terms?)
+# eliminate allText if we use edismax, or down boost A LOT
+# add unique DrOn labels back in?
+
+
+# print(unlist(rxn.alt.lab.solr.list[['http://purl.bioontology.org/ontology/RXNORM/836397']]))
+#
+#
+# print(main.solr.list[['http://purl.bioontology.org/ontology/RXNORM/836397']])
+# print(main.solr.list[['http://purl.obolibrary.org/obo/CHEBI_3611']])

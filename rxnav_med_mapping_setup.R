@@ -60,6 +60,7 @@ approximateTerm <- function(med.string) {
   r <- r$approximateGroup$candidate
   if (is.data.frame(r)) {
     r$query <- med.string
+    Sys.sleep(0.1)
     return(r)
   }
 }
@@ -400,11 +401,13 @@ q2j2df <-
            auth = saved.authentication) {
     # query <- config$main.solr.query
     
+    minquery <- gsub(pattern = " +", replacement = " ", x = query)
+    
     rdfres <- httr::GET(
       url = paste0(endpoint,
                    "/repositories/",
                    repo),
-      query = list(query = query),
+      query = list(query = minquery),
       auth
     )
     
@@ -482,3 +485,4 @@ rxnCon <-
     config$rxnav.mysql.user,
     config$rxnav.mysql.pw
   )
+

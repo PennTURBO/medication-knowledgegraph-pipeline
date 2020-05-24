@@ -1,14 +1,10 @@
+outer.start <- Sys.time()
+
 source("rxnav_med_mapping_setup.R", chdir = TRUE)
 
 # currently unused
-# config$tune.rf boolean
+# config$tune.rf Boolean
 
-# the target of the rf prediction over search results is set in the config file
-# this script assumes it is "rxnmatch"... is the search results exactly right?
-# I have stubs of code here and in other scripts to account for RxNorm assigned proximities
-#   "RELA"
-
-# may need to reactivate at some point
 rxnCon <-   dbConnect(
   rxnDriver,
   paste0(
@@ -50,28 +46,63 @@ random.str.res$bad.tty <-
 # throw out really long query strings?
 # hist(log10(nchar(random.str.res$STR)), breaks = 99)
 # see PDS r_medication full_name histogram elsewhere
-# somewhat rght skewed. 100 good cutoff
+# somewhat right skewed. 100 good cutoff
 random.str.res$STR.lc <- tolower(random.str.res$STR)
 
-### DOES THIS (incomplete merges from discarded sandom rxnorm string inputs)
+### DOES THIS (incomplete merges from discarded random RxNorm string inputs)
 ###   EFFECT COVERAGE CALCULATION?
 random.queries <-
   sort(unique(random.str.res$STR.lc[!random.str.res$bad.tty &
                                       nchar(random.str.res$STR) < config$approximate.max.chars]))
 
-# since I'm running the queries against a local rxnav-in-a-box,
-# i haven't applied and error handling
-# whoops, with 100 000 queries -> 70 000 unique normalized
-# it seemed to have frozen after pot...
-#  confirm wherehter there is some technical limit
-# the queries are being submitted one at a time... is there a bulk submission?
-# 30 000 -> 22 000 unique normalized queries
-# c0...->cz... ~ 2 minutes
-# 1 hour total? no, only 20 minutes
-start.time <- Sys.time()
-approximate.term.res <- bulk.approximateTerm(random.queries)
-end.time <- Sys.time()
+# since I'm running the queries against a local RxNav-in-a-box,
+# I haven't applied and error handling
 
+# lowercase uniqification decreases search space to 0.7x size
+
+# really large inputs lead to a freeze
+# 10k SQL retreived terms OK
+# but stops at "tube..." out of 30k terms retreived by SQL -> 20k random queries
+# docker has one CPU @ > 100%
+# RxNav remains responsive to curl requests from outside of this environment
+#  confirm whether there is some technical limit... R/curl?
+
+# the queries are being submitted one at a time... is there a bulk submission?
+
+# 0.06 seconds/query
+
+# start.time <- Sys.time()
+# approximate.term.res <- bulk.approximateTerm(random.queries)
+# end.time <- Sys.time()
+# print(as.numeric((end.time - start.time)) / length(random.queries) * 60)
+
+# put in config
+# refactor
+safe.rxnav.submission.size <- 1000
+
+safe.rxnav.submission.count <-
+  ceiling(length(random.queries) / safe.rxnav.submission.size)
+
+safe.rxnav.submission.chunks <-
+  chunk.vec(vec = random.queries, chunk.count = safe.rxnav.submission.count)
+
+temp <-
+  lapply(
+    X = safe.rxnav.submission.chunks,
+    FUN = function(current.chunk) {
+      print(Sys.time())
+      inner.temp <- bulk.approximateTerm(current.chunk)
+      return(inner.temp)
+      gc()
+      Sys.sleep(60)
+      print(Sys.time())
+    }
+  )
+
+approximate.term.res <-
+  do.call(what = rbind.data.frame, args = temp)
+
+# close old, potentially stale connection first?
 rxnCon <-   dbConnect(
   rxnDriver,
   paste0(
@@ -83,6 +114,9 @@ rxnCon <-   dbConnect(
   config$rxnav.mysql.user,
   config$rxnav.mysql.pw
 )
+
+# get ATOM details (string, etc.)
+# ~1 minutes for 250k "approximate results"
 rxaui.asserted.string.res <-
   bulk.rxaui.asserted.strings(approximate.term.res$rxaui,
                               chunk.count = config$rxaui.asserted.strings.chunk.count)
@@ -105,6 +139,13 @@ approximate.with.original <-
   base::merge(approximate.term.res, rxaui.asserted.string.res[!(rxaui.asserted.string.res$too.long |
                                                                   rxaui.asserted.string.res$bad.tty) ,])
 
+# anything lost in this merge?
+print(length(unique(approximate.term.res$rxaui)))
+print(length(unique(rxaui.asserted.string.res$rxaui)))
+setdiff(approximate.term.res$rxaui, rxaui.asserted.string.res$rxaui)
+setdiff(rxaui.asserted.string.res$rxaui, approximate.term.res$rxaui)
+# all rxauis retained
+
 print(table(nchar(approximate.with.original$STR)))
 print(table(approximate.with.original$TTY))
 
@@ -116,6 +157,9 @@ unknowns.approximate.original <-
     by.y = "query",
     suffixes = c(".q", ".sr")
   )
+
+# todo
+# deal with @ signs?
 
 string.dist.mat.res <-
   get.string.dist.mat(unknowns.approximate.original[, c("STR.lc", "STR.lc.sr")])
@@ -131,7 +175,7 @@ unknowns.approximate.original.dists <-
     suffixes = c("", ".dist")
   )
 
-# skip rela semantic proximity for now
+# skip rela semantic proximity for now?
 
 rxnCon <-   dbConnect(
   rxnDriver,
@@ -205,7 +249,7 @@ unknowns.approximate.original.dists$sr.words <- temp
 ###   ###   ###
 
 # will need to get factors in the right order and partition appropriately for training
-# drop antyhign that can't be partitioned
+# drop anything that can't be partitioned
 
 all.cols <-
   sort(colnames(unknowns.approximate.original.dists))
@@ -215,8 +259,8 @@ factor.predictors <- c("TTY.sr", "SAB.sr")
 numeric.predictors <-
   c(
     "cosine",
-    "rxaui.freq" ,
-    "rxcui.freq",
+    "rxaui.count" ,
+    "rxcui.count",
     "jaccard",
     "jw",
     "lcs",
@@ -292,6 +336,9 @@ placeholder <-
 unknowns.approximate.original.dists <-
   unknowns.approximate.original.dists[complete.cases(unknowns.approximate.original.dists), ]
 
+
+#### STOP HERE FOR TUNING
+
 coverage.check <-
   unique(unknowns.approximate.original.dists$STR.q)
 
@@ -303,7 +350,6 @@ coverage.check <-
 coverage.check.frame <-
   unknowns.approximate.original.dists[unknowns.approximate.original.dists$STR.q %in% coverage.check , ]
 
-# using rela as a target (semantic proximity)? include it below
 train.test <-
   unknowns.approximate.original.dists[!(unknowns.approximate.original.dists$STR.q %in% coverage.check) ,
                                       c(config$target.col, numeric.predictors, factor.predictors)]
@@ -326,11 +372,16 @@ test.frame <- strat.res[[2]]
 
 ###   ###   ###
 
-### probably would require retuning (ntree, mtry, important factors) if switching back to predicting relations
+### probably would require retuning (ntree, mtry, important factors)
+# if signficiant changes were made to veracity/proximity assessment
 
 # 10 minutes with 30 000 labels queried from RxNorm
 # ~ 20 000 (case?) normalized unique queries
 # ~ 450 000 rows in trainframe
+
+# 20200512... 10 minutes for 147k trainframe?!
+# 25 minutes for 288k row trainframe from 20k terms from SQL
+# any improvement in performance Sn Sp coverage?
 
 target <- as.data.frame(train.frame)
 target <- target[, config$target.col]
@@ -376,9 +427,6 @@ performance.frame <-
 performance.frame$overridden <- performance.frame$rf_responses
 table(performance.frame$overridden)
 
-# performance.frame$overridden[performance.frame$score == 100] <- "TRUE"
-
-
 performance.frame$overridden[performance.frame$score == 100] <-
   "identical"
 performance.frame$overridden[performance.frame$score == 0] <-
@@ -387,16 +435,14 @@ table(performance.frame$overridden)
 
 ###   ###   ###
 
-# print(
-#   confusionMatrix(performance.frame$overridden, test.frame$rxnmatch, positive = "TRUE")
-# )
+print(confusionMatrix(performance.frame$rf_responses, test.frame$RELA, positive = "TRUE"))
 
-print(confusionMatrix(performance.frame$overridden, test.frame$RELA, positive = "TRUE"))
+x <- confusionMatrix(performance.frame$rf_responses, test.frame$RELA, positive = "TRUE")
+x <- t(x$table)
 
-# get from config
-write.csv(rf_classifier$confusion, file = config$testing.confusion.writepath)
+# write.csv(rf_classifier$confusion, file = config$testing.confusion.writepath)
 
-### ROC options for multi class are different from teh options for single class
+### ROC options for multi class are different from the options for single class
 # # ROCRpred <-
 # #   prediction(
 # #     as.numeric(performance.frame$overridden),
@@ -416,7 +462,7 @@ write.csv(rf_classifier$confusion, file = config$testing.confusion.writepath)
 #
 # ###
 
-### PICK BACK UP WTH COVERAGE HERE.... "MORE DISTANT" ONLY MEDS ARE UNCOVERED
+### non-more-distant COVERAGE HERE
 
 print(Sys.time())
 timed.system <- system.time(coverage_probs <-
@@ -441,22 +487,19 @@ coverage <- length(covered.rxcuis) / length(attempted.rxcuis)
 
 print(coverage)
 
-# # include prediction with  score = 100 in rxnmatch = true, even if the RF doesn't think so
-# acceptable.coverage.search.results <-
-#   coverage.check.frame[coverage.check.frame$coverage_responses == TRUE |
-#                        coverage.check.frame$score == 100 ,]
-#
-# submitted.for.coverage <- unique(coverage.check.frame$RXCUI)
-# accepted.from.coverage <-
-#   unique(acceptable.coverage.search.results$RXCUI)
-#
-# coverage <-
-#   length(accepted.from.coverage) / length(submitted.for.coverage)
-#
-# print(coverage)
-
 # 24 MB... on the large size for github
-save(rf_classifier, file = config$rf.model.savepath)
+# save(rf_classifier, file = config$rf.model.savepath)
 
 # could even save all objects in memory for QC/debugging in the future
-# save.image("no_tuning_202003041313.Rdata")
+# save.image("rxnav_med_mapping_proximity_training_no_tuning.Rdata")
+
+outer.end <- Sys.time()
+print(config$approximate.row.count)
+print(length(random.queries))
+print(nrow(train.frame))
+print(outer.end - outer.start)
+temp <-
+  confusionMatrix(performance.frame$overridden, test.frame$RELA, positive = "TRUE")
+print(round(temp$overall, 3))
+
+print(temp$byClass)
