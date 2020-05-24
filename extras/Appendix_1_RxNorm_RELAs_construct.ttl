@@ -1,0 +1,88 @@
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://example.com/resource/rxn_tty/MIN>
+        <http://purl.bioontology.org/ontology/RXNORM/has_part>
+                <http://example.com/resource/rxn_tty/PIN> , <http://example.com/resource/rxn_tty/IN> .
+
+<http://example.com/resource/rxn_tty/SCDC>
+        <http://purl.bioontology.org/ontology/RXNORM/has_ingredient>
+                <http://example.com/resource/rxn_tty/IN> ;
+        <http://purl.bioontology.org/ontology/RXNORM/has_precise_ingredient>
+                <http://example.com/resource/rxn_tty/PIN> .
+
+<http://example.com/resource/rxn_tty/SBDG>
+        <http://purl.bioontology.org/ontology/RXNORM/has_ingredient>
+                <http://example.com/resource/rxn_tty/BN> ;
+        <http://purl.bioontology.org/ontology/RXNORM/inverse_isa>
+                <http://example.com/resource/rxn_tty/SBD> , <http://example.com/resource/rxn_tty/SBDF> ;
+        <http://purl.bioontology.org/ontology/RXNORM/tradename_of>
+                <http://example.com/resource/rxn_tty/SCDG> .
+
+<http://example.com/resource/rxn_tty/BPCK>
+        <http://purl.bioontology.org/ontology/RXNORM/contains>
+                <http://example.com/resource/rxn_tty/SBD> , <http://example.com/resource/rxn_tty/SCD> ;
+        <http://purl.bioontology.org/ontology/RXNORM/tradename_of>
+                <http://example.com/resource/rxn_tty/GPCK> .
+
+<http://example.com/resource/rxn_tty/SCD>
+        <http://purl.bioontology.org/ontology/RXNORM/consists_of>
+                <http://example.com/resource/rxn_tty/SCDC> ;
+        <http://purl.bioontology.org/ontology/RXNORM/has_ingredients>
+                <http://example.com/resource/rxn_tty/MIN> ;
+        <http://purl.bioontology.org/ontology/RXNORM/has_quantified_form>
+                <http://example.com/resource/rxn_tty/SCD> .
+
+<http://example.com/resource/rxn_tty/SCDF>
+        <http://purl.bioontology.org/ontology/RXNORM/has_ingredient>
+                <http://example.com/resource/rxn_tty/IN> ;
+        <http://purl.bioontology.org/ontology/RXNORM/inverse_isa>
+                <http://example.com/resource/rxn_tty/SCD> .
+
+<http://example.com/resource/rxn_tty/GPCK>
+        <http://purl.bioontology.org/ontology/RXNORM/contains>
+                <http://example.com/resource/rxn_tty/SCD> .
+
+<http://example.com/resource/rxn_tty/SBDC>
+        <http://purl.bioontology.org/ontology/RXNORM/has_ingredient>
+                <http://example.com/resource/rxn_tty/BN> ;
+        <http://purl.bioontology.org/ontology/RXNORM/tradename_of>
+                <http://example.com/resource/rxn_tty/SCDC> .
+
+<http://example.com/resource/rxn_tty/BN>
+        <http://purl.bioontology.org/ontology/RXNORM/has_precise_ingredient>
+                <http://example.com/resource/rxn_tty/PIN> ;
+        <http://purl.bioontology.org/ontology/RXNORM/reformulated_to>
+                <http://example.com/resource/rxn_tty/BN> ;
+        <http://purl.bioontology.org/ontology/RXNORM/tradename_of>
+                <http://example.com/resource/rxn_tty/IN> .
+
+<http://example.com/resource/rxn_tty/SBD>
+        <http://purl.bioontology.org/ontology/RXNORM/consists_of>
+                <http://example.com/resource/rxn_tty/SCDC> , <http://example.com/resource/rxn_tty/SBDC> ;
+        <http://purl.bioontology.org/ontology/RXNORM/has_ingredient>
+                <http://example.com/resource/rxn_tty/BN> ;
+        <http://purl.bioontology.org/ontology/RXNORM/has_quantified_form>
+                <http://example.com/resource/rxn_tty/SBD> ;
+        <http://purl.bioontology.org/ontology/RXNORM/tradename_of>
+                <http://example.com/resource/rxn_tty/SCD> .
+
+<http://example.com/resource/rxn_tty/SCDG>
+        <http://purl.bioontology.org/ontology/RXNORM/has_ingredient>
+                <http://example.com/resource/rxn_tty/IN> ;
+        <http://purl.bioontology.org/ontology/RXNORM/inverse_isa>
+                <http://example.com/resource/rxn_tty/SCDF> , <http://example.com/resource/rxn_tty/SCD> .
+
+<http://example.com/resource/rxn_tty/SBDF>
+        <http://purl.bioontology.org/ontology/RXNORM/has_ingredient>
+                <http://example.com/resource/rxn_tty/BN> ;
+        <http://purl.bioontology.org/ontology/RXNORM/inverse_isa>
+                <http://example.com/resource/rxn_tty/SBD> ;
+        <http://purl.bioontology.org/ontology/RXNORM/tradename_of>
+                <http://example.com/resource/rxn_tty/SCDF> .
+
+<http://example.com/resource/rxn_tty/PIN>
+        <http://purl.bioontology.org/ontology/RXNORM/form_of>
+                <http://example.com/resource/rxn_tty/IN> .
