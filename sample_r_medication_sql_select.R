@@ -53,12 +53,6 @@ print(timed.system)
 # Close connection
 dbDisconnect(pdsConnection)
 
-# should ahve applied this in the SQL query
-
-# dput(colnames(source.medications))
-
-# c("FK_MEDICATION_ID", "FULL_NAME", "GENERIC_NAME", "RXNORM", "EMPI_COUNT")
-
 colnames(source.medications) <-
   c("MEDICATION_ID",
     "FULL_NAME",
@@ -77,6 +71,8 @@ write.table(
 )
 
 save.image("pds_r_medication_sql_select.Rdata")
+
+# optional exploration
 
 # temp <- table(source.medications$MEDICATION_COUNT)
 # temp <- cbind.data.frame(names(temp), as.numeric(temp))
@@ -124,4 +120,3 @@ save.image("pds_r_medication_sql_select.Rdata")
 # R_MEDICATION$has.rxn <- !is.na(R_MEDICATION$RXNORM)
 # R_MEDICATION$has.ncid <- !is.na(R_MEDICATION$FK_3M_NCID_ID)
 
-# numeric concept ID
