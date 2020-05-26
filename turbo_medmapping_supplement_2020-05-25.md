@@ -157,7 +157,13 @@ RxNav’s `approximateTerm` REST endpoint returns RxNorm concept unique identifi
 
 The TMM GitHub repository includes an RF tuning script, `rxnav_med_mapping_tuneup_followon.R`. It is included to show methods that can be used iteratively to tune the RF, in terms of factor correlation and importance, number of trees trained (`ntree`), and number of simultaneous predictors included in each tree (`mtry`). It is intended for use in an interactive environment like RStudio, not to be run from beginning to end from the command line. Tuning over a wide range of parameters with a large input set can take several hours.
 
-`rxnav_med_mapping_proximity_classifier.R` performs the classification of medication strings from a CDW, etc. In order to load those results into a triplestore, the script saves them in a format compatible with [ROBOT](http://robot.obolibrary.org/). `med_mapping_robot.sh` is provided to save the user from typing in the two long ROBOT commands that generate the RDF. At this point, the expected input and output file names are hard-coded into the shell script.
+`rxnav_med_mapping_proximity_classifier.R` performs the classification of medication strings from a CDW, etc. `MEDICATION` `FULL_NAME`s are always taken as input, as are `GENERIC_NAME`s, which are available for 21.3% of the MEDICATIONs, our CDW.
+
+
+
+In order to load those results into a triplestore, the script saves them in a format compatible with [ROBOT](http://robot.obolibrary.org/). `med_mapping_robot.sh` is provided to save the user from typing in the two long ROBOT commands that generate the RDF. At this point, the expected input and output file names are hard-coded into the shell script.
+
+TMM does not parse medication text inputs, so is not able to arithmetically compare concentrations like “10 mg in 50 ml” and “0.2 mg/ml”. Frequently both versions are in RxNorm’s list of synonyms. However, we have not compared how well TMM performs in this area compared to other solutions.
 
 TMM scripts such as `rxnav_med_mapping_load_materialize_etc.R` will load public RDF files into the GraphDB repository, optimally from public web locations. Otherwise, users can pre-download those files to their local system and configure `my.import.urls` and `my.import.files` in `rxnav_med_mapping.yaml` accordingly.
 

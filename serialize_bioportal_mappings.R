@@ -23,13 +23,13 @@ bp.mappings.to.minimal.df <- function(current.source.ontology) {
   aggregated.mapping <<- data.frame()
   
   value.added <-
-    setdiff(my.config$relevant.ontologies, current.source.ontology)
+    setdiff(config$relevant.ontologies, current.source.ontology)
   
   print(paste0('Searching ', current.source.ontology, ' against: '))
   print(sort(value.added))
   
   value.added <-
-    paste0(my.config$my.bioportal.api.base,
+    paste0(config$my.bioportal.api.base,
            '/ontologies/',
            value.added)
   
@@ -47,13 +47,13 @@ bp.mappings.to.minimal.df <- function(current.source.ontology) {
     
     source.class.uri <-
       paste0(
-        my.config$my.bioportal.api.base,
+        config$my.bioportal.api.base,
         '/ontologies/',
         current.source.ontology,
         '/mappings?apikey=',
-        my.config$my.apikey,
+        config$my.apikey,
         '&pagesize=',
-        my.config$my.pagesize,
+        config$my.pagesize,
         '&page=',
         current.page
       )
@@ -91,7 +91,7 @@ bp.mappings.to.minimal.df <- function(current.source.ontology) {
     inner.res <- do.call(rbind.data.frame, inner.res)
     inner.res$source.method <- mappings.result.source.methods
     inner.res <-
-      inner.res[inner.res$source.method %in% my.config$aceepted.mapping.sources ,]
+      inner.res[inner.res$source.method %in% config$aceepted.mapping.sources ,]
     inner.res <-
       inner.res[as.character(inner.res$source.term) != as.character(inner.res$mapped.term), ]
     inner.res <-
@@ -117,7 +117,7 @@ bp.mappings.to.minimal.df <- function(current.source.ontology) {
 }
 
 per.source.results <-
-  lapply(sort(my.config$my.source.ontolgies), function(current.outer) {
+  lapply(sort(config$my.source.ontolgies), function(current.outer) {
     temp <- bp.mappings.to.minimal.df(current.outer)
     return(temp)
   })
@@ -164,9 +164,9 @@ colnames(bound.source.results) <-
 #
 # per.source.results.rdf <-
 #   rdflib::as_rdf(x = bound.source.results[1:2,c(1,2,4,5)],
-#                  prefix = my.config$my.prefix,
+#                  prefix = config$my.prefix,
 #                  key = 'uuid')
-# rdf_serialize(rdf = per.source.results.rdf, doc = my.config$my.triples.destination)
+# rdf_serialize(rdf = per.source.results.rdf, doc = config$my.triples.destination)
 
 
 ####
@@ -200,7 +200,7 @@ placeholder <-
 print(Sys.time())
 
 rdf_serialize(rdf = direct.rdf,
-              doc = my.config$bioportal.triples.destination)
+              doc = config$bioportal.triples.destination)
 
 # could save the image for later diagnostics
 # save.image("serialize_bioportal_mappings.Rdata")
