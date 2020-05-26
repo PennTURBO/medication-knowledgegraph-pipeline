@@ -29,7 +29,7 @@ http://purl.bioontology.org/ontology/RXNORM/6754 Label: meperidine
 
 # 2020-05-26
 
-_For ingredients searches, we expect a top-ranked, perfect hit from RxNorm and ChEBI, or DrOn instead of ChEBI in a minority of cases. It shouldn't require constraining the employment. See examples of that below._
+_For ingredients searches, we expect a top-ranked, perfect hit from RxNorm and ChEBI (or DrOn instead of ChEBI in a minority of cases.) It shouldn't require constraining the employment. See examples of that below._
 
 ## Active Ingredients
 
@@ -37,7 +37,7 @@ _For ingredients searches, we expect a top-ranked, perfect hit from RxNorm and C
 
 `http://<solrhost:solrport>/solr/med_mapping_kb_labels_exp/select?defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medlabel%20tokens&q=aspirin`
 
-for the rest of this document,only the portion after the core name will be shown, ie
+for the rest of this document, only the portion after the Solr core name will be shown, i.e.
 
 `select?defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medlabel%20tokens&q=aspirin`
 
@@ -137,9 +137,9 @@ returns
   }}
 ```
 
-That gets correct search results even though ChEBI's preferred label for this entity is "paracetamol". (The Solr core was created I a way that prioritizes DrOn labels on ChEBI labels on ChEBI terms
+That gets correct search results even though ChEBI's preferred label for this entity is "paracetamol". (The Solr core was created in a way that prioritizes DrOn labels on ChEBI labels on ChEBI terms.
 
-Note that ChEBI provides the brand name "tylenol" for this molecule. That mean users searching for "tylenol" (and several other common brands) will get BN hits from RxNorm, but can also be redirected to active_ingredient hits with a query like this:
+Note that ChEBI provides the brand name "tylenol" for this molecule. That mean users searching for "tylenol" (and several other common brands) will get `BN` hits from RxNorm, but can also be redirected to `active_ingredient` hits with a query like this:
 
 `select?defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=30&qf=medlabel%20tokens%20employment&q=(tylenol%20active_ingredient)`
 
@@ -231,7 +231,7 @@ returns
   }}
 ```
 
-That doesn’t return CHEBI:6754 because DrOn uses its own term in "has active ingredient axioms" instead (informally speaking). In other words, CHEBI:6754 does not have an active_ingredient employment in TMM.
+That doesn’t return CHEBI:6754 because DrOn uses its own term in "has active ingredient axioms" instead (informally speaking). In other words, CHEBI:6754 does not have an `active_ingredient` employment in TMM.
 
 On a related note, ChEBI uses the preferred label "pethidine" for CHEBI:6754. Due to the design described above, "pethidine" won't return CHEBI:6754 either.  
 
