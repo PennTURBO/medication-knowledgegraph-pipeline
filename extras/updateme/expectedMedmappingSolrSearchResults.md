@@ -35,11 +35,11 @@ _For ingredients searches, we expect a top-ranked, perfect hit from RxNorm and C
 
 ### Aspirin
 
-`http://<solrhost:solrport>/solr/med_mapping_kb_labels_exp/select?defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medlabel%20tokens&q=aspirin`
+`http://<solrhost:solrport>/solr/med_mapping_kb_labels_exp/select?defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medlabel+tokens&q=aspirin`
 
 for the rest of this document, only the portion after the Solr core name will be shown, i.e.
 
-`select?defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medlabel%20tokens&q=aspirin`
+`select?defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medlabel+tokens&q=aspirin`
 
 returns
 
@@ -90,7 +90,7 @@ returns
 
 ### acetaminophen
 
-`select?defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medlabel%20tokens&q=acetaminophen`
+`select?defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medlabel+tokens&q=acetaminophen`
 
 returns
 
@@ -141,7 +141,7 @@ That gets correct search results even though ChEBI's preferred label for this en
 
 Note that ChEBI provides the brand name "tylenol" for this molecule. That mean users searching for "tylenol" (and several other common brands) will get `BN` hits from RxNorm, but can also be redirected to `active_ingredient` hits with a query like this:
 
-`select?defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=30&qf=medlabel%20tokens%20employment&q=(tylenol%20active_ingredient)`
+`select?defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=30&qf=medlabel+tokens+employment&q=(tylenol+active_ingredient)`
 
 returns
 
@@ -235,7 +235,7 @@ That doesn’t return CHEBI:6754 because DrOn uses its own term in "has active i
 
 On a related note, ChEBI uses the preferred label "pethidine" for CHEBI:6754. Due to the design described above, "pethidine" won't return CHEBI:6754 either.  
 
-`select?defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medlabel%20tokens&q=pethidine`
+`select?defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medlabel+tokens&q=pethidine`
 
 returns
 
@@ -278,7 +278,7 @@ returns
 
 ### terbinafine
 
-`select?defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medlabel%20tokens&q=terbinafine`
+`select?defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medlabel+tokens&q=terbinafine`
 
 returns
 
@@ -368,7 +368,7 @@ The same case is true for...
 
 _As Hayden showed, it would be nice if CHEBI:35472 came to the top._
 
-`select?defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medlabel%20tokens&q=anti-inflammatory`
+`select?defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medlabel+tokens&q=anti-inflammatory`
 
 returns
 
@@ -418,7 +418,7 @@ returns
 
 CHEBI:35472 does come to the top if "drug" is included in the query, or if the query is scoped to roles
 
-`select?defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medlabel%20tokens&q=(anti-inflammatory+drug)`
+`select?defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medlabel+tokens&q=(anti-inflammatory+drug)`
 
 or
 
