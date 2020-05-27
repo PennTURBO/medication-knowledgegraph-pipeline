@@ -137,9 +137,9 @@ returns
   }}
 ```
 
-That gets correct search results even though ChEBI's preferred label for this entity is "paracetamol". (The Solr core was created in a way that prioritizes DrOn labels on ChEBI labels on ChEBI terms.
+That gets correct search results even though ChEBI's preferred label for this entity is "paracetamol". (The Solr core was created in a way that prioritizes DrOn labels on ChEBI labels over ChEBI terms.)
 
-Note that ChEBI provides the brand name "tylenol" for this molecule. That mean users searching for "tylenol" (and several other common brands) will get `BN` hits from RxNorm, but can also be redirected to `active_ingredient` hits with a query like this:
+Note that ChEBI provides the brand name "tylenol" for this molecule. That mean users searching for "tylenol" (and several other common brands) will get `BN` hits from RxNorm, but can also be redirected to `active_ingredient` hits with a query like this as below. We'll have to decide whether it's appropriate to broaden the scope from a brand to any products that contain the active ingredients that is most closely associated with the submitted brand.
 
 `select?defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=30&qf=medlabel+tokens+employment&q=(tylenol+active_ingredient)`
 
@@ -526,6 +526,7 @@ As with most of the `clinrel_structclass`es, 'statin' and 'statins' get the same
 
 `select?defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medlabel+tokens&q=(500+mg+acetaminophen+tablet)`
 
+```json
 {
   "responseHeader":{
     "status":0,
@@ -573,6 +574,7 @@ As with most of the `clinrel_structclass`es, 'statin' and 'statins' get the same
         "employment":["product"],
         "score":11.188951}]
   }}
+```
 
 DRON:00036033 and RXNORM:198440 would be the best results
 
@@ -638,7 +640,7 @@ then the optimal results do come to the top
   }}
 ```
 
-One can imagine that many users would type in "500 mg acetaminophen tablets". Submitting that to either medlabel alone or medlable+tokens returns the following, which is not helpful. Some kind of "spelling correction" or stemming should probably be applied as part of the Solr query parsing
+One can imagine that many users would type in "500 mg acetaminophen tablets". Submitting that to either medlabel alone or `medlabel+tokens` returns the following, which is not helpful. Some kind of "spelling correction" or stemming should probably be applied as part of the Solr query parsing
 
 `elect?defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medlabel+tokens&q=(500+mg+acetaminophen+tablets)`
 
@@ -742,5 +744,3 @@ which retrieves good but not perfect results, searching medlabel alone or along 
         "score":12.185806}]
   }}
 ```
-
-
