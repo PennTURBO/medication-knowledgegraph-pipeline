@@ -10,8 +10,23 @@ distinct
 ?order_id ?source_full_name
 where {
     # value or values come from upstream input, like user-requested Solr search
-    values ?rxnprod {
-        rxnorm:209459 
+    values ?dronprod {
+        <http://purl.obolibrary.org/obo/DRON_00082861>
+    }
+    values ?dpemp {
+        mydata:product
+    }
+    values ?dpdi {
+        <http://purl.obolibrary.org/obo/dron/dron-ingredient.owl> <http://purl.obolibrary.org/obo/dron/dron-rxnorm.owl>
+    }
+    graph mydata:employment {
+        ?dronprod mydata:employment ?dpemp
+    }
+    graph mydata:defined_in {
+        ?dronprod mydata:defined_in ?dpdi
+    }
+    graph mydata:bioportal_mapping {
+        ?dronprod mydata:bioportal_mapping ?mapped_rxn
     }
     # the next two constraints can be applied in the SPARQL query, or could be ensured by some upstream logic
     values ?rxemployment {
@@ -21,15 +36,15 @@ where {
         rxnorm:
     }
     graph mydata:employment {
-        ?rxnprod mydata:employment ?rxemployment .
+        ?mapped_rxn mydata:employment ?rxemployment .
     }
     graph mydata:defined_in {
-        ?rxnprod mydata:defined_in ?source_definer .
+        ?mapped_rxn mydata:defined_in ?source_definer .
     }
-    #    # find orders for the bare ingredient or products containing the ingredient
-    #    # probably won't find orders for a bare brand name
+    #    #    # find orders for the bare ingredient or products containing the ingredient
+    #    #    # probably won't find orders for a bare brand name
     graph mydata:elected_mapping {
-        ?order mydata:elected_mapping ?rxnprod .
+        ?order mydata:elected_mapping ?mapped_rxn .
     }
     #    # get properties of the order
     graph mydata:reference_medications {
