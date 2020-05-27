@@ -1,0 +1,24 @@
+﻿Sample Solr search,Expected in top 3 Solr result(s),"Employment of Solr Match, inc. RxNorm Term Types (TTY)",Employment meaning,Defined In,Entities with X employment,Employment Correspondence,SPARQL,Count of Mapped Medications in CDW,Notes
+"""acetaminophen""",CHEBI:46195,mydata:active_ingredient,active ingredient,ChEBI and/or DrOn ,4872,IN,chebi_or_dron_ing_to_rxn_any_order.rq,,
+"""statin""",CHEBI:87631,mydata:clinrel_structclass,clinically relevant structural class,ChEBI ,333,,clinrel_structclass_to_rxn_any_order.rq,,
+"""anti-inflammatory drug""",CHEBI:35472,mydata:curated_role,curated (clinically relevant) role,ChEBI ,665,,chebi_role_to_rxn_any_order.rq,,
+"""NSAID""",CHEBI:87631,mydata:curated_role,curated (clinically relevant) role,ChEBI ,665,,chebi_role_to_rxn_any_order.rq,,
+"""500 mg tylenol tablet""",DRON:00073395,mydata:product,product,DrOn ,85094,SBD,dronprod_to_rxnprod_order.rq,,
+"""500 mg acetaminophen tablet""",DRON:00073389,mydata:product,product,DrOn ,85094,SCD,dronprod_to_rxnprod_order.rq,,
+"""acetaminophen tablet""",DRON:00020450,mydata:product,product,DrOn ,85094,SCDF,dronprod_to_rxnprod_order.rq,,
+"""tylenol""",RXNORM:202433,rxn_tty:BN,brand name,RxNorm,11937,,rxn_brandname_to_rxn_branded_entities.rq,4965,allow matches against active ingredient CHEBI:46195 ? Minimal semantic expansion.
+"""medrol dosepak""",RXNORM:834023,rxn_tty:BPCK,branded package,RxNorm,709,,,844,
+"""methylprednisolone 4 mg tablet 6 day 21 count pack""",RXNORM:762675,rxn_tty:GPCK,generic package,RxNorm,653,,,623,
+"""acetaminophen""",RXNORM:161,rxn_tty:IN,ingredient,RxNorm,12587,active_ingredient,rxning_to_rxn_any_order.rq,17489,
+"""fluoxetine""",RXNORM:4493,rxn_tty:IN,ingredient,RxNorm,12587,active_ingredient,rxning_to_rxn_any_order.rq,17489,
+"""Acetaminophen / oxycodone""",RXNORM:214183,rxn_tty:MIN,multiple ingredients,RxNorm,3744,,,3492,
+"""fluoxetine hydrochloride""",RXNORM:227224,rxn_tty:PIN,precise ingredient,RxNorm,2969,,,4606,"ideally would also find or ""fluoxetine HCL"""
+"""500 mg tylenol tablet""",RXNORM:209459,rxn_tty:SBD,"semantic branded drug: ingredient, dose, form and brand",RxNorm,22606,product,rxnprod_to_rxn_sameprod_order.rq,20327,"really ""acetaminophen 500 mg [tylenol]"". SPARQL includes no expansion... just orders for the exact same thing (vs. ingredient queries are expanded to products that contain the ingredient, etc.)"
+"""500 mg tylenol""",RXNORM:570070,rxn_tty:SBDC,"semantic branded drug component: ingredient, dose, and brand",RxNorm,18819,,,1080,"really ""acetaminophen 500 mg [tylenol]"""
+"""tylenol solution""",RXNORM:364772,rxn_tty:SBDF,"semantic branded doseform: ingredient, detailed form and brand",RxNorm,14377,,,2620,"really ""acetaminophen oral solution [tylenol]"""
+"""tylenol pill""",RXNORM:1187315,rxn_tty:SBDG,"semantic branded doseform group: ingredient, general form, and brand",RxNorm,20461,,,2,rare in our CDW... unlikely search pattern?
+"""500 mg acetaminophen tablet""",RXNORM:198440,rxn_tty:SCD,"semantic clinical drug: ingredient, dose, and form",RxNorm,36652,product,rxnprod_to_rxn_sameprod_order.rq,44792,
+"""500 mg acetaminophen""",RXNORM:315266,rxn_tty:SCDC,semantic clinical drug component: ingredient and dose,RxNorm,26621,,,2739,
+"""acetaminophen tablet""",RXNORM:369097,rxn_tty:SCDF,semantic clinical doseform: ingredient and detailed form,RxNorm,14329,product,rxnprod_to_rxn_sameprod_order.rq,4548,"really ""acetaminophen oral tablet"""
+"""oral acetaminophen""",RXNORM:1152842,rxn_tty:SCDG,semantic clinical doseform group: ingredient and general form,RxNorm,15675,,,451,"really ""Acetaminophen Oral Product"". Best search results when searching on tokens only, because that is deleted of ""product"" tokens."
+,,,,,,,,,
