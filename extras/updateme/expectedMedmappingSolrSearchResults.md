@@ -30,7 +30,7 @@ http://purl.bioontology.org/ontology/RXNORM/6754 Label: meperidine
 
 _For ingredients searches, we expect a top-ranked, perfect hit from RxNorm and ChEBI (or DrOn instead of ChEBI in a minority of cases.) It shouldn't require constraining the employment. See examples of that below._
 
-## Active Ingredients
+## Active Ingredients (DrOn or ChEBI `active_ingredient`, RxNorm `IN`)
 
 ### Aspirin
 
@@ -361,6 +361,56 @@ The same case is true for...
   }}
 ```
 
+## ChEBI clinically relevant structural class
+
+### Statin
+
+`select?defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medlabel+tokens&q=(statin)`
+
+returns
+
+```json
+{
+  "responseHeader":{
+    "status":0,
+    "QTime":1,
+    "params":{
+      "q":"(statin",
+      "defType":"edismax",
+      "qf":"medlabel tokens",
+      "fl":"id,medlabel,employment,definedin,tokens,score",
+      "rows":"3"}},
+  "response":{"numFound":13,"start":0,"maxScore":14.69808,"docs":[
+      {
+        "id":"http://purl.obolibrary.org/obo/CHEBI_87631",
+        "medlabel":["statin"],
+        "tokens":["statin",
+          "statins"],
+        "definedin":["http://purl.obolibrary.org/obo/chebi.owl"],
+        "employment":["clinrel_structclass"],
+        "score":14.69808},
+      {
+        "id":"http://purl.bioontology.org/ontology/RXNORM/215681",
+        "medlabel":["bio-statin"],
+        "tokens":["bio-statin"],
+        "definedin":["http://purl.bioontology.org/ontology/RXNORM/"],
+        "employment":["BN"],
+        "score":13.441258},
+      {
+        "id":"http://purl.bioontology.org/ontology/RXNORM/1174323",
+        "medlabel":["bio-statin pill"],
+        "tokens":["bio-statin",
+          "pill"],
+        "definedin":["http://purl.bioontology.org/ontology/RXNORM/"],
+        "employment":["SBDG"],
+        "score":12.37318}]
+  }}
+```
+
+As with most of the `clinrel_structclass`es, 'statin' and 'statins' get the same result
+
+
+
 ## Curated Roles
 
 ### Anti-inflammatory
@@ -473,55 +523,7 @@ returns
   }}
 ```
 
-## ChEBI clinically relevant structural class
-
-### Statin
-
-`select?defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medlabel+tokens&q=(statin)`
-
-returns
-
-```json
-{
-  "responseHeader":{
-    "status":0,
-    "QTime":1,
-    "params":{
-      "q":"(statin",
-      "defType":"edismax",
-      "qf":"medlabel tokens",
-      "fl":"id,medlabel,employment,definedin,tokens,score",
-      "rows":"3"}},
-  "response":{"numFound":13,"start":0,"maxScore":14.69808,"docs":[
-      {
-        "id":"http://purl.obolibrary.org/obo/CHEBI_87631",
-        "medlabel":["statin"],
-        "tokens":["statin",
-          "statins"],
-        "definedin":["http://purl.obolibrary.org/obo/chebi.owl"],
-        "employment":["clinrel_structclass"],
-        "score":14.69808},
-      {
-        "id":"http://purl.bioontology.org/ontology/RXNORM/215681",
-        "medlabel":["bio-statin"],
-        "tokens":["bio-statin"],
-        "definedin":["http://purl.bioontology.org/ontology/RXNORM/"],
-        "employment":["BN"],
-        "score":13.441258},
-      {
-        "id":"http://purl.bioontology.org/ontology/RXNORM/1174323",
-        "medlabel":["bio-statin pill"],
-        "tokens":["bio-statin",
-          "pill"],
-        "definedin":["http://purl.bioontology.org/ontology/RXNORM/"],
-        "employment":["SBDG"],
-        "score":12.37318}]
-  }}
-```
-
-As with most of the `clinrel_structclass`es, 'statin' and 'statins' get the same result
-
-## Products
+## Products (DrOn `product`, RxNorm `SBD`, `SCD`, `SCDF`)
 
 ### 500 mg acetaminophen tablet
 
@@ -639,11 +641,13 @@ then the optimal results do come to the top
 
 
 
-One can imagine that many users would type in "500 mg acetaminophen tablets". Submitting that to either `medlabel` alone or `medlabel+tokens` returns the following, which is not helpful. Some kind of "spelling correction" or stemming should probably be applied as part of the Solr query parsing
+#### One can imagine that many users would type in "500 mg acetaminophen tablets". 
+
+Submitting that to either `medlabel` alone or `medlabel+tokens` returns the following, which is not helpful. Some modification of the query should be applied before or during the Solr query parsing. Solr has [spell checking](https://lucene.apache.org/solr/guide/7_3/spell-checking.html), the `~` [fuzzy match operator](https://lucene.apache.org/solr/guide/7_3/the-standard-query-parser.html#TheStandardQueryParser-FuzzySearches), a [suggester](https://lucene.apache.org/solr/guide/7_3/suggester.html) and a [Porter stemming filter](https://lucene.apache.org/solr/guide/7_3/about-filters.html). There's also a `synonyms.txt` file in each core or collection's `config` directory. For now, I have put `tablet,tablets` into the synonyms files
 
 `elect?defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medlabel+tokens&q=(500+mg+acetaminophen+tablets)`
 
-returns
+without synonyms:
 
 ```json
 {
@@ -686,11 +690,13 @@ returns
   }}
 ```
 
-500 mg tylenol tablet would also be a reasonable query
+
+
+#### 500 mg tylenol tablet would also be a reasonable query
 
 `select?defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medlabel+tokens&q=(500+mg+tylenol+tablets)`
 
-which retrieves good but not perfect results, searching `medlabel` alone or along with `tokens`
+which retrieves good results when searching `medlabel` alone or along with `tokens`. I wouldn't the results perfect because `RXNORM:570070` , without "tablet" comes to the top. If that was passed on to the semantic part of the search, it would also get people who had orders for 500 mg Tylenol **capsules** (or injections, or suppositories, if they are available at 500 mg).
 
 ```json
 {
@@ -744,3 +750,40 @@ which retrieves good but not perfect results, searching `medlabel` alone or alon
         "score":12.185806}]
   }}
 ```
+
+
+
+
+
+`mydata: <http://example.com/resource>`
+
+`rxn_tty: <http://example.com/resource/rxn_tty/>`
+
+`CHEBI: <http://purl.obolibrary.org/obo/CHEBI_>`
+
+`DRON: <http://purl.obolibrary.org/obo/DRON_>`
+
+`RXNORM: <<http://purl.bioontology.org/ontology/RXNORM/>`
+
+
+
+| Employment, inc. **RxNorm Term Types (TTY)** | **Correspondence** | **Graph entity count** | CDW count | **Solr search**                                              | **Correct Solr result(s)**                   | **Notes**                                                    |
+| -------------------------------------------- | ------------------ | ---------------------: | --------: | ------------------------------------------------------------ | -------------------------------------------- | ------------------------------------------------------------ |
+| mydata:active_ingredient                     | IN                 |                   4872 |           | "acetaminophen"                                              | CHEBI:46195                                  |                                                              |
+| mydata:clinrel_structclass                   |                    |                    333 |           | "statin"                                                     | CHEBI:87631                                  |                                                              |
+| mydata:curated_role                          |                    |                    665 |           | "anti-inflammatory  drug"; "NSAID"                           | CHEBI:35472;  CHEBI:87631                    |                                                              |
+| mydata:product                               | SBD, SCD and SCDF  |                  85094 |           | "500 mg  acetaminophen tablet"; "500 mg tylenol tablet"; "acetaminophen tablet" | DRON:00073389;  DRON:00073395; DRON:00020450 |                                                              |
+| rxn_tty:BN                                   |                    |                  11937 |      4965 | "tylenol"                                                    | RXNORM:202433                                | allow matches against active ingredient CHEBI:46195 ?        |
+| rxn_tty:BPCK                                 |                    |                    709 |       844 | "medrol dosepak"                                             | RXNORM:834023                                | Todo?                                                        |
+| rxn_tty:GPCK                                 |                    |                    653 |       623 | "methylprednisolone 4 mg tablet 6 day 21 count pack"         | RXNORM:762675                                |                                                              |
+| rxn_tty:IN                                   | product            |                  12587 |     17489 | "Acetaminophen";  "fluoxetine"                               | RXNORM:161;  RXNORM:4493                     |                                                              |
+| rxn_tty:MIN                                  |                    |                   3744 |      3492 | "Acetaminophen /  oxycodone"                                 | RXNORM:214183                                |                                                              |
+| rxn_tty:PIN                                  |                    |                   2969 |      4606 | "fluoxetine  hydrochloride"                                  | RXNORM:227224                                | ideally would also find or "fluoxetine HCL"                  |
+| rxn_tty:SBD                                  | product            |                  22606 |     20327 | "500 mg tylenol  tablet"                                     | RXNORM:570070                                | really "acetaminophen 500 mg [tylenol]"                      |
+| rxn_tty:SBDC                                 |                    |                  18819 |      1080 | "500 mg tylenol"                                             | RXNORM:570070                                | really "acetaminophen 500 mg [tylenol]"                      |
+| rxn_tty:SBDF                                 |                    |                  14377 |      2620 | "tylenol solution"                                           | RXNORM:364772                                | really "acetaminophen oral solution [tylenol]"               |
+| rxn_tty:SBDG                                 |                    |                  20461 |         2 | "tylenol pill"                                               | RXNORM:1187315                               | rare in our CDW... unlikely sarch pattern?                   |
+| rxn_tty:SCD                                  | product            |                  36652 |     44792 | "500 mg  acetaminophen tablet"                               | RXNORM:198440                                |                                                              |
+| rxn_tty:SCDC                                 |                    |                  26621 |      2739 | "500 mg acetaminophen"                                       | RXNORM:315266                                |                                                              |
+| rxn_tty:SCDF                                 | product            |                  14329 |      4548 | "acetaminophen  tablet"                                      | RXNORM:369097                                | really "acetaminophen oral tablet"                           |
+| rxn_tty:SCDG                                 |                    |                  15675 |       451 | "oral acetaminophen"                                         | RXNORM:1152842                               | really "Acetaminophen Oral Product". Best search results when searching on `tokens` only, because that is deleted of "product" tokens. |
