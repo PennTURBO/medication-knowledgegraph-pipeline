@@ -91,11 +91,11 @@ bp.mappings.to.minimal.df <- function(current.source.ontology) {
     inner.res <- do.call(rbind.data.frame, inner.res)
     inner.res$source.method <- mappings.result.source.methods
     inner.res <-
-      inner.res[inner.res$source.method %in% config$aceepted.mapping.sources ,]
+      inner.res[inner.res$source.method %in% config$aceepted.mapping.sources , ]
     inner.res <-
-      inner.res[as.character(inner.res$source.term) != as.character(inner.res$mapped.term), ]
+      inner.res[as.character(inner.res$source.term) != as.character(inner.res$mapped.term),]
     inner.res <-
-      inner.res[inner.res$mapped.ontology %in% value.added , ]
+      inner.res[inner.res$mapped.ontology %in% value.added ,]
     inner.res <-
       unique(inner.res[, c("source.term",
                            "source.ontology",
