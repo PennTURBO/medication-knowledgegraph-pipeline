@@ -1,0 +1,38 @@
+prefix mydata: <http://example.com/resource/>
+PREFIX rxnorm: <http://purl.bioontology.org/ontology/RXNORM/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+select 
+distinct ?order_id ?source_full_name
+where {
+    values ?rxnbrand {
+        <http://purl.bioontology.org/ontology/RXNORM/202702> 
+    }
+    values ?rxemployment {
+        <http://example.com/resource/rxn_tty/BN>
+    }
+    graph mydata:employment {
+        ?rxnbrand mydata:employment ?rxemployment .
+    }
+    values ?source_definer {
+        rxnorm:
+    }
+    graph mydata:defined_in {
+        ?rxnbrand mydata:defined_in ?source_definer .
+    }
+    graph rxnorm: {
+        ?rxnbrand  (rxnorm:ingredient_of|rxnorm:inverse_isa|rxnorm:contained_in|rxnorm:constitutes)* ?rxnrelated .
+        ?rxnrelated skos:prefLabel ?rrpl .
+    }
+    graph mydata:elected_mapping {
+        ?order mydata:elected_mapping ?rxnrelated .
+    }
+    # get properties of the order
+    graph mydata:reference_medications {
+        ?order a obo:PDRO_0000024 ;
+               mydata:source_full_name ?source_full_name .
+    }
+    graph mydata:source_med_id  {
+        ?order skos:notation ?order_id .
+    }
+}
