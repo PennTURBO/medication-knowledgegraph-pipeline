@@ -1,28 +1,28 @@
-Search Term: aspirin
-Expected top result(s):
-http://purl.obolibrary.org/obo/CHEBI_15365 Label: aspirin
-http://purl.bioontology.org/ontology/RXNORM/1191 Label: aspirin
+### Search Term: aspirin
+- Expected top result(s):
+    - http://purl.obolibrary.org/obo/CHEBI_15365 Label: aspirin
+    - http://purl.bioontology.org/ontology/RXNORM/1191 Label: aspirin
 
-Search Term: terbinafine
-Expected top result(s):
-http://purl.obolibrary.org/obo/CHEBI_9448 Label: terbinafine
-http://purl.bioontology.org/ontology/RXNORM/37801 Label: terbinafine
+### Search Term: terbinafine
+- Expected top result(s):
+    - http://purl.obolibrary.org/obo/CHEBI_9448 Label: terbinafine
+    - http://purl.bioontology.org/ontology/RXNORM/37801 Label: terbinafine
 
-Search Term: anti-inflammatory
-Expected top result(s):
-http://purl.obolibrary.org/obo/CHEBI_35472 Label: anti-inflammatory
+### Search Term: anti-inflammatory
+- Expected top result(s):
+    - http://purl.obolibrary.org/obo/CHEBI_35472 Label: anti-inflammatory
 
-Search Term: analgesic
-Expected top result(s):
-http://purl.obolibrary.org/obo/CHEBI_35480 Label: analgesic
+### Search Term: analgesic
+- Expected top result(s):
+    - http://purl.obolibrary.org/obo/CHEBI_35480 Label: analgesic
 
-Search Term: meperidine
-Expected top result(s):
-http://purl.bioontology.org/ontology/RXNORM/6754 Label: meperidine
+### Search Term: meperidine
+- Expected top result(s):
+    - http://purl.bioontology.org/ontology/RXNORM/6754 Label: meperidine
 
-Search Term: pethidine
-Expected top result(s):
-http://purl.bioontology.org/ontology/RXNORM/6754 Label: meperidine
+### Search Term: pethidine
+- Expected top result(s):
+    - http://purl.bioontology.org/ontology/RXNORM/6754 Label: meperidine
 
 ----
 
@@ -752,9 +752,6 @@ which retrieves good results when searching `medlabel` alone or along with `toke
 ```
 
 
-
-
-
 `mydata: <http://example.com/resource>`
 
 `rxn_tty: <http://example.com/resource/rxn_tty/>`
@@ -787,3 +784,5 @@ which retrieves good results when searching `medlabel` alone or along with `toke
 | rxn_tty:SCDC                                 |                    |                  26621 |      2739 | "500 mg acetaminophen"                                       | RXNORM:315266                                |                                                              |
 | rxn_tty:SCDF                                 | product            |                  14329 |      4548 | "acetaminophen  tablet"                                      | RXNORM:369097                                | really "acetaminophen oral tablet"                           |
 | rxn_tty:SCDG                                 |                    |                  15675 |       451 | "oral acetaminophen"                                         | RXNORM:1152842                               | really "Acetaminophen Oral Product". Best search results when searching on `tokens` only, because that is deleted of "product" tokens. |
+=======
+
