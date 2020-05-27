@@ -520,3 +520,227 @@ returns
 
 As with most of the `clinrel_structclass`es, 'statin' and 'statins' get the same result
 
+## Products
+
+# 500 mg acetaminophen tablet
+
+`select?defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medlabel+tokens&q=(500+mg+acetaminophen+tablet)`
+
+{
+  "responseHeader":{
+    "status":0,
+    "QTime":21,
+    "params":{
+      "q":"(500 mg acetaminophen tablet",
+      "defType":"edismax",
+      "qf":"medlabel tokens",
+      "fl":"id,medlabel,employment,definedin,tokens,score",
+      "rows":"3"}},
+  "response":{"numFound":120922,"start":0,"maxScore":11.326523,"docs":[
+      {
+        "id":"http://purl.obolibrary.org/obo/DRON_00073389",
+        "medlabel":["acetaminophen 500 mg oral tablet [panex 500]"],
+        "tokens":["[panex",
+          "500",
+          "500]",
+          "acetaminophen",
+          "mg",
+          "oral",
+          "tablet"],
+        "definedin":["http://purl.obolibrary.org/obo/dron/dron-rxnorm.owl"],
+        "employment":["product"],
+        "score":11.326523},
+      {
+        "id":"http://purl.obolibrary.org/obo/DRON_00036033",
+        "medlabel":["acetaminophen 500 mg oral tablet"],
+        "tokens":["500",
+          "acetaminophen",
+          "mg",
+          "oral",
+          "tablet"],
+        "definedin":["http://purl.obolibrary.org/obo/dron/dron-rxnorm.owl"],
+        "employment":["product"],
+        "score":11.188951},
+      {
+        "id":"http://purl.obolibrary.org/obo/DRON_00054521",
+        "medlabel":["acetaminophen 500 mg disintegrating tablet"],
+        "tokens":["500",
+          "acetaminophen",
+          "disintegrating",
+          "mg",
+          "tablet"],
+        "definedin":["http://purl.obolibrary.org/obo/dron/dron-rxnorm.owl"],
+        "employment":["product"],
+        "score":11.188951}]
+  }}
+
+DRON:00036033 and RXNORM:198440 would be the best results
+
+DRON:00073389, "acetaminophen 500 mg oral tablet [panex 500]" probably comes to the top because the Solr prep script parses both "500" and "500]" as space-delimited tokens and submits both to Solr. Solr probably does further punctuation tokenization and registers three appearances of 500 overall in that record. There are ways to confirm that, but I'll have to look them up. We could do  more aggressive space and punctuation parsing before submitting to Solr, but that could certainly have negative effects on other patterns.
+
+We are not currently differentiating the type or source of the non-preferred terms. We could retain all of them in separate fields but not query over them, just the current medlabel and tokens fields.
+
+If the Solr query were applied to medlabel only and not tokens...
+
+`select?defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medlabel&q=(500+mg+acetaminophen+tablet)`
+
+then the optimal results do come to the top
+
+```json
+{
+  "responseHeader":{
+    "status":0,
+    "QTime":6,
+    "params":{
+      "q":"(500 mg acetaminophen tablet",
+      "defType":"edismax",
+      "qf":"medlabel",
+      "fl":"id,medlabel,employment,definedin,tokens,score",
+      "rows":"3"}},
+  "response":{"numFound":120435,"start":0,"maxScore":11.312251,"docs":[
+      {
+        "id":"http://purl.obolibrary.org/obo/DRON_00073389",
+        "medlabel":["acetaminophen 500 mg oral tablet [panex 500]"],
+        "tokens":["[panex",
+          "500",
+          "500]",
+          "acetaminophen",
+          "mg",
+          "oral",
+          "tablet"],
+        "definedin":["http://purl.obolibrary.org/obo/dron/dron-rxnorm.owl"],
+        "employment":["product"],
+        "score":11.312251},
+      {
+        "id":"http://purl.bioontology.org/ontology/RXNORM/198440",
+        "medlabel":["acetaminophen 500 mg oral tablet"],
+        "tokens":["500",
+          "acetaminophen",
+          "apap",
+          "mg",
+          "oral",
+          "tablet"],
+        "definedin":["http://purl.bioontology.org/ontology/RXNORM/"],
+        "employment":["SCD"],
+        "score":11.175909},
+      {
+        "id":"http://purl.bioontology.org/ontology/RXNORM/665056",
+        "medlabel":["acetaminophen 500 mg chewable tablet"],
+        "tokens":["500",
+          "acetaminophen",
+          "apap",
+          "chewable",
+          "mg",
+          "tablet"],
+        "definedin":["http://purl.bioontology.org/ontology/RXNORM/"],
+        "employment":["SCD"],
+        "score":11.175909}]
+  }}
+```
+
+One can imagine that many users would type in "500 mg acetaminophen tablets". Submitting that to either medlabel alone or medlable+tokens returns the following, which is not helpful. Some kind of "spelling correction" or stemming should probably be applied as part of the Solr query parsing
+
+`elect?defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medlabel+tokens&q=(500+mg+acetaminophen+tablets)`
+
+returns
+
+```json
+{
+  "responseHeader":{
+    "status":0,
+    "QTime":0,
+    "params":{
+      "q":"(500 mg acetaminophen tablets",
+      "defType":"edismax",
+      "qf":"medlabel",
+      "fl":"id,medlabel,employment,definedin,tokens,score",
+      "rows":"3"}},
+  "response":{"numFound":111727,"start":0,"maxScore":12.029095,"docs":[
+      {
+        "id":"http://purl.bioontology.org/ontology/RXNORM/1293403",
+        "medlabel":["rescon tablets"],
+        "tokens":["rescon",
+          "tablets"],
+        "definedin":["http://purl.bioontology.org/ontology/RXNORM/"],
+        "employment":["BN"],
+        "score":12.029095},
+      {
+        "id":"http://purl.bioontology.org/ontology/RXNORM/1293407",
+        "medlabel":["rescon tablets pill"],
+        "tokens":["pill",
+          "rescon",
+          "tablets"],
+        "definedin":["http://purl.bioontology.org/ontology/RXNORM/"],
+        "employment":["SBDG"],
+        "score":11.066392},
+      {
+        "id":"http://purl.bioontology.org/ontology/RXNORM/315266",
+        "medlabel":["acetaminophen 500 mg"],
+        "tokens":["500",
+          "acetaminophen",
+          "mg"],
+        "definedin":["http://purl.bioontology.org/ontology/RXNORM/"],
+        "employment":["SCDC"],
+        "score":10.834423}]
+  }}
+```
+500 mg tylenol tablet would also be a reasonable query
+
+`select?defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medlabel+tokens&q=(500+mg+tylenol+tablets)`
+
+which retrieves good but not perfect results, searching medlabel alone or along with tokens
+
+```json
+{
+  "responseHeader":{
+    "status":0,
+    "QTime":11,
+    "params":{
+      "q":"(500 mg tylenol tablets",
+      "defType":"edismax",
+      "qf":"medlabel tokens",
+      "fl":"id,medlabel,employment,definedin,tokens,score",
+      "rows":"3"}},
+  "response":{"numFound":111116,"start":0,"maxScore":13.984484,"docs":[
+      {
+        "id":"http://purl.bioontology.org/ontology/RXNORM/570070",
+        "medlabel":["acetaminophen 500 mg [tylenol]"],
+        "tokens":["[tylenol]",
+          "500",
+          "acetaminophen",
+          "mg"],
+        "definedin":["http://purl.bioontology.org/ontology/RXNORM/"],
+        "employment":["SBDC"],
+        "score":13.984484},
+      {
+        "id":"http://purl.bioontology.org/ontology/RXNORM/209459",
+        "medlabel":["acetaminophen 500 mg oral tablet [tylenol]"],
+        "tokens":["[tylenol]",
+          "500",
+          "acetaminophen",
+          "apap",
+          "extra",
+          "mg",
+          "oral",
+          "strength",
+          "tablet",
+          "tylenol"],
+        "definedin":["http://purl.bioontology.org/ontology/RXNORM/"],
+        "employment":["SBD"],
+        "score":13.351553},
+      {
+        "id":"http://purl.obolibrary.org/obo/DRON_00073395",
+        "medlabel":["acetaminophen 500 mg oral tablet [tylenol]"],
+        "tokens":["[tylenol]",
+          "500",
+          "acetaminophen",
+          "mg",
+          "oral",
+          "tablet"],
+        "definedin":["http://purl.obolibrary.org/obo/dron/dron-rxnorm.owl"],
+        "employment":["product"],
+        "score":12.185806}]
+  }}
+```
+
+
