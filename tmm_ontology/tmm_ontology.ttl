@@ -10,16 +10,22 @@
 
 <https://github.com/PennTURBO/med_mapping/blob/master/tmm_ontology/tmm_ontology.ttl> rdf:type owl:Ontology ;
                                                                                       owl:imports <http://www.w3.org/2004/02/skos/core> ,
-                                                                                                  <http://xmlns.com/foaf/0.1/> ,
-                                                                                                  <https://www.dublincore.org/specifications/dublin-core/collection-description/frequency/freq.rdf> ,
-                                                                                                  <https://www.dublincore.org/specifications/dublin-core/dcmi-terms/dublin_core_elements.rdf> ,
-                                                                                                  <https://www.dublincore.org/specifications/dublin-core/dcmi-terms/dublin_core_terms.rdf> ;
-                                                                                      rdfs:comment """Probably don't need defined_in statements for 
+                                                                                                  <http://xmlns.com/foaf/0.1/> ;
+                                                                                      rdfs:comment "Define EHR and CDW!" ,
+                                                                                                   "I have been inconsistently using the terms \"source\"- or \"reference medication\" to refere to the medication strings from a source like a EHR or CDW." ,
+                                                                                                   """Probably don't need defined_in statements for 
 
 BioPortal mappings... no classes or individuals asserted
 Reference Medications or Classified Search Results... individuals are typed, unlike vague owl:Class assertions in ChEBI, DrOn, RxNorm, etc.
 
 Those vague owl:Class assertions and RxNorm's sparse isa assertions  are the reason for TMM employment assertions""" ,
+                                                                                                   """Some duplication in RxNorm term types for employment vs as a source of strings
+
+same thing with predicates and RF search results classifications
+
+pick one URI style for each pair and stick with it""" ,
+                                                                                                   "There are several terms that are shared between (punned) a property and a named graph individual" ,
+                                                                                                   "This ontology file propably doesn't say anythinga bout the medication string normalizastion process yet... but do we really need to dupicate the docuemtnation here? We have mentioned normalization in the http://example.com/resource/source_normalized_full_name context." ,
                                                                                                    """https://www.dublincore.org/specifications/dublin-core/dcmi-terms/dublin_core_terms.rdf
 
 https://www.dublincore.org/specifications/dublin-core/collection-description/frequency/freq.rdf""" ,
@@ -29,20 +35,27 @@ although faof has a suboptimal filename, \"index.rdf\"
 
 dc freq just disappears
 
-de elements disappears from the imports section but all of its terms get saved into eh importing ontology!""" .
+de elements disappears from the imports section but all of its terms get saved into eh importing ontology!""" ,
+                                                                                                   "lthe namespaces for locally asserted terms are mydata: and turbo:" .
 
 #################################################################
 #    Annotation properties
 #################################################################
 
+###  http://example.com/resource/bioportal_mapping
+mydata:bioportal_mapping rdf:type owl:AnnotationProperty .
+
+
 ###  http://example.com/resource/defined_in
-mydata:defined_in rdf:type owl:AnnotationProperty ;
-                  rdfs:range <http://transformunify.org/ontologies/definer> .
+mydata:defined_in rdf:type owl:AnnotationProperty .
+
+
+###  http://example.com/resource/elected_mapping
+mydata:elected_mapping rdf:type owl:AnnotationProperty .
 
 
 ###  http://example.com/resource/employment
-mydata:employment rdf:type owl:AnnotationProperty ;
-                  rdfs:range <http://transformunify.org/ontologies/TURBO_0022023> .
+mydata:employment rdf:type owl:AnnotationProperty .
 
 
 ###  http://example.com/resource/imports
@@ -51,21 +64,266 @@ mydata:imports rdf:type owl:AnnotationProperty ;
                rdfs:label "imports" .
 
 
+###  http://example.com/resource/match_rxcui
+mydata:match_rxcui rdf:type owl:AnnotationProperty ;
+                   <http://purl.org/dc/dcam/domainIncludes> "eligibale RxNorm term" ;
+                   <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
+
+
+###  http://example.com/resource/match_sab
+mydata:match_sab rdf:type owl:AnnotationProperty ;
+                 <http://purl.org/dc/dcam/domainIncludes> <http://transformunify.org/ontologies/TURBO_0022043> ;
+                 <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> ;
+                 rdfs:comment <http://transformunify.org/ontologies/TURBO_0022041> .
+
+
+###  http://example.com/resource/match_tty
+mydata:match_tty rdf:type owl:AnnotationProperty ;
+                 <http://purl.org/dc/dcam/domainIncludes> <http://transformunify.org/ontologies/TURBO_0022044> ;
+                 <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> ;
+                 rdfs:comment <http://transformunify.org/ontologies/TURBO_0022041> .
+
+
+###  http://example.com/resource/override_classification
+mydata:override_classification rdf:type owl:AnnotationProperty ;
+                               <http://purl.org/dc/dcam/domainIncludes> <http://transformunify.org/ontologies/TURBO_0022045> ;
+                               <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> ;
+                               rdfs:comment <http://transformunify.org/ontologies/TURBO_0022041> ,
+                                            "These are the same as <http://example.com/resource/rf_classification>, except <http://example.com/resource/search_res_classification/identical> is asserted when <http://example.com/resource/match_score> is 100 and <http://example.com/resource/search_res_classification/more_distant>  is asserted when the score is 0" ;
+                               rdfs:seeAlso mydata:rf_classification .
+
+
+###  http://example.com/resource/query_source
+mydata:query_source rdf:type owl:AnnotationProperty ;
+                    <http://purl.org/dc/dcam/domainIncludes> <http://transformunify.org/ontologies/TURBO_0022042> ;
+                    <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> ;
+                    rdfs:comment <http://transformunify.org/ontologies/TURBO_0022041> .
+
+
+###  http://example.com/resource/rf_classification
+mydata:rf_classification rdf:type owl:AnnotationProperty ;
+                         <http://purl.org/dc/dcam/domainIncludes> <http://transformunify.org/ontologies/TURBO_0022045> ;
+                         <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> ;
+                         rdfs:comment <http://transformunify.org/ontologies/TURBO_0022041> .
+
+
+###  http://example.com/resource/source_id_uri
+mydata:source_id_uri rdf:type owl:AnnotationProperty ;
+                     <http://purl.org/dc/dcam/domainIncludes> <http://purl.obolibrary.org/obo/PDRO_0000024> ;
+                     <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
+
+
+###  http://example.com/resource/source_rxcui
+mydata:source_rxcui rdf:type owl:AnnotationProperty ;
+                    <http://purl.org/dc/dcam/domainIncludes> <http://purl.obolibrary.org/obo/PDRO_0000024> ;
+                    rdfs:comment """subject: a drug prescription
+object: an RxNorm term. Casted to a IRI by TMM. May be scrubbed if the RxNorm term isn't valid in the imported RxNorm RDF file? Maybe we should just be keeping that as a literal?""" ;
+                    rdfs:label "medication source asserted RxCUI" .
+
+
+###  http://example.com/resource/transitive_role_of_class
+mydata:transitive_role_of_class rdf:type owl:AnnotationProperty .
+
+
+###  http://example.com/resource/transitively_materialized_dron_ingredient
+mydata:transitively_materialized_dron_ingredient rdf:type owl:AnnotationProperty .
+
+
+###  http://example.com/resource/transitively_materialized_drugrole
+mydata:transitively_materialized_drugrole rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/consists_of
+<http://purl.bioontology.org/ontology/RXNORM/consists_of> rdf:type owl:AnnotationProperty ;
+                                                          <http://transformunify.org/ontologies/TURBO_0022040> <http://purl.bioontology.org/ontology/RXNORM/constitutes> ;
+                                                          rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/constitutes
+<http://purl.bioontology.org/ontology/RXNORM/constitutes> rdf:type owl:AnnotationProperty ;
+                                                          rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/contained_in
+<http://purl.bioontology.org/ontology/RXNORM/contained_in> rdf:type owl:AnnotationProperty ;
+                                                           <http://transformunify.org/ontologies/TURBO_0022040> <http://purl.bioontology.org/ontology/RXNORM/contains> ;
+                                                           rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/contains
+<http://purl.bioontology.org/ontology/RXNORM/contains> rdf:type owl:AnnotationProperty ;
+                                                       rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/dose_form_of
+<http://purl.bioontology.org/ontology/RXNORM/dose_form_of> rdf:type owl:AnnotationProperty ;
+                                                           <http://transformunify.org/ontologies/TURBO_0022040> <http://purl.bioontology.org/ontology/RXNORM/has_dose_form> ;
+                                                           rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/doseformgroup_of
+<http://purl.bioontology.org/ontology/RXNORM/doseformgroup_of> rdf:type owl:AnnotationProperty ;
+                                                               <http://transformunify.org/ontologies/TURBO_0022040> <http://purl.bioontology.org/ontology/RXNORM/has_doseformgroup> ;
+                                                               rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/form_of
+<http://purl.bioontology.org/ontology/RXNORM/form_of> rdf:type owl:AnnotationProperty ;
+                                                      <http://transformunify.org/ontologies/TURBO_0022040> <http://purl.bioontology.org/ontology/RXNORM/has_form> ;
+                                                      rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/has_dose_form
+<http://purl.bioontology.org/ontology/RXNORM/has_dose_form> rdf:type owl:AnnotationProperty ;
+                                                            rdfs:seeAlso <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix2.html> ;
+                                                            rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/has_doseformgroup
+<http://purl.bioontology.org/ontology/RXNORM/has_doseformgroup> rdf:type owl:AnnotationProperty ;
+                                                                rdfs:seeAlso <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix3.html> ;
+                                                                rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/has_form
+<http://purl.bioontology.org/ontology/RXNORM/has_form> rdf:type owl:AnnotationProperty ;
+                                                       rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/has_ingredient
+<http://purl.bioontology.org/ontology/RXNORM/has_ingredient> rdf:type owl:AnnotationProperty ;
+                                                             <http://transformunify.org/ontologies/TURBO_0022040> <http://purl.bioontology.org/ontology/RXNORM/ingredient_of> ;
+                                                             rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/has_ingredients
+<http://purl.bioontology.org/ontology/RXNORM/has_ingredients> rdf:type owl:AnnotationProperty ;
+                                                              <http://transformunify.org/ontologies/TURBO_0022040> <http://purl.bioontology.org/ontology/RXNORM/ingredients_of> ;
+                                                              rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/has_part
+<http://purl.bioontology.org/ontology/RXNORM/has_part> rdf:type owl:AnnotationProperty ;
+                                                       <http://transformunify.org/ontologies/TURBO_0022040> <http://purl.bioontology.org/ontology/RXNORM/part_of> ;
+                                                       rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/has_precise_ingredient
+<http://purl.bioontology.org/ontology/RXNORM/has_precise_ingredient> rdf:type owl:AnnotationProperty ;
+                                                                     <http://transformunify.org/ontologies/TURBO_0022040> <http://purl.bioontology.org/ontology/RXNORM/precise_ingredient_of> ;
+                                                                     rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/has_quantified_form
+<http://purl.bioontology.org/ontology/RXNORM/has_quantified_form> rdf:type owl:AnnotationProperty ;
+                                                                  <http://transformunify.org/ontologies/TURBO_0022040> <http://purl.bioontology.org/ontology/RXNORM/quantified_form_of> ;
+                                                                  rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/has_tradename
+<http://purl.bioontology.org/ontology/RXNORM/has_tradename> rdf:type owl:AnnotationProperty ;
+                                                            <http://transformunify.org/ontologies/TURBO_0022040> <http://purl.bioontology.org/ontology/RXNORM/tradename_of> ;
+                                                            rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/ingredient_of
+<http://purl.bioontology.org/ontology/RXNORM/ingredient_of> rdf:type owl:AnnotationProperty ;
+                                                            rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/ingredients_of
+<http://purl.bioontology.org/ontology/RXNORM/ingredients_of> rdf:type owl:AnnotationProperty ;
+                                                             rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/inverse_isa
+<http://purl.bioontology.org/ontology/RXNORM/inverse_isa> rdf:type owl:AnnotationProperty ;
+                                                          <http://transformunify.org/ontologies/TURBO_0022040> <http://purl.bioontology.org/ontology/RXNORM/isa> ;
+                                                          rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/isa
+<http://purl.bioontology.org/ontology/RXNORM/isa> rdf:type owl:AnnotationProperty ;
+                                                  rdfs:seeAlso """isa and inverse_is provide the only heirarchy in RxNorm
+
+SCDs are DFs are DFGs
+same thing for SBDs""" ;
+                                                  rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/part_of
+<http://purl.bioontology.org/ontology/RXNORM/part_of> rdf:type owl:AnnotationProperty ;
+                                                      rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/precise_ingredient_of
+<http://purl.bioontology.org/ontology/RXNORM/precise_ingredient_of> rdf:type owl:AnnotationProperty ;
+                                                                    rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/quantified_form_of
+<http://purl.bioontology.org/ontology/RXNORM/quantified_form_of> rdf:type owl:AnnotationProperty ;
+                                                                 rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/reformulated_to
+<http://purl.bioontology.org/ontology/RXNORM/reformulated_to> rdf:type owl:AnnotationProperty ;
+                                                              <http://transformunify.org/ontologies/TURBO_0022040> <http://purl.bioontology.org/ontology/RXNORM/reformulation_of> ;
+                                                              rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/reformulation_of
+<http://purl.bioontology.org/ontology/RXNORM/reformulation_of> rdf:type owl:AnnotationProperty ;
+                                                               rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/tradename_of
+<http://purl.bioontology.org/ontology/RXNORM/tradename_of> rdf:type owl:AnnotationProperty ;
+                                                           rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
+
+
 ###  http://purl.org/dc/dcam/domainIncludes
 <http://purl.org/dc/dcam/domainIncludes> rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/dc/dcam/memberOf
+<http://purl.org/dc/dcam/memberOf> rdf:type owl:AnnotationProperty .
 
 
 ###  http://purl.org/dc/dcam/rangeIncludes
 <http://purl.org/dc/dcam/rangeIncludes> rdf:type owl:AnnotationProperty .
 
 
+###  http://purl.org/dc/terms/accrualMethod
+dcterms:accrualMethod rdf:type owl:AnnotationProperty .
+
+
 ###  http://purl.org/dc/terms/accrualPeriodicity
 dcterms:accrualPeriodicity rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/dc/terms/accrualPolicy
+dcterms:accrualPolicy rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/dc/terms/publisher
+dcterms:publisher rdf:type owl:AnnotationProperty .
 
 
 ###  http://transformunify.org/ontologies/TURBO_0022019
 <http://transformunify.org/ontologies/TURBO_0022019> rdf:type owl:AnnotationProperty ;
                                                      rdfs:label "has SPARQL illustration"@en .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022035
+<http://transformunify.org/ontologies/TURBO_0022035> rdf:type owl:AnnotationProperty ;
+                                                     rdfs:label "RxNorm object relation"@en .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022040
+<http://transformunify.org/ontologies/TURBO_0022040> rdf:type owl:AnnotationProperty ;
+                                                     rdfs:comment "useful for class to class relations as found in RxNorm" ;
+                                                     rdfs:label "has inverse" .
 
 
 ###  http://www.w3.org/2002/07/owl#imports
@@ -74,6 +332,14 @@ owl:imports rdf:type owl:AnnotationProperty .
 
 ###  http://www.w3.org/2004/02/skos/core#definition
 <http://www.w3.org/2004/02/skos/core#definition> rdf:type owl:AnnotationProperty .
+
+
+###  http://xmlns.com/foaf/0.1/homepage
+<http://xmlns.com/foaf/0.1/homepage> rdf:type owl:AnnotationProperty .
+
+
+###  http://xmlns.com/foaf/0.1/page
+<http://xmlns.com/foaf/0.1/page> rdf:type owl:AnnotationProperty .
 
 
 #################################################################
@@ -128,169 +394,281 @@ dcterms:URI rdf:type rdfs:Datatype .
 dcterms:W3CDTF rdf:type rdfs:Datatype .
 
 
-#################################################################
-#    Object Properties
-#################################################################
-
-###  http://purl.bioontology.org/ontology/RXNORM/consists_of
-<http://purl.bioontology.org/ontology/RXNORM/consists_of> rdf:type owl:ObjectProperty ;
-                                                          rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> ;
-                                                          owl:inverseOf <http://purl.bioontology.org/ontology/RXNORM/constitutes> .
-
-
-###  http://purl.bioontology.org/ontology/RXNORM/constitutes
-<http://purl.bioontology.org/ontology/RXNORM/constitutes> rdf:type owl:ObjectProperty ;
-                                                          rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
-
-
-###  http://purl.bioontology.org/ontology/RXNORM/contained_in
-<http://purl.bioontology.org/ontology/RXNORM/contained_in> rdf:type owl:ObjectProperty ;
-                                                           rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> ;
-                                                           owl:inverseOf <http://purl.bioontology.org/ontology/RXNORM/contains> .
-
-
-###  http://purl.bioontology.org/ontology/RXNORM/contains
-<http://purl.bioontology.org/ontology/RXNORM/contains> rdf:type owl:ObjectProperty ;
-                                                       rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
-
-
-###  http://purl.bioontology.org/ontology/RXNORM/dose_form_of
-<http://purl.bioontology.org/ontology/RXNORM/dose_form_of> rdf:type owl:ObjectProperty ;
-                                                           rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> ;
-                                                           owl:inverseOf <http://purl.bioontology.org/ontology/RXNORM/has_dose_form> .
-
-
-###  http://purl.bioontology.org/ontology/RXNORM/doseformgroup_of
-<http://purl.bioontology.org/ontology/RXNORM/doseformgroup_of> rdf:type owl:ObjectProperty ;
-                                                               rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> ;
-                                                               owl:inverseOf <http://purl.bioontology.org/ontology/RXNORM/has_doseformgroup> .
-
-
-###  http://purl.bioontology.org/ontology/RXNORM/form_of
-<http://purl.bioontology.org/ontology/RXNORM/form_of> rdf:type owl:ObjectProperty ;
-                                                      rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> ;
-                                                      owl:inverseOf <http://purl.bioontology.org/ontology/RXNORM/has_form> .
-
-
-###  http://purl.bioontology.org/ontology/RXNORM/has_dose_form
-<http://purl.bioontology.org/ontology/RXNORM/has_dose_form> rdf:type owl:ObjectProperty ;
-                                                            rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
-
-
-###  http://purl.bioontology.org/ontology/RXNORM/has_doseformgroup
-<http://purl.bioontology.org/ontology/RXNORM/has_doseformgroup> rdf:type owl:ObjectProperty ;
-                                                                rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
-
-
-###  http://purl.bioontology.org/ontology/RXNORM/has_form
-<http://purl.bioontology.org/ontology/RXNORM/has_form> rdf:type owl:ObjectProperty ;
-                                                       rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
-
-
-###  http://purl.bioontology.org/ontology/RXNORM/has_ingredient
-<http://purl.bioontology.org/ontology/RXNORM/has_ingredient> rdf:type owl:ObjectProperty ;
-                                                             rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> ;
-                                                             owl:inverseOf <http://purl.bioontology.org/ontology/RXNORM/ingredient_of> .
-
-
-###  http://purl.bioontology.org/ontology/RXNORM/has_ingredients
-<http://purl.bioontology.org/ontology/RXNORM/has_ingredients> rdf:type owl:ObjectProperty ;
-                                                              rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> ;
-                                                              owl:inverseOf <http://purl.bioontology.org/ontology/RXNORM/ingredients_of> .
-
-
-###  http://purl.bioontology.org/ontology/RXNORM/has_part
-<http://purl.bioontology.org/ontology/RXNORM/has_part> rdf:type owl:ObjectProperty ;
-                                                       rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> ;
-                                                       owl:inverseOf <http://purl.bioontology.org/ontology/RXNORM/part_of> .
-
-
-###  http://purl.bioontology.org/ontology/RXNORM/has_precise_ingredient
-<http://purl.bioontology.org/ontology/RXNORM/has_precise_ingredient> rdf:type owl:ObjectProperty ;
-                                                                     rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> ;
-                                                                     owl:inverseOf <http://purl.bioontology.org/ontology/RXNORM/precise_ingredient_of> .
-
-
-###  http://purl.bioontology.org/ontology/RXNORM/has_quantified_form
-<http://purl.bioontology.org/ontology/RXNORM/has_quantified_form> rdf:type owl:ObjectProperty ;
-                                                                  rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> ;
-                                                                  owl:inverseOf <http://purl.bioontology.org/ontology/RXNORM/quantified_form_of> .
-
-
-###  http://purl.bioontology.org/ontology/RXNORM/has_tradename
-<http://purl.bioontology.org/ontology/RXNORM/has_tradename> rdf:type owl:ObjectProperty ;
-                                                            rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> ;
-                                                            owl:inverseOf <http://purl.bioontology.org/ontology/RXNORM/tradename_of> .
-
-
-###  http://purl.bioontology.org/ontology/RXNORM/ingredient_of
-<http://purl.bioontology.org/ontology/RXNORM/ingredient_of> rdf:type owl:ObjectProperty ;
-                                                            rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
-
-
-###  http://purl.bioontology.org/ontology/RXNORM/ingredients_of
-<http://purl.bioontology.org/ontology/RXNORM/ingredients_of> rdf:type owl:ObjectProperty ;
-                                                             rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
-
-
-###  http://purl.bioontology.org/ontology/RXNORM/inverse_isa
-<http://purl.bioontology.org/ontology/RXNORM/inverse_isa> rdf:type owl:ObjectProperty ;
-                                                          rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> ;
-                                                          owl:inverseOf <http://purl.bioontology.org/ontology/RXNORM/isa> .
-
-
-###  http://purl.bioontology.org/ontology/RXNORM/isa
-<http://purl.bioontology.org/ontology/RXNORM/isa> rdf:type owl:ObjectProperty ;
-                                                  rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
-
-
-###  http://purl.bioontology.org/ontology/RXNORM/part_of
-<http://purl.bioontology.org/ontology/RXNORM/part_of> rdf:type owl:ObjectProperty ;
-                                                      rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
-
-
-###  http://purl.bioontology.org/ontology/RXNORM/precise_ingredient_of
-<http://purl.bioontology.org/ontology/RXNORM/precise_ingredient_of> rdf:type owl:ObjectProperty ;
-                                                                    rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
-
-
-###  http://purl.bioontology.org/ontology/RXNORM/quantified_form_of
-<http://purl.bioontology.org/ontology/RXNORM/quantified_form_of> rdf:type owl:ObjectProperty ;
-                                                                 rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
-
-
-###  http://purl.bioontology.org/ontology/RXNORM/reformulated_to
-<http://purl.bioontology.org/ontology/RXNORM/reformulated_to> rdf:type owl:ObjectProperty ;
-                                                              rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> ;
-                                                              owl:inverseOf <http://purl.bioontology.org/ontology/RXNORM/reformulation_of> .
-
-
-###  http://purl.bioontology.org/ontology/RXNORM/reformulation_of
-<http://purl.bioontology.org/ontology/RXNORM/reformulation_of> rdf:type owl:ObjectProperty ;
-                                                               rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
-
-
-###  http://purl.bioontology.org/ontology/RXNORM/tradename_of
-<http://purl.bioontology.org/ontology/RXNORM/tradename_of> rdf:type owl:ObjectProperty ;
-                                                           rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
-
-
-###  http://transformunify.org/ontologies/TURBO_0022035
-<http://transformunify.org/ontologies/TURBO_0022035> rdf:type owl:ObjectProperty ;
-                                                     rdfs:label "RxNorm object relation"@en .
-
-
-###  http://xmlns.com/foaf/0.1/homepage
-<http://xmlns.com/foaf/0.1/homepage> rdf:type owl:ObjectProperty .
-
-
-###  http://xmlns.com/foaf/0.1/page
-<http://xmlns.com/foaf/0.1/page> rdf:type owl:ObjectProperty .
+###  http://www.w3.org/2001/XMLSchema#date
+xsd:date rdf:type rdfs:Datatype .
 
 
 #################################################################
 #    Data properties
 #################################################################
+
+###  http://example.com/resource/match_chars
+mydata:match_chars rdf:type owl:DatatypeProperty ;
+                   <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
+
+
+###  http://example.com/resource/match_rank
+mydata:match_rank rdf:type owl:DatatypeProperty ;
+                  <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
+
+
+###  http://example.com/resource/match_rxaui
+mydata:match_rxaui rdf:type owl:DatatypeProperty ;
+                   <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
+
+
+###  http://example.com/resource/match_score
+mydata:match_score rdf:type owl:DatatypeProperty ;
+                   <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
+
+
+###  http://example.com/resource/match_string
+mydata:match_string rdf:type owl:DatatypeProperty ;
+                    <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
+
+
+###  http://example.com/resource/match_words
+mydata:match_words rdf:type owl:DatatypeProperty ;
+                   <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
+
+
+###  http://example.com/resource/prob_consists_of
+mydata:prob_consists_of rdf:type owl:DatatypeProperty ;
+                        <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
+
+
+###  http://example.com/resource/prob_constitutes
+mydata:prob_constitutes rdf:type owl:DatatypeProperty ;
+                        <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
+
+
+###  http://example.com/resource/prob_contained_in
+mydata:prob_contained_in rdf:type owl:DatatypeProperty ;
+                         <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
+
+
+###  http://example.com/resource/prob_contains
+mydata:prob_contains rdf:type owl:DatatypeProperty ;
+                     <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
+
+
+###  http://example.com/resource/prob_form_of
+mydata:prob_form_of rdf:type owl:DatatypeProperty ;
+                    <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
+
+
+###  http://example.com/resource/prob_has_form
+mydata:prob_has_form rdf:type owl:DatatypeProperty ;
+                     <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
+
+
+###  http://example.com/resource/prob_has_ingredient
+mydata:prob_has_ingredient rdf:type owl:DatatypeProperty ;
+                           <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
+
+
+###  http://example.com/resource/prob_has_part
+mydata:prob_has_part rdf:type owl:DatatypeProperty ;
+                     <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
+
+
+###  http://example.com/resource/prob_has_quantified_form
+mydata:prob_has_quantified_form rdf:type owl:DatatypeProperty ;
+                                <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
+
+
+###  http://example.com/resource/prob_has_tradename
+mydata:prob_has_tradename rdf:type owl:DatatypeProperty ;
+                          <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
+
+
+###  http://example.com/resource/prob_identical
+mydata:prob_identical rdf:type owl:DatatypeProperty ;
+                      <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
+
+
+###  http://example.com/resource/prob_ingredient_of
+mydata:prob_ingredient_of rdf:type owl:DatatypeProperty ;
+                          <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
+
+
+###  http://example.com/resource/prob_inverse_isa
+mydata:prob_inverse_isa rdf:type owl:DatatypeProperty ;
+                        <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
+
+
+###  http://example.com/resource/prob_isa
+mydata:prob_isa rdf:type owl:DatatypeProperty ;
+                <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
+
+
+###  http://example.com/resource/prob_more_distant
+mydata:prob_more_distant rdf:type owl:DatatypeProperty ;
+                         <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
+
+
+###  http://example.com/resource/prob_part_of
+mydata:prob_part_of rdf:type owl:DatatypeProperty ;
+                    <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
+
+
+###  http://example.com/resource/prob_quantified_form_of
+mydata:prob_quantified_form_of rdf:type owl:DatatypeProperty ;
+                               <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
+
+
+###  http://example.com/resource/prob_tradename_of
+mydata:prob_tradename_of rdf:type owl:DatatypeProperty ;
+                         <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
+
+
+###  http://example.com/resource/query_chars
+mydata:query_chars rdf:type owl:DatatypeProperty ;
+                   <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
+
+
+###  http://example.com/resource/query_val
+mydata:query_val rdf:type owl:DatatypeProperty ;
+                 <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
+
+
+###  http://example.com/resource/query_words
+mydata:query_words rdf:type owl:DatatypeProperty ;
+                   <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
+
+
+###  http://example.com/resource/rxaui_freq
+mydata:rxaui_freq rdf:type owl:DatatypeProperty ;
+                  <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
+
+
+###  http://example.com/resource/rxcui_freq
+mydata:rxcui_freq rdf:type owl:DatatypeProperty ;
+                  <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
+
+
+###  http://example.com/resource/sd_cosine
+mydata:sd_cosine rdf:type owl:DatatypeProperty ;
+                 <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
+
+
+###  http://example.com/resource/sd_jaccard
+mydata:sd_jaccard rdf:type owl:DatatypeProperty ;
+                  <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
+
+
+###  http://example.com/resource/sd_jw
+mydata:sd_jw rdf:type owl:DatatypeProperty ;
+             <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
+
+
+###  http://example.com/resource/sd_lcs
+mydata:sd_lcs rdf:type owl:DatatypeProperty ;
+              <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
+
+
+###  http://example.com/resource/sd_lv
+mydata:sd_lv rdf:type owl:DatatypeProperty ;
+             <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
+
+
+###  http://example.com/resource/sd_qgram
+mydata:sd_qgram rdf:type owl:DatatypeProperty ;
+                <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
+
+
+###  http://example.com/resource/source_count
+mydata:source_count rdf:type owl:DatatypeProperty ;
+                    <http://purl.org/dc/dcam/domainIncludes> <http://purl.obolibrary.org/obo/PDRO_0000024> ;
+                    rdfs:comment "An indicator of how common a medication is in a source (liek an EHR or CDW). The TURBO team uses this to reflect the number of unique patients that ahve received an order for teh drug (and or self reported it as a historical emdication?)" ;
+                    rdfs:label "count of medication mentions" .
+
+
+###  http://example.com/resource/source_full_name
+mydata:source_full_name rdf:type owl:DatatypeProperty ;
+                        rdfs:subPropertyOf owl:topDataProperty ;
+                        <http://purl.org/dc/dcam/domainIncludes> <http://purl.obolibrary.org/obo/PDRO_0000024> ;
+                        rdfs:comment "FULL NAME of medication" ,
+                                     "Required by TMM code" .
+
+
+###  http://example.com/resource/source_generic_name
+mydata:source_generic_name rdf:type owl:DatatypeProperty ;
+                           <http://purl.org/dc/dcam/domainIncludes> <http://purl.obolibrary.org/obo/PDRO_0000024> ;
+                           rdfs:comment "if available" ;
+                           rdfs:label "Generic name of source/reference medication" .
+
+
+###  http://example.com/resource/source_normalized_full_name
+mydata:source_normalized_full_name rdf:type owl:DatatypeProperty ;
+                                   <http://purl.org/dc/dcam/domainIncludes> <http://purl.obolibrary.org/obo/PDRO_0000024> ;
+                                   rdfs:label "Normalized full name of source/reference medication" .
+
+
+###  http://purl.org/dc/terms/alternative
+dcterms:alternative rdf:type owl:DatatypeProperty ;
+                    rdfs:range rdfs:Literal .
+
+
+###  http://purl.org/dc/terms/available
+dcterms:available rdf:type owl:DatatypeProperty ;
+                  rdfs:range rdfs:Literal .
+
+
+###  http://purl.org/dc/terms/bibliographicCitation
+dcterms:bibliographicCitation rdf:type owl:DatatypeProperty ;
+                              rdfs:range rdfs:Literal .
+
+
+###  http://purl.org/dc/terms/created
+dcterms:created rdf:type owl:DatatypeProperty ;
+                rdfs:range rdfs:Literal .
+
+
+###  http://purl.org/dc/terms/date
+dcterms:date rdf:type owl:DatatypeProperty ;
+             rdfs:range rdfs:Literal .
+
+
+###  http://purl.org/dc/terms/dateAccepted
+dcterms:dateAccepted rdf:type owl:DatatypeProperty ;
+                     rdfs:range rdfs:Literal .
+
+
+###  http://purl.org/dc/terms/dateCopyrighted
+dcterms:dateCopyrighted rdf:type owl:DatatypeProperty ;
+                        rdfs:range rdfs:Literal .
+
+
+###  http://purl.org/dc/terms/dateSubmitted
+dcterms:dateSubmitted rdf:type owl:DatatypeProperty ;
+                      rdfs:range rdfs:Literal .
+
+
+###  http://purl.org/dc/terms/identifier
+dcterms:identifier rdf:type owl:DatatypeProperty ;
+                   rdfs:range rdfs:Literal .
+
+
+###  http://purl.org/dc/terms/issued
+dcterms:issued rdf:type owl:DatatypeProperty ;
+               rdfs:range rdfs:Literal .
+
+
+###  http://purl.org/dc/terms/modified
+dcterms:modified rdf:type owl:DatatypeProperty ;
+                 rdfs:range rdfs:Literal .
+
+
+###  http://purl.org/dc/terms/title
+dcterms:title rdf:type owl:DatatypeProperty ;
+              rdfs:range rdfs:Literal .
+
+
+###  http://purl.org/dc/terms/valid
+dcterms:valid rdf:type owl:DatatypeProperty ;
+              rdfs:range rdfs:Literal .
+
 
 ###  http://transformunify.org/ontologies/TURBO_0022020
 <http://transformunify.org/ontologies/TURBO_0022020> rdf:type owl:DatatypeProperty ;
@@ -302,6 +680,10 @@ dcterms:W3CDTF rdf:type rdfs:Datatype .
                                                      rdfs:label "has sample SPARQL select result"@en .
 
 
+###  http://www.w3.org/2004/02/skos/core#notation
+<http://www.w3.org/2004/02/skos/core#notation> rdfs:comment "TMM uses this predicate to tie an ID to source/reference medications" .
+
+
 #################################################################
 #    Classes
 #################################################################
@@ -311,12 +693,33 @@ mydata:rxnorm_relationship_tuple rdf:type owl:Class ;
                                  rdfs:label "RxNorm allowed { subject predicate object . } tuple" .
 
 
+###  http://purl.obolibrary.org/obo/OBI_0001909
+<http://purl.obolibrary.org/obo/OBI_0001909> rdf:type owl:Class ;
+                                             rdfs:comment "label and IRI hand pasted" ;
+                                             rdfs:label "conclusion based on data" ;
+                                             rdfs:seeAlso <http://purl.obolibrary.org/obo/obi.owl> .
+
+
+###  http://purl.obolibrary.org/obo/PDRO_0000024
+<http://purl.obolibrary.org/obo/PDRO_0000024> rdf:type owl:Class ;
+                                              rdfs:comment "Even ignoring wheelchairs... are these things really drug prescriptions? The EHR or CDW treats them as \"reference medications\""@en ,
+                                                           "Some EHRs or CDWs may have medication strings like \"wheelchair\" that clearly do not denote a drug. So it may be more appropriator for Drivetrain to instantiate PDRO_0000001, \"health care prescription\""@en ,
+                                                           "label and IRI hand pasted"@en ;
+                                              rdfs:label "drug prescription"@en ;
+                                              rdfs:seeAlso <https://raw.githubusercontent.com/OpenLHS/PDRO/master/pdro.owl> .
+
+
+###  http://purl.org/dc/dcam/VocabularyEncodingScheme
+<http://purl.org/dc/dcam/VocabularyEncodingScheme> rdf:type owl:Class .
+
+
 ###  http://purl.org/dc/terms/Agent
 dcterms:Agent rdf:type owl:Class .
 
 
 ###  http://purl.org/dc/terms/AgentClass
-dcterms:AgentClass rdf:type owl:Class .
+dcterms:AgentClass rdf:type owl:Class ;
+                   rdfs:subClassOf rdfs:Class .
 
 
 ###  http://purl.org/dc/terms/BibliographicResource
@@ -324,7 +727,8 @@ dcterms:BibliographicResource rdf:type owl:Class .
 
 
 ###  http://purl.org/dc/terms/FileFormat
-dcterms:FileFormat rdf:type owl:Class .
+dcterms:FileFormat rdf:type owl:Class ;
+                   rdfs:subClassOf dcterms:MediaType .
 
 
 ###  http://purl.org/dc/terms/Frequency
@@ -332,11 +736,13 @@ dcterms:Frequency rdf:type owl:Class .
 
 
 ###  http://purl.org/dc/terms/Jurisdiction
-dcterms:Jurisdiction rdf:type owl:Class .
+dcterms:Jurisdiction rdf:type owl:Class ;
+                     rdfs:subClassOf dcterms:LocationPeriodOrJurisdiction .
 
 
 ###  http://purl.org/dc/terms/LicenseDocument
-dcterms:LicenseDocument rdf:type owl:Class .
+dcterms:LicenseDocument rdf:type owl:Class ;
+                        rdfs:subClassOf dcterms:RightsStatement .
 
 
 ###  http://purl.org/dc/terms/LinguisticSystem
@@ -344,7 +750,8 @@ dcterms:LinguisticSystem rdf:type owl:Class .
 
 
 ###  http://purl.org/dc/terms/Location
-dcterms:Location rdf:type owl:Class .
+dcterms:Location rdf:type owl:Class ;
+                 rdfs:subClassOf dcterms:LocationPeriodOrJurisdiction .
 
 
 ###  http://purl.org/dc/terms/LocationPeriodOrJurisdiction
@@ -352,7 +759,8 @@ dcterms:LocationPeriodOrJurisdiction rdf:type owl:Class .
 
 
 ###  http://purl.org/dc/terms/MediaType
-dcterms:MediaType rdf:type owl:Class .
+dcterms:MediaType rdf:type owl:Class ;
+                  rdfs:subClassOf dcterms:MediaTypeOrExtent .
 
 
 ###  http://purl.org/dc/terms/MediaTypeOrExtent
@@ -368,11 +776,13 @@ dcterms:MethodOfInstruction rdf:type owl:Class .
 
 
 ###  http://purl.org/dc/terms/PeriodOfTime
-dcterms:PeriodOfTime rdf:type owl:Class .
+dcterms:PeriodOfTime rdf:type owl:Class ;
+                     rdfs:subClassOf dcterms:LocationPeriodOrJurisdiction .
 
 
 ###  http://purl.org/dc/terms/PhysicalMedium
-dcterms:PhysicalMedium rdf:type owl:Class .
+dcterms:PhysicalMedium rdf:type owl:Class ;
+                       rdfs:subClassOf dcterms:MediaType .
 
 
 ###  http://purl.org/dc/terms/PhysicalResource
@@ -392,7 +802,8 @@ dcterms:RightsStatement rdf:type owl:Class .
 
 
 ###  http://purl.org/dc/terms/SizeOrDuration
-dcterms:SizeOrDuration rdf:type owl:Class .
+dcterms:SizeOrDuration rdf:type owl:Class ;
+                       rdfs:subClassOf dcterms:MediaTypeOrExtent .
 
 
 ###  http://purl.org/dc/terms/Standard
@@ -429,12 +840,14 @@ dcterms:Standard rdf:type owl:Class .
 ###  http://transformunify.org/ontologies/TURBO_0022036
 <http://transformunify.org/ontologies/TURBO_0022036> rdf:type owl:Class ;
                                                      rdfs:subClassOf <http://transformunify.org/ontologies/TURBO_0022023> ;
-                                                     rdfs:label "RxNorm term types"@en .
+                                                     rdfs:label "RxNorm employable term types"@en ;
+                                                     rdfs:seeAlso <http://transformunify.org/ontologies/TURBO_0022044> .
 
 
 ###  http://transformunify.org/ontologies/TURBO_0022037
 <http://transformunify.org/ontologies/TURBO_0022037> rdf:type owl:Class ;
-                                                     rdfs:subClassOf <http://transformunify.org/ontologies/TURBO_0022036> ;
+                                                     rdfs:subClassOf <http://transformunify.org/ontologies/TURBO_0022023> ;
+                                                     rdfs:comment "These are either synonym strings (not entities) or they are to vague to be useful, like the <http://example.com/resource/rxn_tty/DFG> of \"oral product\""@en ;
                                                      rdfs:label "Unemployed RxNorm term types"@en .
 
 
@@ -442,6 +855,47 @@ dcterms:Standard rdf:type owl:Class .
 <http://transformunify.org/ontologies/TURBO_0022038> rdf:type owl:Class ;
                                                      rdfs:subClassOf <http://transformunify.org/ontologies/TURBO_0022026> ;
                                                      rdfs:label "TMM named graph"@en .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022042
+<http://transformunify.org/ontologies/TURBO_0022042> rdf:type owl:Class ;
+                                                     rdfs:comment """select distinct ?o where {
+    graph <http://example.com/resource/classified_search_results> {
+        ?s <http://example.com/resource/query_source> ?o .
+    }
+}"""@en ;
+                                                     rdfs:label "TMM medication mapping Solr query source"@en .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022043
+<http://transformunify.org/ontologies/TURBO_0022043> rdf:type owl:Class ;
+                                                     rdfs:comment """construct {
+    ?o a <http://transformunify.org/ontologies/TURBO_0022043> 
+}{
+    graph <http://example.com/resource/classified_search_results> {
+        ?s <http://example.com/resource/match_sab> ?o .
+    }
+}"""@en ;
+                                                     rdfs:label "RxNorm Sources"@en .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022044
+<http://transformunify.org/ontologies/TURBO_0022044> rdf:type owl:Class ;
+                                                     rdfs:comment """construct {
+    ?o a <http://example.com/resource/match_tty> 
+} where {
+    graph <http://example.com/resource/classified_search_results> {
+        ?s <http://example.com/resource/match_tty> ?o .
+    }
+}"""@en ;
+                                                     rdfs:label "RxNorm String Bearers"@en ;
+                                                     rdfs:seeAlso <http://transformunify.org/ontologies/TURBO_0022036> .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022045
+<http://transformunify.org/ontologies/TURBO_0022045> rdf:type owl:Class ;
+                                                     rdfs:label "TMM search result classification"@en ;
+                                                     rdfs:seeAlso "http://transformunify.org/ontologies/TURBO_0022035"@en .
 
 
 ###  http://transformunify.org/ontologies/definer
@@ -1421,6 +1875,251 @@ mydata:turbo_med_mapping_hand rdf:type owl:NamedIndividual ,
                                        <http://transformunify.org/ontologies/TURBO_0022038> .
 
 
+###  http://example.com/resource/RXNORM_SAB/ATC
+<http://example.com/resource/RXNORM_SAB/ATC> rdf:type owl:NamedIndividual ,
+                                                      <http://transformunify.org/ontologies/TURBO_0022043> .
+
+
+###  http://example.com/resource/RXNORM_SAB/DRUGBANK
+<http://example.com/resource/RXNORM_SAB/DRUGBANK> rdf:type owl:NamedIndividual ,
+                                                           <http://transformunify.org/ontologies/TURBO_0022043> .
+
+
+###  http://example.com/resource/RXNORM_SAB/GS
+<http://example.com/resource/RXNORM_SAB/GS> rdf:type owl:NamedIndividual ,
+                                                     <http://transformunify.org/ontologies/TURBO_0022043> .
+
+
+###  http://example.com/resource/RXNORM_SAB/MMSL
+<http://example.com/resource/RXNORM_SAB/MMSL> rdf:type owl:NamedIndividual ,
+                                                       <http://transformunify.org/ontologies/TURBO_0022043> .
+
+
+###  http://example.com/resource/RXNORM_SAB/MMX
+<http://example.com/resource/RXNORM_SAB/MMX> rdf:type owl:NamedIndividual ,
+                                                      <http://transformunify.org/ontologies/TURBO_0022043> .
+
+
+###  http://example.com/resource/RXNORM_SAB/MSH
+<http://example.com/resource/RXNORM_SAB/MSH> rdf:type owl:NamedIndividual ,
+                                                      <http://transformunify.org/ontologies/TURBO_0022043> .
+
+
+###  http://example.com/resource/RXNORM_SAB/MTHSPL
+<http://example.com/resource/RXNORM_SAB/MTHSPL> rdf:type owl:NamedIndividual ,
+                                                         <http://transformunify.org/ontologies/TURBO_0022043> .
+
+
+###  http://example.com/resource/RXNORM_SAB/NDDF
+<http://example.com/resource/RXNORM_SAB/NDDF> rdf:type owl:NamedIndividual ,
+                                                       <http://transformunify.org/ontologies/TURBO_0022043> .
+
+
+###  http://example.com/resource/RXNORM_SAB/RXNORM
+<http://example.com/resource/RXNORM_SAB/RXNORM> rdf:type owl:NamedIndividual ,
+                                                         <http://transformunify.org/ontologies/TURBO_0022043> .
+
+
+###  http://example.com/resource/RXNORM_SAB/USP
+<http://example.com/resource/RXNORM_SAB/USP> rdf:type owl:NamedIndividual ,
+                                                      <http://transformunify.org/ontologies/TURBO_0022043> .
+
+
+###  http://example.com/resource/RXNORM_SAB/VANDF
+<http://example.com/resource/RXNORM_SAB/VANDF> rdf:type owl:NamedIndividual ,
+                                                        <http://transformunify.org/ontologies/TURBO_0022043> .
+
+
+###  http://example.com/resource/RXNORM_TTY/AB
+<http://example.com/resource/RXNORM_TTY/AB> rdf:type owl:NamedIndividual ,
+                                                     <http://transformunify.org/ontologies/TURBO_0022044> .
+
+
+###  http://example.com/resource/RXNORM_TTY/BD
+<http://example.com/resource/RXNORM_TTY/BD> rdf:type owl:NamedIndividual ,
+                                                     <http://transformunify.org/ontologies/TURBO_0022044> .
+
+
+###  http://example.com/resource/RXNORM_TTY/BN
+<http://example.com/resource/RXNORM_TTY/BN> rdf:type owl:NamedIndividual ,
+                                                     <http://transformunify.org/ontologies/TURBO_0022044> .
+
+
+###  http://example.com/resource/RXNORM_TTY/BPCK
+<http://example.com/resource/RXNORM_TTY/BPCK> rdf:type owl:NamedIndividual ,
+                                                       <http://transformunify.org/ontologies/TURBO_0022044> .
+
+
+###  http://example.com/resource/RXNORM_TTY/CD
+<http://example.com/resource/RXNORM_TTY/CD> rdf:type owl:NamedIndividual ,
+                                                     <http://transformunify.org/ontologies/TURBO_0022044> .
+
+
+###  http://example.com/resource/RXNORM_TTY/CDA
+<http://example.com/resource/RXNORM_TTY/CDA> rdf:type owl:NamedIndividual ,
+                                                      <http://transformunify.org/ontologies/TURBO_0022044> .
+
+
+###  http://example.com/resource/RXNORM_TTY/CDC
+<http://example.com/resource/RXNORM_TTY/CDC> rdf:type owl:NamedIndividual ,
+                                                      <http://transformunify.org/ontologies/TURBO_0022044> .
+
+
+###  http://example.com/resource/RXNORM_TTY/CDD
+<http://example.com/resource/RXNORM_TTY/CDD> rdf:type owl:NamedIndividual ,
+                                                      <http://transformunify.org/ontologies/TURBO_0022044> .
+
+
+###  http://example.com/resource/RXNORM_TTY/CE
+<http://example.com/resource/RXNORM_TTY/CE> rdf:type owl:NamedIndividual ,
+                                                     <http://transformunify.org/ontologies/TURBO_0022044> .
+
+
+###  http://example.com/resource/RXNORM_TTY/DF
+<http://example.com/resource/RXNORM_TTY/DF> rdf:type owl:NamedIndividual ,
+                                                     <http://transformunify.org/ontologies/TURBO_0022044> .
+
+
+###  http://example.com/resource/RXNORM_TTY/DFG
+<http://example.com/resource/RXNORM_TTY/DFG> rdf:type owl:NamedIndividual ,
+                                                      <http://transformunify.org/ontologies/TURBO_0022044> .
+
+
+###  http://example.com/resource/RXNORM_TTY/DP
+<http://example.com/resource/RXNORM_TTY/DP> rdf:type owl:NamedIndividual ,
+                                                     <http://transformunify.org/ontologies/TURBO_0022044> .
+
+
+###  http://example.com/resource/RXNORM_TTY/GN
+<http://example.com/resource/RXNORM_TTY/GN> rdf:type owl:NamedIndividual ,
+                                                     <http://transformunify.org/ontologies/TURBO_0022044> .
+
+
+###  http://example.com/resource/RXNORM_TTY/GPCK
+<http://example.com/resource/RXNORM_TTY/GPCK> rdf:type owl:NamedIndividual ,
+                                                       <http://transformunify.org/ontologies/TURBO_0022044> .
+
+
+###  http://example.com/resource/RXNORM_TTY/IN
+<http://example.com/resource/RXNORM_TTY/IN> rdf:type owl:NamedIndividual ,
+                                                     <http://transformunify.org/ontologies/TURBO_0022044> .
+
+
+###  http://example.com/resource/RXNORM_TTY/MH
+<http://example.com/resource/RXNORM_TTY/MH> rdf:type owl:NamedIndividual ,
+                                                     <http://transformunify.org/ontologies/TURBO_0022044> .
+
+
+###  http://example.com/resource/RXNORM_TTY/MIN
+<http://example.com/resource/RXNORM_TTY/MIN> rdf:type owl:NamedIndividual ,
+                                                      <http://transformunify.org/ontologies/TURBO_0022044> .
+
+
+###  http://example.com/resource/RXNORM_TTY/MS
+<http://example.com/resource/RXNORM_TTY/MS> rdf:type owl:NamedIndividual ,
+                                                     <http://transformunify.org/ontologies/TURBO_0022044> .
+
+
+###  http://example.com/resource/RXNORM_TTY/MTH_RXN_BD
+<http://example.com/resource/RXNORM_TTY/MTH_RXN_BD> rdf:type owl:NamedIndividual ,
+                                                             <http://transformunify.org/ontologies/TURBO_0022044> .
+
+
+###  http://example.com/resource/RXNORM_TTY/MTH_RXN_CD
+<http://example.com/resource/RXNORM_TTY/MTH_RXN_CD> rdf:type owl:NamedIndividual ,
+                                                             <http://transformunify.org/ontologies/TURBO_0022044> .
+
+
+###  http://example.com/resource/RXNORM_TTY/MTH_RXN_CDC
+<http://example.com/resource/RXNORM_TTY/MTH_RXN_CDC> rdf:type owl:NamedIndividual ,
+                                                              <http://transformunify.org/ontologies/TURBO_0022044> .
+
+
+###  http://example.com/resource/RXNORM_TTY/MTH_RXN_DP
+<http://example.com/resource/RXNORM_TTY/MTH_RXN_DP> rdf:type owl:NamedIndividual ,
+                                                             <http://transformunify.org/ontologies/TURBO_0022044> .
+
+
+###  http://example.com/resource/RXNORM_TTY/NM
+<http://example.com/resource/RXNORM_TTY/NM> rdf:type owl:NamedIndividual ,
+                                                     <http://transformunify.org/ontologies/TURBO_0022044> .
+
+
+###  http://example.com/resource/RXNORM_TTY/PCE
+<http://example.com/resource/RXNORM_TTY/PCE> rdf:type owl:NamedIndividual ,
+                                                      <http://transformunify.org/ontologies/TURBO_0022044> .
+
+
+###  http://example.com/resource/RXNORM_TTY/PEP
+<http://example.com/resource/RXNORM_TTY/PEP> rdf:type owl:NamedIndividual ,
+                                                      <http://transformunify.org/ontologies/TURBO_0022044> .
+
+
+###  http://example.com/resource/RXNORM_TTY/PIN
+<http://example.com/resource/RXNORM_TTY/PIN> rdf:type owl:NamedIndividual ,
+                                                      <http://transformunify.org/ontologies/TURBO_0022044> .
+
+
+###  http://example.com/resource/RXNORM_TTY/PSN
+<http://example.com/resource/RXNORM_TTY/PSN> rdf:type owl:NamedIndividual ,
+                                                      <http://transformunify.org/ontologies/TURBO_0022044> .
+
+
+###  http://example.com/resource/RXNORM_TTY/RXN_IN
+<http://example.com/resource/RXNORM_TTY/RXN_IN> rdf:type owl:NamedIndividual ,
+                                                         <http://transformunify.org/ontologies/TURBO_0022044> .
+
+
+###  http://example.com/resource/RXNORM_TTY/RXN_PT
+<http://example.com/resource/RXNORM_TTY/RXN_PT> rdf:type owl:NamedIndividual ,
+                                                         <http://transformunify.org/ontologies/TURBO_0022044> .
+
+
+###  http://example.com/resource/RXNORM_TTY/SBD
+<http://example.com/resource/RXNORM_TTY/SBD> rdf:type owl:NamedIndividual ,
+                                                      <http://transformunify.org/ontologies/TURBO_0022044> .
+
+
+###  http://example.com/resource/RXNORM_TTY/SBDC
+<http://example.com/resource/RXNORM_TTY/SBDC> rdf:type owl:NamedIndividual ,
+                                                       <http://transformunify.org/ontologies/TURBO_0022044> .
+
+
+###  http://example.com/resource/RXNORM_TTY/SBDF
+<http://example.com/resource/RXNORM_TTY/SBDF> rdf:type owl:NamedIndividual ,
+                                                       <http://transformunify.org/ontologies/TURBO_0022044> .
+
+
+###  http://example.com/resource/RXNORM_TTY/SCD
+<http://example.com/resource/RXNORM_TTY/SCD> rdf:type owl:NamedIndividual ,
+                                                      <http://transformunify.org/ontologies/TURBO_0022044> .
+
+
+###  http://example.com/resource/RXNORM_TTY/SCDC
+<http://example.com/resource/RXNORM_TTY/SCDC> rdf:type owl:NamedIndividual ,
+                                                       <http://transformunify.org/ontologies/TURBO_0022044> .
+
+
+###  http://example.com/resource/RXNORM_TTY/SCDF
+<http://example.com/resource/RXNORM_TTY/SCDF> rdf:type owl:NamedIndividual ,
+                                                       <http://transformunify.org/ontologies/TURBO_0022044> .
+
+
+###  http://example.com/resource/RXNORM_TTY/SY
+<http://example.com/resource/RXNORM_TTY/SY> rdf:type owl:NamedIndividual ,
+                                                     <http://transformunify.org/ontologies/TURBO_0022044> .
+
+
+###  http://example.com/resource/query_source/lowercased_GENERIC_NAME
+<http://example.com/resource/query_source/lowercased_GENERIC_NAME> rdf:type owl:NamedIndividual ,
+                                                                            <http://transformunify.org/ontologies/TURBO_0022042> .
+
+
+###  http://example.com/resource/query_source/normalized_FULL_NAME
+<http://example.com/resource/query_source/normalized_FULL_NAME> rdf:type owl:NamedIndividual ,
+                                                                         <http://transformunify.org/ontologies/TURBO_0022042> .
+
+
 ###  http://example.com/resource/rxn_tty/BN
 <http://example.com/resource/rxn_tty/BN> rdf:type owl:NamedIndividual ,
                                                   <http://transformunify.org/ontologies/TURBO_0022036> ;
@@ -1629,11 +2328,89 @@ mydata:turbo_med_mapping_hand rdf:type owl:NamedIndividual ,
                                            <http://www.w3.org/2004/02/skos/core#example> "FLUoxetine 10 MG Oral Capsule [PROzac]" .
 
 
+###  http://example.com/resource/search_res_classification/consists_of
+<http://example.com/resource/search_res_classification/consists_of> rdf:type owl:NamedIndividual ,
+                                                                             <http://transformunify.org/ontologies/TURBO_0022045> .
+
+
+###  http://example.com/resource/search_res_classification/constitutes
+<http://example.com/resource/search_res_classification/constitutes> rdf:type owl:NamedIndividual ,
+                                                                             <http://transformunify.org/ontologies/TURBO_0022045> .
+
+
+###  http://example.com/resource/search_res_classification/contains
+<http://example.com/resource/search_res_classification/contains> rdf:type owl:NamedIndividual ,
+                                                                          <http://transformunify.org/ontologies/TURBO_0022045> .
+
+
+###  http://example.com/resource/search_res_classification/form_of
+<http://example.com/resource/search_res_classification/form_of> rdf:type owl:NamedIndividual ,
+                                                                         <http://transformunify.org/ontologies/TURBO_0022045> .
+
+
+###  http://example.com/resource/search_res_classification/has_form
+<http://example.com/resource/search_res_classification/has_form> rdf:type owl:NamedIndividual ,
+                                                                          <http://transformunify.org/ontologies/TURBO_0022045> .
+
+
+###  http://example.com/resource/search_res_classification/has_ingredient
+<http://example.com/resource/search_res_classification/has_ingredient> rdf:type owl:NamedIndividual ,
+                                                                                <http://transformunify.org/ontologies/TURBO_0022045> .
+
+
+###  http://example.com/resource/search_res_classification/has_part
+<http://example.com/resource/search_res_classification/has_part> rdf:type owl:NamedIndividual ,
+                                                                          <http://transformunify.org/ontologies/TURBO_0022045> .
+
+
+###  http://example.com/resource/search_res_classification/has_quantified_form
+<http://example.com/resource/search_res_classification/has_quantified_form> rdf:type owl:NamedIndividual ,
+                                                                                     <http://transformunify.org/ontologies/TURBO_0022045> .
+
+
+###  http://example.com/resource/search_res_classification/has_tradename
+<http://example.com/resource/search_res_classification/has_tradename> rdf:type owl:NamedIndividual ,
+                                                                               <http://transformunify.org/ontologies/TURBO_0022045> .
+
+
+###  http://example.com/resource/search_res_classification/identical
+<http://example.com/resource/search_res_classification/identical> rdf:type owl:NamedIndividual ,
+                                                                           <http://transformunify.org/ontologies/TURBO_0022045> .
+
+
+###  http://example.com/resource/search_res_classification/ingredient_of
+<http://example.com/resource/search_res_classification/ingredient_of> rdf:type owl:NamedIndividual ,
+                                                                               <http://transformunify.org/ontologies/TURBO_0022045> .
+
+
+###  http://example.com/resource/search_res_classification/inverse_isa
+<http://example.com/resource/search_res_classification/inverse_isa> rdf:type owl:NamedIndividual ,
+                                                                             <http://transformunify.org/ontologies/TURBO_0022045> .
+
+
+###  http://example.com/resource/search_res_classification/isa
+<http://example.com/resource/search_res_classification/isa> rdf:type owl:NamedIndividual ,
+                                                                     <http://transformunify.org/ontologies/TURBO_0022045> .
+
+
+###  http://example.com/resource/search_res_classification/more_distant
+<http://example.com/resource/search_res_classification/more_distant> rdf:type owl:NamedIndividual ,
+                                                                              <http://transformunify.org/ontologies/TURBO_0022045> .
+
+
+###  http://example.com/resource/search_res_classification/part_of
+<http://example.com/resource/search_res_classification/part_of> rdf:type owl:NamedIndividual ,
+                                                                         <http://transformunify.org/ontologies/TURBO_0022045> .
+
+
+###  http://example.com/resource/search_res_classification/tradename_of
+<http://example.com/resource/search_res_classification/tradename_of> rdf:type owl:NamedIndividual ,
+                                                                              <http://transformunify.org/ontologies/TURBO_0022045> .
+
+
 ###  http://purl.bioontology.org/ontology/RXNORM/
 <http://purl.bioontology.org/ontology/RXNORM/> rdf:type owl:NamedIndividual ,
                                                         <http://transformunify.org/ontologies/definer> ;
-                                               <http://xmlns.com/foaf/0.1/homepage> <https://bioportal.bioontology.org/ontologies/RXNORM> ,
-                                                                                    <https://www.nlm.nih.gov/research/umls/rxnorm/docs/rxnormfiles.html> ;
                                                <http://xmlns.com/foaf/0.1/page> <http://data.bioontology.org/ontologies/RXNORM/download/download?apikey> ;
                                                dcterms:accrualPeriodicity <http://purl.org/cld/freq/monthly> ;
                                                rdfs:comment """BioPortal download URLs require an apikey. A public key is avaiable for some ontologies... see the ontologies homepage. 
@@ -1661,7 +2438,9 @@ Working on writing RRF -> RDF direct converter
 https://download.nlm.nih.gov/umls/kss/rxnorm/RxNorm_full_05042020.zip
 
 May be difficult to load from BioPortal URL into password protected GraphDB repo, so loading from locally staged file may be required. Redirect involved? GraphDB tries to autosense formats, but can tell that BioPortals files are generally TTL from the URL.""" ;
-                                               rdfs:label "BioPortal RxNorm ontology"@en .
+                                               rdfs:label "BioPortal RxNorm ontology"@en ;
+                                               <http://xmlns.com/foaf/0.1/homepage> <https://bioportal.bioontology.org/ontologies/RXNORM> ,
+                                                                                    <https://www.nlm.nih.gov/research/umls/rxnorm/docs/rxnormfiles.html> .
 
 [ rdf:type owl:Axiom ;
    owl:annotatedSource <http://purl.bioontology.org/ontology/RXNORM/> ;
@@ -1781,8 +2560,1076 @@ see https://www.ebi.ac.uk/chebi/downloadsForward.do""" ,
                                                               <http://transformunify.org/ontologies/definer> .
 
 
+###  http://purl.org/cld/freq/
+<http://purl.org/cld/freq/> rdf:type owl:NamedIndividual ;
+                            dcterms:modified "2013-05-10"^^dcterms:W3CDTF ;
+                            dcterms:title "The Collection Description Frequency Namespace"@en ;
+                            dcterms:creator "" .
+
+
+###  http://purl.org/cld/freq/annual
+<http://purl.org/cld/freq/annual> rdf:type owl:NamedIndividual ,
+                                           <http://www.w3.org/2004/02/skos/core#Concept> ;
+                                  <http://www.w3.org/2004/02/skos/core#inScheme> <http://purl.org/cld/terms/Frequency> ;
+                                  <http://purl.org/dc/dcam/memberOf> <http://purl.org/cld/terms/Frequency> ;
+                                  rdfs:comment "The event occurs once a year."@en ;
+                                  rdfs:isDefinedBy <http://purl.org/cld/freq/> ;
+                                  rdfs:label "Annual"@en ;
+                                  rdfs:seeAlso <http://www.loc.gov/marc/holdings/echdcapt.html> ;
+                                  <http://www.w3.org/2004/02/skos/core#prefLabel> "Annual"@en .
+
+
+###  http://purl.org/cld/freq/biennial
+<http://purl.org/cld/freq/biennial> rdf:type owl:NamedIndividual ,
+                                             <http://www.w3.org/2004/02/skos/core#Concept> ;
+                                    <http://www.w3.org/2004/02/skos/core#inScheme> <http://purl.org/cld/terms/Frequency> ;
+                                    <http://purl.org/dc/dcam/memberOf> <http://purl.org/cld/terms/Frequency> ;
+                                    rdfs:comment "The event occurs every two years."@en ;
+                                    rdfs:isDefinedBy <http://purl.org/cld/freq/> ;
+                                    rdfs:label "Biennial"@en ;
+                                    rdfs:seeAlso <http://www.loc.gov/marc/holdings/echdcapt.html> ;
+                                    <http://www.w3.org/2004/02/skos/core#prefLabel> "Biennial"@en .
+
+
+###  http://purl.org/cld/freq/bimonthly
+<http://purl.org/cld/freq/bimonthly> rdf:type owl:NamedIndividual ,
+                                              <http://www.w3.org/2004/02/skos/core#Concept> ;
+                                     <http://www.w3.org/2004/02/skos/core#inScheme> <http://purl.org/cld/terms/Frequency> ;
+                                     <http://purl.org/dc/dcam/memberOf> <http://purl.org/cld/terms/Frequency> ;
+                                     rdfs:comment "The event occurs every two months."@en ;
+                                     rdfs:isDefinedBy <http://purl.org/cld/freq/> ;
+                                     rdfs:label "Bimonthly"@en ;
+                                     rdfs:seeAlso <http://www.loc.gov/marc/holdings/echdcapt.html> ;
+                                     <http://www.w3.org/2004/02/skos/core#prefLabel> "Bimonthly"@en .
+
+
+###  http://purl.org/cld/freq/biweekly
+<http://purl.org/cld/freq/biweekly> rdf:type owl:NamedIndividual ,
+                                             <http://www.w3.org/2004/02/skos/core#Concept> ;
+                                    <http://www.w3.org/2004/02/skos/core#inScheme> <http://purl.org/cld/terms/Frequency> ;
+                                    <http://purl.org/dc/dcam/memberOf> <http://purl.org/cld/terms/Frequency> ;
+                                    rdfs:comment "The event occurs every two weeks."@en ;
+                                    rdfs:isDefinedBy <http://purl.org/cld/freq/> ;
+                                    rdfs:label "Biweekly"@en ;
+                                    rdfs:seeAlso <http://www.loc.gov/marc/holdings/echdcapt.html> ;
+                                    <http://www.w3.org/2004/02/skos/core#prefLabel> "Biweekly"@en .
+
+
+###  http://purl.org/cld/freq/continuous
+<http://purl.org/cld/freq/continuous> rdf:type owl:NamedIndividual ,
+                                               <http://www.w3.org/2004/02/skos/core#Concept> ;
+                                      <http://www.w3.org/2004/02/skos/core#inScheme> <http://purl.org/cld/terms/Frequency> ;
+                                      <http://purl.org/dc/dcam/memberOf> <http://purl.org/cld/terms/Frequency> ;
+                                      rdfs:comment "The event repeats without interruption."@en ;
+                                      rdfs:isDefinedBy <http://purl.org/cld/freq/> ;
+                                      rdfs:label "Continuous"@en ;
+                                      rdfs:seeAlso <http://www.loc.gov/marc/holdings/echdcapt.html> ;
+                                      <http://www.w3.org/2004/02/skos/core#prefLabel> "Continuous"@en .
+
+
+###  http://purl.org/cld/freq/daily
+<http://purl.org/cld/freq/daily> rdf:type owl:NamedIndividual ,
+                                          <http://www.w3.org/2004/02/skos/core#Concept> ;
+                                 <http://www.w3.org/2004/02/skos/core#inScheme> <http://purl.org/cld/terms/Frequency> ;
+                                 <http://purl.org/dc/dcam/memberOf> <http://purl.org/cld/terms/Frequency> ;
+                                 rdfs:comment "The event occurs once a day."@en ;
+                                 rdfs:isDefinedBy <http://purl.org/cld/freq/> ;
+                                 rdfs:label "Daily"@en ;
+                                 rdfs:seeAlso <http://www.loc.gov/marc/holdings/echdcapt.html> ;
+                                 <http://www.w3.org/2004/02/skos/core#prefLabel> "Daily"@en .
+
+
+###  http://purl.org/cld/freq/irregular
+<http://purl.org/cld/freq/irregular> rdf:type owl:NamedIndividual ,
+                                              <http://www.w3.org/2004/02/skos/core#Concept> ;
+                                     <http://www.w3.org/2004/02/skos/core#inScheme> <http://purl.org/cld/terms/Frequency> ;
+                                     <http://purl.org/dc/dcam/memberOf> <http://purl.org/cld/terms/Frequency> ;
+                                     rdfs:comment "The event occurs at uneven intervals."@en ;
+                                     rdfs:isDefinedBy <http://purl.org/cld/freq/> ;
+                                     rdfs:label "Irregular"@en ;
+                                     rdfs:seeAlso <http://www.loc.gov/marc/holdings/echdcapt.html> ;
+                                     <http://www.w3.org/2004/02/skos/core#prefLabel> "Irregular"@en .
+
+
 ###  http://purl.org/cld/freq/monthly
-<http://purl.org/cld/freq/monthly> rdf:type owl:NamedIndividual .
+<http://purl.org/cld/freq/monthly> rdf:type owl:NamedIndividual ,
+                                            <http://www.w3.org/2004/02/skos/core#Concept> ;
+                                   <http://www.w3.org/2004/02/skos/core#inScheme> <http://purl.org/cld/terms/Frequency> ;
+                                   <http://purl.org/dc/dcam/memberOf> <http://purl.org/cld/terms/Frequency> ;
+                                   rdfs:comment "The event occurs once a month."@en ;
+                                   rdfs:isDefinedBy <http://purl.org/cld/freq/> ;
+                                   rdfs:label "Monthly"@en ;
+                                   rdfs:seeAlso <http://www.loc.gov/marc/holdings/echdcapt.html> ;
+                                   <http://www.w3.org/2004/02/skos/core#prefLabel> "Monthly"@en .
+
+
+###  http://purl.org/cld/freq/quarterly
+<http://purl.org/cld/freq/quarterly> rdf:type owl:NamedIndividual ,
+                                              <http://www.w3.org/2004/02/skos/core#Concept> ;
+                                     <http://www.w3.org/2004/02/skos/core#inScheme> <http://purl.org/cld/terms/Frequency> ;
+                                     <http://purl.org/dc/dcam/memberOf> <http://purl.org/cld/terms/Frequency> ;
+                                     rdfs:comment "The event occurs every three months."@en ;
+                                     rdfs:isDefinedBy <http://purl.org/cld/freq/> ;
+                                     rdfs:label "Quarterly"@en ;
+                                     rdfs:seeAlso <http://www.loc.gov/marc/holdings/echdcapt.html> ;
+                                     <http://www.w3.org/2004/02/skos/core#prefLabel> "Quarterly"@en .
+
+
+###  http://purl.org/cld/freq/semiannual
+<http://purl.org/cld/freq/semiannual> rdf:type owl:NamedIndividual ,
+                                               <http://www.w3.org/2004/02/skos/core#Concept> ;
+                                      <http://www.w3.org/2004/02/skos/core#inScheme> <http://purl.org/cld/terms/Frequency> ;
+                                      <http://purl.org/dc/dcam/memberOf> <http://purl.org/cld/terms/Frequency> ;
+                                      rdfs:comment "The event occurs twice a year."@en ;
+                                      rdfs:isDefinedBy <http://purl.org/cld/freq/> ;
+                                      rdfs:label "Semiannual"@en ;
+                                      rdfs:seeAlso <http://www.loc.gov/marc/holdings/echdcapt.html> ;
+                                      <http://www.w3.org/2004/02/skos/core#prefLabel> "Semiannual"@en .
+
+
+###  http://purl.org/cld/freq/semimonthly
+<http://purl.org/cld/freq/semimonthly> rdf:type owl:NamedIndividual ,
+                                                <http://www.w3.org/2004/02/skos/core#Concept> ;
+                                       <http://www.w3.org/2004/02/skos/core#inScheme> <http://purl.org/cld/terms/Frequency> ;
+                                       <http://purl.org/dc/dcam/memberOf> <http://purl.org/cld/terms/Frequency> ;
+                                       rdfs:comment "The event occurs twice a month."@en ;
+                                       rdfs:isDefinedBy <http://purl.org/cld/freq/> ;
+                                       rdfs:label "Semimonthly"@en ;
+                                       rdfs:seeAlso <http://www.loc.gov/marc/holdings/echdcapt.html> ;
+                                       <http://www.w3.org/2004/02/skos/core#prefLabel> "Semimonthly"@en .
+
+
+###  http://purl.org/cld/freq/semiweekly
+<http://purl.org/cld/freq/semiweekly> rdf:type owl:NamedIndividual ,
+                                               <http://www.w3.org/2004/02/skos/core#Concept> ;
+                                      <http://www.w3.org/2004/02/skos/core#inScheme> <http://purl.org/cld/terms/Frequency> ;
+                                      <http://purl.org/dc/dcam/memberOf> <http://purl.org/cld/terms/Frequency> ;
+                                      rdfs:comment "The event occurs twice a week."@en ;
+                                      rdfs:isDefinedBy <http://purl.org/cld/freq/> ;
+                                      rdfs:label "Semiweekly"@en ;
+                                      rdfs:seeAlso <http://www.loc.gov/marc/holdings/echdcapt.html> ;
+                                      <http://www.w3.org/2004/02/skos/core#prefLabel> "Semiweekly"@en .
+
+
+###  http://purl.org/cld/freq/threeTimesAMonth
+<http://purl.org/cld/freq/threeTimesAMonth> rdf:type owl:NamedIndividual ,
+                                                     <http://www.w3.org/2004/02/skos/core#Concept> ;
+                                            <http://www.w3.org/2004/02/skos/core#inScheme> <http://purl.org/cld/terms/Frequency> ;
+                                            <http://purl.org/dc/dcam/memberOf> <http://purl.org/cld/terms/Frequency> ;
+                                            rdfs:comment "The event occurs three times a month."@en ;
+                                            rdfs:isDefinedBy <http://purl.org/cld/freq/> ;
+                                            rdfs:label "Three times a month"@en ;
+                                            rdfs:seeAlso <http://www.loc.gov/marc/holdings/echdcapt.html> ;
+                                            <http://www.w3.org/2004/02/skos/core#prefLabel> "Three times a month"@en .
+
+
+###  http://purl.org/cld/freq/threeTimesAWeek
+<http://purl.org/cld/freq/threeTimesAWeek> rdf:type owl:NamedIndividual ,
+                                                    <http://www.w3.org/2004/02/skos/core#Concept> ;
+                                           <http://www.w3.org/2004/02/skos/core#inScheme> <http://purl.org/cld/terms/Frequency> ;
+                                           <http://purl.org/dc/dcam/memberOf> <http://purl.org/cld/terms/Frequency> ;
+                                           rdfs:comment "The event occurs three times a week."@en ;
+                                           rdfs:isDefinedBy <http://purl.org/cld/freq/> ;
+                                           rdfs:label "Three times a week"@en ;
+                                           rdfs:seeAlso <http://www.loc.gov/marc/holdings/echdcapt.html> ;
+                                           <http://www.w3.org/2004/02/skos/core#prefLabel> "Three times a week"@en .
+
+
+###  http://purl.org/cld/freq/threeTimesAYear
+<http://purl.org/cld/freq/threeTimesAYear> rdf:type owl:NamedIndividual ,
+                                                    <http://www.w3.org/2004/02/skos/core#Concept> ;
+                                           <http://www.w3.org/2004/02/skos/core#inScheme> <http://purl.org/cld/terms/Frequency> ;
+                                           <http://purl.org/dc/dcam/memberOf> <http://purl.org/cld/terms/Frequency> ;
+                                           rdfs:comment "The event occurs three times a year."@en ;
+                                           rdfs:isDefinedBy <http://purl.org/cld/freq/> ;
+                                           rdfs:label "Three times a year"@en ;
+                                           rdfs:seeAlso <http://www.loc.gov/marc/holdings/echdcapt.html> ;
+                                           <http://www.w3.org/2004/02/skos/core#prefLabel> "Three times a year"@en .
+
+
+###  http://purl.org/cld/freq/triennial
+<http://purl.org/cld/freq/triennial> rdf:type owl:NamedIndividual ,
+                                              <http://www.w3.org/2004/02/skos/core#Concept> ;
+                                     <http://www.w3.org/2004/02/skos/core#inScheme> <http://purl.org/cld/terms/Frequency> ;
+                                     <http://purl.org/dc/dcam/memberOf> <http://purl.org/cld/terms/Frequency> ;
+                                     rdfs:comment "The event occurs every three years."@en ;
+                                     rdfs:isDefinedBy <http://purl.org/cld/freq/> ;
+                                     rdfs:label "Triennial"@en ;
+                                     rdfs:seeAlso <http://www.loc.gov/marc/holdings/echdcapt.html> ;
+                                     <http://www.w3.org/2004/02/skos/core#prefLabel> "Triennial"@en .
+
+
+###  http://purl.org/cld/freq/weekly
+<http://purl.org/cld/freq/weekly> rdf:type owl:NamedIndividual ,
+                                           <http://www.w3.org/2004/02/skos/core#Concept> ;
+                                  <http://www.w3.org/2004/02/skos/core#inScheme> <http://purl.org/cld/terms/Frequency> ;
+                                  <http://purl.org/dc/dcam/memberOf> <http://purl.org/cld/terms/Frequency> ;
+                                  rdfs:comment "The event occurs once a week."@en ;
+                                  rdfs:isDefinedBy <http://purl.org/cld/freq/> ;
+                                  rdfs:label "Weekly"@en ;
+                                  rdfs:seeAlso <http://www.loc.gov/marc/holdings/echdcapt.html> ;
+                                  <http://www.w3.org/2004/02/skos/core#prefLabel> "Weekly"@en .
+
+
+###  http://purl.org/cld/terms/Frequency
+<http://purl.org/cld/terms/Frequency> rdf:type owl:NamedIndividual .
+
+
+###  http://purl.org/dc/elements/1.1/
+<http://purl.org/dc/elements/1.1/> rdf:type owl:NamedIndividual ;
+                                   dcterms:modified "2012-06-14"^^xsd:date ;
+                                   dcterms:title "Dublin Core Metadata Element Set, Version 1.1"@en ;
+                                   dcterms:publisher <http://purl.org/dc/aboutdcmi#DCMI> .
+
+
+###  http://purl.org/dc/elements/1.1/contributor
+<http://purl.org/dc/elements/1.1/contributor> rdf:type owl:NamedIndividual ;
+                                              dcterms:issued "1999-07-02"^^xsd:date ;
+                                              dcterms:description "The guidelines for using names of persons or organizations as creators also apply to contributors.  Typically, the name of a Contributor should be used to indicate the entity."@en ;
+                                              rdfs:comment "An entity responsible for making contributions to the resource."@en ;
+                                              rdfs:isDefinedBy <http://purl.org/dc/elements/1.1/> ;
+                                              rdfs:label "Contributor"@en ;
+                                              <http://www.w3.org/2004/02/skos/core#note> "A [second property](/specifications/dublin-core/dcmi-terms/#http://purl.org/dc/terms/contributor) with the same name as this property has been declared in the [dcterms: namespace](http://purl.org/dc/terms/).  See the Introduction to the document [DCMI Metadata Terms](/specifications/dublin-core/dcmi-terms/) for an explanation."@en .
+
+
+###  http://purl.org/dc/elements/1.1/coverage
+<http://purl.org/dc/elements/1.1/coverage> rdf:type owl:NamedIndividual ;
+                                           dcterms:issued "1999-07-02"^^xsd:date ;
+                                           dcterms:description "Spatial topic and spatial applicability may be a named place or a location specified by its geographic coordinates. Temporal topic may be a named period, date, or date range. A jurisdiction may be a named administrative entity or a geographic place to which the resource applies. Recommended practice is to use a controlled vocabulary such as the Getty Thesaurus of Geographic Names [[TGN](https://www.getty.edu/research/tools/vocabulary/tgn/index.html)]. Where appropriate, named places or time periods may be used in preference to numeric identifiers such as sets of coordinates or date ranges."@en ;
+                                           rdfs:comment "The spatial or temporal topic of the resource, spatial applicability of the resource, or jurisdiction under which the resource is relevant."@en ;
+                                           rdfs:isDefinedBy <http://purl.org/dc/elements/1.1/> ;
+                                           rdfs:label "Coverage"@en ;
+                                           <http://www.w3.org/2004/02/skos/core#note> "A [second property](/specifications/dublin-core/dcmi-terms/#http://purl.org/dc/terms/coverage) with the same name as this property has been declared in the [dcterms: namespace](http://purl.org/dc/terms/).  See the Introduction to the document [DCMI Metadata Terms](/specifications/dublin-core/dcmi-terms/) for an explanation."@en .
+
+
+###  http://purl.org/dc/elements/1.1/creator
+<http://purl.org/dc/elements/1.1/creator> rdf:type owl:NamedIndividual ;
+                                          dcterms:issued "1999-07-02"^^xsd:date ;
+                                          dcterms:description "Examples of a Creator include a person, an organization, or a service. Typically, the name of a Creator should be used to indicate the entity."@en ;
+                                          rdfs:comment "An entity primarily responsible for making the resource."@en ;
+                                          rdfs:isDefinedBy <http://purl.org/dc/elements/1.1/> ;
+                                          rdfs:label "Creator"@en ;
+                                          <http://www.w3.org/2004/02/skos/core#note> "A [second property](/specifications/dublin-core/dcmi-terms/#http://purl.org/dc/terms/creator) with the same name as this property has been declared in the [dcterms: namespace](http://purl.org/dc/terms/).  See the Introduction to the document [DCMI Metadata Terms](/specifications/dublin-core/dcmi-terms/) for an explanation."@en .
+
+
+###  http://purl.org/dc/elements/1.1/date
+<http://purl.org/dc/elements/1.1/date> rdf:type owl:NamedIndividual ;
+                                       dcterms:issued "1999-07-02"^^xsd:date ;
+                                       dcterms:description "Date may be used to express temporal information at any level of granularity.  Recommended practice is to express the date, date/time, or period of time according to ISO 8601-1 [[ISO 8601-1](https://www.iso.org/iso-8601-date-and-time-format.html)] or a published profile of the ISO standard, such as the W3C Note on Date and Time Formats [[W3CDTF](https://www.w3.org/TR/NOTE-datetime)] or the Extended Date/Time Format Specification [[EDTF](http://www.loc.gov/standards/datetime/)].  If the full date is unknown, month and year (YYYY-MM) or just year (YYYY) may be used. Date ranges may be specified using ISO 8601 period of time specification in which start and end dates are separated by a '/' (slash) character.  Either the start or end date may be missing."@en ;
+                                       rdfs:comment "A point or period of time associated with an event in the lifecycle of the resource."@en ;
+                                       rdfs:isDefinedBy <http://purl.org/dc/elements/1.1/> ;
+                                       rdfs:label "Date"@en ;
+                                       <http://www.w3.org/2004/02/skos/core#note> "A [second property](/specifications/dublin-core/dcmi-terms/#http://purl.org/dc/terms/date) with the same name as this property has been declared in the [dcterms: namespace](http://purl.org/dc/terms/).  See the Introduction to the document [DCMI Metadata Terms](/specifications/dublin-core/dcmi-terms/) for an explanation."@en .
+
+
+###  http://purl.org/dc/elements/1.1/description
+<http://purl.org/dc/elements/1.1/description> rdf:type owl:NamedIndividual ;
+                                              dcterms:issued "1999-07-02"^^xsd:date ;
+                                              dcterms:description "Description may include but is not limited to: an abstract, a table of contents, a graphical representation, or a free-text account of the resource."@en ;
+                                              rdfs:comment "An account of the resource."@en ;
+                                              rdfs:isDefinedBy <http://purl.org/dc/elements/1.1/> ;
+                                              rdfs:label "Description"@en ;
+                                              <http://www.w3.org/2004/02/skos/core#note> "A [second property](/specifications/dublin-core/dcmi-terms/#http://purl.org/dc/terms/description) with the same name as this property has been declared in the [dcterms: namespace](http://purl.org/dc/terms/).  See the Introduction to the document [DCMI Metadata Terms](/specifications/dublin-core/dcmi-terms/) for an explanation."@en .
+
+
+###  http://purl.org/dc/elements/1.1/format
+<http://purl.org/dc/elements/1.1/format> rdf:type owl:NamedIndividual ;
+                                         dcterms:issued "1999-07-02"^^xsd:date ;
+                                         dcterms:description "Recommended practice is to use a controlled vocabulary where available. For example, for file formats one could use the list of Internet Media Types [[MIME](https://www.iana.org/assignments/media-types/media-types.xhtml)]."@en ;
+                                         rdfs:comment "The file format, physical medium, or dimensions of the resource."@en ;
+                                         rdfs:isDefinedBy <http://purl.org/dc/elements/1.1/> ;
+                                         rdfs:label "Format"@en ;
+                                         <http://www.w3.org/2004/02/skos/core#note> "A [second property](/specifications/dublin-core/dcmi-terms/#http://purl.org/dc/terms/format) with the same name as this property has been declared in the [dcterms: namespace](http://purl.org/dc/terms/).  See the Introduction to the document [DCMI Metadata Terms](/specifications/dublin-core/dcmi-terms/) for an explanation."@en .
+
+
+###  http://purl.org/dc/elements/1.1/identifier
+<http://purl.org/dc/elements/1.1/identifier> rdf:type owl:NamedIndividual ;
+                                             dcterms:issued "1999-07-02"^^xsd:date ;
+                                             dcterms:description "Recommended practice is to identify the resource by means of a string conforming to an identification system."@en ;
+                                             rdfs:comment "An unambiguous reference to the resource within a given context."@en ;
+                                             rdfs:isDefinedBy <http://purl.org/dc/elements/1.1/> ;
+                                             rdfs:label "Identifier"@en ;
+                                             <http://www.w3.org/2004/02/skos/core#note> "A [second property](/specifications/dublin-core/dcmi-terms/#http://purl.org/dc/terms/identifier) with the same name as this property has been declared in the [dcterms: namespace](http://purl.org/dc/terms/).  See the Introduction to the document [DCMI Metadata Terms](/specifications/dublin-core/dcmi-terms/) for an explanation."@en .
+
+
+###  http://purl.org/dc/elements/1.1/language
+<http://purl.org/dc/elements/1.1/language> rdf:type owl:NamedIndividual ;
+                                           dcterms:issued "1999-07-02"^^xsd:date ;
+                                           dcterms:description "Recommended practice is to use either a non-literal value representing a language from a controlled vocabulary such as ISO 639-2 or ISO 639-3, or a literal value consisting of an IETF Best Current Practice 47 [[IETF-BCP47](https://tools.ietf.org/html/bcp47)] language tag."@en ;
+                                           rdfs:comment "A language of the resource."@en ;
+                                           rdfs:isDefinedBy <http://purl.org/dc/elements/1.1/> ;
+                                           rdfs:label "Language"@en ;
+                                           <http://www.w3.org/2004/02/skos/core#note> "A [second property](/specifications/dublin-core/dcmi-terms/#http://purl.org/dc/terms/language) with the same name as this property has been declared in the [dcterms: namespace](http://purl.org/dc/terms/).  See the Introduction to the document [DCMI Metadata Terms](/specifications/dublin-core/dcmi-terms/) for an explanation."@en .
+
+
+###  http://purl.org/dc/elements/1.1/publisher
+<http://purl.org/dc/elements/1.1/publisher> rdf:type owl:NamedIndividual ;
+                                            dcterms:issued "1999-07-02"^^xsd:date ;
+                                            dcterms:description "Examples of a Publisher include a person, an organization, or a service. Typically, the name of a Publisher should be used to indicate the entity."@en ;
+                                            rdfs:comment "An entity responsible for making the resource available."@en ;
+                                            rdfs:isDefinedBy <http://purl.org/dc/elements/1.1/> ;
+                                            rdfs:label "Publisher"@en ;
+                                            <http://www.w3.org/2004/02/skos/core#note> "A [second property](/specifications/dublin-core/dcmi-terms/#http://purl.org/dc/terms/publisher) with the same name as this property has been declared in the [dcterms: namespace](http://purl.org/dc/terms/).  See the Introduction to the document [DCMI Metadata Terms](/specifications/dublin-core/dcmi-terms/) for an explanation."@en .
+
+
+###  http://purl.org/dc/elements/1.1/relation
+<http://purl.org/dc/elements/1.1/relation> rdf:type owl:NamedIndividual ;
+                                           dcterms:issued "1999-07-02"^^xsd:date ;
+                                           dcterms:description "Recommended practice is to identify the related resource by means of a URI. If this is not possible or feasible, a string conforming to a formal identification system may be provided."@en ;
+                                           rdfs:comment "A related resource."@en ;
+                                           rdfs:isDefinedBy <http://purl.org/dc/elements/1.1/> ;
+                                           rdfs:label "Relation"@en ;
+                                           <http://www.w3.org/2004/02/skos/core#note> "A [second property](/specifications/dublin-core/dcmi-terms/#http://purl.org/dc/terms/relation) with the same name as this property has been declared in the [dcterms: namespace](http://purl.org/dc/terms/).  See the Introduction to the document [DCMI Metadata Terms](/specifications/dublin-core/dcmi-terms/) for an explanation."@en .
+
+
+###  http://purl.org/dc/elements/1.1/rights
+<http://purl.org/dc/elements/1.1/rights> rdf:type owl:NamedIndividual ;
+                                         dcterms:issued "1999-07-02"^^xsd:date ;
+                                         dcterms:description "Typically, rights information includes a statement about various property rights associated with the resource, including intellectual property rights."@en ;
+                                         rdfs:comment "Information about rights held in and over the resource."@en ;
+                                         rdfs:isDefinedBy <http://purl.org/dc/elements/1.1/> ;
+                                         rdfs:label "Rights"@en ;
+                                         <http://www.w3.org/2004/02/skos/core#note> "A [second property](/specifications/dublin-core/dcmi-terms/#http://purl.org/dc/terms/rights) with the same name as this property has been declared in the [dcterms: namespace](http://purl.org/dc/terms/).  See the Introduction to the document [DCMI Metadata Terms](/specifications/dublin-core/dcmi-terms/) for an explanation."@en .
+
+
+###  http://purl.org/dc/elements/1.1/source
+<http://purl.org/dc/elements/1.1/source> rdf:type owl:NamedIndividual ;
+                                         dcterms:issued "1999-07-02"^^xsd:date ;
+                                         dcterms:description "The described resource may be derived from the related resource in whole or in part. Recommended best practice is to identify the related resource by means of a string conforming to a formal identification system."@en ;
+                                         rdfs:comment "A related resource from which the described resource is derived."@en ;
+                                         rdfs:isDefinedBy <http://purl.org/dc/elements/1.1/> ;
+                                         rdfs:label "Source"@en ;
+                                         <http://www.w3.org/2004/02/skos/core#note> "A [second property](/specifications/dublin-core/dcmi-terms/#http://purl.org/dc/terms/source) with the same name as this property has been declared in the [dcterms: namespace](http://purl.org/dc/terms/).  See the Introduction to the document [DCMI Metadata Terms](/specifications/dublin-core/dcmi-terms/) for an explanation."@en .
+
+
+###  http://purl.org/dc/elements/1.1/subject
+<http://purl.org/dc/elements/1.1/subject> rdf:type owl:NamedIndividual ;
+                                          dcterms:issued "1999-07-02"^^xsd:date ;
+                                          dcterms:description "Typically, the subject will be represented using keywords, key phrases, or classification codes.  Recommended best practice is to use a controlled vocabulary."@en ;
+                                          rdfs:comment "The topic of the resource."@en ;
+                                          rdfs:isDefinedBy <http://purl.org/dc/elements/1.1/> ;
+                                          rdfs:label "Subject"@en ;
+                                          <http://www.w3.org/2004/02/skos/core#note> "A [second property](/specifications/dublin-core/dcmi-terms/#http://purl.org/dc/terms/subject) with the same name as this property has been declared in the [dcterms: namespace](http://purl.org/dc/terms/).  See the Introduction to the document [DCMI Metadata Terms](/specifications/dublin-core/dcmi-terms/) for an explanation."@en .
+
+
+###  http://purl.org/dc/elements/1.1/title
+<http://purl.org/dc/elements/1.1/title> rdf:type owl:NamedIndividual ;
+                                        dcterms:issued "1999-07-02"^^xsd:date ;
+                                        rdfs:comment "A name given to the resource."@en ;
+                                        rdfs:isDefinedBy <http://purl.org/dc/elements/1.1/> ;
+                                        rdfs:label "Title"@en ;
+                                        <http://www.w3.org/2004/02/skos/core#note> "A [second property](/specifications/dublin-core/dcmi-terms/#http://purl.org/dc/terms/title) with the same name as this property has been declared in the [dcterms: namespace](http://purl.org/dc/terms/).  See the Introduction to the document [DCMI Metadata Terms](/specifications/dublin-core/dcmi-terms/) for an explanation."@en .
+
+
+###  http://purl.org/dc/elements/1.1/type
+<http://purl.org/dc/elements/1.1/type> rdf:type owl:NamedIndividual ;
+                                       dcterms:issued "1999-07-02"^^xsd:date ;
+                                       dcterms:description "Recommended practice is to use a controlled vocabulary such as the DCMI Type Vocabulary [[DCMI-TYPE](http://dublincore.org/documents/dcmi-type-vocabulary/)]. To describe the file format, physical medium, or dimensions of the resource, use the Format element."@en ;
+                                       rdfs:comment "The nature or genre of the resource."@en ;
+                                       rdfs:isDefinedBy <http://purl.org/dc/elements/1.1/> ;
+                                       rdfs:label "Type"@en ;
+                                       <http://www.w3.org/2004/02/skos/core#note> "A [second property](/specifications/dublin-core/dcmi-terms/#http://purl.org/dc/terms/type) with the same name as this property has been declared in the [dcterms: namespace](http://purl.org/dc/terms/).  See the Introduction to the document [DCMI Metadata Terms](/specifications/dublin-core/dcmi-terms/) for an explanation."@en .
+
+
+###  http://purl.org/dc/terms/
+dcterms: rdf:type owl:NamedIndividual ;
+         dcterms:modified "2012-06-14"^^xsd:date ;
+         dcterms:title "DCMI Metadata Terms - other"@en ;
+         dcterms:publisher <http://purl.org/dc/aboutdcmi#DCMI> .
+
+
+###  http://purl.org/dc/terms/Agent
+dcterms:Agent rdf:type owl:NamedIndividual ,
+                       dcterms:AgentClass ;
+              dcterms:issued "2008-01-14"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/AgentClass
+dcterms:AgentClass rdf:type owl:NamedIndividual ;
+                   dcterms:issued "2008-01-14"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/BibliographicResource
+dcterms:BibliographicResource rdf:type owl:NamedIndividual ;
+                              dcterms:issued "2008-01-14"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/Box
+dcterms:Box rdf:type owl:NamedIndividual ;
+            dcterms:issued "2000-07-11"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/DCMIType
+dcterms:DCMIType rdf:type owl:NamedIndividual ,
+                          <http://purl.org/dc/dcam/VocabularyEncodingScheme> ;
+                 dcterms:issued "2000-07-11"^^xsd:date ;
+                 rdfs:comment "The set of classes specified by the DCMI Type Vocabulary, used to categorize the nature or genre of the resource."@en ;
+                 rdfs:isDefinedBy dcterms: ;
+                 rdfs:label "DCMI Type Vocabulary"@en ;
+                 rdfs:seeAlso <http://purl.org/dc/dcmitype/> .
+
+
+###  http://purl.org/dc/terms/DDC
+dcterms:DDC rdf:type owl:NamedIndividual ,
+                     <http://purl.org/dc/dcam/VocabularyEncodingScheme> ;
+            dcterms:issued "2000-07-11"^^xsd:date ;
+            rdfs:comment "The set of conceptual resources specified by the Dewey Decimal Classification."@en ;
+            rdfs:isDefinedBy dcterms: ;
+            rdfs:label "DDC"@en ;
+            rdfs:seeAlso <http://www.oclc.org/dewey/> .
+
+
+###  http://purl.org/dc/terms/FileFormat
+dcterms:FileFormat rdf:type owl:NamedIndividual ;
+                   dcterms:issued "2008-01-14"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/Frequency
+dcterms:Frequency rdf:type owl:NamedIndividual ;
+                  dcterms:issued "2008-01-14"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/IMT
+dcterms:IMT rdf:type owl:NamedIndividual ,
+                     <http://purl.org/dc/dcam/VocabularyEncodingScheme> ;
+            dcterms:issued "2000-07-11"^^xsd:date ;
+            rdfs:comment "The set of media types specified by the Internet Assigned Numbers Authority."@en ;
+            rdfs:isDefinedBy dcterms: ;
+            rdfs:label "IMT"@en ;
+            rdfs:seeAlso <http://www.iana.org/assignments/media-types/> .
+
+
+###  http://purl.org/dc/terms/ISO3166
+dcterms:ISO3166 rdf:type owl:NamedIndividual ;
+                dcterms:issued "2000-07-11"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/ISO639-2
+dcterms:ISO639-2 rdf:type owl:NamedIndividual ;
+                 dcterms:issued "2000-07-11"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/ISO639-3
+dcterms:ISO639-3 rdf:type owl:NamedIndividual ;
+                 dcterms:issued "2008-01-14"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/Jurisdiction
+dcterms:Jurisdiction rdf:type owl:NamedIndividual ;
+                     dcterms:issued "2008-01-14"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/LCC
+dcterms:LCC rdf:type owl:NamedIndividual ,
+                     <http://purl.org/dc/dcam/VocabularyEncodingScheme> ;
+            dcterms:issued "2000-07-11"^^xsd:date ;
+            rdfs:comment "The set of conceptual resources specified by the Library of Congress Classification."@en ;
+            rdfs:isDefinedBy dcterms: ;
+            rdfs:label "LCC"@en ;
+            rdfs:seeAlso <http://lcweb.loc.gov/catdir/cpso/lcco/lcco.html> .
+
+
+###  http://purl.org/dc/terms/LCSH
+dcterms:LCSH rdf:type owl:NamedIndividual ,
+                      <http://purl.org/dc/dcam/VocabularyEncodingScheme> ;
+             dcterms:issued "2000-07-11"^^xsd:date ;
+             rdfs:comment "The set of labeled concepts specified by the Library of Congress Subject Headings."@en ;
+             rdfs:isDefinedBy dcterms: ;
+             rdfs:label "LCSH"@en .
+
+
+###  http://purl.org/dc/terms/LicenseDocument
+dcterms:LicenseDocument rdf:type owl:NamedIndividual ;
+                        dcterms:issued "2008-01-14"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/LinguisticSystem
+dcterms:LinguisticSystem rdf:type owl:NamedIndividual ;
+                         dcterms:issued "2008-01-14"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/Location
+dcterms:Location rdf:type owl:NamedIndividual ;
+                 dcterms:issued "2008-01-14"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/LocationPeriodOrJurisdiction
+dcterms:LocationPeriodOrJurisdiction rdf:type owl:NamedIndividual ;
+                                     dcterms:issued "2008-01-14"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/MESH
+dcterms:MESH rdf:type owl:NamedIndividual ,
+                      <http://purl.org/dc/dcam/VocabularyEncodingScheme> ;
+             dcterms:issued "2000-07-11"^^xsd:date ;
+             rdfs:comment "The set of labeled concepts specified by the Medical Subject Headings."@en ;
+             rdfs:isDefinedBy dcterms: ;
+             rdfs:label "MeSH"@en ;
+             rdfs:seeAlso <http://www.nlm.nih.gov/mesh/meshhome.html> .
+
+
+###  http://purl.org/dc/terms/MediaType
+dcterms:MediaType rdf:type owl:NamedIndividual ;
+                  dcterms:issued "2008-01-14"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/MediaTypeOrExtent
+dcterms:MediaTypeOrExtent rdf:type owl:NamedIndividual ;
+                          dcterms:issued "2008-01-14"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/MethodOfAccrual
+dcterms:MethodOfAccrual rdf:type owl:NamedIndividual ;
+                        dcterms:issued "2008-01-14"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/MethodOfInstruction
+dcterms:MethodOfInstruction rdf:type owl:NamedIndividual ;
+                            dcterms:issued "2008-01-14"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/NLM
+dcterms:NLM rdf:type owl:NamedIndividual ,
+                     <http://purl.org/dc/dcam/VocabularyEncodingScheme> ;
+            dcterms:issued "2005-06-13"^^xsd:date ;
+            rdfs:comment "The set of conceptual resources specified by the National Library of Medicine Classification."@en ;
+            rdfs:isDefinedBy dcterms: ;
+            rdfs:label "NLM"@en ;
+            rdfs:seeAlso <http://wwwcf.nlm.nih.gov/class/> .
+
+
+###  http://purl.org/dc/terms/Period
+dcterms:Period rdf:type owl:NamedIndividual ;
+               dcterms:issued "2000-07-11"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/PeriodOfTime
+dcterms:PeriodOfTime rdf:type owl:NamedIndividual ;
+                     dcterms:issued "2008-01-14"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/PhysicalMedium
+dcterms:PhysicalMedium rdf:type owl:NamedIndividual ;
+                       dcterms:issued "2008-01-14"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/PhysicalResource
+dcterms:PhysicalResource rdf:type owl:NamedIndividual ;
+                         dcterms:issued "2008-01-14"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/Point
+dcterms:Point rdf:type owl:NamedIndividual ;
+              dcterms:issued "2000-07-11"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/Policy
+dcterms:Policy rdf:type owl:NamedIndividual ;
+               dcterms:issued "2008-01-14"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/ProvenanceStatement
+dcterms:ProvenanceStatement rdf:type owl:NamedIndividual ;
+                            dcterms:issued "2008-01-14"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/RFC1766
+dcterms:RFC1766 rdf:type owl:NamedIndividual ;
+                dcterms:issued "2000-07-11"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/RFC3066
+dcterms:RFC3066 rdf:type owl:NamedIndividual ;
+                dcterms:issued "2002-07-13"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/RFC4646
+dcterms:RFC4646 rdf:type owl:NamedIndividual ;
+                dcterms:issued "2008-01-14"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/RFC5646
+dcterms:RFC5646 rdf:type owl:NamedIndividual ;
+                dcterms:issued "2010-10-11"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/RightsStatement
+dcterms:RightsStatement rdf:type owl:NamedIndividual ;
+                        dcterms:issued "2008-01-14"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/SizeOrDuration
+dcterms:SizeOrDuration rdf:type owl:NamedIndividual ;
+                       dcterms:issued "2008-01-14"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/Standard
+dcterms:Standard rdf:type owl:NamedIndividual ;
+                 dcterms:issued "2008-01-14"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/TGN
+dcterms:TGN rdf:type owl:NamedIndividual ,
+                     <http://purl.org/dc/dcam/VocabularyEncodingScheme> ;
+            dcterms:issued "2000-07-11"^^xsd:date ;
+            rdfs:comment "The set of places specified by the Getty Thesaurus of Geographic Names."@en ;
+            rdfs:isDefinedBy dcterms: ;
+            rdfs:label "TGN"@en ;
+            rdfs:seeAlso <http://www.getty.edu/research/tools/vocabulary/tgn/index.html> .
+
+
+###  http://purl.org/dc/terms/UDC
+dcterms:UDC rdf:type owl:NamedIndividual ,
+                     <http://purl.org/dc/dcam/VocabularyEncodingScheme> ;
+            dcterms:issued "2000-07-11"^^xsd:date ;
+            rdfs:comment "The set of conceptual resources specified by the Universal Decimal Classification."@en ;
+            rdfs:isDefinedBy dcterms: ;
+            rdfs:label "UDC"@en ;
+            rdfs:seeAlso <http://www.udcc.org/> .
+
+
+###  http://purl.org/dc/terms/URI
+dcterms:URI rdf:type owl:NamedIndividual ;
+            dcterms:issued "2000-07-11"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/W3CDTF
+dcterms:W3CDTF rdf:type owl:NamedIndividual ;
+               dcterms:issued "2000-07-11"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/abstract
+dcterms:abstract rdf:type owl:NamedIndividual ;
+                 dcterms:issued "2000-07-11"^^xsd:date ;
+                 rdfs:comment "A summary of the resource."@en ;
+                 rdfs:isDefinedBy dcterms: ;
+                 rdfs:label "Abstract"@en .
+
+
+###  http://purl.org/dc/terms/accessRights
+dcterms:accessRights rdf:type owl:NamedIndividual ;
+                     dcterms:issued "2003-02-15"^^xsd:date ;
+                     <http://purl.org/dc/dcam/rangeIncludes> dcterms:RightsStatement ;
+                     dcterms:description "Access Rights may include information regarding access or restrictions based on privacy, security, or other policies."@en ;
+                     rdfs:comment "Information about who access the resource or an indication of its security status."@en ;
+                     rdfs:isDefinedBy dcterms: ;
+                     rdfs:label "Access Rights"@en .
+
+
+###  http://purl.org/dc/terms/accrualMethod
+dcterms:accrualMethod rdf:type owl:NamedIndividual ;
+                      dcterms:issued "2005-06-13"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/accrualPeriodicity
+dcterms:accrualPeriodicity rdf:type owl:NamedIndividual ;
+                           dcterms:issued "2005-06-13"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/accrualPolicy
+dcterms:accrualPolicy rdf:type owl:NamedIndividual ;
+                      dcterms:issued "2005-06-13"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/alternative
+dcterms:alternative rdf:type owl:NamedIndividual ;
+                    dcterms:issued "2000-07-11"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/audience
+dcterms:audience rdf:type owl:NamedIndividual ;
+                 dcterms:issued "2001-05-21"^^xsd:date ;
+                 <http://purl.org/dc/dcam/rangeIncludes> dcterms:AgentClass ;
+                 dcterms:description "Recommended practice is to use this property with non-literal values from a vocabulary of audience types."@en ;
+                 rdfs:comment "A class of agents for whom the resource is intended or useful."@en ;
+                 rdfs:isDefinedBy dcterms: ;
+                 rdfs:label "Audience"@en .
+
+
+###  http://purl.org/dc/terms/available
+dcterms:available rdf:type owl:NamedIndividual ;
+                  dcterms:issued "2000-07-11"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/bibliographicCitation
+dcterms:bibliographicCitation rdf:type owl:NamedIndividual ;
+                              dcterms:issued "2003-02-15"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/conformsTo
+dcterms:conformsTo rdf:type owl:NamedIndividual ;
+                   dcterms:issued "2001-05-21"^^xsd:date ;
+                   <http://purl.org/dc/dcam/rangeIncludes> dcterms:Standard ;
+                   rdfs:comment "An established standard to which the described resource conforms."@en ;
+                   rdfs:isDefinedBy dcterms: ;
+                   rdfs:label "Conforms To"@en .
+
+
+###  http://purl.org/dc/terms/contributor
+dcterms:contributor rdf:type owl:NamedIndividual ;
+                    dcterms:issued "2008-01-14"^^xsd:date ;
+                    <http://purl.org/dc/dcam/rangeIncludes> dcterms:Agent ;
+                    dcterms:description "The guidelines for using names of persons or organizations as creators apply to contributors."@en ;
+                    rdfs:comment "An entity responsible for making contributions to the resource."@en ;
+                    rdfs:isDefinedBy dcterms: ;
+                    rdfs:label "Contributor"@en .
+
+
+###  http://purl.org/dc/terms/coverage
+dcterms:coverage rdf:type owl:NamedIndividual ;
+                 dcterms:issued "2008-01-14"^^xsd:date ;
+                 <http://purl.org/dc/dcam/rangeIncludes> dcterms:Jurisdiction ,
+                                                         dcterms:Location ,
+                                                         dcterms:Period ;
+                 dcterms:description "Spatial topic and spatial applicability may be a named place or a location specified by its geographic coordinates. Temporal topic may be a named period, date, or date range. A jurisdiction may be a named administrative entity or a geographic place to which the resource applies. Recommended practice is to use a controlled vocabulary such as the Getty Thesaurus of Geographic Names [[TGN](https://www.getty.edu/research/tools/vocabulary/tgn/index.html)]. Where appropriate, named places or time periods may be used in preference to numeric identifiers such as sets of coordinates or date ranges.  Because coverage is so broadly defined, it is preferable to use the more specific subproperties Temporal Coverage and Spatial Coverage."@en ;
+                 rdfs:comment "The spatial or temporal topic of the resource, spatial applicability of the resource, or jurisdiction under which the resource is relevant."@en ;
+                 rdfs:isDefinedBy dcterms: ;
+                 rdfs:label "Coverage"@en .
+
+
+###  http://purl.org/dc/terms/created
+dcterms:created rdf:type owl:NamedIndividual ;
+                dcterms:issued "2000-07-11"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/creator
+dcterms:creator rdf:type owl:NamedIndividual ;
+                dcterms:issued "2008-01-14"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/date
+dcterms:date rdf:type owl:NamedIndividual ;
+             dcterms:issued "2008-01-14"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/dateAccepted
+dcterms:dateAccepted rdf:type owl:NamedIndividual ;
+                     dcterms:issued "2002-07-13"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/dateCopyrighted
+dcterms:dateCopyrighted rdf:type owl:NamedIndividual ;
+                        dcterms:issued "2002-07-13"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/dateSubmitted
+dcterms:dateSubmitted rdf:type owl:NamedIndividual ;
+                      dcterms:issued "2002-07-13"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/description
+dcterms:description rdf:type owl:NamedIndividual ;
+                    dcterms:issued "2008-01-14"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/educationLevel
+dcterms:educationLevel rdf:type owl:NamedIndividual ;
+                       dcterms:issued "2002-07-13"^^xsd:date ;
+                       <http://purl.org/dc/dcam/rangeIncludes> dcterms:AgentClass ;
+                       rdfs:comment "A class of agents, defined in terms of progression through an educational or training context, for which the described resource is intended."@en ;
+                       rdfs:isDefinedBy dcterms: ;
+                       rdfs:label "Audience Education Level"@en .
+
+
+###  http://purl.org/dc/terms/extent
+dcterms:extent rdf:type owl:NamedIndividual ;
+               dcterms:issued "2000-07-11"^^xsd:date ;
+               <http://purl.org/dc/dcam/rangeIncludes> dcterms:SizeOrDuration ;
+               dcterms:description "Recommended practice is to specify the file size in megabytes and duration in ISO 8601 format."@en ;
+               rdfs:comment "The size or duration of the resource."@en ;
+               rdfs:isDefinedBy dcterms: ;
+               rdfs:label "Extent"@en .
+
+
+###  http://purl.org/dc/terms/format
+dcterms:format rdf:type owl:NamedIndividual ;
+               dcterms:issued "2008-01-14"^^xsd:date ;
+               <http://purl.org/dc/dcam/rangeIncludes> dcterms:Extent ,
+                                                       dcterms:MediaType ;
+               dcterms:description "Recommended practice is to use a controlled vocabulary where available. For example, for file formats one could use the list of Internet Media Types [[MIME](https://www.iana.org/assignments/media-types/media-types.xhtml)].  Examples of dimensions include size and duration."@en ;
+               rdfs:comment "The file format, physical medium, or dimensions of the resource."@en ;
+               rdfs:isDefinedBy dcterms: ;
+               rdfs:label "Format"@en .
+
+
+###  http://purl.org/dc/terms/hasFormat
+dcterms:hasFormat rdf:type owl:NamedIndividual ;
+                  dcterms:issued "2000-07-11"^^xsd:date ;
+                  dcterms:description "This property is intended to be used with non-literal values. This property is an inverse property of Is Format Of."@en ;
+                  rdfs:comment "A related resource that is substantially the same as the pre-existing described resource, but in another format."@en ;
+                  rdfs:isDefinedBy dcterms: ;
+                  rdfs:label "Has Format"@en .
+
+
+###  http://purl.org/dc/terms/hasPart
+dcterms:hasPart rdf:type owl:NamedIndividual ;
+                dcterms:issued "2000-07-11"^^xsd:date ;
+                dcterms:description "This property is intended to be used with non-literal values. This property is an inverse property of Is Part Of."@en ;
+                rdfs:comment "A related resource that is included either physically or logically in the described resource."@en ;
+                rdfs:isDefinedBy dcterms: ;
+                rdfs:label "Has Part"@en .
+
+
+###  http://purl.org/dc/terms/hasVersion
+dcterms:hasVersion rdf:type owl:NamedIndividual ;
+                   dcterms:issued "2000-07-11"^^xsd:date ;
+                   dcterms:description "Changes in version imply substantive changes in content rather than differences in format. This property is intended to be used with non-literal values. This property is an inverse property of Is Version Of."@en ;
+                   rdfs:comment "A related resource that is a version, edition, or adaptation of the described resource."@en ;
+                   rdfs:isDefinedBy dcterms: ;
+                   rdfs:label "Has Version"@en .
+
+
+###  http://purl.org/dc/terms/identifier
+dcterms:identifier rdf:type owl:NamedIndividual ;
+                   dcterms:issued "2008-01-14"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/instructionalMethod
+dcterms:instructionalMethod rdf:type owl:NamedIndividual ;
+                            dcterms:issued "2005-06-13"^^xsd:date ;
+                            <http://purl.org/dc/dcam/rangeIncludes> dcterms:MethodOfInstruction ;
+                            dcterms:description "Instructional Method typically includes ways of presenting instructional materials or conducting instructional activities, patterns of learner-to-learner and learner-to-instructor interactions, and mechanisms by which group and individual levels of learning are measured.  Instructional methods include all aspects of the instruction and learning processes from planning and implementation through evaluation and feedback."@en ;
+                            rdfs:comment "A process, used to engender knowledge, attitudes and skills, that the described resource is designed to support."@en ;
+                            rdfs:isDefinedBy dcterms: ;
+                            rdfs:label "Instructional Method"@en .
+
+
+###  http://purl.org/dc/terms/isFormatOf
+dcterms:isFormatOf rdf:type owl:NamedIndividual ;
+                   dcterms:issued "2000-07-11"^^xsd:date ;
+                   dcterms:description "This property is intended to be used with non-literal values. This property is an inverse property of Has Format."@en ;
+                   rdfs:comment "A pre-existing related resource that is substantially the same as the described resource, but in another format."@en ;
+                   rdfs:isDefinedBy dcterms: ;
+                   rdfs:label "Is Format Of"@en .
+
+
+###  http://purl.org/dc/terms/isPartOf
+dcterms:isPartOf rdf:type owl:NamedIndividual ;
+                 dcterms:issued "2000-07-11"^^xsd:date ;
+                 dcterms:description "This property is intended to be used with non-literal values. This property is an inverse property of Has Part."@en ;
+                 rdfs:comment "A related resource in which the described resource is physically or logically included."@en ;
+                 rdfs:isDefinedBy dcterms: ;
+                 rdfs:label "Is Part Of"@en .
+
+
+###  http://purl.org/dc/terms/isReferencedBy
+dcterms:isReferencedBy rdf:type owl:NamedIndividual ;
+                       dcterms:issued "2000-07-11"^^xsd:date ;
+                       dcterms:description "This property is intended to be used with non-literal values. This property is an inverse property of References."@en ;
+                       rdfs:comment "A related resource that references, cites, or otherwise points to the described resource."@en ;
+                       rdfs:isDefinedBy dcterms: ;
+                       rdfs:label "Is Referenced By"@en .
+
+
+###  http://purl.org/dc/terms/isReplacedBy
+dcterms:isReplacedBy rdf:type owl:NamedIndividual ;
+                     dcterms:issued "2000-07-11"^^xsd:date ;
+                     dcterms:description "This property is intended to be used with non-literal values. This property is an inverse property of Replaces."@en ;
+                     rdfs:comment "A related resource that supplants, displaces, or supersedes the described resource."@en ;
+                     rdfs:isDefinedBy dcterms: ;
+                     rdfs:label "Is Replaced By"@en .
+
+
+###  http://purl.org/dc/terms/isRequiredBy
+dcterms:isRequiredBy rdf:type owl:NamedIndividual ;
+                     dcterms:issued "2000-07-11"^^xsd:date ;
+                     dcterms:description "This property is intended to be used with non-literal values. This property is an inverse property of Requires."@en ;
+                     rdfs:comment "A related resource that requires the described resource to support its function, delivery, or coherence."@en ;
+                     rdfs:isDefinedBy dcterms: ;
+                     rdfs:label "Is Required By"@en .
+
+
+###  http://purl.org/dc/terms/isVersionOf
+dcterms:isVersionOf rdf:type owl:NamedIndividual ;
+                    dcterms:issued "2000-07-11"^^xsd:date ;
+                    dcterms:description "Changes in version imply substantive changes in content rather than differences in format. This property is intended to be used with non-literal values. This property is an inverse property of Has Version."@en ;
+                    rdfs:comment "A related resource of which the described resource is a version, edition, or adaptation."@en ;
+                    rdfs:isDefinedBy dcterms: ;
+                    rdfs:label "Is Version Of"@en .
+
+
+###  http://purl.org/dc/terms/issued
+dcterms:issued rdf:type owl:NamedIndividual ;
+               dcterms:issued "2000-07-11"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/language
+dcterms:language rdf:type owl:NamedIndividual ;
+                 dcterms:issued "2008-01-14"^^xsd:date ;
+                 <http://purl.org/dc/dcam/rangeIncludes> dcterms:LinguisticSystem ;
+                 dcterms:description "Recommended practice is to use either a non-literal value representing a language from a controlled vocabulary such as ISO 639-2 or ISO 639-3, or a literal value consisting of an IETF Best Current Practice 47 [[IETF-BCP47](https://tools.ietf.org/html/bcp47)] language tag."@en ;
+                 rdfs:comment "A language of the resource."@en ;
+                 rdfs:isDefinedBy dcterms: ;
+                 rdfs:label "Language"@en .
+
+
+###  http://purl.org/dc/terms/license
+dcterms:license rdf:type owl:NamedIndividual ;
+                dcterms:issued "2004-06-14"^^xsd:date ;
+                <http://purl.org/dc/dcam/rangeIncludes> dcterms:LicenseDocument ;
+                dcterms:description "Recommended practice is to identify the license document with a URI. If this is not possible or feasible, a literal value that identifies the license may be provided."@en ;
+                rdfs:comment "A legal document giving official permission to do something with the resource."@en ;
+                rdfs:isDefinedBy dcterms: ;
+                rdfs:label "License"@en .
+
+
+###  http://purl.org/dc/terms/mediator
+dcterms:mediator rdf:type owl:NamedIndividual ;
+                 dcterms:issued "2001-05-21"^^xsd:date ;
+                 <http://purl.org/dc/dcam/rangeIncludes> dcterms:AgentClass ;
+                 dcterms:description "In an educational context, a mediator might be a parent, teacher, teaching assistant, or care-giver."@en ;
+                 rdfs:comment "An entity that mediates access to the resource."@en ;
+                 rdfs:isDefinedBy dcterms: ;
+                 rdfs:label "Mediator"@en .
+
+
+###  http://purl.org/dc/terms/medium
+dcterms:medium rdf:type owl:NamedIndividual ;
+               dcterms:issued "2000-07-11"^^xsd:date ;
+               <http://purl.org/dc/dcam/domainIncludes> dcterms:PhysicalResource ;
+               <http://purl.org/dc/dcam/rangeIncludes> dcterms:PhysicalMedium ;
+               rdfs:comment "The material or physical carrier of the resource."@en ;
+               rdfs:isDefinedBy dcterms: ;
+               rdfs:label "Medium"@en .
+
+
+###  http://purl.org/dc/terms/modified
+dcterms:modified rdf:type owl:NamedIndividual ;
+                 dcterms:issued "2000-07-11"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/provenance
+dcterms:provenance rdf:type owl:NamedIndividual ;
+                   dcterms:issued "2004-09-20"^^xsd:date ;
+                   <http://purl.org/dc/dcam/rangeIncludes> dcterms:ProvenanceStatement ;
+                   dcterms:description "The statement may include a description of any changes successive custodians made to the resource."@en ;
+                   rdfs:comment "A statement of any changes in ownership and custody of the resource since its creation that are significant for its authenticity, integrity, and interpretation."@en ;
+                   rdfs:isDefinedBy dcterms: ;
+                   rdfs:label "Provenance"@en .
+
+
+###  http://purl.org/dc/terms/publisher
+dcterms:publisher rdf:type owl:NamedIndividual ;
+                  dcterms:issued "2008-01-14"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/references
+dcterms:references rdf:type owl:NamedIndividual ;
+                   dcterms:issued "2000-07-11"^^xsd:date ;
+                   dcterms:description "This property is intended to be used with non-literal values. This property is an inverse property of Is Referenced By."@en ;
+                   rdfs:comment "A related resource that is referenced, cited, or otherwise pointed to by the described resource."@en ;
+                   rdfs:isDefinedBy dcterms: ;
+                   rdfs:label "References"@en .
+
+
+###  http://purl.org/dc/terms/relation
+dcterms:relation rdf:type owl:NamedIndividual ;
+                 dcterms:issued "2008-01-14"^^xsd:date ;
+                 dcterms:description "Recommended practice is to identify the related resource by means of a URI.  If this is not possible or feasible, a string conforming to a formal identification system may be provided."@en ;
+                 rdfs:comment "A related resource."@en ;
+                 rdfs:isDefinedBy dcterms: ;
+                 rdfs:label "Relation"@en .
+
+
+###  http://purl.org/dc/terms/replaces
+dcterms:replaces rdf:type owl:NamedIndividual ;
+                 dcterms:issued "2000-07-11"^^xsd:date ;
+                 dcterms:description "This property is intended to be used with non-literal values. This property is an inverse property of Is Replaced By."@en ;
+                 rdfs:comment "A related resource that is supplanted, displaced, or superseded by the described resource."@en ;
+                 rdfs:isDefinedBy dcterms: ;
+                 rdfs:label "Replaces"@en .
+
+
+###  http://purl.org/dc/terms/requires
+dcterms:requires rdf:type owl:NamedIndividual ;
+                 dcterms:issued "2000-07-11"^^xsd:date ;
+                 dcterms:description "This property is intended to be used with non-literal values. This property is an inverse property of Is Required By."@en ;
+                 rdfs:comment "A related resource that is required by the described resource to support its function, delivery, or coherence."@en ;
+                 rdfs:isDefinedBy dcterms: ;
+                 rdfs:label "Requires"@en .
+
+
+###  http://purl.org/dc/terms/rights
+dcterms:rights rdf:type owl:NamedIndividual ;
+               dcterms:issued "2008-01-14"^^xsd:date ;
+               <http://purl.org/dc/dcam/rangeIncludes> dcterms:RightsStatement ;
+               dcterms:description "Typically, rights information includes a statement about various property rights associated with the resource, including intellectual property rights.  Recommended practice is to refer to a rights statement with a URI.  If this is not possible or feasible, a literal value (name, label, or short text) may be provided."@en ;
+               rdfs:comment "Information about rights held in and over the resource."@en ;
+               rdfs:isDefinedBy dcterms: ;
+               rdfs:label "Rights"@en .
+
+
+###  http://purl.org/dc/terms/rightsHolder
+dcterms:rightsHolder rdf:type owl:NamedIndividual ;
+                     dcterms:issued "2004-06-14"^^xsd:date ;
+                     <http://purl.org/dc/dcam/rangeIncludes> dcterms:Agent ;
+                     dcterms:description "Recommended practice is to refer to the rights holder with a URI. If this is not possible or feasible, a literal value that identifies the rights holder may be provided."@en ;
+                     rdfs:comment "A person or organization owning or managing rights over the resource."@en ;
+                     rdfs:isDefinedBy dcterms: ;
+                     rdfs:label "Rights Holder"@en .
+
+
+###  http://purl.org/dc/terms/source
+dcterms:source rdf:type owl:NamedIndividual ;
+               dcterms:issued "2008-01-14"^^xsd:date ;
+               dcterms:description "This property is intended to be used with non-literal values. The described resource may be derived from the related resource in whole or in part. Best practice is to identify the related resource by means of a URI or a string conforming to a formal identification system."@en ;
+               rdfs:comment "A related resource from which the described resource is derived."@en ;
+               rdfs:isDefinedBy dcterms: ;
+               rdfs:label "Source"@en .
+
+
+###  http://purl.org/dc/terms/spatial
+dcterms:spatial rdf:type owl:NamedIndividual ;
+                dcterms:issued "2000-07-11"^^xsd:date ;
+                <http://purl.org/dc/dcam/rangeIncludes> dcterms:Location ;
+                rdfs:comment "Spatial characteristics of the resource."@en ;
+                rdfs:isDefinedBy dcterms: ;
+                rdfs:label "Spatial Coverage"@en .
+
+
+###  http://purl.org/dc/terms/subject
+dcterms:subject rdf:type owl:NamedIndividual ;
+                dcterms:issued "2008-01-14"^^xsd:date ;
+                dcterms:description "Recommended practice is to refer to the subject with a URI. If this is not possible or feasible, a literal value that identifies the subject may be provided. Both should preferably refer to a subject in a controlled vocabulary."@en ;
+                rdfs:comment "A topic of the resource."@en ;
+                rdfs:isDefinedBy dcterms: ;
+                rdfs:label "Subject"@en .
+
+
+###  http://purl.org/dc/terms/tableOfContents
+dcterms:tableOfContents rdf:type owl:NamedIndividual ;
+                        dcterms:issued "2000-07-11"^^xsd:date ;
+                        rdfs:comment "A list of subunits of the resource."@en ;
+                        rdfs:isDefinedBy dcterms: ;
+                        rdfs:label "Table Of Contents"@en .
+
+
+###  http://purl.org/dc/terms/temporal
+dcterms:temporal rdf:type owl:NamedIndividual ;
+                 dcterms:issued "2000-07-11"^^xsd:date ;
+                 <http://purl.org/dc/dcam/rangeIncludes> dcterms:PeriodOfTime ;
+                 rdfs:comment "Temporal characteristics of the resource."@en ;
+                 rdfs:isDefinedBy dcterms: ;
+                 rdfs:label "Temporal Coverage"@en .
+
+
+###  http://purl.org/dc/terms/title
+dcterms:title rdf:type owl:NamedIndividual ;
+              dcterms:issued "2008-01-14"^^xsd:date .
+
+
+###  http://purl.org/dc/terms/type
+dcterms:type rdf:type owl:NamedIndividual ;
+             dcterms:issued "2008-01-14"^^xsd:date ;
+             dcterms:description "Recommended practice is to use a controlled vocabulary such as the DCMI Type Vocabulary [[DCMI-TYPE](http://dublincore.org/documents/dcmi-type-vocabulary/)]. To describe the file format, physical medium, or dimensions of the resource, use the property Format."@en ;
+             rdfs:comment "The nature or genre of the resource."@en ;
+             rdfs:isDefinedBy dcterms: ;
+             rdfs:label "Type"@en .
+
+
+###  http://purl.org/dc/terms/valid
+dcterms:valid rdf:type owl:NamedIndividual ;
+              dcterms:issued "2000-07-11"^^xsd:date .
 
 
 ###  http://transformunify.org/ontologies/TURBO_0022011
@@ -2158,6 +4005,16 @@ group by ?emp1 ?o1 ?emp2 ?o2""" ;
                                                      rdfs:label "employment, definer and mapping relations"@en .
 
 
+###  http://transformunify.org/ontologies/TURBO_0022039
+<http://transformunify.org/ontologies/TURBO_0022039> rdf:type owl:NamedIndividual ;
+                                                     rdfs:label "TMM punned term for named graph individual and property"@en .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022041
+<http://transformunify.org/ontologies/TURBO_0022041> rdf:type owl:NamedIndividual ;
+                                                     rdfs:label "do enumeration"@en .
+
+
 ###  https://bioportal.bioontology.org/ontologies/RXNORM
 <https://bioportal.bioontology.org/ontologies/RXNORM> rdf:type owl:NamedIndividual ,
                                                                <http://xmlns.com/foaf/0.1/Document> ;
@@ -2186,6 +4043,10 @@ group by ?emp1 ?o1 ?emp2 ?o2""" ;
 #    Annotations
 #################################################################
 
+mydata:bioportal_mapping rdfs:seeAlso "https://www.bioontology.org/wiki/BioPortal_Mappings" ;
+                         rdfs:label "maps to" .
+
+
 mydata:defined_in rdfs:label "defined in" ;
                   rdfs:comment """At least one defined_in statement is asserted about all classes in the TMM graph. The objects of those statements are the IRIs of any ontology that asserts the term to be an owl:Class. In Turtle notation:
 
@@ -2213,10 +4074,20 @@ http://purl.obolibrary.org/obo/chebi.owl
 
 and
 
-http://purl.obolibrary.org/obo/dron/dron-ingredient.owl""" .
+http://purl.obolibrary.org/obo/dron/dron-ingredient.owl""" ;
+                  <http://purl.org/dc/dcam/rangeIncludes> <http://transformunify.org/ontologies/definer> .
+
+
+mydata:elected_mapping rdfs:comment """links a \"reference medication\" to an rxnorm term
+
+domain = http://purl.obolibrary.org/obo/PDRO_0000024 drug prescription
+
+add to this ontology""" .
 
 
 mydata:employment rdfs:label "has employment" ;
+                  <http://purl.org/dc/dcam/rangeIncludes> <http://transformunify.org/ontologies/TURBO_0022023> ;
+                  rdfs:seeAlso <http://example.com/resource/search_res_classification/isa> ;
                   <http://transformunify.org/ontologies/TURBO_0022019> <http://transformunify.org/ontologies/TURBO_0022022> ;
                   <http://www.w3.org/2004/02/skos/core#definition> """TMM assigns (ideally) one employment to each term from the public ontologies and RDF  knowledgbases that it loads into a triplestore. The purposes are describing how the terms are useful in modelling medications,  normalization of  the various methods the  public resources  use to topically group the terms. 
 
@@ -2229,6 +4100,326 @@ Conversely, the type assertions in these ontologies are not helpful: they are al
 The relational RxNorm artefacts assert a term type (TTY) for each term, and these are used directly as employments. One might think that the RxNorm isa relations would be used for employment. Those are heirarchical relationships, like rdfs:subClassOf, and they are only asserted for a limited number of entities, like \"500 mg acetaminophen oral tablet\" isa \"acetaminophen oral tablet\".
 
 In some cases, there are correspondences between the employments: if some ChEBI or DrOn term, employed as an http://example.com/resource/active_ingredient, are also modeled in RxNorm, the RxNorm term will be employed as an http://example.com/resource/rxn_tty/IN. Most of the DrOn terms employed as product will corespond to a term from RxNorm with SBD, SCD or SCDF employment (using the same IRI bases as before).""" .
+
+
+mydata:transitive_role_of_class rdfs:comment """as a predicate:
+subjects should probably all be ChEBI active ingredients
+only curated roles are eligible as objects""" .
+
+
+mydata:transitively_materialized_dron_ingredient rdfs:comment "as a predicate, links a DrOn product to a DrOn or ChEBI active_ingredient" .
+
+
+mydata:transitively_materialized_drugrole rdfs:comment """as a predicate
+subject and predicate are both roles""" .
+
+
+dcterms:Agent rdfs:label "Agent"@en ;
+              rdfs:comment "A resource that acts or has the power to act."@en ;
+              rdfs:isDefinedBy dcterms: .
+
+
+dcterms:AgentClass rdfs:isDefinedBy dcterms: ;
+                   rdfs:label "Agent Class"@en ;
+                   rdfs:comment "A group of agents."@en .
+
+
+dcterms:BibliographicResource rdfs:isDefinedBy dcterms: ;
+                              rdfs:comment "A book, article, or other documentary resource."@en ;
+                              rdfs:label "Bibliographic Resource"@en .
+
+
+dcterms:Box rdfs:comment "The set of regions in space defined by their geographic coordinates according to the DCMI Box Encoding Scheme."@en ;
+            rdfs:isDefinedBy dcterms: ;
+            rdfs:label "DCMI Box"@en ;
+            rdfs:seeAlso <https://www.dublincore.org/specifications/dublin-core/dcmi-box/> .
+
+
+dcterms:FileFormat rdfs:label "File Format"@en ;
+                   rdfs:comment "A digital resource format."@en ;
+                   rdfs:isDefinedBy dcterms: .
+
+
+dcterms:Frequency rdfs:label "Frequency"@en ;
+                  rdfs:isDefinedBy dcterms: ;
+                  rdfs:comment "A rate at which something recurs."@en .
+
+
+dcterms:ISO3166 rdfs:comment "The set of codes listed in ISO 3166-1 for the representation of names of countries."@en ;
+                rdfs:isDefinedBy dcterms: ;
+                rdfs:label "ISO 3166"@en ;
+                rdfs:seeAlso <http://www.iso.org/iso/en/prods-services/iso3166ma/02iso-3166-code-lists/list-en1.html> .
+
+
+dcterms:ISO639-2 rdfs:seeAlso <http://lcweb.loc.gov/standards/iso639-2/langhome.html> ;
+                 rdfs:comment "The three-letter alphabetic codes listed in ISO639-2 for the representation of names of languages."@en ;
+                 rdfs:isDefinedBy dcterms: ;
+                 rdfs:label "ISO 639-2"@en .
+
+
+dcterms:ISO639-3 rdfs:comment "The set of three-letter codes listed in ISO 639-3 for the representation of names of languages."@en ;
+                 rdfs:label "ISO 639-3"@en ;
+                 rdfs:isDefinedBy dcterms: ;
+                 rdfs:seeAlso <http://www.sil.org/iso639-3/> .
+
+
+dcterms:Jurisdiction rdfs:label "Jurisdiction"@en ;
+                     rdfs:comment "The extent or range of judicial, law enforcement, or other authority."@en ;
+                     rdfs:isDefinedBy dcterms: .
+
+
+dcterms:LicenseDocument rdfs:label "License Document"@en ;
+                        rdfs:isDefinedBy dcterms: ;
+                        rdfs:comment "A legal document giving official permission to do something with a resource."@en .
+
+
+dcterms:LinguisticSystem dcterms:description "Written, spoken, sign, and computer languages are linguistic systems."@en ;
+                         rdfs:isDefinedBy dcterms: ;
+                         rdfs:comment "A system of signs, symbols, sounds, gestures, or rules used in communication."@en ;
+                         rdfs:label "Linguistic System"@en .
+
+
+dcterms:Location rdfs:label "Location"@en ;
+                 rdfs:isDefinedBy dcterms: ;
+                 rdfs:comment "A spatial region or named place."@en .
+
+
+dcterms:LocationPeriodOrJurisdiction rdfs:label "Location, Period, or Jurisdiction"@en ;
+                                     rdfs:comment "A location, period of time, or jurisdiction."@en ;
+                                     rdfs:isDefinedBy dcterms: .
+
+
+dcterms:MediaType rdfs:comment "A file format or physical medium."@en ;
+                  rdfs:isDefinedBy dcterms: ;
+                  rdfs:label "Media Type"@en .
+
+
+dcterms:MediaTypeOrExtent rdfs:isDefinedBy dcterms: ;
+                          rdfs:comment "A media type or extent."@en ;
+                          rdfs:label "Media Type or Extent"@en .
+
+
+dcterms:MethodOfAccrual rdfs:isDefinedBy dcterms: ;
+                        rdfs:comment "A method by which resources are added to a collection."@en ;
+                        rdfs:label "Method of Accrual"@en .
+
+
+dcterms:MethodOfInstruction rdfs:label "Method of Instruction"@en ;
+                            rdfs:comment "A process that is used to engender knowledge, attitudes, and skills."@en ;
+                            rdfs:isDefinedBy dcterms: .
+
+
+dcterms:Period rdfs:seeAlso <https://www.dublincore.org/specifications/dublin-core/dcmi-period/> ;
+               rdfs:comment "The set of time intervals defined by their limits according to the DCMI Period Encoding Scheme."@en ;
+               rdfs:label "DCMI Period"@en ;
+               rdfs:isDefinedBy dcterms: .
+
+
+dcterms:PeriodOfTime rdfs:comment "An interval of time that is named or defined by its start and end dates."@en ;
+                     rdfs:isDefinedBy dcterms: ;
+                     rdfs:label "Period of Time"@en .
+
+
+dcterms:PhysicalMedium dcterms:description "Examples include paper, canvas, or DVD."@en ;
+                       rdfs:label "Physical Medium"@en ;
+                       rdfs:isDefinedBy dcterms: ;
+                       rdfs:comment "A physical material or carrier."@en .
+
+
+dcterms:PhysicalResource rdfs:isDefinedBy dcterms: ;
+                         rdfs:comment "A material thing."@en ;
+                         rdfs:label "Physical Resource"@en .
+
+
+dcterms:Point rdfs:comment "The set of points in space defined by their geographic coordinates according to the DCMI Point Encoding Scheme."@en ;
+              rdfs:label "DCMI Point"@en ;
+              rdfs:seeAlso <https://www.dublincore.org/specifications/dublin-core/dcmi-point/> ;
+              rdfs:isDefinedBy dcterms: .
+
+
+dcterms:Policy rdfs:label "Policy"@en ;
+               rdfs:isDefinedBy dcterms: ;
+               rdfs:comment "A plan or course of action by an authority, intended to influence and determine decisions, actions, and other matters."@en .
+
+
+dcterms:ProvenanceStatement rdfs:label "Provenance Statement"@en ;
+                            rdfs:isDefinedBy dcterms: ;
+                            rdfs:comment "Any changes in ownership and custody of a resource since its creation that are significant for its authenticity, integrity, and interpretation."@en .
+
+
+dcterms:RFC1766 rdfs:isDefinedBy dcterms: ;
+                rdfs:seeAlso <http://www.ietf.org/rfc/rfc1766.txt> ;
+                rdfs:comment "The set of tags, constructed according to RFC 1766, for the identification of languages."@en ;
+                rdfs:label "RFC 1766"@en .
+
+
+dcterms:RFC3066 rdfs:label "RFC 3066"@en ;
+                rdfs:isDefinedBy dcterms: ;
+                dcterms:description "RFC 3066 has been obsoleted by RFC 4646."@en ;
+                rdfs:comment "The set of tags constructed according to RFC 3066 for the identification of languages."@en ;
+                rdfs:seeAlso <http://www.ietf.org/rfc/rfc3066.txt> .
+
+
+dcterms:RFC4646 dcterms:description "RFC 4646 obsoletes RFC 3066."@en ;
+                rdfs:seeAlso <http://www.ietf.org/rfc/rfc4646.txt> ;
+                rdfs:isDefinedBy dcterms: ;
+                rdfs:comment "The set of tags constructed according to RFC 4646 for the identification of languages."@en ;
+                rdfs:label "RFC 4646"@en .
+
+
+dcterms:RFC5646 rdfs:seeAlso <http://www.ietf.org/rfc/rfc5646.txt> ;
+                rdfs:comment "The set of tags constructed according to RFC 5646 for the identification of languages."@en ;
+                rdfs:label "RFC 5646"@en ;
+                dcterms:description "RFC 5646 obsoletes RFC 4646."@en ;
+                rdfs:isDefinedBy dcterms: .
+
+
+dcterms:RightsStatement rdfs:label "Rights Statement"@en ;
+                        rdfs:isDefinedBy dcterms: ;
+                        rdfs:comment "A statement about the intellectual property rights (IPR) held in or over a resource, a legal document giving official permission to do something with a resource, or a statement about access rights."@en .
+
+
+dcterms:SizeOrDuration rdfs:label "Size or Duration"@en ;
+                       dcterms:description "Examples include a number of pages, a specification of length, width, and breadth, or a period in hours, minutes, and seconds."@en ;
+                       rdfs:comment "A dimension or extent, or a time taken to play or execute."@en ;
+                       rdfs:isDefinedBy dcterms: .
+
+
+dcterms:Standard rdfs:comment "A reference point against which other things can be evaluated or compared."@en ;
+                 rdfs:label "Standard"@en ;
+                 rdfs:isDefinedBy dcterms: .
+
+
+dcterms:URI rdfs:comment "The set of identifiers constructed according to the generic syntax for Uniform Resource Identifiers as specified by the Internet Engineering Task Force."@en ;
+            rdfs:isDefinedBy dcterms: ;
+            rdfs:seeAlso <http://www.ietf.org/rfc/rfc3986.txt> ;
+            rdfs:label "URI"@en .
+
+
+dcterms:W3CDTF rdfs:label "W3C-DTF"@en ;
+               rdfs:comment "The set of dates and times constructed according to the W3C Date and Time Formats Specification."@en ;
+               rdfs:isDefinedBy dcterms: ;
+               rdfs:seeAlso <http://www.w3.org/TR/NOTE-datetime> .
+
+
+dcterms:accrualMethod rdfs:label "Accrual Method"@en ;
+                      <http://purl.org/dc/dcam/domainIncludes> <http://purl.org/dc/dcmitype/Collection> ;
+                      dcterms:description "Recommended practice is to use a value from the Collection Description Accrual Method Vocabulary [[DCMI-ACCRUALMETHOD](https://dublincore.org/groups/collections/accrual-method/)]."@en ;
+                      rdfs:comment "The method by which items are added to a collection."@en ;
+                      <http://purl.org/dc/dcam/rangeIncludes> dcterms:MethodOfAccrual ;
+                      rdfs:isDefinedBy dcterms: .
+
+
+dcterms:accrualPeriodicity dcterms:description "Recommended practice is to use a value from the Collection Description Frequency Vocabulary [[DCMI-COLLFREQ](https://dublincore.org/groups/collections/frequency/)]."@en ;
+                           <http://purl.org/dc/dcam/domainIncludes> <http://purl.org/dc/dcmitype/Collection> ;
+                           rdfs:label "Accrual Periodicity"@en ;
+                           rdfs:comment "The frequency with which items are added to a collection."@en ;
+                           rdfs:isDefinedBy dcterms: ;
+                           <http://purl.org/dc/dcam/rangeIncludes> dcterms:Frequency .
+
+
+dcterms:accrualPolicy <http://purl.org/dc/dcam/domainIncludes> <http://purl.org/dc/dcmitype/Collection> ;
+                      dcterms:description "Recommended practice is to use a value from the Collection Description Accrual Policy Vocabulary [[DCMI-ACCRUALPOLICY](https://dublincore.org/groups/collections/accrual-policy/)]."@en ;
+                      rdfs:isDefinedBy dcterms: ;
+                      <http://purl.org/dc/dcam/rangeIncludes> dcterms:Policy ;
+                      rdfs:comment "The policy governing the addition of items to a collection."@en ;
+                      rdfs:label "Accrual Policy"@en .
+
+
+dcterms:alternative rdfs:comment "An alternative name for the resource."@en ;
+                    rdfs:isDefinedBy dcterms: ;
+                    dcterms:description "The distinction between titles and alternative titles is application-specific."@en ;
+                    rdfs:label "Alternative Title"@en .
+
+
+dcterms:available rdfs:isDefinedBy dcterms: ;
+                  rdfs:label "Date Available"@en ;
+                  rdfs:comment "Date that the resource became or will become available."@en ;
+                  dcterms:description "Recommended practice is to describe the date, date/time, or period of time as recommended for the property Date, of which this is a subproperty."@en .
+
+
+dcterms:bibliographicCitation dcterms:description "Recommended practice is to include sufficient bibliographic detail to identify the resource as unambiguously as possible."@en ;
+                              rdfs:label "Bibliographic Citation"@en ;
+                              rdfs:comment "A bibliographic reference for the resource."@en ;
+                              rdfs:isDefinedBy dcterms: .
+
+
+dcterms:created rdfs:isDefinedBy dcterms: ;
+                rdfs:comment "Date of creation of the resource."@en ;
+                rdfs:label "Date Created"@en ;
+                dcterms:description "Recommended practice is to describe the date, date/time, or period of time as recommended for the property Date, of which this is a subproperty."@en .
+
+
+dcterms:creator <http://purl.org/dc/dcam/rangeIncludes> dcterms:Agent ;
+                rdfs:isDefinedBy dcterms: ;
+                dcterms:description "Recommended practice is to identify the creator with a URI.  If this is not possible or feasible, a literal value that identifies the creator may be provided."@en ;
+                rdfs:comment "An entity responsible for making the resource."@en ;
+                rdfs:label "Creator"@en .
+
+
+dcterms:date rdfs:isDefinedBy dcterms: ;
+             rdfs:comment "A point or period of time associated with an event in the lifecycle of the resource."@en ;
+             rdfs:label "Date"@en ;
+             dcterms:description "Date may be used to express temporal information at any level of granularity.  Recommended practice is to express the date, date/time, or period of time according to ISO 8601-1 [[ISO 8601-1](https://www.iso.org/iso-8601-date-and-time-format.html)] or a published profile of the ISO standard, such as the W3C Note on Date and Time Formats [[W3CDTF](https://www.w3.org/TR/NOTE-datetime)] or the Extended Date/Time Format Specification [[EDTF](http://www.loc.gov/standards/datetime/)].  If the full date is unknown, month and year (YYYY-MM) or just year (YYYY) may be used. Date ranges may be specified using ISO 8601 period of time specification in which start and end dates are separated by a '/' (slash) character.  Either the start or end date may be missing."@en .
+
+
+dcterms:dateAccepted dcterms:description "Recommended practice is to describe the date, date/time, or period of time as recommended for the property Date, of which this is a subproperty.  Examples of resources to which a date of acceptance may be relevant are a thesis (accepted by a university department) or an article (accepted by a journal)."@en ;
+                     rdfs:comment "Date of acceptance of the resource."@en ;
+                     rdfs:label "Date Accepted"@en ;
+                     rdfs:isDefinedBy dcterms: .
+
+
+dcterms:dateCopyrighted rdfs:isDefinedBy dcterms: ;
+                        rdfs:label "Date Copyrighted"@en ;
+                        rdfs:comment "Date of copyright of the resource."@en ;
+                        dcterms:description "Typically a year.  Recommended practice is to describe the date, date/time, or period of time as recommended for the property Date, of which this is a subproperty."@en .
+
+
+dcterms:dateSubmitted dcterms:description "Recommended practice is to describe the date, date/time, or period of time as recommended for the property Date, of which this is a subproperty.  Examples of resources to which a 'Date Submitted' may be relevant include a thesis (submitted to a university department) or an article (submitted to a journal)."@en ;
+                      rdfs:comment "Date of submission of the resource."@en ;
+                      rdfs:label "Date Submitted"@en ;
+                      rdfs:isDefinedBy dcterms: .
+
+
+dcterms:description rdfs:label "Description"@en ;
+                    rdfs:isDefinedBy dcterms: ;
+                    rdfs:comment "An account of the resource."@en ;
+                    dcterms:description "Description may include but is not limited to: an abstract, a table of contents, a graphical representation, or a free-text account of the resource."@en .
+
+
+dcterms:identifier rdfs:isDefinedBy dcterms: ;
+                   dcterms:description "Recommended practice is to identify the resource by means of a string conforming to an identification system. Examples include International Standard Book Number (ISBN), Digital Object Identifier (DOI), and Uniform Resource Name (URN).  Persistent identifiers should be provided as HTTP URIs."@en ;
+                   rdfs:comment "An unambiguous reference to the resource within a given context."@en ;
+                   rdfs:label "Identifier"@en .
+
+
+dcterms:issued dcterms:description "Recommended practice is to describe the date, date/time, or period of time as recommended for the property Date, of which this is a subproperty."@en ;
+               rdfs:isDefinedBy dcterms: ;
+               rdfs:comment "Date of formal issuance of the resource."@en ;
+               rdfs:label "Date Issued"@en .
+
+
+dcterms:modified rdfs:isDefinedBy dcterms: ;
+                 rdfs:label "Date Modified"@en ;
+                 rdfs:comment "Date on which the resource was changed."@en ;
+                 dcterms:description "Recommended practice is to describe the date, date/time, or period of time as recommended for the property Date, of which this is a subproperty."@en .
+
+
+dcterms:publisher rdfs:label "Publisher"@en ;
+                  <http://purl.org/dc/dcam/rangeIncludes> dcterms:Agent ;
+                  rdfs:isDefinedBy dcterms: ;
+                  rdfs:comment "An entity responsible for making the resource available."@en .
+
+
+dcterms:title rdfs:label "Title"@en ;
+              rdfs:comment "A name given to the resource."@en ;
+              rdfs:isDefinedBy dcterms: .
+
+
+dcterms:valid dcterms:description "Recommended practice is to describe the date, date/time, or period of time as recommended for the property Date, of which this is a subproperty."@en ;
+              rdfs:comment "Date (often a range) of validity of a resource."@en ;
+              rdfs:label "Date Valid"@en ;
+              rdfs:isDefinedBy dcterms: .
 
 
 ###  Generated by the OWL API (version 4.5.9.2019-02-01T07:24:44Z) https://github.com/owlcs/owlapi
