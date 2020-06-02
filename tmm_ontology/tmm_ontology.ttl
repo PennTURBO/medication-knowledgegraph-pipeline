@@ -1,0 +1,1071 @@
+@prefix : <http://transformunify.org/tmm_ontology.owl#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <https://github.com/PennTURBO/med_mapping/blob/master/tmm_ontology/tmm_ontology.ttl> .
+
+<https://github.com/PennTURBO/med_mapping/blob/master/tmm_ontology/tmm_ontology.ttl> rdf:type owl:Ontology ;
+                                                                                      owl:imports <http://www.w3.org/2004/02/skos/core> ,
+                                                                                                  <http://xmlns.com/foaf/0.1/> ;
+                                                                                      rdfs:comment """Probaably don't need defined_in statments for 
+
+BioPortal mappings... no classes or individuls asserted
+Reference Medications or Classified Search Results... individuals are typed, unlike vague owl:Class assertions in ChEBI, DrOn, RxNorm, etc.
+
+Those vague owl:Class assertions and RxNorm's sparse isa assertions  are the reason for TMM employment assertions""" ,
+                                                                                                   """https://www.dublincore.org/specifications/dublin-core/dcmi-terms/dublin_core_terms.rdf
+
+https://www.dublincore.org/specifications/dublin-core/collection-description/frequency/freq.rdf""" ,
+                                                                                                   """importing skos and foaf seems to go as planned... they remain as import statemtns
+
+although faof has a suboptimal filename, \"index.rdf\"
+
+dc freq just disappears
+
+de elements disappears from the imports section but all of its terms get saved intot eh importing ontology!""" .
+
+#################################################################
+#    Annotation properties
+#################################################################
+
+###  http://example.com/resource/defined_in
+<http://example.com/resource/defined_in> rdf:type owl:AnnotationProperty ;
+                                         rdfs:comment """At least one defined_in statement is asserted about all classes in the TMM graph. The objects of those statements are the IRIs of any ontology that asserts the term to be an owl:Class. In Turtle notation:
+
+graph ?ontology { ?term a owl:Class . }
+
+That's possible because TMM loads each public ontology or imported module into its own named graph, where the graph's IRI is equivalent to the subject of that ontology's/module's 
+
+{ ?s a owl:Ontology . } 
+
+statement, within the ontology itself. (We are assuming that the ontologies stick to the guideline of asserting only a single owl:Ontology IRI).
+
+TODO: Don't care about properties, but should add individuals, specifically
+
+http://example.com/resource/classified_search_results
+
+and 
+
+http://example.com/resource/reference_medications  
+
+So shouldn't be just classes.
+
+Many ChEBI terms will be defined in both
+
+http://purl.obolibrary.org/obo/chebi.owl
+
+and
+
+http://purl.obolibrary.org/obo/dron/dron-ingredient.owl""" ;
+                                         rdfs:label "defined in" ;
+                                         rdfs:range <http://transformunify.org/ontologies/definer> .
+
+
+###  http://example.com/resource/employment
+<http://example.com/resource/employment> rdf:type owl:AnnotationProperty ;
+                                         <http://transformunify.org/ontologies/TURBO_0022019> <http://transformunify.org/ontologies/TURBO_0022022> ;
+                                         rdfs:label "has employment" ;
+                                         <http://www.w3.org/2004/02/skos/core#definition> """TMM assigns (ideally) one employment to each term from the public ontologies and RDF  knowledgbases that it loads into a triplestore. The purposes are describing how the terms are useful in modelling medications,  normalization of  the various methods the  public resources  use to topically group the terms. 
+
+For example, one can gain an understanding of DrOn and ChEBI terms by examining their direct and transitive superclasses, but many terms will have  mutiple transitive superclasses (perhaps five on average?).For the record, the superclass realtions are asserted as
+
+{ ?term rdfs:subClassOf ?superclass . }
+
+Conversely, the type assertions in these ontologies are not helpful: they are all owl:Class. 
+
+The relational RxNorm artefacts assert a term type (TTY) for each term, and these are used directly as employments. One might think that the RxNorm isa relations would be used for employment. Those are heirarchical relationships, like rdfs:subClassOf, and they are only asserted for a limited number of entities, like \"500 mg acetaminophen oral tablet\" isa \"acetaminophen oral tablet\".
+
+In some cases, there are correspondences between the employments: if some ChEBI or DrOn term, employed as an http://example.com/resource/active_ingredient, are also modeled in RxNorm, the RxNorm term will be employed as an http://example.com/resource/rxn_tty/IN. Most of the DrOn terms employed as product will corespond to a term from RxNorm with SBD, SCD or SCDF employment (using the same IRI bases as before).""" ;
+                                         rdfs:range <http://transformunify.org/ontologies/TURBO_0022023> .
+
+
+###  http://purl.org/dc/terms/accrualPeriodicity
+<http://purl.org/dc/terms/accrualPeriodicity> rdf:type owl:AnnotationProperty .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022019
+<http://transformunify.org/ontologies/TURBO_0022019> rdf:type owl:AnnotationProperty ;
+                                                     rdfs:label "has SPARQL illustration"@en .
+
+
+###  http://www.w3.org/2004/02/skos/core#definition
+<http://www.w3.org/2004/02/skos/core#definition> rdf:type owl:AnnotationProperty .
+
+
+#################################################################
+#    Datatypes
+#################################################################
+
+###  http://purl.org/dc/terms/Box
+<http://purl.org/dc/terms/Box> rdf:type rdfs:Datatype .
+
+
+###  http://purl.org/dc/terms/ISO3166
+<http://purl.org/dc/terms/ISO3166> rdf:type rdfs:Datatype .
+
+
+###  http://purl.org/dc/terms/ISO639-2
+<http://purl.org/dc/terms/ISO639-2> rdf:type rdfs:Datatype .
+
+
+###  http://purl.org/dc/terms/ISO639-3
+<http://purl.org/dc/terms/ISO639-3> rdf:type rdfs:Datatype .
+
+
+###  http://purl.org/dc/terms/Period
+<http://purl.org/dc/terms/Period> rdf:type rdfs:Datatype .
+
+
+###  http://purl.org/dc/terms/Point
+<http://purl.org/dc/terms/Point> rdf:type rdfs:Datatype .
+
+
+###  http://purl.org/dc/terms/RFC1766
+<http://purl.org/dc/terms/RFC1766> rdf:type rdfs:Datatype .
+
+
+###  http://purl.org/dc/terms/RFC3066
+<http://purl.org/dc/terms/RFC3066> rdf:type rdfs:Datatype .
+
+
+###  http://purl.org/dc/terms/RFC4646
+<http://purl.org/dc/terms/RFC4646> rdf:type rdfs:Datatype .
+
+
+###  http://purl.org/dc/terms/RFC5646
+<http://purl.org/dc/terms/RFC5646> rdf:type rdfs:Datatype .
+
+
+###  http://purl.org/dc/terms/URI
+<http://purl.org/dc/terms/URI> rdf:type rdfs:Datatype .
+
+
+###  http://purl.org/dc/terms/W3CDTF
+<http://purl.org/dc/terms/W3CDTF> rdf:type rdfs:Datatype .
+
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  http://xmlns.com/foaf/0.1/homepage
+<http://xmlns.com/foaf/0.1/homepage> rdf:type owl:ObjectProperty .
+
+
+###  http://xmlns.com/foaf/0.1/page
+<http://xmlns.com/foaf/0.1/page> rdf:type owl:ObjectProperty .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  http://transformunify.org/ontologies/TURBO_0022020
+<http://transformunify.org/ontologies/TURBO_0022020> rdf:type owl:DatatypeProperty ;
+                                                     rdfs:label "has SPARQL select query"@en .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022021
+<http://transformunify.org/ontologies/TURBO_0022021> rdf:type owl:DatatypeProperty ;
+                                                     rdfs:label "has sample SPARQL select result"@en .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://purl.org/dc/terms/Agent
+<http://purl.org/dc/terms/Agent> rdf:type owl:Class .
+
+
+###  http://purl.org/dc/terms/AgentClass
+<http://purl.org/dc/terms/AgentClass> rdf:type owl:Class .
+
+
+###  http://purl.org/dc/terms/BibliographicResource
+<http://purl.org/dc/terms/BibliographicResource> rdf:type owl:Class .
+
+
+###  http://purl.org/dc/terms/FileFormat
+<http://purl.org/dc/terms/FileFormat> rdf:type owl:Class .
+
+
+###  http://purl.org/dc/terms/Frequency
+<http://purl.org/dc/terms/Frequency> rdf:type owl:Class .
+
+
+###  http://purl.org/dc/terms/Jurisdiction
+<http://purl.org/dc/terms/Jurisdiction> rdf:type owl:Class .
+
+
+###  http://purl.org/dc/terms/LicenseDocument
+<http://purl.org/dc/terms/LicenseDocument> rdf:type owl:Class .
+
+
+###  http://purl.org/dc/terms/LinguisticSystem
+<http://purl.org/dc/terms/LinguisticSystem> rdf:type owl:Class .
+
+
+###  http://purl.org/dc/terms/Location
+<http://purl.org/dc/terms/Location> rdf:type owl:Class .
+
+
+###  http://purl.org/dc/terms/LocationPeriodOrJurisdiction
+<http://purl.org/dc/terms/LocationPeriodOrJurisdiction> rdf:type owl:Class .
+
+
+###  http://purl.org/dc/terms/MediaType
+<http://purl.org/dc/terms/MediaType> rdf:type owl:Class .
+
+
+###  http://purl.org/dc/terms/MediaTypeOrExtent
+<http://purl.org/dc/terms/MediaTypeOrExtent> rdf:type owl:Class .
+
+
+###  http://purl.org/dc/terms/MethodOfAccrual
+<http://purl.org/dc/terms/MethodOfAccrual> rdf:type owl:Class .
+
+
+###  http://purl.org/dc/terms/MethodOfInstruction
+<http://purl.org/dc/terms/MethodOfInstruction> rdf:type owl:Class .
+
+
+###  http://purl.org/dc/terms/PeriodOfTime
+<http://purl.org/dc/terms/PeriodOfTime> rdf:type owl:Class .
+
+
+###  http://purl.org/dc/terms/PhysicalMedium
+<http://purl.org/dc/terms/PhysicalMedium> rdf:type owl:Class .
+
+
+###  http://purl.org/dc/terms/PhysicalResource
+<http://purl.org/dc/terms/PhysicalResource> rdf:type owl:Class .
+
+
+###  http://purl.org/dc/terms/Policy
+<http://purl.org/dc/terms/Policy> rdf:type owl:Class .
+
+
+###  http://purl.org/dc/terms/ProvenanceStatement
+<http://purl.org/dc/terms/ProvenanceStatement> rdf:type owl:Class .
+
+
+###  http://purl.org/dc/terms/RightsStatement
+<http://purl.org/dc/terms/RightsStatement> rdf:type owl:Class .
+
+
+###  http://purl.org/dc/terms/SizeOrDuration
+<http://purl.org/dc/terms/SizeOrDuration> rdf:type owl:Class .
+
+
+###  http://purl.org/dc/terms/Standard
+<http://purl.org/dc/terms/Standard> rdf:type owl:Class .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022016
+<http://transformunify.org/ontologies/TURBO_0022016> rdf:type owl:Class ;
+                                                     rdfs:label "TMM SPARQL illustration"@en .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022017
+<http://transformunify.org/ontologies/TURBO_0022017> rdf:type owl:Class ;
+                                                     rdfs:label "TMM SPARQL select query"@en .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022018
+<http://transformunify.org/ontologies/TURBO_0022018> rdf:type owl:Class ;
+                                                     rdfs:label "TMM SPARQL select result"@en .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022023
+<http://transformunify.org/ontologies/TURBO_0022023> rdf:type owl:Class ;
+                                                     rdfs:label "TMM employment"@en ;
+                                                     rdfs:seeAlso "https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html" .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022026
+<http://transformunify.org/ontologies/TURBO_0022026> rdf:type owl:Class ;
+                                                     rdfs:subClassOf <http://xmlns.com/foaf/0.1/Document> ;
+                                                     rdfs:label "RDF file"@en .
+
+
+###  http://transformunify.org/ontologies/definer
+<http://transformunify.org/ontologies/definer> rdf:type owl:Class ;
+                                               rdfs:label "TMM term definer"@en .
+
+
+###  http://xmlns.com/foaf/0.1/Document
+<http://xmlns.com/foaf/0.1/Document> rdf:type owl:Class .
+
+
+#################################################################
+#    Individuals
+#################################################################
+
+###  ftp://ftp.ebi.ac.uk/pub/databases/chebi/ontology/chebi.owl.gz
+<ftp://ftp.ebi.ac.uk/pub/databases/chebi/ontology/chebi.owl.gz> rdf:type owl:NamedIndividual ,
+                                                                         <http://transformunify.org/ontologies/TURBO_0022026> ;
+                                                                rdfs:label "ChEBI compressed full download  URL" .
+
+
+###  http://data.bioontology.org/ontologies/RXNORM/download/download?apikey
+<http://data.bioontology.org/ontologies/RXNORM/download/download?apikey> rdf:type owl:NamedIndividual ,
+                                                                                  <http://transformunify.org/ontologies/TURBO_0022026> ;
+                                                                         rdfs:label "BioPortal RxNorm turtle download URL" .
+
+
+###  http://example.com/resource/active_ingredient
+<http://example.com/resource/active_ingredient> rdf:type owl:NamedIndividual ,
+                                                         <http://transformunify.org/ontologies/TURBO_0022023> ;
+                                                <http://www.w3.org/2004/02/skos/core#exactMatch> <http://example.com/resource/rxn_tty/IN> ;
+                                                <http://www.w3.org/2004/02/skos/core#notation> "active_ingredient" ;
+                                                rdfs:comment "active ingredient" .
+
+
+###  http://example.com/resource/classified_search_results
+<http://example.com/resource/classified_search_results> rdf:type owl:NamedIndividual .
+
+
+###  http://example.com/resource/clinrel_structclass
+<http://example.com/resource/clinrel_structclass> rdf:type owl:NamedIndividual ,
+                                                           <http://transformunify.org/ontologies/TURBO_0022023> .
+
+
+###  http://example.com/resource/curated_role
+<http://example.com/resource/curated_role> rdf:type owl:NamedIndividual ,
+                                                    <http://transformunify.org/ontologies/TURBO_0022023> .
+
+
+###  http://example.com/resource/product
+<http://example.com/resource/product> rdf:type owl:NamedIndividual ,
+                                               <http://transformunify.org/ontologies/TURBO_0022023> ;
+                                      <http://www.w3.org/2004/02/skos/core#narrowMatch> <http://example.com/resource/rxn_tty/SBD> ,
+                                                                                        <http://example.com/resource/rxn_tty/SCD> ,
+                                                                                        <http://example.com/resource/rxn_tty/SCDF> .
+
+
+###  http://example.com/resource/reference_medications
+<http://example.com/resource/reference_medications> rdf:type owl:NamedIndividual .
+
+
+###  http://example.com/resource/rxn_tty/BN
+<http://example.com/resource/rxn_tty/BN> rdf:type owl:NamedIndividual ,
+                                                  <http://transformunify.org/ontologies/TURBO_0022023> ;
+                                         <http://www.w3.org/2004/02/skos/core#notation> "BN" ;
+                                         <http://purl.org/dc/terms/creator> <http://purl.bioontology.org/ontology/RXNORM/> ,
+                                                                            <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
+                                         rdfs:label "Brand Name" ,
+                                                    "brand name" ;
+                                         <http://www.w3.org/2004/02/skos/core#definition> "A proprietary name for a family of products containing a specific active ingredient." ;
+                                         <http://www.w3.org/2004/02/skos/core#example> "Prozac" .
+
+
+###  http://example.com/resource/rxn_tty/BPCK
+<http://example.com/resource/rxn_tty/BPCK> rdf:type owl:NamedIndividual ,
+                                                    <http://transformunify.org/ontologies/TURBO_0022023> ;
+                                           <http://www.w3.org/2004/02/skos/core#notation> "BPCK" ;
+                                           <http://purl.org/dc/terms/creator> <http://purl.bioontology.org/ontology/RXNORM/> ,
+                                                                              <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
+                                           rdfs:label "Brand Name Pack" ;
+                                           <http://www.w3.org/2004/02/skos/core#definition> "{# (Ingredient Strength Dose Form) / # (Ingredient Strength Dose Form)} Pack [Brand Name]" ;
+                                           <http://www.w3.org/2004/02/skos/core#example> "{12 (Ethinyl Estradiol 0.035 MG / Norethindrone 0.5 MG Oral Tablet) / 9 (Ethinyl Estradiol 0.035 MG / Norethindrone 1 MG Oral Tablet) / 7 (Inert Ingredients 1 MG Oral Tablet) } Pack [Leena 28 Day]" .
+
+
+###  http://example.com/resource/rxn_tty/DF
+<http://example.com/resource/rxn_tty/DF> rdf:type owl:NamedIndividual ;
+                                         <http://www.w3.org/2004/02/skos/core#notation> "DF" ;
+                                         <http://purl.org/dc/terms/creator> <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
+                                         rdfs:label "Dose Form" ;
+                                         <http://www.w3.org/2004/02/skos/core#definition> "See Appendix 2 for a full list of Dose Forms." ;
+                                         <http://www.w3.org/2004/02/skos/core#example> "Oral Solution" .
+
+
+###  http://example.com/resource/rxn_tty/DFG
+<http://example.com/resource/rxn_tty/DFG> rdf:type owl:NamedIndividual ;
+                                          <http://www.w3.org/2004/02/skos/core#notation> "DFG" ;
+                                          <http://purl.org/dc/terms/creator> <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
+                                          rdfs:label "Dose Form Group" ;
+                                          <http://www.w3.org/2004/02/skos/core#definition> "See Appendix 3 for a full list of Dose Form Groups." ;
+                                          <http://www.w3.org/2004/02/skos/core#example> "Oral Liquid" .
+
+
+###  http://example.com/resource/rxn_tty/ET
+<http://example.com/resource/rxn_tty/ET> rdf:type owl:NamedIndividual ;
+                                         <http://www.w3.org/2004/02/skos/core#notation> "ET" ;
+                                         <http://purl.org/dc/terms/creator> <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
+                                         rdfs:label "Dose Form Entry Term" ;
+                                         <http://www.w3.org/2004/02/skos/core#definition> "Entry terms for dose forms (TTY=DF)." ;
+                                         <http://www.w3.org/2004/02/skos/core#example> "Nasal Drops" .
+
+
+###  http://example.com/resource/rxn_tty/GPCK
+<http://example.com/resource/rxn_tty/GPCK> rdf:type owl:NamedIndividual ,
+                                                    <http://transformunify.org/ontologies/TURBO_0022023> ;
+                                           <http://www.w3.org/2004/02/skos/core#notation> "GPCK" ;
+                                           <http://purl.org/dc/terms/creator> <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
+                                           rdfs:label "Generic Pack" ;
+                                           <http://www.w3.org/2004/02/skos/core#definition> "{# (Ingredient + Strength + Dose Form) / # (Ingredient + Strength + Dose Form)} Pack" ;
+                                           <http://www.w3.org/2004/02/skos/core#example> "{11 (varenicline 0.5 MG Oral Tablet) / 42 (varenicline 1 MG Oral Tablet) } Pack" .
+
+
+###  http://example.com/resource/rxn_tty/IN
+<http://example.com/resource/rxn_tty/IN> rdf:type owl:NamedIndividual ,
+                                                  <http://transformunify.org/ontologies/TURBO_0022023> ;
+                                         <http://www.w3.org/2004/02/skos/core#exactMatch> <http://example.com/resource/active_ingredient> ;
+                                         <http://www.w3.org/2004/02/skos/core#notation> "IN" ;
+                                         <http://purl.org/dc/terms/creator> <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
+                                         rdfs:label "Ingredient" ;
+                                         <http://www.w3.org/2004/02/skos/core#definition> "A compound or moiety that gives the drug its distinctive clinical properties. Ingredients generally use the United States Adopted Name (USAN)." ;
+                                         <http://www.w3.org/2004/02/skos/core#example> "" ,
+                                                                                       "Fluoxetine" .
+
+
+###  http://example.com/resource/rxn_tty/MIN
+<http://example.com/resource/rxn_tty/MIN> rdf:type owl:NamedIndividual ,
+                                                   <http://transformunify.org/ontologies/TURBO_0022023> ;
+                                          <http://www.w3.org/2004/02/skos/core#notation> "MIN" ;
+                                          <http://purl.org/dc/terms/creator> <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
+                                          rdfs:label "Multiple Ingredients" ;
+                                          <http://www.w3.org/2004/02/skos/core#definition> "Two or more ingredients appearing together in a single drug preparation, created from SCDF. In rare cases when IN/PIN or PIN/PIN combinations of the same base ingredient exist, created from SCD." ;
+                                          <http://www.w3.org/2004/02/skos/core#example> "Fluoxetine / Olanzapine" .
+
+
+###  http://example.com/resource/rxn_tty/PIN
+<http://example.com/resource/rxn_tty/PIN> rdf:type owl:NamedIndividual ,
+                                                   <http://transformunify.org/ontologies/TURBO_0022023> ;
+                                          <http://www.w3.org/2004/02/skos/core#notation> "PIN" ;
+                                          <http://purl.org/dc/terms/creator> <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
+                                          rdfs:label "Precise Ingredient" ;
+                                          <http://www.w3.org/2004/02/skos/core#definition> "A specified form of the ingredient that may or may not be clinically active. Most precise ingredients are salt or isomer forms." ;
+                                          <http://www.w3.org/2004/02/skos/core#example> "Fluoxetine Hydrochloride" .
+
+
+###  http://example.com/resource/rxn_tty/PSN
+<http://example.com/resource/rxn_tty/PSN> rdf:type owl:NamedIndividual ;
+                                          <http://www.w3.org/2004/02/skos/core#notation> "PSN" ;
+                                          <http://purl.org/dc/terms/creator> <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
+                                          rdfs:label "Prescribable Name" ;
+                                          <http://www.w3.org/2004/02/skos/core#definition> "Synonym of another TTY, given for clarity and for display purposes in electronic prescribing applications. Only one PSN per concept." ;
+                                          <http://www.w3.org/2004/02/skos/core#example> "Leena 28 Day Pack" .
+
+
+###  http://example.com/resource/rxn_tty/SBD
+<http://example.com/resource/rxn_tty/SBD> rdf:type owl:NamedIndividual ,
+                                                   <http://transformunify.org/ontologies/TURBO_0022023> ;
+                                          <http://www.w3.org/2004/02/skos/core#broadMatch> <http://example.com/resource/product> ;
+                                          <http://www.w3.org/2004/02/skos/core#notation> "SBD" ;
+                                          <http://purl.org/dc/terms/creator> <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
+                                          rdfs:label "Semantic Branded Drug" ;
+                                          <http://www.w3.org/2004/02/skos/core#definition> "Ingredient + Strength + Dose Form + Brand Name" ;
+                                          <http://www.w3.org/2004/02/skos/core#example> "Fluoxetine 4 MG/ML Oral Solution [Prozac]" .
+
+
+###  http://example.com/resource/rxn_tty/SBDC
+<http://example.com/resource/rxn_tty/SBDC> rdf:type owl:NamedIndividual ,
+                                                    <http://transformunify.org/ontologies/TURBO_0022023> ;
+                                           <http://www.w3.org/2004/02/skos/core#notation> "SBDC" ;
+                                           <http://purl.org/dc/terms/creator> <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
+                                           rdfs:label "Semantic Branded Drug Component" ;
+                                           <http://www.w3.org/2004/02/skos/core#definition> "Ingredient + Strength + Brand Name" ;
+                                           <http://www.w3.org/2004/02/skos/core#example> "Fluoxetine 4 MG/ML [Prozac]" .
+
+
+###  http://example.com/resource/rxn_tty/SBDF
+<http://example.com/resource/rxn_tty/SBDF> rdf:type owl:NamedIndividual ,
+                                                    <http://transformunify.org/ontologies/TURBO_0022023> ;
+                                           <http://www.w3.org/2004/02/skos/core#notation> "SBDF" ;
+                                           <http://purl.org/dc/terms/creator> <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
+                                           rdfs:label "Semantic Branded Drug Form" ;
+                                           <http://www.w3.org/2004/02/skos/core#definition> "Ingredient + Dose Form + Brand Name" ;
+                                           <http://www.w3.org/2004/02/skos/core#example> "Fluoxetine Oral Solution [Prozac]" .
+
+
+###  http://example.com/resource/rxn_tty/SBDG
+<http://example.com/resource/rxn_tty/SBDG> rdf:type owl:NamedIndividual ,
+                                                    <http://transformunify.org/ontologies/TURBO_0022023> ;
+                                           <http://www.w3.org/2004/02/skos/core#notation> "SBDG" ;
+                                           <http://purl.org/dc/terms/creator> <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
+                                           rdfs:label "Semantic Branded Dose Form Group" ;
+                                           <http://www.w3.org/2004/02/skos/core#definition> "Brand Name + Dose Form Group" ;
+                                           <http://www.w3.org/2004/02/skos/core#example> "Prozac Pill" .
+
+
+###  http://example.com/resource/rxn_tty/SCD
+<http://example.com/resource/rxn_tty/SCD> rdf:type owl:NamedIndividual ,
+                                                   <http://transformunify.org/ontologies/TURBO_0022023> ;
+                                          <http://www.w3.org/2004/02/skos/core#broadMatch> <http://example.com/resource/product> ;
+                                          <http://www.w3.org/2004/02/skos/core#notation> "SCD" ;
+                                          <http://purl.org/dc/terms/creator> <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
+                                          rdfs:label "Semantic Clinical Drug" ;
+                                          <http://www.w3.org/2004/02/skos/core#definition> "Ingredient + Strength + Dose Form" ;
+                                          <http://www.w3.org/2004/02/skos/core#example> "Fluoxetine 4 MG/ML Oral Solution" .
+
+
+###  http://example.com/resource/rxn_tty/SCDC
+<http://example.com/resource/rxn_tty/SCDC> rdf:type owl:NamedIndividual ,
+                                                    <http://transformunify.org/ontologies/TURBO_0022023> ;
+                                           <http://www.w3.org/2004/02/skos/core#notation> "SCDC" ;
+                                           <http://purl.org/dc/terms/creator> <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
+                                           rdfs:label "Semantic Clinical Drug Component" ;
+                                           <http://www.w3.org/2004/02/skos/core#definition> "Ingredient + Strength" ;
+                                           <http://www.w3.org/2004/02/skos/core#example> "Fluoxetine 4 MG/ML" .
+
+
+###  http://example.com/resource/rxn_tty/SCDF
+<http://example.com/resource/rxn_tty/SCDF> rdf:type owl:NamedIndividual ,
+                                                    <http://transformunify.org/ontologies/TURBO_0022023> ;
+                                           <http://www.w3.org/2004/02/skos/core#broadMatch> <http://example.com/resource/product> ;
+                                           <http://www.w3.org/2004/02/skos/core#notation> "SCDF" ;
+                                           <http://purl.org/dc/terms/creator> <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
+                                           rdfs:label "Semantic Clinical Drug Form" ;
+                                           <http://www.w3.org/2004/02/skos/core#definition> "Ingredient + Dose Form" ;
+                                           <http://www.w3.org/2004/02/skos/core#example> "Fluoxetine Oral Solution" .
+
+
+###  http://example.com/resource/rxn_tty/SCDG
+<http://example.com/resource/rxn_tty/SCDG> rdf:type owl:NamedIndividual ,
+                                                    <http://transformunify.org/ontologies/TURBO_0022023> ;
+                                           <http://www.w3.org/2004/02/skos/core#notation> "SCDG" ;
+                                           <http://purl.org/dc/terms/creator> <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
+                                           rdfs:label "Semantic Clinical Dose Form Group" ;
+                                           <http://www.w3.org/2004/02/skos/core#definition> "Ingredient + Dose Form Group" ;
+                                           <http://www.w3.org/2004/02/skos/core#example> "Fluoxetine Oral Product" .
+
+
+###  http://example.com/resource/rxn_tty/SY
+<http://example.com/resource/rxn_tty/SY> rdf:type owl:NamedIndividual ;
+                                         <http://www.w3.org/2004/02/skos/core#notation> "SY" ;
+                                         <http://purl.org/dc/terms/creator> <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
+                                         rdfs:label "Synonym" ;
+                                         <http://www.w3.org/2004/02/skos/core#definition> "Synonym of another TTY, given for clarity." ;
+                                         <http://www.w3.org/2004/02/skos/core#example> "Prozac 4 MG/ML Oral Solution" .
+
+
+###  http://example.com/resource/rxn_tty/TMSY
+<http://example.com/resource/rxn_tty/TMSY> rdf:type owl:NamedIndividual ;
+                                           <http://www.w3.org/2004/02/skos/core#notation> "TMSY" ;
+                                           <http://purl.org/dc/terms/creator> <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
+                                           rdfs:label "Tall Man Lettering Synonym" ;
+                                           <http://www.w3.org/2004/02/skos/core#definition> "Tall Man Lettering synonym of another TTY, given to distinguish between commonly confused drugs." ;
+                                           <http://www.w3.org/2004/02/skos/core#example> "FLUoxetine 10 MG Oral Capsule [PROzac]" .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/
+<http://purl.bioontology.org/ontology/RXNORM/> rdf:type owl:NamedIndividual ,
+                                                        <http://transformunify.org/ontologies/definer> ;
+                                               <http://xmlns.com/foaf/0.1/homepage> <https://bioportal.bioontology.org/ontologies/RXNORM> ,
+                                                                                    <https://www.nlm.nih.gov/research/umls/rxnorm/docs/rxnormfiles.html> ;
+                                               <http://xmlns.com/foaf/0.1/page> <http://data.bioontology.org/ontologies/RXNORM/download/download?apikey> ;
+                                               <http://purl.org/dc/terms/accrualPeriodicity> <http://purl.org/cld/freq/monthly> ;
+                                               rdfs:comment """BioPortal download URLs require an apikey. A public key is avaiable for some ontologies... see the ontologies homepage. 
+
+https://bioportal.bioontology.org/ontologies/RXNORM
+
+http://data.bioontology.org/ontologies/RXNORM/submissions/18/download?apikey=9cf735c3-a44a-404f-8b2f-c49d48b2b8b2
+
+TMM users should really get their own apikeys.
+
+https://bioportal.bioontology.org/help#Getting_an_API_key
+
+http://data.bioontology.org/ontologies/RXNORM/download/download?apikey=<secret>
+
+Can also build RXNORM by downloading UMLS, extracting with MetaMorphoSys, loading into MySQL, and then converting with umls2rdf
+
+Native RRF comes out monthly, but UMLS and derrived BioPortal versions only come out twice per year.
+
+https://download.nlm.nih.gov/umls/kss/rxnorm/RxNorm_full_05042020.zip
+
+https://www.nlm.nih.gov/research/umls/rxnorm/docs/rxnormfiles.html
+
+Working on writing RRF -> RDF direct converter
+
+https://download.nlm.nih.gov/umls/kss/rxnorm/RxNorm_full_05042020.zip
+
+May be difficult to load from BioPortal URL into password protected GraphDB repo, so loading from locally staged file may be required. Redirect involved? GraphDB tries to autosense formats, but can tell that BioPortals files are generally TTL from the URL.""" ;
+                                               rdfs:label "BioPortal RxNorm ontology"@en .
+
+[ rdf:type owl:Axiom ;
+   owl:annotatedSource <http://purl.bioontology.org/ontology/RXNORM/> ;
+   owl:annotatedProperty <http://xmlns.com/foaf/0.1/page> ;
+   owl:annotatedTarget <http://data.bioontology.org/ontologies/RXNORM/download/download?apikey> ;
+   rdfs:comment <http://transformunify.org/ontologies/TURBO_0022027>
+ ] .
+
+[ rdf:type owl:Axiom ;
+   owl:annotatedSource <http://purl.bioontology.org/ontology/RXNORM/> ;
+   owl:annotatedProperty <http://purl.org/dc/terms/accrualPeriodicity> ;
+   owl:annotatedTarget <http://purl.org/cld/freq/monthly> ;
+   rdfs:seeAlso <https://www.nlm.nih.gov/research/umls/rxnorm/docs/rxnormfiles.html>
+ ] .
+
+
+###  http://purl.obolibrary.org/obo/chebi.owl
+<http://purl.obolibrary.org/obo/chebi.owl> rdf:type owl:NamedIndividual ,
+                                                    <http://transformunify.org/ontologies/definer> ;
+                                           <http://xmlns.com/foaf/0.1/page> <ftp://ftp.ebi.ac.uk/pub/databases/chebi/ontology/chebi.owl.gz> ;
+                                           <http://purl.org/dc/terms/accrualPeriodicity> <http://purl.org/cld/freq/monthly> ;
+                                           rdfs:comment """Available in OWL or OBO formats, with or without gz compression. 
+
+Three verisons are available, but they all share the same ontology IRI
+
+LITE - Only ids, name, subsets and relationships are available. Small size if you are interested in our ontology only
+CORE - As above plus chemical data (mass, charge, formula) and structures (inchis, inchikeys, smiles)
+FULL - As above plus name synonyms and manually added cross-reference.
+
+see https://www.ebi.ac.uk/chebi/downloadsForward.do""" ,
+                                                        """Sample annotations
+
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix ns0: <http://www.geneontology.org/formats/oboInOwl#> .
+@prefix ns1: <http://purl.obolibrary.org/obo/> .
+
+<http://purl.obolibrary.org/obo/chebi.owl>
+  a owl:Ontology ;
+  owl:versionIRI <http://purl.obolibrary.org/obo/chebi/187/chebi.owl> ;
+
+  rdfs:comment \"ChEBI subsumes and replaces the Chemical Ontology first\"^^xsd:string, 
+\"ChEBI Release version 187\"^^xsd:string, 
+\"Author: ChEBI curation team\"^^xsd:string, 
+\"developed by Michael Ashburner & Pankaj Jaiswal.\"^^xsd:string, 
+\"For any queries contact chebi-help@ebi.ac.uk\"^^xsd:string ;
+
+  ns0:date \"27:04:2020 18:51\"^^xsd:string ;
+  ns0:saved-by \"chebi\"^^xsd:string ;
+  ns0:hasOBOFormatVersion \"1.2\"^^xsd:string ;
+  ns0:default-namespace \"chebi_ontology\"^^xsd:string .""" ;
+                                           rdfs:label "ChEBI"@en .
+
+[ rdf:type owl:Axiom ;
+   owl:annotatedSource <http://purl.obolibrary.org/obo/chebi.owl> ;
+   owl:annotatedProperty <http://xmlns.com/foaf/0.1/page> ;
+   owl:annotatedTarget <ftp://ftp.ebi.ac.uk/pub/databases/chebi/ontology/chebi.owl.gz> ;
+   owl:versionInfo <http://transformunify.org/ontologies/TURBO_0022011>
+ ] .
+
+[ rdf:type owl:Axiom ;
+   owl:annotatedSource <http://purl.obolibrary.org/obo/chebi.owl> ;
+   owl:annotatedProperty <http://purl.org/dc/terms/accrualPeriodicity> ;
+   owl:annotatedTarget <http://purl.org/cld/freq/monthly> ;
+   rdfs:seeAlso <ftp://ftp.ebi.ac.uk/pub/databases/chebi/archive/>
+ ] .
+
+
+###  http://purl.obolibrary.org/obo/dron/dron-hand.owl
+<http://purl.obolibrary.org/obo/dron/dron-hand.owl> rdf:type owl:NamedIndividual ,
+                                                             <http://transformunify.org/ontologies/definer> .
+
+
+###  http://purl.obolibrary.org/obo/dron/dron-ingredient.owl
+<http://purl.obolibrary.org/obo/dron/dron-ingredient.owl> rdf:type owl:NamedIndividual ,
+                                                                   <http://transformunify.org/ontologies/definer> .
+
+
+###  http://purl.obolibrary.org/obo/dron/dron-rxnorm.owl
+<http://purl.obolibrary.org/obo/dron/dron-rxnorm.owl> rdf:type owl:NamedIndividual ,
+                                                               <http://transformunify.org/ontologies/definer> .
+
+
+###  http://purl.obolibrary.org/obo/dron/dron-upper.owl
+<http://purl.obolibrary.org/obo/dron/dron-upper.owl> rdf:type owl:NamedIndividual ,
+                                                              <http://transformunify.org/ontologies/definer> .
+
+
+###  http://purl.org/cld/freq/monthly
+<http://purl.org/cld/freq/monthly> rdf:type owl:NamedIndividual .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022011
+<http://transformunify.org/ontologies/TURBO_0022011> rdf:type owl:NamedIndividual ;
+                                                     rdfs:label "full"@en .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022012
+<http://transformunify.org/ontologies/TURBO_0022012> rdf:type owl:NamedIndividual ;
+                                                     rdfs:label "core"@en .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022013
+<http://transformunify.org/ontologies/TURBO_0022013> rdf:type owl:NamedIndividual ;
+                                                     rdfs:label "lite"@en .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022022
+<http://transformunify.org/ontologies/TURBO_0022022> rdf:type owl:NamedIndividual ,
+                                                              <http://transformunify.org/ontologies/TURBO_0022016> ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022020> """PREFIX mydata: <http://example.com/resource/>
+select 
+?o (count(distinct ?rxn  ) as ?count) 
+where {
+#    graph mydata:elected_mapping {
+#        ?refmed mydata:elected_mapping ?rxn
+#    }
+    graph <http://example.com/resource/employment> {
+        ?rxn <http://example.com/resource/employment> ?o .
+    }
+}
+group by ?o""" ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022021> """+-------------------------------------------------+-------+
+| o                                               | count |
++-------------------------------------------------+-------+
+| http://example.com/resource/active_ingredient   | 4872  |
++-------------------------------------------------+-------+
+| http://example.com/resource/clinrel_structclass | 333   |
++-------------------------------------------------+-------+
+| http://example.com/resource/product             | 85094 |
++-------------------------------------------------+-------+
+| http://example.com/resource/rxn_tty/IN          | 12587 |
++-------------------------------------------------+-------+
+| http://example.com/resource/rxn_tty/PIN         | 2969  |
++-------------------------------------------------+-------+
+| http://example.com/resource/rxn_tty/BN          | 11937 |
++-------------------------------------------------+-------+
+| http://example.com/resource/rxn_tty/MIN         | 3744  |
++-------------------------------------------------+-------+
+| http://example.com/resource/rxn_tty/SCD         | 36652 |
++-------------------------------------------------+-------+
+| http://example.com/resource/curated_role        | 665   |
++-------------------------------------------------+-------+
+| http://example.com/resource/rxn_tty/SCDF        | 14329 |
++-------------------------------------------------+-------+
+| http://example.com/resource/rxn_tty/SBD         | 22606 |
++-------------------------------------------------+-------+
+| http://example.com/resource/rxn_tty/GPCK        | 653   |
++-------------------------------------------------+-------+
+| http://example.com/resource/rxn_tty/BPCK        | 709   |
++-------------------------------------------------+-------+
+| http://example.com/resource/rxn_tty/SCDG        | 15675 |
++-------------------------------------------------+-------+
+| http://example.com/resource/rxn_tty/SBDF        | 14377 |
++-------------------------------------------------+-------+
+| http://example.com/resource/rxn_tty/SCDC        | 26621 |
++-------------------------------------------------+-------+
+| http://example.com/resource/rxn_tty/SBDC        | 18819 |
++-------------------------------------------------+-------+
+| http://example.com/resource/rxn_tty/SBDG        | 20461 |
++-------------------------------------------------+-------+""" ;
+                                                     rdfs:label "find employments of entities from public ontologies and RDF knowledgebases" .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022024
+<http://transformunify.org/ontologies/TURBO_0022024> rdf:type owl:NamedIndividual ,
+                                                              <http://transformunify.org/ontologies/TURBO_0022016> ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022020> """select 
+?o (count(?s) as ?count)
+where { 
+    graph <http://example.com/resource/defined_in> {
+        ?s <http://example.com/resource/defined_in> ?o .
+    }
+	
+} 
+group by ?o""" ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022021> """+---------------------------------------------------------+--------+
+| o                                                       | count  |
++---------------------------------------------------------+--------+
+| http://purl.obolibrary.org/obo/chebi.owl                | 137894 |
++---------------------------------------------------------+--------+
+| http://purl.bioontology.org/ontology/RXNORM/            | 108886 |
++---------------------------------------------------------+--------+
+| http://purl.obolibrary.org/obo/dron/dron-rxnorm.owl     | 86147  |
++---------------------------------------------------------+--------+
+| http://purl.obolibrary.org/obo/dron/dron-ingredient.owl | 43697  |
++---------------------------------------------------------+--------+
+| http://purl.obolibrary.org/obo/dron/dron-hand.owl       | 155    |
++---------------------------------------------------------+--------+
+| http://purl.obolibrary.org/obo/dron/dron-upper.owl      | 80     |
++---------------------------------------------------------+--------+
+| http://example.com/resource/classified_search_results   | 1      |
++---------------------------------------------------------+--------+
+| http://example.com/resource/reference_medications       | 1      |
++---------------------------------------------------------+--------+""" ;
+                                                     rdfs:label "find TMM definers"@en .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022027
+<http://transformunify.org/ontologies/TURBO_0022027> rdf:type owl:NamedIndividual ;
+                                                     rdfs:label "requires BioPortal API key"@en .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022030
+<http://transformunify.org/ontologies/TURBO_0022030> rdf:type owl:NamedIndividual ,
+                                                              <http://transformunify.org/ontologies/TURBO_0022016> ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022020> """select 
+?g (count(?s) as ?count) 
+where {
+    graph ?g {
+        ?s ?p ?o .
+    }
+    ?s ?p ?o .
+}
+group by ?g""" ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022021> """+-----------------------------------------------------------------------+----------+
+| g                                                                     | count    |
++-----------------------------------------------------------------------+----------+
+| http://example.com/resource/classified_search_results                 | 13520146 |
++-----------------------------------------------------------------------+----------+
+| http://purl.obolibrary.org/obo/chebi.owl                              | 4715864  |
++-----------------------------------------------------------------------+----------+
+| http://purl.bioontology.org/ontology/RXNORM/                          | 2198229  |
++-----------------------------------------------------------------------+----------+
+| http://purl.obolibrary.org/obo/dron/dron-ingredient.owl               | 2146846  |
++-----------------------------------------------------------------------+----------+
+| http://example.com/resource/reference_medications                     | 543846   |
++-----------------------------------------------------------------------+----------+
+| http://example.com/resource/defined_in                                | 376861   |
++-----------------------------------------------------------------------+----------+
+| http://purl.obolibrary.org/obo/dron/dron-rxnorm.owl                   | 347661   |
++-----------------------------------------------------------------------+----------+
+| http://example.com/resource/classifications_labels                    | 314421   |
++-----------------------------------------------------------------------+----------+
+| http://example.com/resource/employment                                | 293103   |
++-----------------------------------------------------------------------+----------+
+| http://example.com/resource/transitively_materialized_dron_ingredient | 129575   |
++-----------------------------------------------------------------------+----------+
+| http://example.com/resource/elected_mapping                           | 110207   |
++-----------------------------------------------------------------------+----------+
+| http://example.com/resource/reference_medications_labels              | 108823   |
++-----------------------------------------------------------------------+----------+
+| http://example.com/resource/source_med_id                             | 108823   |
++-----------------------------------------------------------------------+----------+
+| http://example.com/resource/bioportal_mapping                         | 83474    |
++-----------------------------------------------------------------------+----------+
+| http://example.com/resource/transitive_role_of_class                  | 42946    |
++-----------------------------------------------------------------------+----------+
+| http://purl.obolibrary.org/obo/dron/dron-hand.owl                     | 2569     |
++-----------------------------------------------------------------------+----------+
+| http://example.com/resource/transitively_materialized_drugrole        | 2273     |
++-----------------------------------------------------------------------+----------+
+| http://purl.obolibrary.org/obo/dron/dron-upper.owl                    | 1321     |
++-----------------------------------------------------------------------+----------+
+| http://purl.obolibrary.org/obo/dron.owl                               | 18       |
++-----------------------------------------------------------------------+----------+
+| http://example.com/resource/turbo_med_mapping_hand                    | 6        |
++-----------------------------------------------------------------------+----------+""" ;
+                                                     rdfs:comment "Showing results from 1 to 20 of 20. Query took 48s, moments ago." ;
+                                                     rdfs:label "statements per named graph"@en .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022031
+<http://transformunify.org/ontologies/TURBO_0022031> rdf:type owl:NamedIndividual ,
+                                                              <http://transformunify.org/ontologies/TURBO_0022016> ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022020> """PREFIX owl: <http://www.w3.org/2002/07/owl#>
+select * where { 
+	?o a owl:Ontology
+}""" ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022021> """o
+http://example.com/resource/bioportal_mapping
+http://example.com/resource/classified_search_results
+http://example.com/resource/reference_medications
+http://purl.bioontology.org/ontology/RXNORM/
+http://purl.obolibrary.org/obo/chebi.owl
+http://purl.obolibrary.org/obo/dron.owl
+http://purl.obolibrary.org/obo/dron/dron-hand.owl
+http://purl.obolibrary.org/obo/dron/dron-ingredient.owl
+http://purl.obolibrary.org/obo/dron/dron-rxnorm.owl
+http://purl.obolibrary.org/obo/dron/dron-upper.owl""" ;
+                                                     rdfs:comment "Showing results from 1 to 10 of 10. Query took 0.2s, moments ago." ;
+                                                     rdfs:label "asserted ontologies"@en .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022032
+<http://transformunify.org/ontologies/TURBO_0022032> rdf:type owl:NamedIndividual ,
+                                                              <http://transformunify.org/ontologies/TURBO_0022016> ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022020> """PREFIX owl: <http://www.w3.org/2002/07/owl#>
+select * 
+where {
+    values ?p {
+        owl:versionIRI owl:versionInfo 
+    }
+    ?s ?p ?o .
+}""" ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022021> """+-------------------------------------------+----------------------------------------------+----------------------------------------------------+
+| p                                         | s                                            | o                                                  |
++-------------------------------------------+----------------------------------------------+----------------------------------------------------+
+| http://www.w3.org/2002/07/owl#versionIRI  | http://purl.obolibrary.org/obo/chebi.owl     | http://purl.obolibrary.org/obo/chebi/187/chebi.owl |
++-------------------------------------------+----------------------------------------------+----------------------------------------------------+
+| http://www.w3.org/2002/07/owl#versionInfo | http://purl.obolibrary.org/obo/dron.owl      | 1/6/20                                             |
++-------------------------------------------+----------------------------------------------+----------------------------------------------------+
+| http://www.w3.org/2002/07/owl#versionInfo | http://purl.bioontology.org/ontology/RXNORM/ | 2020aa                                             |
++-------------------------------------------+----------------------------------------------+----------------------------------------------------+""" ;
+                                                     rdfs:comment "Showing results from 1 to 3 of 3. Query took 0.1s, minutes ago." ;
+                                                     rdfs:label "version info or IRI"@en .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022033
+<http://transformunify.org/ontologies/TURBO_0022033> rdf:type owl:NamedIndividual ,
+                                                              <http://transformunify.org/ontologies/TURBO_0022016> ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022020> """PREFIX owl: <http://www.w3.org/2002/07/owl#>
+select * 
+where {
+    graph ?ontologyGraph {
+        ?ontology a owl:Ontology .
+    }
+    optional {
+        values ?versionpred {
+            owl:versionIRI owl:versionInfo 
+        }
+        graph ?versiongraph {
+            ?ontology ?versionpred ?versionval .
+        }
+    }
+}""" ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022021> """+---------------------------------------------------------+---------------------------------------------------------+-------------------------------------------+----------------------------------------------+----------------------------------------------------+
+| ontologyGraph                                           | ontology                                                | versionpred                               | versiongraph                                 | versionval                                         |
++---------------------------------------------------------+---------------------------------------------------------+-------------------------------------------+----------------------------------------------+----------------------------------------------------+
+| http://purl.obolibrary.org/obo/dron.owl                 | http://purl.obolibrary.org/obo/dron.owl                 | http://www.w3.org/2002/07/owl#versionInfo | http://purl.obolibrary.org/obo/dron.owl      | 2020-01-06                                         |
++---------------------------------------------------------+---------------------------------------------------------+-------------------------------------------+----------------------------------------------+----------------------------------------------------+
+| http://purl.obolibrary.org/obo/dron/dron-ingredient.owl | http://purl.obolibrary.org/obo/dron/dron-ingredient.owl |                                           |                                              |                                                    |
++---------------------------------------------------------+---------------------------------------------------------+-------------------------------------------+----------------------------------------------+----------------------------------------------------+
+| http://purl.obolibrary.org/obo/dron/dron-hand.owl       | http://purl.obolibrary.org/obo/dron/dron-hand.owl       |                                           |                                              |                                                    |
++---------------------------------------------------------+---------------------------------------------------------+-------------------------------------------+----------------------------------------------+----------------------------------------------------+
+| http://purl.obolibrary.org/obo/dron/dron-upper.owl      | http://purl.obolibrary.org/obo/dron/dron-upper.owl      |                                           |                                              |                                                    |
++---------------------------------------------------------+---------------------------------------------------------+-------------------------------------------+----------------------------------------------+----------------------------------------------------+
+| http://purl.obolibrary.org/obo/dron/dron-rxnorm.owl     | http://purl.obolibrary.org/obo/dron/dron-rxnorm.owl     |                                           |                                              |                                                    |
++---------------------------------------------------------+---------------------------------------------------------+-------------------------------------------+----------------------------------------------+----------------------------------------------------+
+| http://example.com/resource/turbo_med_mapping_hand      | http://example.com/resource/bioportal_mapping           |                                           |                                              |                                                    |
++---------------------------------------------------------+---------------------------------------------------------+-------------------------------------------+----------------------------------------------+----------------------------------------------------+
+| http://example.com/resource/turbo_med_mapping_hand      | http://example.com/resource/classified_search_results   |                                           |                                              |                                                    |
++---------------------------------------------------------+---------------------------------------------------------+-------------------------------------------+----------------------------------------------+----------------------------------------------------+
+| http://example.com/resource/turbo_med_mapping_hand      | http://example.com/resource/reference_medications       |                                           |                                              |                                                    |
++---------------------------------------------------------+---------------------------------------------------------+-------------------------------------------+----------------------------------------------+----------------------------------------------------+
+| http://purl.bioontology.org/ontology/RXNORM/            | http://purl.bioontology.org/ontology/RXNORM/            | http://www.w3.org/2002/07/owl#versionInfo | http://purl.bioontology.org/ontology/RXNORM/ | 2020aa                                             |
++---------------------------------------------------------+---------------------------------------------------------+-------------------------------------------+----------------------------------------------+----------------------------------------------------+
+| http://purl.obolibrary.org/obo/chebi.owl                | http://purl.obolibrary.org/obo/chebi.owl                | http://www.w3.org/2002/07/owl#versionIRI  | http://purl.obolibrary.org/obo/chebi.owl     | http://purl.obolibrary.org/obo/chebi/187/chebi.owl |
++---------------------------------------------------------+---------------------------------------------------------+-------------------------------------------+----------------------------------------------+----------------------------------------------------+""" ;
+                                                     rdfs:comment "Showing results from 1 to 10 of 10. Query took 0.1s, minutes ago." ;
+                                                     rdfs:label "ontologies in named graphs, optionally with versions"@en .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022034
+<http://transformunify.org/ontologies/TURBO_0022034> rdf:type owl:NamedIndividual ,
+                                                              <http://transformunify.org/ontologies/TURBO_0022016> ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022020> """PREFIX mydata: <http://example.com/resource/>
+select 
+?emp1 ?o1 ?emp2 ?o2 (count (?s1) as ?count)
+where {
+    #    values ?emp1 {
+    #        mydata:active_ingredient 
+    #    }
+    graph mydata:employment {
+        ?s1 mydata:employment ?emp1
+    }
+    graph mydata:defined_in {
+        ?s1 mydata:defined_in ?o1 .
+    }
+    graph mydata:bioportal_mapping {
+        ?s1 mydata:bioportal_mapping ?s2 .
+    }
+    graph mydata:employment {
+        ?s2 mydata:employment  ?emp2 .
+    }
+    graph mydata:defined_in {
+        ?s2 mydata:defined_in ?o2 .
+    }
+} 
+group by ?emp1 ?o1 ?emp2 ?o2""" ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022021> """+-------------------------------------------------+---------------------------------------------------------+-------------------------------------------------+---------------------------------------------------------+-------+
+| emp1                                            | o1                                                      | emp2                                            | o2                                                      | count |
++-------------------------------------------------+---------------------------------------------------------+-------------------------------------------------+---------------------------------------------------------+-------+
+| http://example.com/resource/active_ingredient   | http://purl.obolibrary.org/obo/dron/dron-ingredient.owl | http://example.com/resource/rxn_tty/IN          | http://purl.bioontology.org/ontology/RXNORM/            | 4449  |
++-------------------------------------------------+---------------------------------------------------------+-------------------------------------------------+---------------------------------------------------------+-------+
+| http://example.com/resource/active_ingredient   | http://purl.obolibrary.org/obo/dron/dron-hand.owl       | http://example.com/resource/rxn_tty/IN          | http://purl.bioontology.org/ontology/RXNORM/            | 49    |
++-------------------------------------------------+---------------------------------------------------------+-------------------------------------------------+---------------------------------------------------------+-------+
+| http://example.com/resource/active_ingredient   | http://purl.obolibrary.org/obo/chebi.owl                | http://example.com/resource/rxn_tty/IN          | http://purl.bioontology.org/ontology/RXNORM/            | 736   |
++-------------------------------------------------+---------------------------------------------------------+-------------------------------------------------+---------------------------------------------------------+-------+
+| http://example.com/resource/clinrel_structclass | http://purl.obolibrary.org/obo/dron/dron-ingredient.owl | http://example.com/resource/rxn_tty/IN          | http://purl.bioontology.org/ontology/RXNORM/            | 52    |
++-------------------------------------------------+---------------------------------------------------------+-------------------------------------------------+---------------------------------------------------------+-------+
+| http://example.com/resource/clinrel_structclass | http://purl.obolibrary.org/obo/dron/dron-hand.owl       | http://example.com/resource/rxn_tty/IN          | http://purl.bioontology.org/ontology/RXNORM/            | 3     |
++-------------------------------------------------+---------------------------------------------------------+-------------------------------------------------+---------------------------------------------------------+-------+
+| http://example.com/resource/clinrel_structclass | http://purl.obolibrary.org/obo/chebi.owl                | http://example.com/resource/rxn_tty/IN          | http://purl.bioontology.org/ontology/RXNORM/            | 96    |
++-------------------------------------------------+---------------------------------------------------------+-------------------------------------------------+---------------------------------------------------------+-------+
+| http://example.com/resource/active_ingredient   | http://purl.obolibrary.org/obo/dron/dron-ingredient.owl | http://example.com/resource/rxn_tty/PIN         | http://purl.bioontology.org/ontology/RXNORM/            | 71    |
++-------------------------------------------------+---------------------------------------------------------+-------------------------------------------------+---------------------------------------------------------+-------+
+| http://example.com/resource/active_ingredient   | http://purl.obolibrary.org/obo/chebi.owl                | http://example.com/resource/rxn_tty/PIN         | http://purl.bioontology.org/ontology/RXNORM/            | 7     |
++-------------------------------------------------+---------------------------------------------------------+-------------------------------------------------+---------------------------------------------------------+-------+
+| http://example.com/resource/active_ingredient   | http://purl.obolibrary.org/obo/dron/dron-ingredient.owl | http://example.com/resource/active_ingredient   | http://purl.obolibrary.org/obo/dron/dron-ingredient.owl | 4     |
++-------------------------------------------------+---------------------------------------------------------+-------------------------------------------------+---------------------------------------------------------+-------+
+| http://example.com/resource/active_ingredient   | http://purl.obolibrary.org/obo/chebi.owl                | http://example.com/resource/active_ingredient   | http://purl.obolibrary.org/obo/dron/dron-ingredient.owl | 2     |
++-------------------------------------------------+---------------------------------------------------------+-------------------------------------------------+---------------------------------------------------------+-------+
+| http://example.com/resource/active_ingredient   | http://purl.obolibrary.org/obo/dron/dron-ingredient.owl | http://example.com/resource/active_ingredient   | http://purl.obolibrary.org/obo/chebi.owl                | 2     |
++-------------------------------------------------+---------------------------------------------------------+-------------------------------------------------+---------------------------------------------------------+-------+
+| http://example.com/resource/product             | http://purl.obolibrary.org/obo/dron/dron-ingredient.owl | http://example.com/resource/rxn_tty/SCDF        | http://purl.bioontology.org/ontology/RXNORM/            | 7223  |
++-------------------------------------------------+---------------------------------------------------------+-------------------------------------------------+---------------------------------------------------------+-------+
+| http://example.com/resource/product             | http://purl.obolibrary.org/obo/dron/dron-rxnorm.owl     | http://example.com/resource/rxn_tty/SCDF        | http://purl.bioontology.org/ontology/RXNORM/            | 7223  |
++-------------------------------------------------+---------------------------------------------------------+-------------------------------------------------+---------------------------------------------------------+-------+
+| http://example.com/resource/clinrel_structclass | http://purl.obolibrary.org/obo/dron/dron-ingredient.owl | http://example.com/resource/rxn_tty/PIN         | http://purl.bioontology.org/ontology/RXNORM/            | 1     |
++-------------------------------------------------+---------------------------------------------------------+-------------------------------------------------+---------------------------------------------------------+-------+
+| http://example.com/resource/clinrel_structclass | http://purl.obolibrary.org/obo/chebi.owl                | http://example.com/resource/rxn_tty/PIN         | http://purl.bioontology.org/ontology/RXNORM/            | 21    |
++-------------------------------------------------+---------------------------------------------------------+-------------------------------------------------+---------------------------------------------------------+-------+
+| http://example.com/resource/active_ingredient   | http://purl.obolibrary.org/obo/dron/dron-ingredient.owl | http://example.com/resource/clinrel_structclass | http://purl.obolibrary.org/obo/chebi.owl                | 36    |
++-------------------------------------------------+---------------------------------------------------------+-------------------------------------------------+---------------------------------------------------------+-------+
+| http://example.com/resource/active_ingredient   | http://purl.obolibrary.org/obo/chebi.owl                | http://example.com/resource/clinrel_structclass | http://purl.obolibrary.org/obo/chebi.owl                | 1     |
++-------------------------------------------------+---------------------------------------------------------+-------------------------------------------------+---------------------------------------------------------+-------+
+| http://example.com/resource/product             | http://purl.obolibrary.org/obo/dron/dron-ingredient.owl | http://example.com/resource/rxn_tty/SCD         | http://purl.bioontology.org/ontology/RXNORM/            | 4115  |
++-------------------------------------------------+---------------------------------------------------------+-------------------------------------------------+---------------------------------------------------------+-------+
+| http://example.com/resource/product             | http://purl.obolibrary.org/obo/dron/dron-rxnorm.owl     | http://example.com/resource/rxn_tty/SCD         | http://purl.bioontology.org/ontology/RXNORM/            | 16378 |
++-------------------------------------------------+---------------------------------------------------------+-------------------------------------------------+---------------------------------------------------------+-------+
+| http://example.com/resource/product             | http://purl.obolibrary.org/obo/dron/dron-ingredient.owl | http://example.com/resource/rxn_tty/SBD         | http://purl.bioontology.org/ontology/RXNORM/            | 3318  |
++-------------------------------------------------+---------------------------------------------------------+-------------------------------------------------+---------------------------------------------------------+-------+
+| http://example.com/resource/product             | http://purl.obolibrary.org/obo/dron/dron-rxnorm.owl     | http://example.com/resource/rxn_tty/SBD         | http://purl.bioontology.org/ontology/RXNORM/            | 4492  |
++-------------------------------------------------+---------------------------------------------------------+-------------------------------------------------+---------------------------------------------------------+-------+
+| http://example.com/resource/rxn_tty/IN          | http://purl.bioontology.org/ontology/RXNORM/            | http://example.com/resource/active_ingredient   | http://purl.obolibrary.org/obo/dron/dron-ingredient.owl | 4449  |
++-------------------------------------------------+---------------------------------------------------------+-------------------------------------------------+---------------------------------------------------------+-------+
+| http://example.com/resource/rxn_tty/PIN         | http://purl.bioontology.org/ontology/RXNORM/            | http://example.com/resource/active_ingredient   | http://purl.obolibrary.org/obo/dron/dron-ingredient.owl | 71    |
++-------------------------------------------------+---------------------------------------------------------+-------------------------------------------------+---------------------------------------------------------+-------+
+| http://example.com/resource/rxn_tty/IN          | http://purl.bioontology.org/ontology/RXNORM/            | http://example.com/resource/active_ingredient   | http://purl.obolibrary.org/obo/chebi.owl                | 736   |
++-------------------------------------------------+---------------------------------------------------------+-------------------------------------------------+---------------------------------------------------------+-------+
+| http://example.com/resource/rxn_tty/IN          | http://purl.bioontology.org/ontology/RXNORM/            | http://example.com/resource/clinrel_structclass | http://purl.obolibrary.org/obo/chebi.owl                | 96    |
++-------------------------------------------------+---------------------------------------------------------+-------------------------------------------------+---------------------------------------------------------+-------+
+| http://example.com/resource/rxn_tty/IN          | http://purl.bioontology.org/ontology/RXNORM/            | http://example.com/resource/clinrel_structclass | http://purl.obolibrary.org/obo/dron/dron-ingredient.owl | 52    |
++-------------------------------------------------+---------------------------------------------------------+-------------------------------------------------+---------------------------------------------------------+-------+
+| http://example.com/resource/rxn_tty/IN          | http://purl.bioontology.org/ontology/RXNORM/            | http://example.com/resource/active_ingredient   | http://purl.obolibrary.org/obo/dron/dron-hand.owl       | 49    |
++-------------------------------------------------+---------------------------------------------------------+-------------------------------------------------+---------------------------------------------------------+-------+
+| http://example.com/resource/rxn_tty/PIN         | http://purl.bioontology.org/ontology/RXNORM/            | http://example.com/resource/clinrel_structclass | http://purl.obolibrary.org/obo/chebi.owl                | 21    |
++-------------------------------------------------+---------------------------------------------------------+-------------------------------------------------+---------------------------------------------------------+-------+
+| http://example.com/resource/rxn_tty/PIN         | http://purl.bioontology.org/ontology/RXNORM/            | http://example.com/resource/active_ingredient   | http://purl.obolibrary.org/obo/chebi.owl                | 7     |
++-------------------------------------------------+---------------------------------------------------------+-------------------------------------------------+---------------------------------------------------------+-------+
+| http://example.com/resource/rxn_tty/IN          | http://purl.bioontology.org/ontology/RXNORM/            | http://example.com/resource/clinrel_structclass | http://purl.obolibrary.org/obo/dron/dron-hand.owl       | 3     |
++-------------------------------------------------+---------------------------------------------------------+-------------------------------------------------+---------------------------------------------------------+-------+
+| http://example.com/resource/rxn_tty/SCD         | http://purl.bioontology.org/ontology/RXNORM/            | http://example.com/resource/product             | http://purl.obolibrary.org/obo/dron/dron-rxnorm.owl     | 16378 |
++-------------------------------------------------+---------------------------------------------------------+-------------------------------------------------+---------------------------------------------------------+-------+
+| http://example.com/resource/clinrel_structclass | http://purl.obolibrary.org/obo/chebi.owl                | http://example.com/resource/active_ingredient   | http://purl.obolibrary.org/obo/dron/dron-ingredient.owl | 36    |
++-------------------------------------------------+---------------------------------------------------------+-------------------------------------------------+---------------------------------------------------------+-------+
+| http://example.com/resource/rxn_tty/PIN         | http://purl.bioontology.org/ontology/RXNORM/            | http://example.com/resource/clinrel_structclass | http://purl.obolibrary.org/obo/dron/dron-ingredient.owl | 1     |
++-------------------------------------------------+---------------------------------------------------------+-------------------------------------------------+---------------------------------------------------------+-------+
+| http://example.com/resource/rxn_tty/SCDF        | http://purl.bioontology.org/ontology/RXNORM/            | http://example.com/resource/product             | http://purl.obolibrary.org/obo/dron/dron-ingredient.owl | 7223  |
++-------------------------------------------------+---------------------------------------------------------+-------------------------------------------------+---------------------------------------------------------+-------+
+| http://example.com/resource/rxn_tty/SCDF        | http://purl.bioontology.org/ontology/RXNORM/            | http://example.com/resource/product             | http://purl.obolibrary.org/obo/dron/dron-rxnorm.owl     | 7223  |
++-------------------------------------------------+---------------------------------------------------------+-------------------------------------------------+---------------------------------------------------------+-------+
+| http://example.com/resource/rxn_tty/SCD         | http://purl.bioontology.org/ontology/RXNORM/            | http://example.com/resource/product             | http://purl.obolibrary.org/obo/dron/dron-ingredient.owl | 4115  |
++-------------------------------------------------+---------------------------------------------------------+-------------------------------------------------+---------------------------------------------------------+-------+
+| http://example.com/resource/rxn_tty/SBD         | http://purl.bioontology.org/ontology/RXNORM/            | http://example.com/resource/product             | http://purl.obolibrary.org/obo/dron/dron-ingredient.owl | 3318  |
++-------------------------------------------------+---------------------------------------------------------+-------------------------------------------------+---------------------------------------------------------+-------+
+| http://example.com/resource/rxn_tty/SBD         | http://purl.bioontology.org/ontology/RXNORM/            | http://example.com/resource/product             | http://purl.obolibrary.org/obo/dron/dron-rxnorm.owl     | 4492  |
++-------------------------------------------------+---------------------------------------------------------+-------------------------------------------------+---------------------------------------------------------+-------+
+| http://example.com/resource/clinrel_structclass | http://purl.obolibrary.org/obo/chebi.owl                | http://example.com/resource/active_ingredient   | http://purl.obolibrary.org/obo/chebi.owl                | 1     |
++-------------------------------------------------+---------------------------------------------------------+-------------------------------------------------+---------------------------------------------------------+-------+""" ;
+                                                     rdfs:comment "Showing results from 1 to 39 of 39. Query took 1s, minutes ago." ;
+                                                     rdfs:label "employment, definer and mapping relations"@en .
+
+
+###  https://bioportal.bioontology.org/ontologies/RXNORM
+<https://bioportal.bioontology.org/ontologies/RXNORM> rdf:type owl:NamedIndividual ,
+                                                               <http://xmlns.com/foaf/0.1/Document> ;
+                                                      rdfs:label "BioPortal's homepage for RxNorm" .
+
+
+###  https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html
+<https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> rdf:type owl:NamedIndividual ;
+                                                                   rdfs:label "Appendix 5 - RxNorm Term Types (TTY)" .
+
+
+###  https://www.nlm.nih.gov/research/umls/rxnorm/docs/rxnormfiles.html
+<https://www.nlm.nih.gov/research/umls/rxnorm/docs/rxnormfiles.html> rdf:type owl:NamedIndividual ,
+                                                                              <http://xmlns.com/foaf/0.1/Document> ;
+                                                                     rdfs:label "NLM's RxNorm download page" .
+
+
+###  Generated by the OWL API (version 4.5.9.2019-02-01T07:24:44Z) https://github.com/owlcs/owlapi
