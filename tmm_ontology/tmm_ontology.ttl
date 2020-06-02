@@ -10,7 +10,9 @@
 
 <https://github.com/PennTURBO/med_mapping/blob/master/tmm_ontology/tmm_ontology.ttl> rdf:type owl:Ontology ;
                                                                                       owl:imports <http://www.w3.org/2004/02/skos/core> ,
-                                                                                                  <http://xmlns.com/foaf/0.1/> ;
+                                                                                                  <http://xmlns.com/foaf/0.1/> ,
+                                                                                                  <https://www.dublincore.org/specifications/dublin-core/dcmi-terms/dublin_core_elements.rdf> ,
+                                                                                                  <https://www.dublincore.org/specifications/dublin-core/dcmi-terms/dublin_core_terms.rdf> ;
                                                                                       rdfs:comment "Define EHR and CDW!" ,
                                                                                                    "I have been inconsistently using the terms \"source\"- or \"reference medication\" to refere to the medication strings from a source like a EHR or CDW." ,
                                                                                                    """Probably don't need defined_in statements for 
@@ -43,45 +45,53 @@ de elements disappears from the imports section but all of its terms get saved i
 #################################################################
 
 ###  http://example.com/resource/bioportal_mapping
-mydata:bioportal_mapping rdf:type owl:AnnotationProperty .
+mydata:bioportal_mapping rdf:type owl:AnnotationProperty ;
+                         rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022055> .
 
 
 ###  http://example.com/resource/defined_in
-mydata:defined_in rdf:type owl:AnnotationProperty .
+mydata:defined_in rdf:type owl:AnnotationProperty ;
+                  rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022055> .
 
 
 ###  http://example.com/resource/elected_mapping
-mydata:elected_mapping rdf:type owl:AnnotationProperty .
+mydata:elected_mapping rdf:type owl:AnnotationProperty ;
+                       rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022057> .
 
 
 ###  http://example.com/resource/employment
-mydata:employment rdf:type owl:AnnotationProperty .
+mydata:employment rdf:type owl:AnnotationProperty ;
+                  rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022055> .
 
 
 ###  http://example.com/resource/imports
 mydata:imports rdf:type owl:AnnotationProperty ;
                rdfs:comment "this annotation is intended to be informative without triggering an import in Protege, ROBOT, etc." ;
-               rdfs:label "imports" .
+               rdfs:label "imports" ;
+               rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022055> .
 
 
 ###  http://example.com/resource/match_rxcui
 mydata:match_rxcui rdf:type owl:AnnotationProperty ;
                    <http://purl.org/dc/dcam/domainIncludes> "eligibale RxNorm term" ;
-                   <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
+                   <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> ;
+                   rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022057> .
 
 
 ###  http://example.com/resource/match_sab
 mydata:match_sab rdf:type owl:AnnotationProperty ;
                  <http://purl.org/dc/dcam/domainIncludes> <http://transformunify.org/ontologies/TURBO_0022043> ;
                  <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> ;
-                 rdfs:comment <http://transformunify.org/ontologies/TURBO_0022041> .
+                 rdfs:comment <http://transformunify.org/ontologies/TURBO_0022041> ;
+                 rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022057> .
 
 
 ###  http://example.com/resource/match_tty
 mydata:match_tty rdf:type owl:AnnotationProperty ;
                  <http://purl.org/dc/dcam/domainIncludes> <http://transformunify.org/ontologies/TURBO_0022044> ;
                  <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> ;
-                 rdfs:comment <http://transformunify.org/ontologies/TURBO_0022041> .
+                 rdfs:comment <http://transformunify.org/ontologies/TURBO_0022041> ;
+                 rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022057> .
 
 
 ###  http://example.com/resource/override_classification
@@ -90,27 +100,31 @@ mydata:override_classification rdf:type owl:AnnotationProperty ;
                                <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> ;
                                rdfs:comment <http://transformunify.org/ontologies/TURBO_0022041> ,
                                             "These are the same as <http://example.com/resource/rf_classification>, except <http://example.com/resource/search_res_classification/identical> is asserted when <http://example.com/resource/match_score> is 100 and <http://example.com/resource/search_res_classification/more_distant>  is asserted when the score is 0" ;
-                               rdfs:seeAlso mydata:rf_classification .
+                               rdfs:seeAlso mydata:rf_classification ;
+                               rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022057> .
 
 
 ###  http://example.com/resource/query_source
 mydata:query_source rdf:type owl:AnnotationProperty ;
                     <http://purl.org/dc/dcam/domainIncludes> <http://transformunify.org/ontologies/TURBO_0022042> ;
                     <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> ;
-                    rdfs:comment <http://transformunify.org/ontologies/TURBO_0022041> .
+                    rdfs:comment <http://transformunify.org/ontologies/TURBO_0022041> ;
+                    rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022057> .
 
 
 ###  http://example.com/resource/rf_classification
 mydata:rf_classification rdf:type owl:AnnotationProperty ;
                          <http://purl.org/dc/dcam/domainIncludes> <http://transformunify.org/ontologies/TURBO_0022045> ;
                          <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> ;
-                         rdfs:comment <http://transformunify.org/ontologies/TURBO_0022041> .
+                         rdfs:comment <http://transformunify.org/ontologies/TURBO_0022041> ;
+                         rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022057> .
 
 
 ###  http://example.com/resource/source_id_uri
 mydata:source_id_uri rdf:type owl:AnnotationProperty ;
-                     <http://purl.org/dc/dcam/domainIncludes> <http://purl.obolibrary.org/obo/PDRO_0000024> ;
-                     <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
+                     <http://purl.org/dc/dcam/domainIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> ;
+                     <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/PDRO_0000024> ;
+                     rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022057> .
 
 
 ###  http://example.com/resource/source_rxcui
@@ -118,19 +132,23 @@ mydata:source_rxcui rdf:type owl:AnnotationProperty ;
                     <http://purl.org/dc/dcam/domainIncludes> <http://purl.obolibrary.org/obo/PDRO_0000024> ;
                     rdfs:comment """subject: a drug prescription
 object: an RxNorm term. Casted to a IRI by TMM. May be scrubbed if the RxNorm term isn't valid in the imported RxNorm RDF file? Maybe we should just be keeping that as a literal?""" ;
-                    rdfs:label "medication source asserted RxCUI" .
+                    rdfs:label "medication source asserted RxCUI" ;
+                    rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022056> .
 
 
 ###  http://example.com/resource/transitive_role_of_class
-mydata:transitive_role_of_class rdf:type owl:AnnotationProperty .
+mydata:transitive_role_of_class rdf:type owl:AnnotationProperty ;
+                                rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022054> .
 
 
 ###  http://example.com/resource/transitively_materialized_dron_ingredient
-mydata:transitively_materialized_dron_ingredient rdf:type owl:AnnotationProperty .
+mydata:transitively_materialized_dron_ingredient rdf:type owl:AnnotationProperty ;
+                                                 rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022054> .
 
 
 ###  http://example.com/resource/transitively_materialized_drugrole
-mydata:transitively_materialized_drugrole rdf:type owl:AnnotationProperty .
+mydata:transitively_materialized_drugrole rdf:type owl:AnnotationProperty ;
+                                          rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022054> .
 
 
 ###  http://purl.bioontology.org/ontology/RXNORM/consists_of
@@ -310,6 +328,10 @@ dcterms:accrualPolicy rdf:type owl:AnnotationProperty .
 dcterms:publisher rdf:type owl:AnnotationProperty .
 
 
+###  http://purl.org/dc/terms/title
+dcterms:title rdfs:range rdfs:Literal .
+
+
 ###  http://transformunify.org/ontologies/TURBO_0022019
 <http://transformunify.org/ontologies/TURBO_0022019> rdf:type owl:AnnotationProperty ;
                                                      rdfs:label "has SPARQL illustration"@en .
@@ -323,7 +345,29 @@ dcterms:publisher rdf:type owl:AnnotationProperty .
 ###  http://transformunify.org/ontologies/TURBO_0022040
 <http://transformunify.org/ontologies/TURBO_0022040> rdf:type owl:AnnotationProperty ;
                                                      rdfs:comment "useful for class to class relations as found in RxNorm" ;
-                                                     rdfs:label "has inverse" .
+                                                     rdfs:label "has inverse" ;
+                                                     rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022055> .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022054
+<http://transformunify.org/ontologies/TURBO_0022054> rdf:type owl:AnnotationProperty ;
+                                                     rdfs:label "TMM materialization"@en ;
+                                                     rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022055> .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022055
+<http://transformunify.org/ontologies/TURBO_0022055> rdf:type owl:AnnotationProperty ;
+                                                     rdfs:label "TMM elaboration on public knowledge"@en .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022056
+<http://transformunify.org/ontologies/TURBO_0022056> rdf:type owl:AnnotationProperty ;
+                                                     rdfs:label "TMM attribute of source/reference medication"@en .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022057
+<http://transformunify.org/ontologies/TURBO_0022057> rdf:type owl:AnnotationProperty ;
+                                                     rdfs:label "TMM attribute of classified search result"@en .
 
 
 ###  http://www.w3.org/2002/07/owl#imports
@@ -404,181 +448,218 @@ xsd:date rdf:type rdfs:Datatype .
 
 ###  http://example.com/resource/match_chars
 mydata:match_chars rdf:type owl:DatatypeProperty ;
+                   rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022052> ;
                    <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
 
 
 ###  http://example.com/resource/match_rank
 mydata:match_rank rdf:type owl:DatatypeProperty ;
+                  rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022051> ;
                   <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
 
 
 ###  http://example.com/resource/match_rxaui
 mydata:match_rxaui rdf:type owl:DatatypeProperty ;
+                   rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022051> ;
                    <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
 
 
 ###  http://example.com/resource/match_score
 mydata:match_score rdf:type owl:DatatypeProperty ;
+                   rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022051> ;
                    <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
 
 
 ###  http://example.com/resource/match_string
 mydata:match_string rdf:type owl:DatatypeProperty ;
-                    <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
+                    rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022047> ;
+                    <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> ;
+                    rdfs:comment "From RxNav SQL lookup" .
 
 
 ###  http://example.com/resource/match_words
 mydata:match_words rdf:type owl:DatatypeProperty ;
+                   rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022052> ;
                    <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
 
 
 ###  http://example.com/resource/prob_consists_of
 mydata:prob_consists_of rdf:type owl:DatatypeProperty ;
+                        rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022046> ;
                         <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
 
 
 ###  http://example.com/resource/prob_constitutes
 mydata:prob_constitutes rdf:type owl:DatatypeProperty ;
+                        rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022046> ;
                         <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
 
 
 ###  http://example.com/resource/prob_contained_in
 mydata:prob_contained_in rdf:type owl:DatatypeProperty ;
+                         rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022046> ;
                          <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
 
 
 ###  http://example.com/resource/prob_contains
 mydata:prob_contains rdf:type owl:DatatypeProperty ;
+                     rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022046> ;
                      <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
 
 
 ###  http://example.com/resource/prob_form_of
 mydata:prob_form_of rdf:type owl:DatatypeProperty ;
+                    rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022046> ;
                     <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
 
 
 ###  http://example.com/resource/prob_has_form
 mydata:prob_has_form rdf:type owl:DatatypeProperty ;
+                     rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022046> ;
                      <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
 
 
 ###  http://example.com/resource/prob_has_ingredient
 mydata:prob_has_ingredient rdf:type owl:DatatypeProperty ;
+                           rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022046> ;
                            <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
 
 
 ###  http://example.com/resource/prob_has_part
 mydata:prob_has_part rdf:type owl:DatatypeProperty ;
+                     rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022046> ;
                      <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
 
 
 ###  http://example.com/resource/prob_has_quantified_form
 mydata:prob_has_quantified_form rdf:type owl:DatatypeProperty ;
+                                rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022046> ;
                                 <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
 
 
 ###  http://example.com/resource/prob_has_tradename
 mydata:prob_has_tradename rdf:type owl:DatatypeProperty ;
+                          rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022046> ;
                           <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
 
 
 ###  http://example.com/resource/prob_identical
 mydata:prob_identical rdf:type owl:DatatypeProperty ;
+                      rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022046> ;
                       <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
 
 
 ###  http://example.com/resource/prob_ingredient_of
 mydata:prob_ingredient_of rdf:type owl:DatatypeProperty ;
+                          rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022046> ;
                           <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
 
 
 ###  http://example.com/resource/prob_inverse_isa
 mydata:prob_inverse_isa rdf:type owl:DatatypeProperty ;
+                        rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022046> ;
                         <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
 
 
 ###  http://example.com/resource/prob_isa
 mydata:prob_isa rdf:type owl:DatatypeProperty ;
+                rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022046> ;
                 <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
 
 
 ###  http://example.com/resource/prob_more_distant
 mydata:prob_more_distant rdf:type owl:DatatypeProperty ;
+                         rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022046> ;
                          <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
 
 
 ###  http://example.com/resource/prob_part_of
 mydata:prob_part_of rdf:type owl:DatatypeProperty ;
+                    rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022046> ;
                     <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
 
 
 ###  http://example.com/resource/prob_quantified_form_of
 mydata:prob_quantified_form_of rdf:type owl:DatatypeProperty ;
+                               rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022046> ;
                                <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
 
 
 ###  http://example.com/resource/prob_tradename_of
 mydata:prob_tradename_of rdf:type owl:DatatypeProperty ;
+                         rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022046> ;
                          <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
 
 
 ###  http://example.com/resource/query_chars
 mydata:query_chars rdf:type owl:DatatypeProperty ;
+                   rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022052> ;
                    <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
 
 
 ###  http://example.com/resource/query_val
 mydata:query_val rdf:type owl:DatatypeProperty ;
+                 rdfs:subPropertyOf owl:topDataProperty ;
                  <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
 
 
 ###  http://example.com/resource/query_words
 mydata:query_words rdf:type owl:DatatypeProperty ;
+                   rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022052> ;
                    <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
 
 
 ###  http://example.com/resource/rxaui_freq
 mydata:rxaui_freq rdf:type owl:DatatypeProperty ;
+                  rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022052> ;
                   <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
 
 
 ###  http://example.com/resource/rxcui_freq
 mydata:rxcui_freq rdf:type owl:DatatypeProperty ;
+                  rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022052> ;
                   <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
 
 
 ###  http://example.com/resource/sd_cosine
 mydata:sd_cosine rdf:type owl:DatatypeProperty ;
+                 rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022050> ;
                  <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
 
 
 ###  http://example.com/resource/sd_jaccard
 mydata:sd_jaccard rdf:type owl:DatatypeProperty ;
+                  rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022050> ;
                   <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
 
 
 ###  http://example.com/resource/sd_jw
 mydata:sd_jw rdf:type owl:DatatypeProperty ;
+             rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022050> ;
              <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
 
 
 ###  http://example.com/resource/sd_lcs
 mydata:sd_lcs rdf:type owl:DatatypeProperty ;
+              rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022050> ;
               <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
 
 
 ###  http://example.com/resource/sd_lv
 mydata:sd_lv rdf:type owl:DatatypeProperty ;
+             rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022050> ;
              <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
 
 
 ###  http://example.com/resource/sd_qgram
 mydata:sd_qgram rdf:type owl:DatatypeProperty ;
+                rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022050> ;
                 <http://purl.org/dc/dcam/rangeIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
 
 
 ###  http://example.com/resource/source_count
 mydata:source_count rdf:type owl:DatatypeProperty ;
+                    rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022048> ;
                     <http://purl.org/dc/dcam/domainIncludes> <http://purl.obolibrary.org/obo/PDRO_0000024> ;
                     rdfs:comment "An indicator of how common a medication is in a source (liek an EHR or CDW). The TURBO team uses this to reflect the number of unique patients that ahve received an order for teh drug (and or self reported it as a historical emdication?)" ;
                     rdfs:label "count of medication mentions" .
@@ -586,7 +667,7 @@ mydata:source_count rdf:type owl:DatatypeProperty ;
 
 ###  http://example.com/resource/source_full_name
 mydata:source_full_name rdf:type owl:DatatypeProperty ;
-                        rdfs:subPropertyOf owl:topDataProperty ;
+                        rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022048> ;
                         <http://purl.org/dc/dcam/domainIncludes> <http://purl.obolibrary.org/obo/PDRO_0000024> ;
                         rdfs:comment "FULL NAME of medication" ,
                                      "Required by TMM code" .
@@ -594,6 +675,7 @@ mydata:source_full_name rdf:type owl:DatatypeProperty ;
 
 ###  http://example.com/resource/source_generic_name
 mydata:source_generic_name rdf:type owl:DatatypeProperty ;
+                           rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022048> ;
                            <http://purl.org/dc/dcam/domainIncludes> <http://purl.obolibrary.org/obo/PDRO_0000024> ;
                            rdfs:comment "if available" ;
                            rdfs:label "Generic name of source/reference medication" .
@@ -601,6 +683,7 @@ mydata:source_generic_name rdf:type owl:DatatypeProperty ;
 
 ###  http://example.com/resource/source_normalized_full_name
 mydata:source_normalized_full_name rdf:type owl:DatatypeProperty ;
+                                   rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022048> ;
                                    <http://purl.org/dc/dcam/domainIncludes> <http://purl.obolibrary.org/obo/PDRO_0000024> ;
                                    rdfs:label "Normalized full name of source/reference medication" .
 
@@ -661,8 +744,7 @@ dcterms:modified rdf:type owl:DatatypeProperty ;
 
 
 ###  http://purl.org/dc/terms/title
-dcterms:title rdf:type owl:DatatypeProperty ;
-              rdfs:range rdfs:Literal .
+dcterms:title rdf:type owl:DatatypeProperty .
 
 
 ###  http://purl.org/dc/terms/valid
@@ -678,6 +760,47 @@ dcterms:valid rdf:type owl:DatatypeProperty ;
 ###  http://transformunify.org/ontologies/TURBO_0022021
 <http://transformunify.org/ontologies/TURBO_0022021> rdf:type owl:DatatypeProperty ;
                                                      rdfs:label "has sample SPARQL select result"@en .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022046
+<http://transformunify.org/ontologies/TURBO_0022046> rdf:type owl:DatatypeProperty ;
+                                                     rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022049> ;
+                                                     rdfs:comment "RF outputs" ;
+                                                     rdfs:label "TMM RF per-class probabilities"@en .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022047
+<http://transformunify.org/ontologies/TURBO_0022047> rdf:type owl:DatatypeProperty ;
+                                                     rdfs:label "TMM classified search results attributes"@en .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022048
+<http://transformunify.org/ontologies/TURBO_0022048> rdf:type owl:DatatypeProperty ;
+                                                     rdfs:label "TMM source/reference medication attributes"@en .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022049
+<http://transformunify.org/ontologies/TURBO_0022049> rdf:type owl:DatatypeProperty ;
+                                                     rdfs:subPropertyOf owl:topDataProperty ;
+                                                     rdfs:label "TMM classificaton outputs"@en .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022050
+<http://transformunify.org/ontologies/TURBO_0022050> rdf:type owl:DatatypeProperty ;
+                                                     rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022047> ;
+                                                     rdfs:label "string distance"@en .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022051
+<http://transformunify.org/ontologies/TURBO_0022051> rdf:type owl:DatatypeProperty ;
+                                                     rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022047> ;
+                                                     rdfs:label "RxNav output"@en .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022052
+<http://transformunify.org/ontologies/TURBO_0022052> rdf:type owl:DatatypeProperty ;
+                                                     rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022047> ;
+                                                     rdfs:label "TMM calculated RF features"@en .
 
 
 ###  http://www.w3.org/2004/02/skos/core#notation
@@ -2563,8 +2686,8 @@ see https://www.ebi.ac.uk/chebi/downloadsForward.do""" ,
 ###  http://purl.org/cld/freq/
 <http://purl.org/cld/freq/> rdf:type owl:NamedIndividual ;
                             dcterms:modified "2013-05-10"^^dcterms:W3CDTF ;
-                            dcterms:title "The Collection Description Frequency Namespace"@en ;
-                            dcterms:creator "" .
+                            dcterms:creator "" ;
+                            dcterms:title "The Collection Description Frequency Namespace"@en .
 
 
 ###  http://purl.org/cld/freq/annual
@@ -2778,8 +2901,8 @@ see https://www.ebi.ac.uk/chebi/downloadsForward.do""" ,
 ###  http://purl.org/dc/elements/1.1/
 <http://purl.org/dc/elements/1.1/> rdf:type owl:NamedIndividual ;
                                    dcterms:modified "2012-06-14"^^xsd:date ;
-                                   dcterms:title "Dublin Core Metadata Element Set, Version 1.1"@en ;
-                                   dcterms:publisher <http://purl.org/dc/aboutdcmi#DCMI> .
+                                   dcterms:publisher <http://purl.org/dc/aboutdcmi#DCMI> ;
+                                   dcterms:title "Dublin Core Metadata Element Set, Version 1.1"@en .
 
 
 ###  http://purl.org/dc/elements/1.1/contributor
@@ -2934,8 +3057,8 @@ see https://www.ebi.ac.uk/chebi/downloadsForward.do""" ,
 ###  http://purl.org/dc/terms/
 dcterms: rdf:type owl:NamedIndividual ;
          dcterms:modified "2012-06-14"^^xsd:date ;
-         dcterms:title "DCMI Metadata Terms - other"@en ;
-         dcterms:publisher <http://purl.org/dc/aboutdcmi#DCMI> .
+         dcterms:publisher <http://purl.org/dc/aboutdcmi#DCMI> ;
+         dcterms:title "DCMI Metadata Terms - other"@en .
 
 
 ###  http://purl.org/dc/terms/Agent
@@ -4082,7 +4205,8 @@ mydata:elected_mapping rdfs:comment """links a \"reference medication\" to an rx
 
 domain = http://purl.obolibrary.org/obo/PDRO_0000024 drug prescription
 
-add to this ontology""" .
+add to this ontology""" ;
+                       <http://purl.org/dc/dcam/domainIncludes> <http://purl.obolibrary.org/obo/OBI_0001909> .
 
 
 mydata:employment rdfs:label "has employment" ;
@@ -4115,8 +4239,8 @@ subject and predicate are both roles""" .
 
 
 dcterms:Agent rdfs:label "Agent"@en ;
-              rdfs:comment "A resource that acts or has the power to act."@en ;
-              rdfs:isDefinedBy dcterms: .
+              rdfs:isDefinedBy dcterms: ;
+              rdfs:comment "A resource that acts or has the power to act."@en .
 
 
 dcterms:AgentClass rdfs:isDefinedBy dcterms: ;
@@ -4135,8 +4259,8 @@ dcterms:Box rdfs:comment "The set of regions in space defined by their geographi
             rdfs:seeAlso <https://www.dublincore.org/specifications/dublin-core/dcmi-box/> .
 
 
-dcterms:FileFormat rdfs:label "File Format"@en ;
-                   rdfs:comment "A digital resource format."@en ;
+dcterms:FileFormat rdfs:comment "A digital resource format."@en ;
+                   rdfs:label "File Format"@en ;
                    rdfs:isDefinedBy dcterms: .
 
 
@@ -4157,19 +4281,19 @@ dcterms:ISO639-2 rdfs:seeAlso <http://lcweb.loc.gov/standards/iso639-2/langhome.
                  rdfs:label "ISO 639-2"@en .
 
 
-dcterms:ISO639-3 rdfs:comment "The set of three-letter codes listed in ISO 639-3 for the representation of names of languages."@en ;
-                 rdfs:label "ISO 639-3"@en ;
+dcterms:ISO639-3 rdfs:label "ISO 639-3"@en ;
+                 rdfs:comment "The set of three-letter codes listed in ISO 639-3 for the representation of names of languages."@en ;
                  rdfs:isDefinedBy dcterms: ;
                  rdfs:seeAlso <http://www.sil.org/iso639-3/> .
 
 
 dcterms:Jurisdiction rdfs:label "Jurisdiction"@en ;
-                     rdfs:comment "The extent or range of judicial, law enforcement, or other authority."@en ;
-                     rdfs:isDefinedBy dcterms: .
+                     rdfs:isDefinedBy dcterms: ;
+                     rdfs:comment "The extent or range of judicial, law enforcement, or other authority."@en .
 
 
-dcterms:LicenseDocument rdfs:label "License Document"@en ;
-                        rdfs:isDefinedBy dcterms: ;
+dcterms:LicenseDocument rdfs:isDefinedBy dcterms: ;
+                        rdfs:label "License Document"@en ;
                         rdfs:comment "A legal document giving official permission to do something with a resource."@en .
 
 
@@ -4190,8 +4314,8 @@ dcterms:LocationPeriodOrJurisdiction rdfs:label "Location, Period, or Jurisdicti
 
 
 dcterms:MediaType rdfs:comment "A file format or physical medium."@en ;
-                  rdfs:isDefinedBy dcterms: ;
-                  rdfs:label "Media Type"@en .
+                  rdfs:label "Media Type"@en ;
+                  rdfs:isDefinedBy dcterms: .
 
 
 dcterms:MediaTypeOrExtent rdfs:isDefinedBy dcterms: ;
@@ -4199,8 +4323,8 @@ dcterms:MediaTypeOrExtent rdfs:isDefinedBy dcterms: ;
                           rdfs:label "Media Type or Extent"@en .
 
 
-dcterms:MethodOfAccrual rdfs:isDefinedBy dcterms: ;
-                        rdfs:comment "A method by which resources are added to a collection."@en ;
+dcterms:MethodOfAccrual rdfs:comment "A method by which resources are added to a collection."@en ;
+                        rdfs:isDefinedBy dcterms: ;
                         rdfs:label "Method of Accrual"@en .
 
 
@@ -4221,8 +4345,8 @@ dcterms:PeriodOfTime rdfs:comment "An interval of time that is named or defined 
 
 
 dcterms:PhysicalMedium dcterms:description "Examples include paper, canvas, or DVD."@en ;
-                       rdfs:label "Physical Medium"@en ;
                        rdfs:isDefinedBy dcterms: ;
+                       rdfs:label "Physical Medium"@en ;
                        rdfs:comment "A physical material or carrier."@en .
 
 
@@ -4237,8 +4361,8 @@ dcterms:Point rdfs:comment "The set of points in space defined by their geograph
               rdfs:isDefinedBy dcterms: .
 
 
-dcterms:Policy rdfs:label "Policy"@en ;
-               rdfs:isDefinedBy dcterms: ;
+dcterms:Policy rdfs:isDefinedBy dcterms: ;
+               rdfs:label "Policy"@en ;
                rdfs:comment "A plan or course of action by an authority, intended to influence and determine decisions, actions, and other matters."@en .
 
 
@@ -4248,8 +4372,8 @@ dcterms:ProvenanceStatement rdfs:label "Provenance Statement"@en ;
 
 
 dcterms:RFC1766 rdfs:isDefinedBy dcterms: ;
-                rdfs:seeAlso <http://www.ietf.org/rfc/rfc1766.txt> ;
                 rdfs:comment "The set of tags, constructed according to RFC 1766, for the identification of languages."@en ;
+                rdfs:seeAlso <http://www.ietf.org/rfc/rfc1766.txt> ;
                 rdfs:label "RFC 1766"@en .
 
 
@@ -4290,8 +4414,8 @@ dcterms:Standard rdfs:comment "A reference point against which other things can 
                  rdfs:isDefinedBy dcterms: .
 
 
-dcterms:URI rdfs:comment "The set of identifiers constructed according to the generic syntax for Uniform Resource Identifiers as specified by the Internet Engineering Task Force."@en ;
-            rdfs:isDefinedBy dcterms: ;
+dcterms:URI rdfs:isDefinedBy dcterms: ;
+            rdfs:comment "The set of identifiers constructed according to the generic syntax for Uniform Resource Identifiers as specified by the Internet Engineering Task Force."@en ;
             rdfs:seeAlso <http://www.ietf.org/rfc/rfc3986.txt> ;
             rdfs:label "URI"@en .
 
@@ -4306,8 +4430,8 @@ dcterms:accrualMethod rdfs:label "Accrual Method"@en ;
                       <http://purl.org/dc/dcam/domainIncludes> <http://purl.org/dc/dcmitype/Collection> ;
                       dcterms:description "Recommended practice is to use a value from the Collection Description Accrual Method Vocabulary [[DCMI-ACCRUALMETHOD](https://dublincore.org/groups/collections/accrual-method/)]."@en ;
                       rdfs:comment "The method by which items are added to a collection."@en ;
-                      <http://purl.org/dc/dcam/rangeIncludes> dcterms:MethodOfAccrual ;
-                      rdfs:isDefinedBy dcterms: .
+                      rdfs:isDefinedBy dcterms: ;
+                      <http://purl.org/dc/dcam/rangeIncludes> dcterms:MethodOfAccrual .
 
 
 dcterms:accrualPeriodicity dcterms:description "Recommended practice is to use a value from the Collection Description Frequency Vocabulary [[DCMI-COLLFREQ](https://dublincore.org/groups/collections/frequency/)]."@en ;
@@ -4423,3 +4547,60 @@ dcterms:valid dcterms:description "Recommended practice is to describe the date,
 
 
 ###  Generated by the OWL API (version 4.5.9.2019-02-01T07:24:44Z) https://github.com/owlcs/owlapi
+
+<http://example.com/resource/active_ingredient> <http://www.w3.org/2004/02/skos/core#relatedMatch>
+    <http://purl.obolibrary.org/obo/chebi.owl>, <http://purl.obolibrary.org/obo/dron/dron-hand.owl>,
+    <http://purl.obolibrary.org/obo/dron/dron-ingredient.owl> .
+
+<http://example.com/resource/clinrel_structclass> <http://www.w3.org/2004/02/skos/core#relatedMatch>
+    <http://purl.obolibrary.org/obo/chebi.owl>, <http://purl.obolibrary.org/obo/dron/dron-hand.owl>,
+    <http://purl.obolibrary.org/obo/dron/dron-ingredient.owl> .
+
+<http://example.com/resource/product> <http://www.w3.org/2004/02/skos/core#relatedMatch>
+    <http://purl.obolibrary.org/obo/dron/dron-ingredient.owl>, <http://purl.obolibrary.org/obo/dron/dron-rxnorm.owl> .
+
+<http://example.com/resource/rxn_tty/IN> <http://www.w3.org/2004/02/skos/core#relatedMatch>
+    <http://purl.bioontology.org/ontology/RXNORM/> .
+
+<http://example.com/resource/rxn_tty/PIN> <http://www.w3.org/2004/02/skos/core#relatedMatch>
+    <http://purl.bioontology.org/ontology/RXNORM/> .
+
+<http://example.com/resource/rxn_tty/BN> <http://www.w3.org/2004/02/skos/core#relatedMatch>
+    <http://purl.bioontology.org/ontology/RXNORM/> .
+
+<http://example.com/resource/rxn_tty/MIN> <http://www.w3.org/2004/02/skos/core#relatedMatch>
+    <http://purl.bioontology.org/ontology/RXNORM/> .
+
+<http://example.com/resource/rxn_tty/SCD> <http://www.w3.org/2004/02/skos/core#relatedMatch>
+    <http://purl.bioontology.org/ontology/RXNORM/> .
+
+<http://example.com/resource/curated_role> <http://www.w3.org/2004/02/skos/core#relatedMatch>
+    <http://purl.obolibrary.org/obo/chebi.owl> .
+
+<http://example.com/resource/rxn_tty/SCDF> <http://www.w3.org/2004/02/skos/core#relatedMatch>
+    <http://purl.bioontology.org/ontology/RXNORM/> .
+
+<http://example.com/resource/rxn_tty/SBD> <http://www.w3.org/2004/02/skos/core#relatedMatch>
+    <http://purl.bioontology.org/ontology/RXNORM/> .
+
+<http://example.com/resource/rxn_tty/GPCK> <http://www.w3.org/2004/02/skos/core#relatedMatch>
+    <http://purl.bioontology.org/ontology/RXNORM/> .
+
+<http://example.com/resource/rxn_tty/BPCK> <http://www.w3.org/2004/02/skos/core#relatedMatch>
+    <http://purl.bioontology.org/ontology/RXNORM/> .
+
+<http://example.com/resource/rxn_tty/SCDG> <http://www.w3.org/2004/02/skos/core#relatedMatch>
+    <http://purl.bioontology.org/ontology/RXNORM/> .
+
+<http://example.com/resource/rxn_tty/SBDF> <http://www.w3.org/2004/02/skos/core#relatedMatch>
+    <http://purl.bioontology.org/ontology/RXNORM/> .
+
+<http://example.com/resource/rxn_tty/SCDC> <http://www.w3.org/2004/02/skos/core#relatedMatch>
+    <http://purl.bioontology.org/ontology/RXNORM/> .
+
+<http://example.com/resource/rxn_tty/SBDC> <http://www.w3.org/2004/02/skos/core#relatedMatch>
+    <http://purl.bioontology.org/ontology/RXNORM/> .
+
+<http://example.com/resource/rxn_tty/SBDG> <http://www.w3.org/2004/02/skos/core#relatedMatch>
+    <http://purl.bioontology.org/ontology/RXNORM/> .
+
