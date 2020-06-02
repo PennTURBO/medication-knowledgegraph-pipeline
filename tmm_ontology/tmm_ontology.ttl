@@ -4,90 +4,72 @@
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix mydata: <http://example.com/resource/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
 @base <https://github.com/PennTURBO/med_mapping/blob/master/tmm_ontology/tmm_ontology.ttl> .
 
 <https://github.com/PennTURBO/med_mapping/blob/master/tmm_ontology/tmm_ontology.ttl> rdf:type owl:Ontology ;
                                                                                       owl:imports <http://www.w3.org/2004/02/skos/core> ,
-                                                                                                  <http://xmlns.com/foaf/0.1/> ;
-                                                                                      rdfs:comment """Probaably don't need defined_in statments for 
+                                                                                                  <http://xmlns.com/foaf/0.1/> ,
+                                                                                                  <https://www.dublincore.org/specifications/dublin-core/collection-description/frequency/freq.rdf> ,
+                                                                                                  <https://www.dublincore.org/specifications/dublin-core/dcmi-terms/dublin_core_elements.rdf> ,
+                                                                                                  <https://www.dublincore.org/specifications/dublin-core/dcmi-terms/dublin_core_terms.rdf> ;
+                                                                                      rdfs:comment """Probably don't need defined_in statements for 
 
-BioPortal mappings... no classes or individuls asserted
+BioPortal mappings... no classes or individuals asserted
 Reference Medications or Classified Search Results... individuals are typed, unlike vague owl:Class assertions in ChEBI, DrOn, RxNorm, etc.
 
 Those vague owl:Class assertions and RxNorm's sparse isa assertions  are the reason for TMM employment assertions""" ,
                                                                                                    """https://www.dublincore.org/specifications/dublin-core/dcmi-terms/dublin_core_terms.rdf
 
 https://www.dublincore.org/specifications/dublin-core/collection-description/frequency/freq.rdf""" ,
-                                                                                                   """importing skos and foaf seems to go as planned... they remain as import statemtns
+                                                                                                   """importing skos and foaf seems to go as planned... they remain as import statements
 
 although faof has a suboptimal filename, \"index.rdf\"
 
 dc freq just disappears
 
-de elements disappears from the imports section but all of its terms get saved intot eh importing ontology!""" .
+de elements disappears from the imports section but all of its terms get saved into eh importing ontology!""" .
 
 #################################################################
 #    Annotation properties
 #################################################################
 
 ###  http://example.com/resource/defined_in
-<http://example.com/resource/defined_in> rdf:type owl:AnnotationProperty ;
-                                         rdfs:comment """At least one defined_in statement is asserted about all classes in the TMM graph. The objects of those statements are the IRIs of any ontology that asserts the term to be an owl:Class. In Turtle notation:
-
-graph ?ontology { ?term a owl:Class . }
-
-That's possible because TMM loads each public ontology or imported module into its own named graph, where the graph's IRI is equivalent to the subject of that ontology's/module's 
-
-{ ?s a owl:Ontology . } 
-
-statement, within the ontology itself. (We are assuming that the ontologies stick to the guideline of asserting only a single owl:Ontology IRI).
-
-TODO: Don't care about properties, but should add individuals, specifically
-
-http://example.com/resource/classified_search_results
-
-and 
-
-http://example.com/resource/reference_medications  
-
-So shouldn't be just classes.
-
-Many ChEBI terms will be defined in both
-
-http://purl.obolibrary.org/obo/chebi.owl
-
-and
-
-http://purl.obolibrary.org/obo/dron/dron-ingredient.owl""" ;
-                                         rdfs:label "defined in" ;
-                                         rdfs:range <http://transformunify.org/ontologies/definer> .
+mydata:defined_in rdf:type owl:AnnotationProperty ;
+                  rdfs:range <http://transformunify.org/ontologies/definer> .
 
 
 ###  http://example.com/resource/employment
-<http://example.com/resource/employment> rdf:type owl:AnnotationProperty ;
-                                         <http://transformunify.org/ontologies/TURBO_0022019> <http://transformunify.org/ontologies/TURBO_0022022> ;
-                                         rdfs:label "has employment" ;
-                                         <http://www.w3.org/2004/02/skos/core#definition> """TMM assigns (ideally) one employment to each term from the public ontologies and RDF  knowledgbases that it loads into a triplestore. The purposes are describing how the terms are useful in modelling medications,  normalization of  the various methods the  public resources  use to topically group the terms. 
+mydata:employment rdf:type owl:AnnotationProperty ;
+                  rdfs:range <http://transformunify.org/ontologies/TURBO_0022023> .
 
-For example, one can gain an understanding of DrOn and ChEBI terms by examining their direct and transitive superclasses, but many terms will have  mutiple transitive superclasses (perhaps five on average?).For the record, the superclass realtions are asserted as
 
-{ ?term rdfs:subClassOf ?superclass . }
+###  http://example.com/resource/imports
+mydata:imports rdf:type owl:AnnotationProperty ;
+               rdfs:comment "this annotation is intended to be informative without triggering an import in Protege, ROBOT, etc." ;
+               rdfs:label "imports" .
 
-Conversely, the type assertions in these ontologies are not helpful: they are all owl:Class. 
 
-The relational RxNorm artefacts assert a term type (TTY) for each term, and these are used directly as employments. One might think that the RxNorm isa relations would be used for employment. Those are heirarchical relationships, like rdfs:subClassOf, and they are only asserted for a limited number of entities, like \"500 mg acetaminophen oral tablet\" isa \"acetaminophen oral tablet\".
+###  http://purl.org/dc/dcam/domainIncludes
+<http://purl.org/dc/dcam/domainIncludes> rdf:type owl:AnnotationProperty .
 
-In some cases, there are correspondences between the employments: if some ChEBI or DrOn term, employed as an http://example.com/resource/active_ingredient, are also modeled in RxNorm, the RxNorm term will be employed as an http://example.com/resource/rxn_tty/IN. Most of the DrOn terms employed as product will corespond to a term from RxNorm with SBD, SCD or SCDF employment (using the same IRI bases as before).""" ;
-                                         rdfs:range <http://transformunify.org/ontologies/TURBO_0022023> .
+
+###  http://purl.org/dc/dcam/rangeIncludes
+<http://purl.org/dc/dcam/rangeIncludes> rdf:type owl:AnnotationProperty .
 
 
 ###  http://purl.org/dc/terms/accrualPeriodicity
-<http://purl.org/dc/terms/accrualPeriodicity> rdf:type owl:AnnotationProperty .
+dcterms:accrualPeriodicity rdf:type owl:AnnotationProperty .
 
 
 ###  http://transformunify.org/ontologies/TURBO_0022019
 <http://transformunify.org/ontologies/TURBO_0022019> rdf:type owl:AnnotationProperty ;
                                                      rdfs:label "has SPARQL illustration"@en .
+
+
+###  http://www.w3.org/2002/07/owl#imports
+owl:imports rdf:type owl:AnnotationProperty .
 
 
 ###  http://www.w3.org/2004/02/skos/core#definition
@@ -99,56 +81,204 @@ In some cases, there are correspondences between the employments: if some ChEBI 
 #################################################################
 
 ###  http://purl.org/dc/terms/Box
-<http://purl.org/dc/terms/Box> rdf:type rdfs:Datatype .
+dcterms:Box rdf:type rdfs:Datatype .
 
 
 ###  http://purl.org/dc/terms/ISO3166
-<http://purl.org/dc/terms/ISO3166> rdf:type rdfs:Datatype .
+dcterms:ISO3166 rdf:type rdfs:Datatype .
 
 
 ###  http://purl.org/dc/terms/ISO639-2
-<http://purl.org/dc/terms/ISO639-2> rdf:type rdfs:Datatype .
+dcterms:ISO639-2 rdf:type rdfs:Datatype .
 
 
 ###  http://purl.org/dc/terms/ISO639-3
-<http://purl.org/dc/terms/ISO639-3> rdf:type rdfs:Datatype .
+dcterms:ISO639-3 rdf:type rdfs:Datatype .
 
 
 ###  http://purl.org/dc/terms/Period
-<http://purl.org/dc/terms/Period> rdf:type rdfs:Datatype .
+dcterms:Period rdf:type rdfs:Datatype .
 
 
 ###  http://purl.org/dc/terms/Point
-<http://purl.org/dc/terms/Point> rdf:type rdfs:Datatype .
+dcterms:Point rdf:type rdfs:Datatype .
 
 
 ###  http://purl.org/dc/terms/RFC1766
-<http://purl.org/dc/terms/RFC1766> rdf:type rdfs:Datatype .
+dcterms:RFC1766 rdf:type rdfs:Datatype .
 
 
 ###  http://purl.org/dc/terms/RFC3066
-<http://purl.org/dc/terms/RFC3066> rdf:type rdfs:Datatype .
+dcterms:RFC3066 rdf:type rdfs:Datatype .
 
 
 ###  http://purl.org/dc/terms/RFC4646
-<http://purl.org/dc/terms/RFC4646> rdf:type rdfs:Datatype .
+dcterms:RFC4646 rdf:type rdfs:Datatype .
 
 
 ###  http://purl.org/dc/terms/RFC5646
-<http://purl.org/dc/terms/RFC5646> rdf:type rdfs:Datatype .
+dcterms:RFC5646 rdf:type rdfs:Datatype .
 
 
 ###  http://purl.org/dc/terms/URI
-<http://purl.org/dc/terms/URI> rdf:type rdfs:Datatype .
+dcterms:URI rdf:type rdfs:Datatype .
 
 
 ###  http://purl.org/dc/terms/W3CDTF
-<http://purl.org/dc/terms/W3CDTF> rdf:type rdfs:Datatype .
+dcterms:W3CDTF rdf:type rdfs:Datatype .
 
 
 #################################################################
 #    Object Properties
 #################################################################
+
+###  http://purl.bioontology.org/ontology/RXNORM/consists_of
+<http://purl.bioontology.org/ontology/RXNORM/consists_of> rdf:type owl:ObjectProperty ;
+                                                          rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> ;
+                                                          owl:inverseOf <http://purl.bioontology.org/ontology/RXNORM/constitutes> .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/constitutes
+<http://purl.bioontology.org/ontology/RXNORM/constitutes> rdf:type owl:ObjectProperty ;
+                                                          rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/contained_in
+<http://purl.bioontology.org/ontology/RXNORM/contained_in> rdf:type owl:ObjectProperty ;
+                                                           rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> ;
+                                                           owl:inverseOf <http://purl.bioontology.org/ontology/RXNORM/contains> .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/contains
+<http://purl.bioontology.org/ontology/RXNORM/contains> rdf:type owl:ObjectProperty ;
+                                                       rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/dose_form_of
+<http://purl.bioontology.org/ontology/RXNORM/dose_form_of> rdf:type owl:ObjectProperty ;
+                                                           rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> ;
+                                                           owl:inverseOf <http://purl.bioontology.org/ontology/RXNORM/has_dose_form> .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/doseformgroup_of
+<http://purl.bioontology.org/ontology/RXNORM/doseformgroup_of> rdf:type owl:ObjectProperty ;
+                                                               rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> ;
+                                                               owl:inverseOf <http://purl.bioontology.org/ontology/RXNORM/has_doseformgroup> .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/form_of
+<http://purl.bioontology.org/ontology/RXNORM/form_of> rdf:type owl:ObjectProperty ;
+                                                      rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> ;
+                                                      owl:inverseOf <http://purl.bioontology.org/ontology/RXNORM/has_form> .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/has_dose_form
+<http://purl.bioontology.org/ontology/RXNORM/has_dose_form> rdf:type owl:ObjectProperty ;
+                                                            rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/has_doseformgroup
+<http://purl.bioontology.org/ontology/RXNORM/has_doseformgroup> rdf:type owl:ObjectProperty ;
+                                                                rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/has_form
+<http://purl.bioontology.org/ontology/RXNORM/has_form> rdf:type owl:ObjectProperty ;
+                                                       rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/has_ingredient
+<http://purl.bioontology.org/ontology/RXNORM/has_ingredient> rdf:type owl:ObjectProperty ;
+                                                             rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> ;
+                                                             owl:inverseOf <http://purl.bioontology.org/ontology/RXNORM/ingredient_of> .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/has_ingredients
+<http://purl.bioontology.org/ontology/RXNORM/has_ingredients> rdf:type owl:ObjectProperty ;
+                                                              rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> ;
+                                                              owl:inverseOf <http://purl.bioontology.org/ontology/RXNORM/ingredients_of> .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/has_part
+<http://purl.bioontology.org/ontology/RXNORM/has_part> rdf:type owl:ObjectProperty ;
+                                                       rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> ;
+                                                       owl:inverseOf <http://purl.bioontology.org/ontology/RXNORM/part_of> .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/has_precise_ingredient
+<http://purl.bioontology.org/ontology/RXNORM/has_precise_ingredient> rdf:type owl:ObjectProperty ;
+                                                                     rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> ;
+                                                                     owl:inverseOf <http://purl.bioontology.org/ontology/RXNORM/precise_ingredient_of> .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/has_quantified_form
+<http://purl.bioontology.org/ontology/RXNORM/has_quantified_form> rdf:type owl:ObjectProperty ;
+                                                                  rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> ;
+                                                                  owl:inverseOf <http://purl.bioontology.org/ontology/RXNORM/quantified_form_of> .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/has_tradename
+<http://purl.bioontology.org/ontology/RXNORM/has_tradename> rdf:type owl:ObjectProperty ;
+                                                            rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> ;
+                                                            owl:inverseOf <http://purl.bioontology.org/ontology/RXNORM/tradename_of> .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/ingredient_of
+<http://purl.bioontology.org/ontology/RXNORM/ingredient_of> rdf:type owl:ObjectProperty ;
+                                                            rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/ingredients_of
+<http://purl.bioontology.org/ontology/RXNORM/ingredients_of> rdf:type owl:ObjectProperty ;
+                                                             rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/inverse_isa
+<http://purl.bioontology.org/ontology/RXNORM/inverse_isa> rdf:type owl:ObjectProperty ;
+                                                          rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> ;
+                                                          owl:inverseOf <http://purl.bioontology.org/ontology/RXNORM/isa> .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/isa
+<http://purl.bioontology.org/ontology/RXNORM/isa> rdf:type owl:ObjectProperty ;
+                                                  rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/part_of
+<http://purl.bioontology.org/ontology/RXNORM/part_of> rdf:type owl:ObjectProperty ;
+                                                      rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/precise_ingredient_of
+<http://purl.bioontology.org/ontology/RXNORM/precise_ingredient_of> rdf:type owl:ObjectProperty ;
+                                                                    rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/quantified_form_of
+<http://purl.bioontology.org/ontology/RXNORM/quantified_form_of> rdf:type owl:ObjectProperty ;
+                                                                 rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/reformulated_to
+<http://purl.bioontology.org/ontology/RXNORM/reformulated_to> rdf:type owl:ObjectProperty ;
+                                                              rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> ;
+                                                              owl:inverseOf <http://purl.bioontology.org/ontology/RXNORM/reformulation_of> .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/reformulation_of
+<http://purl.bioontology.org/ontology/RXNORM/reformulation_of> rdf:type owl:ObjectProperty ;
+                                                               rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/tradename_of
+<http://purl.bioontology.org/ontology/RXNORM/tradename_of> rdf:type owl:ObjectProperty ;
+                                                           rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022035> .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022035
+<http://transformunify.org/ontologies/TURBO_0022035> rdf:type owl:ObjectProperty ;
+                                                     rdfs:label "RxNorm object relation"@en .
+
 
 ###  http://xmlns.com/foaf/0.1/homepage
 <http://xmlns.com/foaf/0.1/homepage> rdf:type owl:ObjectProperty .
@@ -176,92 +306,97 @@ In some cases, there are correspondences between the employments: if some ChEBI 
 #    Classes
 #################################################################
 
+###  http://example.com/resource/rxnorm_relationship_tuple
+mydata:rxnorm_relationship_tuple rdf:type owl:Class ;
+                                 rdfs:label "RxNorm allowed { subject predicate object . } tuple" .
+
+
 ###  http://purl.org/dc/terms/Agent
-<http://purl.org/dc/terms/Agent> rdf:type owl:Class .
+dcterms:Agent rdf:type owl:Class .
 
 
 ###  http://purl.org/dc/terms/AgentClass
-<http://purl.org/dc/terms/AgentClass> rdf:type owl:Class .
+dcterms:AgentClass rdf:type owl:Class .
 
 
 ###  http://purl.org/dc/terms/BibliographicResource
-<http://purl.org/dc/terms/BibliographicResource> rdf:type owl:Class .
+dcterms:BibliographicResource rdf:type owl:Class .
 
 
 ###  http://purl.org/dc/terms/FileFormat
-<http://purl.org/dc/terms/FileFormat> rdf:type owl:Class .
+dcterms:FileFormat rdf:type owl:Class .
 
 
 ###  http://purl.org/dc/terms/Frequency
-<http://purl.org/dc/terms/Frequency> rdf:type owl:Class .
+dcterms:Frequency rdf:type owl:Class .
 
 
 ###  http://purl.org/dc/terms/Jurisdiction
-<http://purl.org/dc/terms/Jurisdiction> rdf:type owl:Class .
+dcterms:Jurisdiction rdf:type owl:Class .
 
 
 ###  http://purl.org/dc/terms/LicenseDocument
-<http://purl.org/dc/terms/LicenseDocument> rdf:type owl:Class .
+dcterms:LicenseDocument rdf:type owl:Class .
 
 
 ###  http://purl.org/dc/terms/LinguisticSystem
-<http://purl.org/dc/terms/LinguisticSystem> rdf:type owl:Class .
+dcterms:LinguisticSystem rdf:type owl:Class .
 
 
 ###  http://purl.org/dc/terms/Location
-<http://purl.org/dc/terms/Location> rdf:type owl:Class .
+dcterms:Location rdf:type owl:Class .
 
 
 ###  http://purl.org/dc/terms/LocationPeriodOrJurisdiction
-<http://purl.org/dc/terms/LocationPeriodOrJurisdiction> rdf:type owl:Class .
+dcterms:LocationPeriodOrJurisdiction rdf:type owl:Class .
 
 
 ###  http://purl.org/dc/terms/MediaType
-<http://purl.org/dc/terms/MediaType> rdf:type owl:Class .
+dcterms:MediaType rdf:type owl:Class .
 
 
 ###  http://purl.org/dc/terms/MediaTypeOrExtent
-<http://purl.org/dc/terms/MediaTypeOrExtent> rdf:type owl:Class .
+dcterms:MediaTypeOrExtent rdf:type owl:Class .
 
 
 ###  http://purl.org/dc/terms/MethodOfAccrual
-<http://purl.org/dc/terms/MethodOfAccrual> rdf:type owl:Class .
+dcterms:MethodOfAccrual rdf:type owl:Class .
 
 
 ###  http://purl.org/dc/terms/MethodOfInstruction
-<http://purl.org/dc/terms/MethodOfInstruction> rdf:type owl:Class .
+dcterms:MethodOfInstruction rdf:type owl:Class .
 
 
 ###  http://purl.org/dc/terms/PeriodOfTime
-<http://purl.org/dc/terms/PeriodOfTime> rdf:type owl:Class .
+dcterms:PeriodOfTime rdf:type owl:Class .
 
 
 ###  http://purl.org/dc/terms/PhysicalMedium
-<http://purl.org/dc/terms/PhysicalMedium> rdf:type owl:Class .
+dcterms:PhysicalMedium rdf:type owl:Class .
 
 
 ###  http://purl.org/dc/terms/PhysicalResource
-<http://purl.org/dc/terms/PhysicalResource> rdf:type owl:Class .
+dcterms:PhysicalResource rdf:type owl:Class .
 
 
 ###  http://purl.org/dc/terms/Policy
-<http://purl.org/dc/terms/Policy> rdf:type owl:Class .
+dcterms:Policy rdf:type owl:Class .
 
 
 ###  http://purl.org/dc/terms/ProvenanceStatement
-<http://purl.org/dc/terms/ProvenanceStatement> rdf:type owl:Class .
+dcterms:ProvenanceStatement rdf:type owl:Class .
 
 
 ###  http://purl.org/dc/terms/RightsStatement
-<http://purl.org/dc/terms/RightsStatement> rdf:type owl:Class .
+dcterms:RightsStatement rdf:type owl:Class .
 
 
 ###  http://purl.org/dc/terms/SizeOrDuration
-<http://purl.org/dc/terms/SizeOrDuration> rdf:type owl:Class .
+dcterms:SizeOrDuration rdf:type owl:Class .
 
 
 ###  http://purl.org/dc/terms/Standard
-<http://purl.org/dc/terms/Standard> rdf:type owl:Class .
+dcterms:Standard rdf:type owl:Class .
 
 
 ###  http://transformunify.org/ontologies/TURBO_0022016
@@ -291,8 +426,27 @@ In some cases, there are correspondences between the employments: if some ChEBI 
                                                      rdfs:label "RDF file"@en .
 
 
+###  http://transformunify.org/ontologies/TURBO_0022036
+<http://transformunify.org/ontologies/TURBO_0022036> rdf:type owl:Class ;
+                                                     rdfs:subClassOf <http://transformunify.org/ontologies/TURBO_0022023> ;
+                                                     rdfs:label "RxNorm term types"@en .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022037
+<http://transformunify.org/ontologies/TURBO_0022037> rdf:type owl:Class ;
+                                                     rdfs:subClassOf <http://transformunify.org/ontologies/TURBO_0022036> ;
+                                                     rdfs:label "Unemployed RxNorm term types"@en .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022038
+<http://transformunify.org/ontologies/TURBO_0022038> rdf:type owl:Class ;
+                                                     rdfs:subClassOf <http://transformunify.org/ontologies/TURBO_0022026> ;
+                                                     rdfs:label "TMM named graph"@en .
+
+
 ###  http://transformunify.org/ontologies/definer
 <http://transformunify.org/ontologies/definer> rdf:type owl:Class ;
+                                               rdfs:subClassOf <http://transformunify.org/ontologies/TURBO_0022038> ;
                                                rdfs:label "TMM term definer"@en .
 
 
@@ -316,46 +470,963 @@ In some cases, there are correspondences between the employments: if some ChEBI 
                                                                          rdfs:label "BioPortal RxNorm turtle download URL" .
 
 
+###  http://example.com/resource/BN_has_precise_ingredient_PIN
+mydata:BN_has_precise_ingredient_PIN rdf:type owl:NamedIndividual ,
+                                              mydata:rxnorm_relationship_tuple ;
+                                     <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/BN> ;
+                                     <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/PIN> ;
+                                     dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                                     rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/has_precise_ingredient> ,
+                                                  "has_precise_ingredient" .
+
+
+###  http://example.com/resource/BN_ingredient_of_SBD
+mydata:BN_ingredient_of_SBD rdf:type owl:NamedIndividual ,
+                                     mydata:rxnorm_relationship_tuple ;
+                            <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/BN> ;
+                            <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/SBD> ;
+                            dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                            rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/ingredient_of> ,
+                                         "ingredient_of" .
+
+
+###  http://example.com/resource/BN_ingredient_of_SBDC
+mydata:BN_ingredient_of_SBDC rdf:type owl:NamedIndividual ,
+                                      mydata:rxnorm_relationship_tuple ;
+                             <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/BN> ;
+                             <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/SBDC> ;
+                             dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                             rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/ingredient_of> ,
+                                          "ingredient_of" .
+
+
+###  http://example.com/resource/BN_ingredient_of_SBDF
+mydata:BN_ingredient_of_SBDF rdf:type owl:NamedIndividual ,
+                                      mydata:rxnorm_relationship_tuple ;
+                             <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/BN> ;
+                             <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/SBDF> ;
+                             dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                             rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/ingredient_of> ,
+                                          "ingredient_of" .
+
+
+###  http://example.com/resource/BN_ingredient_of_SBDG
+mydata:BN_ingredient_of_SBDG rdf:type owl:NamedIndividual ,
+                                      mydata:rxnorm_relationship_tuple ;
+                             <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/BN> ;
+                             <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/SBDG> ;
+                             dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                             rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/ingredient_of> ,
+                                          "ingredient_of" .
+
+
+###  http://example.com/resource/BN_reformulated_to_BN
+mydata:BN_reformulated_to_BN rdf:type owl:NamedIndividual ,
+                                      mydata:rxnorm_relationship_tuple ;
+                             <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/BN> ;
+                             <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/BN> ;
+                             dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                             rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/reformulated_to> ,
+                                          "reformulated_to" .
+
+
+###  http://example.com/resource/BN_reformulation_of_BN
+mydata:BN_reformulation_of_BN rdf:type owl:NamedIndividual ,
+                                       mydata:rxnorm_relationship_tuple ;
+                              <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/BN> ;
+                              <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/BN> ;
+                              dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                              rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/reformulation_of> ,
+                                           "reformulation_of" .
+
+
+###  http://example.com/resource/BN_tradename_of_IN
+mydata:BN_tradename_of_IN rdf:type owl:NamedIndividual ,
+                                   mydata:rxnorm_relationship_tuple ;
+                          <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/BN> ;
+                          <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/IN> ;
+                          dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                          rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/tradename_of> ,
+                                       "tradename_of" .
+
+
+###  http://example.com/resource/BPCK_contains_SBD
+mydata:BPCK_contains_SBD rdf:type owl:NamedIndividual ,
+                                  mydata:rxnorm_relationship_tuple ;
+                         <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/BPCK> ;
+                         <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/SBD> ;
+                         dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                         rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/contains> ,
+                                      "contains" .
+
+
+###  http://example.com/resource/BPCK_contains_SCD
+mydata:BPCK_contains_SCD rdf:type owl:NamedIndividual ,
+                                  mydata:rxnorm_relationship_tuple ;
+                         <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/BPCK> ;
+                         <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/SCD> ;
+                         dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                         rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/contains> ,
+                                      "contains" .
+
+
+###  http://example.com/resource/BPCK_has_dose_form_DF
+mydata:BPCK_has_dose_form_DF rdf:type owl:NamedIndividual ,
+                                      mydata:rxnorm_relationship_tuple ;
+                             <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/BPCK> ;
+                             <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/DF> ;
+                             dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                             rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/has_dose_form> ,
+                                          "has_dose_form" .
+
+
+###  http://example.com/resource/BPCK_tradename_of_GPCK
+mydata:BPCK_tradename_of_GPCK rdf:type owl:NamedIndividual ,
+                                       mydata:rxnorm_relationship_tuple ;
+                              <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/BPCK> ;
+                              <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/GPCK> ;
+                              dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                              rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/tradename_of> ,
+                                           "tradename_of" .
+
+
+###  http://example.com/resource/DFG_doseformgroup_of_SBDG
+mydata:DFG_doseformgroup_of_SBDG rdf:type owl:NamedIndividual ,
+                                          mydata:rxnorm_relationship_tuple ;
+                                 <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/DFG> ;
+                                 <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/SBDG> ;
+                                 dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                                 rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/doseformgroup_of> ,
+                                              "doseformgroup_of" .
+
+
+###  http://example.com/resource/DFG_doseformgroup_of_SCDG
+mydata:DFG_doseformgroup_of_SCDG rdf:type owl:NamedIndividual ,
+                                          mydata:rxnorm_relationship_tuple ;
+                                 <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/DFG> ;
+                                 <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/SCDG> ;
+                                 dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                                 rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/doseformgroup_of> ,
+                                              "doseformgroup_of" .
+
+
+###  http://example.com/resource/DFG_inverse_isa_DF
+mydata:DFG_inverse_isa_DF rdf:type owl:NamedIndividual ,
+                                   mydata:rxnorm_relationship_tuple ;
+                          <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/DFG> ;
+                          <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/DF> ;
+                          dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                          rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/inverse_isa> ,
+                                       "inverse_isa" .
+
+
+###  http://example.com/resource/DF_dose_form_of_BPCK
+mydata:DF_dose_form_of_BPCK rdf:type owl:NamedIndividual ,
+                                     mydata:rxnorm_relationship_tuple ;
+                            <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/DF> ;
+                            <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/BPCK> ;
+                            dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                            rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/dose_form_of> ,
+                                         "dose_form_of" .
+
+
+###  http://example.com/resource/DF_dose_form_of_GPCK
+mydata:DF_dose_form_of_GPCK rdf:type owl:NamedIndividual ,
+                                     mydata:rxnorm_relationship_tuple ;
+                            <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/DF> ;
+                            <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/GPCK> ;
+                            dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                            rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/dose_form_of> ,
+                                         "dose_form_of" .
+
+
+###  http://example.com/resource/DF_dose_form_of_SBD
+mydata:DF_dose_form_of_SBD rdf:type owl:NamedIndividual ,
+                                    mydata:rxnorm_relationship_tuple ;
+                           <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/DF> ;
+                           <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/SBD> ;
+                           dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                           rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/dose_form_of> ,
+                                        "dose_form_of" .
+
+
+###  http://example.com/resource/DF_dose_form_of_SBDF
+mydata:DF_dose_form_of_SBDF rdf:type owl:NamedIndividual ,
+                                     mydata:rxnorm_relationship_tuple ;
+                            <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/DF> ;
+                            <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/SBDF> ;
+                            dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                            rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/dose_form_of> ,
+                                         "dose_form_of" .
+
+
+###  http://example.com/resource/DF_dose_form_of_SCD
+mydata:DF_dose_form_of_SCD rdf:type owl:NamedIndividual ,
+                                    mydata:rxnorm_relationship_tuple ;
+                           <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/DF> ;
+                           <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/SCD> ;
+                           dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                           rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/dose_form_of> ,
+                                        "dose_form_of" .
+
+
+###  http://example.com/resource/DF_dose_form_of_SCDF
+mydata:DF_dose_form_of_SCDF rdf:type owl:NamedIndividual ,
+                                     mydata:rxnorm_relationship_tuple ;
+                            <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/DF> ;
+                            <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/SCDF> ;
+                            dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                            rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/dose_form_of> ,
+                                         "dose_form_of" .
+
+
+###  http://example.com/resource/DF_isa_DFG
+mydata:DF_isa_DFG rdf:type owl:NamedIndividual ,
+                           mydata:rxnorm_relationship_tuple ;
+                  <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/DF> ;
+                  <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/DFG> ;
+                  dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                  rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/isa> ,
+                               "isa" .
+
+
+###  http://example.com/resource/GPCK_contains_SCD
+mydata:GPCK_contains_SCD rdf:type owl:NamedIndividual ,
+                                  mydata:rxnorm_relationship_tuple ;
+                         <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/GPCK> ;
+                         <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/SCD> ;
+                         dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                         rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/contains> ,
+                                      "contains" .
+
+
+###  http://example.com/resource/GPCK_has_dose_form_DF
+mydata:GPCK_has_dose_form_DF rdf:type owl:NamedIndividual ,
+                                      mydata:rxnorm_relationship_tuple ;
+                             <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/GPCK> ;
+                             <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/DF> ;
+                             dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                             rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/has_dose_form> ,
+                                          "has_dose_form" .
+
+
+###  http://example.com/resource/GPCK_has_tradename_BPCK
+mydata:GPCK_has_tradename_BPCK rdf:type owl:NamedIndividual ,
+                                        mydata:rxnorm_relationship_tuple ;
+                               <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/GPCK> ;
+                               <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/BPCK> ;
+                               dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                               rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/has_tradename> ,
+                                            "has_tradename" .
+
+
+###  http://example.com/resource/IN_has_form_PIN
+mydata:IN_has_form_PIN rdf:type owl:NamedIndividual ,
+                                mydata:rxnorm_relationship_tuple ;
+                       <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/IN> ;
+                       <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/PIN> ;
+                       dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                       rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/has_form> ,
+                                    "has_form" .
+
+
+###  http://example.com/resource/IN_has_tradename_BN
+mydata:IN_has_tradename_BN rdf:type owl:NamedIndividual ,
+                                    mydata:rxnorm_relationship_tuple ;
+                           <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/IN> ;
+                           <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/BN> ;
+                           dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                           rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/has_tradename> ,
+                                        "has_tradename" .
+
+
+###  http://example.com/resource/IN_ingredient_of_SCDC
+mydata:IN_ingredient_of_SCDC rdf:type owl:NamedIndividual ,
+                                      mydata:rxnorm_relationship_tuple ;
+                             <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/IN> ;
+                             <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/SCDC> ;
+                             dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                             rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/ingredient_of> ,
+                                          "ingredient_of" .
+
+
+###  http://example.com/resource/IN_ingredient_of_SCDF
+mydata:IN_ingredient_of_SCDF rdf:type owl:NamedIndividual ,
+                                      mydata:rxnorm_relationship_tuple ;
+                             <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/IN> ;
+                             <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/SCDF> ;
+                             dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                             rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/ingredient_of> ,
+                                          "ingredient_of" .
+
+
+###  http://example.com/resource/IN_ingredient_of_SCDG
+mydata:IN_ingredient_of_SCDG rdf:type owl:NamedIndividual ,
+                                      mydata:rxnorm_relationship_tuple ;
+                             <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/IN> ;
+                             <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/SCDG> ;
+                             dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                             rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/ingredient_of> ,
+                                          "ingredient_of" .
+
+
+###  http://example.com/resource/IN_part_of_MIN
+mydata:IN_part_of_MIN rdf:type owl:NamedIndividual ,
+                               mydata:rxnorm_relationship_tuple ;
+                      <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/IN> ;
+                      <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/MIN> ;
+                      dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                      rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/part_of> ,
+                                   "part_of" .
+
+
+###  http://example.com/resource/MIN_has_part_IN
+mydata:MIN_has_part_IN rdf:type owl:NamedIndividual ,
+                                mydata:rxnorm_relationship_tuple ;
+                       <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/MIN> ;
+                       <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/IN> ;
+                       dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                       rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/has_part> ,
+                                    "has_part" .
+
+
+###  http://example.com/resource/MIN_has_part_PIN
+mydata:MIN_has_part_PIN rdf:type owl:NamedIndividual ,
+                                 mydata:rxnorm_relationship_tuple ;
+                        <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/MIN> ;
+                        <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/PIN> ;
+                        dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                        rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/has_part> ,
+                                     "has_part" .
+
+
+###  http://example.com/resource/MIN_ingredients_of_SCD
+mydata:MIN_ingredients_of_SCD rdf:type owl:NamedIndividual ,
+                                       mydata:rxnorm_relationship_tuple ;
+                              <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/MIN> ;
+                              <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/SCD> ;
+                              dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                              rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/ingredients_of> ,
+                                           "ingredients_of" .
+
+
+###  http://example.com/resource/PIN_form_of_IN
+mydata:PIN_form_of_IN rdf:type owl:NamedIndividual ,
+                               mydata:rxnorm_relationship_tuple ;
+                      <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/PIN> ;
+                      <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/IN> ;
+                      dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                      rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/form_of> ,
+                                   "form_of" .
+
+
+###  http://example.com/resource/PIN_part_of_MIN
+mydata:PIN_part_of_MIN rdf:type owl:NamedIndividual ,
+                                mydata:rxnorm_relationship_tuple ;
+                       <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/PIN> ;
+                       <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/MIN> ;
+                       dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                       rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/part_of> ,
+                                    "part_of" .
+
+
+###  http://example.com/resource/PIN_precise_ingredient_of_BN
+mydata:PIN_precise_ingredient_of_BN rdf:type owl:NamedIndividual ,
+                                             mydata:rxnorm_relationship_tuple ;
+                                    <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/PIN> ;
+                                    <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/BN> ;
+                                    dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                                    rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/precise_ingredient_of> ,
+                                                 "precise_ingredient_of" .
+
+
+###  http://example.com/resource/PIN_precise_ingredient_of_SCDC
+mydata:PIN_precise_ingredient_of_SCDC rdf:type owl:NamedIndividual ,
+                                               mydata:rxnorm_relationship_tuple ;
+                                      <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/PIN> ;
+                                      <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/SCDC> ;
+                                      dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                                      rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/precise_ingredient_of> ,
+                                                   "precise_ingredient_of" .
+
+
+###  http://example.com/resource/SBDC_constitutes_SBD
+mydata:SBDC_constitutes_SBD rdf:type owl:NamedIndividual ,
+                                     mydata:rxnorm_relationship_tuple ;
+                            <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/SBDC> ;
+                            <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/SBD> ;
+                            dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                            rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/constitutes> ,
+                                         "constitutes" .
+
+
+###  http://example.com/resource/SBDC_has_ingredient_BN
+mydata:SBDC_has_ingredient_BN rdf:type owl:NamedIndividual ,
+                                       mydata:rxnorm_relationship_tuple ;
+                              <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/SBDC> ;
+                              <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/BN> ;
+                              dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                              rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/has_ingredient> ,
+                                           "has_ingredient" .
+
+
+###  http://example.com/resource/SBDC_tradename_of_SCDC
+mydata:SBDC_tradename_of_SCDC rdf:type owl:NamedIndividual ,
+                                       mydata:rxnorm_relationship_tuple ;
+                              <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/SBDC> ;
+                              <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/SCDC> ;
+                              dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                              rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/tradename_of> ,
+                                           "tradename_of" .
+
+
+###  http://example.com/resource/SBDF_has_dose_form_DF
+mydata:SBDF_has_dose_form_DF rdf:type owl:NamedIndividual ,
+                                      mydata:rxnorm_relationship_tuple ;
+                             <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/SBDF> ;
+                             <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/DF> ;
+                             dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                             rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/has_dose_form> ,
+                                          "has_dose_form" .
+
+
+###  http://example.com/resource/SBDF_has_ingredient_BN
+mydata:SBDF_has_ingredient_BN rdf:type owl:NamedIndividual ,
+                                       mydata:rxnorm_relationship_tuple ;
+                              <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/SBDF> ;
+                              <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/BN> ;
+                              dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                              rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/has_ingredient> ,
+                                           "has_ingredient" .
+
+
+###  http://example.com/resource/SBDF_inverse_isa_SBD
+mydata:SBDF_inverse_isa_SBD rdf:type owl:NamedIndividual ,
+                                     mydata:rxnorm_relationship_tuple ;
+                            <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/SBDF> ;
+                            <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/SBD> ;
+                            dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                            rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/inverse_isa> ,
+                                         "inverse_isa" .
+
+
+###  http://example.com/resource/SBDF_isa_SBDG
+mydata:SBDF_isa_SBDG rdf:type owl:NamedIndividual ,
+                              mydata:rxnorm_relationship_tuple ;
+                     <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/SBDF> ;
+                     <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/SBDG> ;
+                     dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                     rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/isa> ,
+                                  "isa" .
+
+
+###  http://example.com/resource/SBDF_tradename_of_SCDF
+mydata:SBDF_tradename_of_SCDF rdf:type owl:NamedIndividual ,
+                                       mydata:rxnorm_relationship_tuple ;
+                              <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/SBDF> ;
+                              <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/SCDF> ;
+                              dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                              rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/tradename_of> ,
+                                           "tradename_of" .
+
+
+###  http://example.com/resource/SBDG_has_doseformgroup_DFG
+mydata:SBDG_has_doseformgroup_DFG rdf:type owl:NamedIndividual ,
+                                           mydata:rxnorm_relationship_tuple ;
+                                  <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/SBDG> ;
+                                  <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/DFG> ;
+                                  dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                                  rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/has_doseformgroup> ,
+                                               "has_doseformgroup" .
+
+
+###  http://example.com/resource/SBDG_has_ingredient_BN
+mydata:SBDG_has_ingredient_BN rdf:type owl:NamedIndividual ,
+                                       mydata:rxnorm_relationship_tuple ;
+                              <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/SBDG> ;
+                              <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/BN> ;
+                              dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                              rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/has_ingredient> ,
+                                           "has_ingredient" .
+
+
+###  http://example.com/resource/SBDG_inverse_isa_SBD
+mydata:SBDG_inverse_isa_SBD rdf:type owl:NamedIndividual ,
+                                     mydata:rxnorm_relationship_tuple ;
+                            <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/SBDG> ;
+                            <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/SBD> ;
+                            dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                            rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/inverse_isa> ,
+                                         "inverse_isa" .
+
+
+###  http://example.com/resource/SBDG_inverse_isa_SBDF
+mydata:SBDG_inverse_isa_SBDF rdf:type owl:NamedIndividual ,
+                                      mydata:rxnorm_relationship_tuple ;
+                             <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/SBDG> ;
+                             <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/SBDF> ;
+                             dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                             rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/inverse_isa> ,
+                                          "inverse_isa" .
+
+
+###  http://example.com/resource/SBDG_tradename_of_SCDG
+mydata:SBDG_tradename_of_SCDG rdf:type owl:NamedIndividual ,
+                                       mydata:rxnorm_relationship_tuple ;
+                              <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/SBDG> ;
+                              <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/SCDG> ;
+                              dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                              rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/tradename_of> ,
+                                           "tradename_of" .
+
+
+###  http://example.com/resource/SBD_consists_of_SBDC
+mydata:SBD_consists_of_SBDC rdf:type owl:NamedIndividual ,
+                                     mydata:rxnorm_relationship_tuple ;
+                            <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/SBD> ;
+                            <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/SBDC> ;
+                            dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                            rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/consists_of> ,
+                                         "consists_of" .
+
+
+###  http://example.com/resource/SBD_consists_of_SCDC
+mydata:SBD_consists_of_SCDC rdf:type owl:NamedIndividual ,
+                                     mydata:rxnorm_relationship_tuple ;
+                            <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/SBD> ;
+                            <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/SCDC> ;
+                            dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                            rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/consists_of> ,
+                                         "consists_of" .
+
+
+###  http://example.com/resource/SBD_contained_in_BPCK
+mydata:SBD_contained_in_BPCK rdf:type owl:NamedIndividual ,
+                                      mydata:rxnorm_relationship_tuple ;
+                             <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/SBD> ;
+                             <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/BPCK> ;
+                             dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                             rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/contained_in> ,
+                                          "contained_in" .
+
+
+###  http://example.com/resource/SBD_has_dose_form_DF
+mydata:SBD_has_dose_form_DF rdf:type owl:NamedIndividual ,
+                                     mydata:rxnorm_relationship_tuple ;
+                            <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/SBD> ;
+                            <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/DF> ;
+                            dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                            rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/has_dose_form> ,
+                                         "has_dose_form" .
+
+
+###  http://example.com/resource/SBD_has_ingredient_BN
+mydata:SBD_has_ingredient_BN rdf:type owl:NamedIndividual ,
+                                      mydata:rxnorm_relationship_tuple ;
+                             <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/SBD> ;
+                             <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/BN> ;
+                             dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                             rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/has_ingredient> ,
+                                          "has_ingredient" .
+
+
+###  http://example.com/resource/SBD_has_quantified_form_SBD
+mydata:SBD_has_quantified_form_SBD rdf:type owl:NamedIndividual ,
+                                            mydata:rxnorm_relationship_tuple ;
+                                   <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/SBD> ;
+                                   <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/SBD> ;
+                                   dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                                   rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/has_quantified_form> ,
+                                                "has_quantified_form" .
+
+
+###  http://example.com/resource/SBD_isa_SBDF
+mydata:SBD_isa_SBDF rdf:type owl:NamedIndividual ,
+                             mydata:rxnorm_relationship_tuple ;
+                    <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/SBD> ;
+                    <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/SBDF> ;
+                    dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                    rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/isa> ,
+                                 "isa" .
+
+
+###  http://example.com/resource/SBD_isa_SBDG
+mydata:SBD_isa_SBDG rdf:type owl:NamedIndividual ,
+                             mydata:rxnorm_relationship_tuple ;
+                    <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/SBD> ;
+                    <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/SBDG> ;
+                    dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                    rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/isa> ,
+                                 "isa" .
+
+
+###  http://example.com/resource/SBD_quantified_form_of_SBD
+mydata:SBD_quantified_form_of_SBD rdf:type owl:NamedIndividual ,
+                                           mydata:rxnorm_relationship_tuple ;
+                                  <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/SBD> ;
+                                  <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/SBD> ;
+                                  dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                                  rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/quantified_form_of> ,
+                                               "quantified_form_of" .
+
+
+###  http://example.com/resource/SBD_tradename_of_SCD
+mydata:SBD_tradename_of_SCD rdf:type owl:NamedIndividual ,
+                                     mydata:rxnorm_relationship_tuple ;
+                            <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/SBD> ;
+                            <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/SCD> ;
+                            dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                            rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/tradename_of> ,
+                                         "tradename_of" .
+
+
+###  http://example.com/resource/SCDC_constitutes_SBD
+mydata:SCDC_constitutes_SBD rdf:type owl:NamedIndividual ,
+                                     mydata:rxnorm_relationship_tuple ;
+                            <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/SCDC> ;
+                            <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/SBD> ;
+                            dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                            rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/constitutes> ,
+                                         "constitutes" .
+
+
+###  http://example.com/resource/SCDC_constitutes_SCD
+mydata:SCDC_constitutes_SCD rdf:type owl:NamedIndividual ,
+                                     mydata:rxnorm_relationship_tuple ;
+                            <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/SCDC> ;
+                            <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/SCD> ;
+                            dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                            rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/constitutes> ,
+                                         "constitutes" .
+
+
+###  http://example.com/resource/SCDC_has_ingredient_IN
+mydata:SCDC_has_ingredient_IN rdf:type owl:NamedIndividual ,
+                                       mydata:rxnorm_relationship_tuple ;
+                              <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/SCDC> ;
+                              <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/IN> ;
+                              dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                              rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/has_ingredient> ,
+                                           "has_ingredient" .
+
+
+###  http://example.com/resource/SCDC_has_precise_ingredient_PIN
+mydata:SCDC_has_precise_ingredient_PIN rdf:type owl:NamedIndividual ,
+                                                mydata:rxnorm_relationship_tuple ;
+                                       <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/SCDC> ;
+                                       <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/PIN> ;
+                                       dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                                       rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/has_precise_ingredient> ,
+                                                    "has_precise_ingredient" .
+
+
+###  http://example.com/resource/SCDC_has_tradename_SBDC
+mydata:SCDC_has_tradename_SBDC rdf:type owl:NamedIndividual ,
+                                        mydata:rxnorm_relationship_tuple ;
+                               <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/SCDC> ;
+                               <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/SBDC> ;
+                               dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                               rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/has_tradename> ,
+                                            "has_tradename" .
+
+
+###  http://example.com/resource/SCDF_has_dose_form_DF
+mydata:SCDF_has_dose_form_DF rdf:type owl:NamedIndividual ,
+                                      mydata:rxnorm_relationship_tuple ;
+                             <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/SCDF> ;
+                             <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/DF> ;
+                             dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                             rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/has_dose_form> ,
+                                          "has_dose_form" .
+
+
+###  http://example.com/resource/SCDF_has_ingredient_IN
+mydata:SCDF_has_ingredient_IN rdf:type owl:NamedIndividual ,
+                                       mydata:rxnorm_relationship_tuple ;
+                              <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/SCDF> ;
+                              <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/IN> ;
+                              dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                              rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/has_ingredient> ,
+                                           "has_ingredient" .
+
+
+###  http://example.com/resource/SCDF_has_tradename_SBDF
+mydata:SCDF_has_tradename_SBDF rdf:type owl:NamedIndividual ,
+                                        mydata:rxnorm_relationship_tuple ;
+                               <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/SCDF> ;
+                               <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/SBDF> ;
+                               dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                               rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/has_tradename> ,
+                                            "has_tradename" .
+
+
+###  http://example.com/resource/SCDF_inverse_isa_SCD
+mydata:SCDF_inverse_isa_SCD rdf:type owl:NamedIndividual ,
+                                     mydata:rxnorm_relationship_tuple ;
+                            <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/SCDF> ;
+                            <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/SCD> ;
+                            dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                            rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/inverse_isa> ,
+                                         "inverse_isa" .
+
+
+###  http://example.com/resource/SCDF_isa_SCDG
+mydata:SCDF_isa_SCDG rdf:type owl:NamedIndividual ,
+                              mydata:rxnorm_relationship_tuple ;
+                     <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/SCDF> ;
+                     <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/SCDG> ;
+                     dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                     rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/isa> ,
+                                  "isa" .
+
+
+###  http://example.com/resource/SCDG_has_doseformgroup_DFG
+mydata:SCDG_has_doseformgroup_DFG rdf:type owl:NamedIndividual ,
+                                           mydata:rxnorm_relationship_tuple ;
+                                  <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/SCDG> ;
+                                  <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/DFG> ;
+                                  dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                                  rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/has_doseformgroup> ,
+                                               "has_doseformgroup" .
+
+
+###  http://example.com/resource/SCDG_has_ingredient_IN
+mydata:SCDG_has_ingredient_IN rdf:type owl:NamedIndividual ,
+                                       mydata:rxnorm_relationship_tuple ;
+                              <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/SCDG> ;
+                              <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/IN> ;
+                              dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                              rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/has_ingredient> ,
+                                           "has_ingredient" .
+
+
+###  http://example.com/resource/SCDG_has_tradename_SBDG
+mydata:SCDG_has_tradename_SBDG rdf:type owl:NamedIndividual ,
+                                        mydata:rxnorm_relationship_tuple ;
+                               <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/SCDG> ;
+                               <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/SBDG> ;
+                               dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                               rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/has_tradename> ,
+                                            "has_tradename" .
+
+
+###  http://example.com/resource/SCDG_inverse_isa_SCD
+mydata:SCDG_inverse_isa_SCD rdf:type owl:NamedIndividual ,
+                                     mydata:rxnorm_relationship_tuple ;
+                            <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/SCDG> ;
+                            <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/SCD> ;
+                            dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                            rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/inverse_isa> ,
+                                         "inverse_isa" .
+
+
+###  http://example.com/resource/SCDG_inverse_isa_SCDF
+mydata:SCDG_inverse_isa_SCDF rdf:type owl:NamedIndividual ,
+                                      mydata:rxnorm_relationship_tuple ;
+                             <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/SCDG> ;
+                             <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/SCDF> ;
+                             dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                             rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/inverse_isa> ,
+                                          "inverse_isa" .
+
+
+###  http://example.com/resource/SCD_consists_of_SCDC
+mydata:SCD_consists_of_SCDC rdf:type owl:NamedIndividual ,
+                                     mydata:rxnorm_relationship_tuple ;
+                            <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/SCD> ;
+                            <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/SCDC> ;
+                            dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                            rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/consists_of> ,
+                                         "consists_of" .
+
+
+###  http://example.com/resource/SCD_contained_in_BPCK
+mydata:SCD_contained_in_BPCK rdf:type owl:NamedIndividual ,
+                                      mydata:rxnorm_relationship_tuple ;
+                             <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/SCD> ;
+                             <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/BPCK> ;
+                             dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                             rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/contained_in> ,
+                                          "contained_in" .
+
+
+###  http://example.com/resource/SCD_contained_in_GPCK
+mydata:SCD_contained_in_GPCK rdf:type owl:NamedIndividual ,
+                                      mydata:rxnorm_relationship_tuple ;
+                             <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/SCD> ;
+                             <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/GPCK> ;
+                             dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                             rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/contained_in> ,
+                                          "contained_in" .
+
+
+###  http://example.com/resource/SCD_has_dose_form_DF
+mydata:SCD_has_dose_form_DF rdf:type owl:NamedIndividual ,
+                                     mydata:rxnorm_relationship_tuple ;
+                            <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/SCD> ;
+                            <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/DF> ;
+                            dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                            rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/has_dose_form> ,
+                                         "has_dose_form" .
+
+
+###  http://example.com/resource/SCD_has_ingredients_MIN
+mydata:SCD_has_ingredients_MIN rdf:type owl:NamedIndividual ,
+                                        mydata:rxnorm_relationship_tuple ;
+                               <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/SCD> ;
+                               <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/MIN> ;
+                               dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                               rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/has_ingredients> ,
+                                            "has_ingredients" .
+
+
+###  http://example.com/resource/SCD_has_quantified_form_SCD
+mydata:SCD_has_quantified_form_SCD rdf:type owl:NamedIndividual ,
+                                            mydata:rxnorm_relationship_tuple ;
+                                   <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/SCD> ;
+                                   <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/SCD> ;
+                                   dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                                   rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/has_quantified_form> ,
+                                                "has_quantified_form" .
+
+
+###  http://example.com/resource/SCD_has_tradename_SBD
+mydata:SCD_has_tradename_SBD rdf:type owl:NamedIndividual ,
+                                      mydata:rxnorm_relationship_tuple ;
+                             <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/SCD> ;
+                             <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/SBD> ;
+                             dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                             rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/has_tradename> ,
+                                          "has_tradename" .
+
+
+###  http://example.com/resource/SCD_isa_SCDF
+mydata:SCD_isa_SCDF rdf:type owl:NamedIndividual ,
+                             mydata:rxnorm_relationship_tuple ;
+                    <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/SCD> ;
+                    <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/SCDF> ;
+                    dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                    rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/isa> ,
+                                 "isa" .
+
+
+###  http://example.com/resource/SCD_isa_SCDG
+mydata:SCD_isa_SCDG rdf:type owl:NamedIndividual ,
+                             mydata:rxnorm_relationship_tuple ;
+                    <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/SCD> ;
+                    <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/SCDG> ;
+                    dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                    rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/isa> ,
+                                 "isa" .
+
+
+###  http://example.com/resource/SCD_quantified_form_of_SCD
+mydata:SCD_quantified_form_of_SCD rdf:type owl:NamedIndividual ,
+                                           mydata:rxnorm_relationship_tuple ;
+                                  <http://purl.org/dc/dcam/domainIncludes> <http://purl.bioontology.org/ontology/RXNORM/SCD> ;
+                                  <http://purl.org/dc/dcam/rangeIncludes> <http://purl.bioontology.org/ontology/RXNORM/SCD> ;
+                                  dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
+                                  rdfs:seeAlso <http://purl.bioontology.org/ontology/RXNORM/quantified_form_of> ,
+                                               "quantified_form_of" .
+
+
 ###  http://example.com/resource/active_ingredient
-<http://example.com/resource/active_ingredient> rdf:type owl:NamedIndividual ,
-                                                         <http://transformunify.org/ontologies/TURBO_0022023> ;
-                                                <http://www.w3.org/2004/02/skos/core#exactMatch> <http://example.com/resource/rxn_tty/IN> ;
-                                                <http://www.w3.org/2004/02/skos/core#notation> "active_ingredient" ;
-                                                rdfs:comment "active ingredient" .
+mydata:active_ingredient rdf:type owl:NamedIndividual ,
+                                  <http://transformunify.org/ontologies/TURBO_0022023> ;
+                         <http://www.w3.org/2004/02/skos/core#exactMatch> <http://example.com/resource/rxn_tty/IN> ;
+                         <http://www.w3.org/2004/02/skos/core#notation> "active_ingredient" ;
+                         rdfs:comment "active ingredient" .
+
+
+###  http://example.com/resource/bioportal_mapping
+mydata:bioportal_mapping rdf:type owl:NamedIndividual ,
+                                  <http://transformunify.org/ontologies/TURBO_0022038> .
+
+
+###  http://example.com/resource/classifications_labels
+mydata:classifications_labels rdf:type owl:NamedIndividual ,
+                                       <http://transformunify.org/ontologies/TURBO_0022038> .
 
 
 ###  http://example.com/resource/classified_search_results
-<http://example.com/resource/classified_search_results> rdf:type owl:NamedIndividual .
+mydata:classified_search_results rdf:type owl:NamedIndividual ,
+                                          <http://transformunify.org/ontologies/TURBO_0022038> .
 
 
 ###  http://example.com/resource/clinrel_structclass
-<http://example.com/resource/clinrel_structclass> rdf:type owl:NamedIndividual ,
-                                                           <http://transformunify.org/ontologies/TURBO_0022023> .
+mydata:clinrel_structclass rdf:type owl:NamedIndividual ,
+                                    <http://transformunify.org/ontologies/TURBO_0022023> .
 
 
 ###  http://example.com/resource/curated_role
-<http://example.com/resource/curated_role> rdf:type owl:NamedIndividual ,
-                                                    <http://transformunify.org/ontologies/TURBO_0022023> .
+mydata:curated_role rdf:type owl:NamedIndividual ,
+                             <http://transformunify.org/ontologies/TURBO_0022023> .
+
+
+###  http://example.com/resource/defined_in
+mydata:defined_in rdf:type owl:NamedIndividual ,
+                           <http://transformunify.org/ontologies/TURBO_0022038> .
+
+
+###  http://example.com/resource/elected_mapping
+mydata:elected_mapping rdf:type owl:NamedIndividual ,
+                                <http://transformunify.org/ontologies/TURBO_0022038> .
+
+
+###  http://example.com/resource/employment
+mydata:employment rdf:type owl:NamedIndividual ,
+                           <http://transformunify.org/ontologies/TURBO_0022038> .
 
 
 ###  http://example.com/resource/product
-<http://example.com/resource/product> rdf:type owl:NamedIndividual ,
-                                               <http://transformunify.org/ontologies/TURBO_0022023> ;
-                                      <http://www.w3.org/2004/02/skos/core#narrowMatch> <http://example.com/resource/rxn_tty/SBD> ,
-                                                                                        <http://example.com/resource/rxn_tty/SCD> ,
-                                                                                        <http://example.com/resource/rxn_tty/SCDF> .
+mydata:product rdf:type owl:NamedIndividual ,
+                        <http://transformunify.org/ontologies/TURBO_0022023> ;
+               <http://www.w3.org/2004/02/skos/core#narrowMatch> <http://example.com/resource/rxn_tty/SBD> ,
+                                                                 <http://example.com/resource/rxn_tty/SCD> ,
+                                                                 <http://example.com/resource/rxn_tty/SCDF> .
 
 
 ###  http://example.com/resource/reference_medications
-<http://example.com/resource/reference_medications> rdf:type owl:NamedIndividual .
+mydata:reference_medications rdf:type owl:NamedIndividual ,
+                                      <http://transformunify.org/ontologies/TURBO_0022038> .
+
+
+###  http://example.com/resource/reference_medications_labels
+mydata:reference_medications_labels rdf:type owl:NamedIndividual ,
+                                             <http://transformunify.org/ontologies/TURBO_0022038> .
+
+
+###  http://example.com/resource/source_med_id
+mydata:source_med_id rdf:type owl:NamedIndividual ,
+                              <http://transformunify.org/ontologies/TURBO_0022038> .
+
+
+###  http://example.com/resource/transitive_role_of_class
+mydata:transitive_role_of_class rdf:type owl:NamedIndividual ,
+                                         <http://transformunify.org/ontologies/TURBO_0022038> .
+
+
+###  http://example.com/resource/transitively_materialized_dron_ingredient
+mydata:transitively_materialized_dron_ingredient rdf:type owl:NamedIndividual ,
+                                                          <http://transformunify.org/ontologies/TURBO_0022038> .
+
+
+###  http://example.com/resource/transitively_materialized_drugrole
+mydata:transitively_materialized_drugrole rdf:type owl:NamedIndividual ,
+                                                   <http://transformunify.org/ontologies/TURBO_0022038> .
+
+
+###  http://example.com/resource/turbo_med_mapping_hand
+mydata:turbo_med_mapping_hand rdf:type owl:NamedIndividual ,
+                                       <http://transformunify.org/ontologies/TURBO_0022038> .
 
 
 ###  http://example.com/resource/rxn_tty/BN
 <http://example.com/resource/rxn_tty/BN> rdf:type owl:NamedIndividual ,
-                                                  <http://transformunify.org/ontologies/TURBO_0022023> ;
+                                                  <http://transformunify.org/ontologies/TURBO_0022036> ;
                                          <http://www.w3.org/2004/02/skos/core#notation> "BN" ;
-                                         <http://purl.org/dc/terms/creator> <http://purl.bioontology.org/ontology/RXNORM/> ,
-                                                                            <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
+                                         dcterms:creator <http://purl.bioontology.org/ontology/RXNORM/> ,
+                                                         <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
                                          rdfs:label "Brand Name" ,
                                                     "brand name" ;
                                          <http://www.w3.org/2004/02/skos/core#definition> "A proprietary name for a family of products containing a specific active ingredient." ;
@@ -364,37 +1435,40 @@ In some cases, there are correspondences between the employments: if some ChEBI 
 
 ###  http://example.com/resource/rxn_tty/BPCK
 <http://example.com/resource/rxn_tty/BPCK> rdf:type owl:NamedIndividual ,
-                                                    <http://transformunify.org/ontologies/TURBO_0022023> ;
+                                                    <http://transformunify.org/ontologies/TURBO_0022036> ;
                                            <http://www.w3.org/2004/02/skos/core#notation> "BPCK" ;
-                                           <http://purl.org/dc/terms/creator> <http://purl.bioontology.org/ontology/RXNORM/> ,
-                                                                              <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
+                                           dcterms:creator <http://purl.bioontology.org/ontology/RXNORM/> ,
+                                                           <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
                                            rdfs:label "Brand Name Pack" ;
                                            <http://www.w3.org/2004/02/skos/core#definition> "{# (Ingredient Strength Dose Form) / # (Ingredient Strength Dose Form)} Pack [Brand Name]" ;
                                            <http://www.w3.org/2004/02/skos/core#example> "{12 (Ethinyl Estradiol 0.035 MG / Norethindrone 0.5 MG Oral Tablet) / 9 (Ethinyl Estradiol 0.035 MG / Norethindrone 1 MG Oral Tablet) / 7 (Inert Ingredients 1 MG Oral Tablet) } Pack [Leena 28 Day]" .
 
 
 ###  http://example.com/resource/rxn_tty/DF
-<http://example.com/resource/rxn_tty/DF> rdf:type owl:NamedIndividual ;
+<http://example.com/resource/rxn_tty/DF> rdf:type owl:NamedIndividual ,
+                                                  <http://transformunify.org/ontologies/TURBO_0022037> ;
                                          <http://www.w3.org/2004/02/skos/core#notation> "DF" ;
-                                         <http://purl.org/dc/terms/creator> <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
+                                         dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
                                          rdfs:label "Dose Form" ;
                                          <http://www.w3.org/2004/02/skos/core#definition> "See Appendix 2 for a full list of Dose Forms." ;
                                          <http://www.w3.org/2004/02/skos/core#example> "Oral Solution" .
 
 
 ###  http://example.com/resource/rxn_tty/DFG
-<http://example.com/resource/rxn_tty/DFG> rdf:type owl:NamedIndividual ;
+<http://example.com/resource/rxn_tty/DFG> rdf:type owl:NamedIndividual ,
+                                                   <http://transformunify.org/ontologies/TURBO_0022037> ;
                                           <http://www.w3.org/2004/02/skos/core#notation> "DFG" ;
-                                          <http://purl.org/dc/terms/creator> <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
+                                          dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
                                           rdfs:label "Dose Form Group" ;
                                           <http://www.w3.org/2004/02/skos/core#definition> "See Appendix 3 for a full list of Dose Form Groups." ;
                                           <http://www.w3.org/2004/02/skos/core#example> "Oral Liquid" .
 
 
 ###  http://example.com/resource/rxn_tty/ET
-<http://example.com/resource/rxn_tty/ET> rdf:type owl:NamedIndividual ;
+<http://example.com/resource/rxn_tty/ET> rdf:type owl:NamedIndividual ,
+                                                  <http://transformunify.org/ontologies/TURBO_0022037> ;
                                          <http://www.w3.org/2004/02/skos/core#notation> "ET" ;
-                                         <http://purl.org/dc/terms/creator> <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
+                                         dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
                                          rdfs:label "Dose Form Entry Term" ;
                                          <http://www.w3.org/2004/02/skos/core#definition> "Entry terms for dose forms (TTY=DF)." ;
                                          <http://www.w3.org/2004/02/skos/core#example> "Nasal Drops" .
@@ -402,9 +1476,9 @@ In some cases, there are correspondences between the employments: if some ChEBI 
 
 ###  http://example.com/resource/rxn_tty/GPCK
 <http://example.com/resource/rxn_tty/GPCK> rdf:type owl:NamedIndividual ,
-                                                    <http://transformunify.org/ontologies/TURBO_0022023> ;
+                                                    <http://transformunify.org/ontologies/TURBO_0022036> ;
                                            <http://www.w3.org/2004/02/skos/core#notation> "GPCK" ;
-                                           <http://purl.org/dc/terms/creator> <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
+                                           dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
                                            rdfs:label "Generic Pack" ;
                                            <http://www.w3.org/2004/02/skos/core#definition> "{# (Ingredient + Strength + Dose Form) / # (Ingredient + Strength + Dose Form)} Pack" ;
                                            <http://www.w3.org/2004/02/skos/core#example> "{11 (varenicline 0.5 MG Oral Tablet) / 42 (varenicline 1 MG Oral Tablet) } Pack" .
@@ -412,10 +1486,10 @@ In some cases, there are correspondences between the employments: if some ChEBI 
 
 ###  http://example.com/resource/rxn_tty/IN
 <http://example.com/resource/rxn_tty/IN> rdf:type owl:NamedIndividual ,
-                                                  <http://transformunify.org/ontologies/TURBO_0022023> ;
-                                         <http://www.w3.org/2004/02/skos/core#exactMatch> <http://example.com/resource/active_ingredient> ;
+                                                  <http://transformunify.org/ontologies/TURBO_0022036> ;
+                                         <http://www.w3.org/2004/02/skos/core#exactMatch> mydata:active_ingredient ;
                                          <http://www.w3.org/2004/02/skos/core#notation> "IN" ;
-                                         <http://purl.org/dc/terms/creator> <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
+                                         dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
                                          rdfs:label "Ingredient" ;
                                          <http://www.w3.org/2004/02/skos/core#definition> "A compound or moiety that gives the drug its distinctive clinical properties. Ingredients generally use the United States Adopted Name (USAN)." ;
                                          <http://www.w3.org/2004/02/skos/core#example> "" ,
@@ -424,9 +1498,9 @@ In some cases, there are correspondences between the employments: if some ChEBI 
 
 ###  http://example.com/resource/rxn_tty/MIN
 <http://example.com/resource/rxn_tty/MIN> rdf:type owl:NamedIndividual ,
-                                                   <http://transformunify.org/ontologies/TURBO_0022023> ;
+                                                   <http://transformunify.org/ontologies/TURBO_0022036> ;
                                           <http://www.w3.org/2004/02/skos/core#notation> "MIN" ;
-                                          <http://purl.org/dc/terms/creator> <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
+                                          dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
                                           rdfs:label "Multiple Ingredients" ;
                                           <http://www.w3.org/2004/02/skos/core#definition> "Two or more ingredients appearing together in a single drug preparation, created from SCDF. In rare cases when IN/PIN or PIN/PIN combinations of the same base ingredient exist, created from SCD." ;
                                           <http://www.w3.org/2004/02/skos/core#example> "Fluoxetine / Olanzapine" .
@@ -434,18 +1508,19 @@ In some cases, there are correspondences between the employments: if some ChEBI 
 
 ###  http://example.com/resource/rxn_tty/PIN
 <http://example.com/resource/rxn_tty/PIN> rdf:type owl:NamedIndividual ,
-                                                   <http://transformunify.org/ontologies/TURBO_0022023> ;
+                                                   <http://transformunify.org/ontologies/TURBO_0022036> ;
                                           <http://www.w3.org/2004/02/skos/core#notation> "PIN" ;
-                                          <http://purl.org/dc/terms/creator> <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
+                                          dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
                                           rdfs:label "Precise Ingredient" ;
                                           <http://www.w3.org/2004/02/skos/core#definition> "A specified form of the ingredient that may or may not be clinically active. Most precise ingredients are salt or isomer forms." ;
                                           <http://www.w3.org/2004/02/skos/core#example> "Fluoxetine Hydrochloride" .
 
 
 ###  http://example.com/resource/rxn_tty/PSN
-<http://example.com/resource/rxn_tty/PSN> rdf:type owl:NamedIndividual ;
+<http://example.com/resource/rxn_tty/PSN> rdf:type owl:NamedIndividual ,
+                                                   <http://transformunify.org/ontologies/TURBO_0022037> ;
                                           <http://www.w3.org/2004/02/skos/core#notation> "PSN" ;
-                                          <http://purl.org/dc/terms/creator> <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
+                                          dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
                                           rdfs:label "Prescribable Name" ;
                                           <http://www.w3.org/2004/02/skos/core#definition> "Synonym of another TTY, given for clarity and for display purposes in electronic prescribing applications. Only one PSN per concept." ;
                                           <http://www.w3.org/2004/02/skos/core#example> "Leena 28 Day Pack" .
@@ -453,10 +1528,10 @@ In some cases, there are correspondences between the employments: if some ChEBI 
 
 ###  http://example.com/resource/rxn_tty/SBD
 <http://example.com/resource/rxn_tty/SBD> rdf:type owl:NamedIndividual ,
-                                                   <http://transformunify.org/ontologies/TURBO_0022023> ;
-                                          <http://www.w3.org/2004/02/skos/core#broadMatch> <http://example.com/resource/product> ;
+                                                   <http://transformunify.org/ontologies/TURBO_0022036> ;
+                                          <http://www.w3.org/2004/02/skos/core#broadMatch> mydata:product ;
                                           <http://www.w3.org/2004/02/skos/core#notation> "SBD" ;
-                                          <http://purl.org/dc/terms/creator> <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
+                                          dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
                                           rdfs:label "Semantic Branded Drug" ;
                                           <http://www.w3.org/2004/02/skos/core#definition> "Ingredient + Strength + Dose Form + Brand Name" ;
                                           <http://www.w3.org/2004/02/skos/core#example> "Fluoxetine 4 MG/ML Oral Solution [Prozac]" .
@@ -464,9 +1539,9 @@ In some cases, there are correspondences between the employments: if some ChEBI 
 
 ###  http://example.com/resource/rxn_tty/SBDC
 <http://example.com/resource/rxn_tty/SBDC> rdf:type owl:NamedIndividual ,
-                                                    <http://transformunify.org/ontologies/TURBO_0022023> ;
+                                                    <http://transformunify.org/ontologies/TURBO_0022036> ;
                                            <http://www.w3.org/2004/02/skos/core#notation> "SBDC" ;
-                                           <http://purl.org/dc/terms/creator> <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
+                                           dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
                                            rdfs:label "Semantic Branded Drug Component" ;
                                            <http://www.w3.org/2004/02/skos/core#definition> "Ingredient + Strength + Brand Name" ;
                                            <http://www.w3.org/2004/02/skos/core#example> "Fluoxetine 4 MG/ML [Prozac]" .
@@ -474,9 +1549,9 @@ In some cases, there are correspondences between the employments: if some ChEBI 
 
 ###  http://example.com/resource/rxn_tty/SBDF
 <http://example.com/resource/rxn_tty/SBDF> rdf:type owl:NamedIndividual ,
-                                                    <http://transformunify.org/ontologies/TURBO_0022023> ;
+                                                    <http://transformunify.org/ontologies/TURBO_0022036> ;
                                            <http://www.w3.org/2004/02/skos/core#notation> "SBDF" ;
-                                           <http://purl.org/dc/terms/creator> <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
+                                           dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
                                            rdfs:label "Semantic Branded Drug Form" ;
                                            <http://www.w3.org/2004/02/skos/core#definition> "Ingredient + Dose Form + Brand Name" ;
                                            <http://www.w3.org/2004/02/skos/core#example> "Fluoxetine Oral Solution [Prozac]" .
@@ -484,9 +1559,9 @@ In some cases, there are correspondences between the employments: if some ChEBI 
 
 ###  http://example.com/resource/rxn_tty/SBDG
 <http://example.com/resource/rxn_tty/SBDG> rdf:type owl:NamedIndividual ,
-                                                    <http://transformunify.org/ontologies/TURBO_0022023> ;
+                                                    <http://transformunify.org/ontologies/TURBO_0022036> ;
                                            <http://www.w3.org/2004/02/skos/core#notation> "SBDG" ;
-                                           <http://purl.org/dc/terms/creator> <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
+                                           dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
                                            rdfs:label "Semantic Branded Dose Form Group" ;
                                            <http://www.w3.org/2004/02/skos/core#definition> "Brand Name + Dose Form Group" ;
                                            <http://www.w3.org/2004/02/skos/core#example> "Prozac Pill" .
@@ -494,10 +1569,10 @@ In some cases, there are correspondences between the employments: if some ChEBI 
 
 ###  http://example.com/resource/rxn_tty/SCD
 <http://example.com/resource/rxn_tty/SCD> rdf:type owl:NamedIndividual ,
-                                                   <http://transformunify.org/ontologies/TURBO_0022023> ;
-                                          <http://www.w3.org/2004/02/skos/core#broadMatch> <http://example.com/resource/product> ;
+                                                   <http://transformunify.org/ontologies/TURBO_0022036> ;
+                                          <http://www.w3.org/2004/02/skos/core#broadMatch> mydata:product ;
                                           <http://www.w3.org/2004/02/skos/core#notation> "SCD" ;
-                                          <http://purl.org/dc/terms/creator> <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
+                                          dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
                                           rdfs:label "Semantic Clinical Drug" ;
                                           <http://www.w3.org/2004/02/skos/core#definition> "Ingredient + Strength + Dose Form" ;
                                           <http://www.w3.org/2004/02/skos/core#example> "Fluoxetine 4 MG/ML Oral Solution" .
@@ -505,9 +1580,9 @@ In some cases, there are correspondences between the employments: if some ChEBI 
 
 ###  http://example.com/resource/rxn_tty/SCDC
 <http://example.com/resource/rxn_tty/SCDC> rdf:type owl:NamedIndividual ,
-                                                    <http://transformunify.org/ontologies/TURBO_0022023> ;
+                                                    <http://transformunify.org/ontologies/TURBO_0022036> ;
                                            <http://www.w3.org/2004/02/skos/core#notation> "SCDC" ;
-                                           <http://purl.org/dc/terms/creator> <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
+                                           dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
                                            rdfs:label "Semantic Clinical Drug Component" ;
                                            <http://www.w3.org/2004/02/skos/core#definition> "Ingredient + Strength" ;
                                            <http://www.w3.org/2004/02/skos/core#example> "Fluoxetine 4 MG/ML" .
@@ -515,10 +1590,10 @@ In some cases, there are correspondences between the employments: if some ChEBI 
 
 ###  http://example.com/resource/rxn_tty/SCDF
 <http://example.com/resource/rxn_tty/SCDF> rdf:type owl:NamedIndividual ,
-                                                    <http://transformunify.org/ontologies/TURBO_0022023> ;
-                                           <http://www.w3.org/2004/02/skos/core#broadMatch> <http://example.com/resource/product> ;
+                                                    <http://transformunify.org/ontologies/TURBO_0022036> ;
+                                           <http://www.w3.org/2004/02/skos/core#broadMatch> mydata:product ;
                                            <http://www.w3.org/2004/02/skos/core#notation> "SCDF" ;
-                                           <http://purl.org/dc/terms/creator> <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
+                                           dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
                                            rdfs:label "Semantic Clinical Drug Form" ;
                                            <http://www.w3.org/2004/02/skos/core#definition> "Ingredient + Dose Form" ;
                                            <http://www.w3.org/2004/02/skos/core#example> "Fluoxetine Oral Solution" .
@@ -526,27 +1601,29 @@ In some cases, there are correspondences between the employments: if some ChEBI 
 
 ###  http://example.com/resource/rxn_tty/SCDG
 <http://example.com/resource/rxn_tty/SCDG> rdf:type owl:NamedIndividual ,
-                                                    <http://transformunify.org/ontologies/TURBO_0022023> ;
+                                                    <http://transformunify.org/ontologies/TURBO_0022036> ;
                                            <http://www.w3.org/2004/02/skos/core#notation> "SCDG" ;
-                                           <http://purl.org/dc/terms/creator> <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
+                                           dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
                                            rdfs:label "Semantic Clinical Dose Form Group" ;
                                            <http://www.w3.org/2004/02/skos/core#definition> "Ingredient + Dose Form Group" ;
                                            <http://www.w3.org/2004/02/skos/core#example> "Fluoxetine Oral Product" .
 
 
 ###  http://example.com/resource/rxn_tty/SY
-<http://example.com/resource/rxn_tty/SY> rdf:type owl:NamedIndividual ;
+<http://example.com/resource/rxn_tty/SY> rdf:type owl:NamedIndividual ,
+                                                  <http://transformunify.org/ontologies/TURBO_0022037> ;
                                          <http://www.w3.org/2004/02/skos/core#notation> "SY" ;
-                                         <http://purl.org/dc/terms/creator> <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
+                                         dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
                                          rdfs:label "Synonym" ;
                                          <http://www.w3.org/2004/02/skos/core#definition> "Synonym of another TTY, given for clarity." ;
                                          <http://www.w3.org/2004/02/skos/core#example> "Prozac 4 MG/ML Oral Solution" .
 
 
 ###  http://example.com/resource/rxn_tty/TMSY
-<http://example.com/resource/rxn_tty/TMSY> rdf:type owl:NamedIndividual ;
+<http://example.com/resource/rxn_tty/TMSY> rdf:type owl:NamedIndividual ,
+                                                    <http://transformunify.org/ontologies/TURBO_0022037> ;
                                            <http://www.w3.org/2004/02/skos/core#notation> "TMSY" ;
-                                           <http://purl.org/dc/terms/creator> <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
+                                           dcterms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
                                            rdfs:label "Tall Man Lettering Synonym" ;
                                            <http://www.w3.org/2004/02/skos/core#definition> "Tall Man Lettering synonym of another TTY, given to distinguish between commonly confused drugs." ;
                                            <http://www.w3.org/2004/02/skos/core#example> "FLUoxetine 10 MG Oral Capsule [PROzac]" .
@@ -558,7 +1635,7 @@ In some cases, there are correspondences between the employments: if some ChEBI 
                                                <http://xmlns.com/foaf/0.1/homepage> <https://bioportal.bioontology.org/ontologies/RXNORM> ,
                                                                                     <https://www.nlm.nih.gov/research/umls/rxnorm/docs/rxnormfiles.html> ;
                                                <http://xmlns.com/foaf/0.1/page> <http://data.bioontology.org/ontologies/RXNORM/download/download?apikey> ;
-                                               <http://purl.org/dc/terms/accrualPeriodicity> <http://purl.org/cld/freq/monthly> ;
+                                               dcterms:accrualPeriodicity <http://purl.org/cld/freq/monthly> ;
                                                rdfs:comment """BioPortal download URLs require an apikey. A public key is avaiable for some ontologies... see the ontologies homepage. 
 
 https://bioportal.bioontology.org/ontologies/RXNORM
@@ -595,7 +1672,7 @@ May be difficult to load from BioPortal URL into password protected GraphDB repo
 
 [ rdf:type owl:Axiom ;
    owl:annotatedSource <http://purl.bioontology.org/ontology/RXNORM/> ;
-   owl:annotatedProperty <http://purl.org/dc/terms/accrualPeriodicity> ;
+   owl:annotatedProperty dcterms:accrualPeriodicity ;
    owl:annotatedTarget <http://purl.org/cld/freq/monthly> ;
    rdfs:seeAlso <https://www.nlm.nih.gov/research/umls/rxnorm/docs/rxnormfiles.html>
  ] .
@@ -604,8 +1681,11 @@ May be difficult to load from BioPortal URL into password protected GraphDB repo
 ###  http://purl.obolibrary.org/obo/chebi.owl
 <http://purl.obolibrary.org/obo/chebi.owl> rdf:type owl:NamedIndividual ,
                                                     <http://transformunify.org/ontologies/definer> ;
+                                           <http://www.w3.org/2004/02/skos/core#narrowMatch> <http://transformunify.org/ontologies/TURBO_0022011> ,
+                                                                                             <http://transformunify.org/ontologies/TURBO_0022012> ,
+                                                                                             <http://transformunify.org/ontologies/TURBO_0022013> ;
                                            <http://xmlns.com/foaf/0.1/page> <ftp://ftp.ebi.ac.uk/pub/databases/chebi/ontology/chebi.owl.gz> ;
-                                           <http://purl.org/dc/terms/accrualPeriodicity> <http://purl.org/cld/freq/monthly> ;
+                                           dcterms:accrualPeriodicity <http://purl.org/cld/freq/monthly> ;
                                            rdfs:comment """Available in OWL or OBO formats, with or without gz compression. 
 
 Three verisons are available, but they all share the same ontology IRI
@@ -648,10 +1728,27 @@ see https://www.ebi.ac.uk/chebi/downloadsForward.do""" ,
 
 [ rdf:type owl:Axiom ;
    owl:annotatedSource <http://purl.obolibrary.org/obo/chebi.owl> ;
-   owl:annotatedProperty <http://purl.org/dc/terms/accrualPeriodicity> ;
+   owl:annotatedProperty dcterms:accrualPeriodicity ;
    owl:annotatedTarget <http://purl.org/cld/freq/monthly> ;
    rdfs:seeAlso <ftp://ftp.ebi.ac.uk/pub/databases/chebi/archive/>
  ] .
+
+
+###  http://purl.obolibrary.org/obo/dron.owl
+<http://purl.obolibrary.org/obo/dron.owl> rdf:type owl:NamedIndividual ,
+                                                   <http://transformunify.org/ontologies/definer> ;
+                                          mydata:imports <http://purl.obolibrary.org/obo/dron/dron-chebi.owl> ,
+                                                         <http://purl.obolibrary.org/obo/dron/dron-hand.owl> ,
+                                                         <http://purl.obolibrary.org/obo/dron/dron-ingredient.owl> ,
+                                                         <http://purl.obolibrary.org/obo/dron/dron-ndc.owl> ,
+                                                         <http://purl.obolibrary.org/obo/dron/dron-pro.owl> ,
+                                                         <http://purl.obolibrary.org/obo/dron/dron-rxnorm.owl> ,
+                                                         <http://purl.obolibrary.org/obo/dron/dron-upper.owl> .
+
+
+###  http://purl.obolibrary.org/obo/dron/dron-chebi.owl
+<http://purl.obolibrary.org/obo/dron/dron-chebi.owl> rdf:type owl:NamedIndividual ,
+                                                              <http://transformunify.org/ontologies/TURBO_0022026> .
 
 
 ###  http://purl.obolibrary.org/obo/dron/dron-hand.owl
@@ -662,6 +1759,16 @@ see https://www.ebi.ac.uk/chebi/downloadsForward.do""" ,
 ###  http://purl.obolibrary.org/obo/dron/dron-ingredient.owl
 <http://purl.obolibrary.org/obo/dron/dron-ingredient.owl> rdf:type owl:NamedIndividual ,
                                                                    <http://transformunify.org/ontologies/definer> .
+
+
+###  http://purl.obolibrary.org/obo/dron/dron-ndc.owl
+<http://purl.obolibrary.org/obo/dron/dron-ndc.owl> rdf:type owl:NamedIndividual ,
+                                                            <http://transformunify.org/ontologies/TURBO_0022026> .
+
+
+###  http://purl.obolibrary.org/obo/dron/dron-pro.owl
+<http://purl.obolibrary.org/obo/dron/dron-pro.owl> rdf:type owl:NamedIndividual ,
+                                                            <http://transformunify.org/ontologies/TURBO_0022026> .
 
 
 ###  http://purl.obolibrary.org/obo/dron/dron-rxnorm.owl
@@ -1057,8 +2164,15 @@ group by ?emp1 ?o1 ?emp2 ?o2""" ;
                                                       rdfs:label "BioPortal's homepage for RxNorm" .
 
 
+###  https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html
+<https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> rdf:type owl:NamedIndividual ,
+                                                                            <http://xmlns.com/foaf/0.1/Document> ;
+                                                                   rdfs:label "Appendix 1 - RxNorm Relationships (RELA)" .
+
+
 ###  https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html
-<https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> rdf:type owl:NamedIndividual ;
+<https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> rdf:type owl:NamedIndividual ,
+                                                                            <http://xmlns.com/foaf/0.1/Document> ;
                                                                    rdfs:label "Appendix 5 - RxNorm Term Types (TTY)" .
 
 
@@ -1066,6 +2180,55 @@ group by ?emp1 ?o1 ?emp2 ?o2""" ;
 <https://www.nlm.nih.gov/research/umls/rxnorm/docs/rxnormfiles.html> rdf:type owl:NamedIndividual ,
                                                                               <http://xmlns.com/foaf/0.1/Document> ;
                                                                      rdfs:label "NLM's RxNorm download page" .
+
+
+#################################################################
+#    Annotations
+#################################################################
+
+mydata:defined_in rdfs:label "defined in" ;
+                  rdfs:comment """At least one defined_in statement is asserted about all classes in the TMM graph. The objects of those statements are the IRIs of any ontology that asserts the term to be an owl:Class. In Turtle notation:
+
+graph ?ontology { ?term a owl:Class . }
+
+That's possible because TMM loads each public ontology or imported module into its own named graph, where the graph's IRI is equivalent to the subject of that ontology's/module's 
+
+{ ?s a owl:Ontology . } 
+
+statement, within the ontology itself. (We are assuming that the ontologies stick to the guideline of asserting only a single owl:Ontology IRI).
+
+TODO: Don't care about properties, but should add individuals, specifically
+
+http://example.com/resource/classified_search_results
+
+and 
+
+http://example.com/resource/reference_medications  
+
+So shouldn't be just classes.
+
+Many ChEBI terms will be defined in both
+
+http://purl.obolibrary.org/obo/chebi.owl
+
+and
+
+http://purl.obolibrary.org/obo/dron/dron-ingredient.owl""" .
+
+
+mydata:employment rdfs:label "has employment" ;
+                  <http://transformunify.org/ontologies/TURBO_0022019> <http://transformunify.org/ontologies/TURBO_0022022> ;
+                  <http://www.w3.org/2004/02/skos/core#definition> """TMM assigns (ideally) one employment to each term from the public ontologies and RDF  knowledgbases that it loads into a triplestore. The purposes are describing how the terms are useful in modelling medications,  normalization of  the various methods the  public resources  use to topically group the terms. 
+
+For example, one can gain an understanding of DrOn and ChEBI terms by examining their direct and transitive superclasses, but many terms will have  mutiple transitive superclasses (perhaps five on average?).For the record, the superclass realtions are asserted as
+
+{ ?term rdfs:subClassOf ?superclass . }
+
+Conversely, the type assertions in these ontologies are not helpful: they are all owl:Class. 
+
+The relational RxNorm artefacts assert a term type (TTY) for each term, and these are used directly as employments. One might think that the RxNorm isa relations would be used for employment. Those are heirarchical relationships, like rdfs:subClassOf, and they are only asserted for a limited number of entities, like \"500 mg acetaminophen oral tablet\" isa \"acetaminophen oral tablet\".
+
+In some cases, there are correspondences between the employments: if some ChEBI or DrOn term, employed as an http://example.com/resource/active_ingredient, are also modeled in RxNorm, the RxNorm term will be employed as an http://example.com/resource/rxn_tty/IN. Most of the DrOn terms employed as product will corespond to a term from RxNorm with SBD, SCD or SCDF employment (using the same IRI bases as before).""" .
 
 
 ###  Generated by the OWL API (version 4.5.9.2019-02-01T07:24:44Z) https://github.com/owlcs/owlapi
