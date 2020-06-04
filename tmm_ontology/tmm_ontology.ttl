@@ -26,6 +26,7 @@ same thing with predicates and RF search results classifications
 pick one URI style for each pair and stick with it""" ,
                                                                                                    "There are several terms that are shared between (punned) a property and a named graph individual" ,
                                                                                                    "This ontology file probably doesn't say anything about the medication string normalization process yet... but do we really need to duplicate the documentation here? We have mentioned normalization in the http://example.com/resource/source_normalized_full_name context." ,
+                                                                                                   "add expected solr results" ,
                                                                                                    """https://www.dublincore.org/specifications/dublin-core/dcmi-terms/dublin_core_terms.rdf
 
 https://www.dublincore.org/specifications/dublin-core/collection-description/frequency/freq.rdf""" ,
@@ -36,6 +37,11 @@ although faof has a suboptimal filename, \"index.rdf\"
 dc freq just disappears
 
 de elements disappears from the imports section but all of its terms get saved into eh importing ontology!""" ,
+                                                                                                   """mydata: <http://example.com/resource>
+rxn_tty: <http://example.com/resource/rxn_tty/>
+CHEBI: <http://purl.obolibrary.org/obo/CHEBI_>
+DRON: <http://purl.obolibrary.org/obo/DRON_>
+RXNORM: <<http://purl.bioontology.org/ontology/RXNORM/>""" ,
                                                                                                    "the namespaces for locally asserted terms are mydata: and turbo:" .
 
 #################################################################
@@ -798,6 +804,22 @@ dcterms:valid rdf:type owl:DatatypeProperty ;
                                                      rdfs:label "TMM calculated RF features"@en .
 
 
+###  http://transformunify.org/ontologies/TURBO_0022060
+<http://transformunify.org/ontologies/TURBO_0022060> rdf:type owl:DatatypeProperty ;
+                                                     rdfs:label "has sample Solr query"@en .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022061
+<http://transformunify.org/ontologies/TURBO_0022061> rdf:type owl:DatatypeProperty ;
+                                                     rdfs:comment "An acceptable Solr result will have the entities listed here ranked within the top three results" ;
+                                                     rdfs:label "has Expected Solr result"@en .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022062
+<http://transformunify.org/ontologies/TURBO_0022062> rdf:type owl:DatatypeProperty ;
+                                                     rdfs:label "has Solr keyword"@en .
+
+
 ###  http://www.w3.org/2004/02/skos/core#notation
 <http://www.w3.org/2004/02/skos/core#notation> rdfs:comment "TMM uses this predicate to tie an ID to source/reference medications" .
 
@@ -935,18 +957,19 @@ dcterms:Standard rdf:type owl:Class .
 
 ###  http://transformunify.org/ontologies/TURBO_0022017
 <http://transformunify.org/ontologies/TURBO_0022017> rdf:type owl:Class ;
-                                                     rdfs:label "TMM SPARQL select query"@en .
+                                                     rdfs:label "TMM SPARQL select query"@en ;
+                                                     owl:deprecated "true"^^xsd:boolean .
 
 
 ###  http://transformunify.org/ontologies/TURBO_0022018
 <http://transformunify.org/ontologies/TURBO_0022018> rdf:type owl:Class ;
-                                                     rdfs:label "TMM SPARQL select result"@en .
+                                                     rdfs:label "TMM SPARQL select result"@en ;
+                                                     owl:deprecated "true"^^xsd:boolean .
 
 
 ###  http://transformunify.org/ontologies/TURBO_0022023
 <http://transformunify.org/ontologies/TURBO_0022023> rdf:type owl:Class ;
-                                                     rdfs:label "TMM employment"@en ;
-                                                     rdfs:seeAlso "https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html" .
+                                                     rdfs:label "TMM employment"@en .
 
 
 ###  http://transformunify.org/ontologies/TURBO_0022026
@@ -959,7 +982,8 @@ dcterms:Standard rdf:type owl:Class .
 <http://transformunify.org/ontologies/TURBO_0022036> rdf:type owl:Class ;
                                                      rdfs:subClassOf <http://transformunify.org/ontologies/TURBO_0022023> ;
                                                      rdfs:label "RxNorm employable term types"@en ;
-                                                     rdfs:seeAlso <http://transformunify.org/ontologies/TURBO_0022044> .
+                                                     rdfs:seeAlso <http://transformunify.org/ontologies/TURBO_0022044> ,
+                                                                  "https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html" .
 
 
 ###  http://transformunify.org/ontologies/TURBO_0022037
@@ -1022,10 +1046,19 @@ dcterms:Standard rdf:type owl:Class .
                                                      rdfs:label "medication based cohort building query"@en .
 
 
+###  http://transformunify.org/ontologies/TURBO_0022059
+<http://transformunify.org/ontologies/TURBO_0022059> rdf:type owl:Class ;
+                                                     rdfs:label "TMM Solr illustration"@en ;
+                                                     owl:deprecated "That gets correct search results even though ChEBI's preferred label for this entity is \"paracetamol\". (The Solr core was created in a way that prioritizes DrOn labels on ChEBI labels over ChEBI terms.)" .
+
+
 ###  http://transformunify.org/ontologies/definer
 <http://transformunify.org/ontologies/definer> rdf:type owl:Class ;
                                                rdfs:subClassOf <http://transformunify.org/ontologies/TURBO_0022038> ;
-                                               rdfs:label "TMM term definer"@en .
+                                               rdfs:label "TMM term definer"@en ;
+                                               owl:deprecated """a definer is an ontology file (and corresponding named graph) that asserts 
+
+{ ?x a owl:Class . }""" .
 
 
 ###  http://xmlns.com/foaf/0.1/Document
@@ -4181,6 +4214,172 @@ group by ?emp1 ?o1 ?emp2 ?o2""" ;
                                                      rdfs:label "do enumeration"@en .
 
 
+###  http://transformunify.org/ontologies/TURBO_0022063
+<http://transformunify.org/ontologies/TURBO_0022063> rdf:type owl:NamedIndividual ,
+                                                              <http://transformunify.org/ontologies/TURBO_0022059> ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022060> "defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medlabel+tokens&q=aspirin" ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022061> "http://purl.bioontology.org/ontology/RXNORM/1191" ,
+                                                                                                          "http://purl.bioontology.org/ontology/RXNORM/368457" ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022062> "aspirin" ;
+                                                     rdfs:label "Solr query for aspirin"@en ;
+                                                     rdfs:seeAlso mydata:active_ingredient ,
+                                                                  <http://example.com/resource/RXNORM_TTY/IN> .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022064
+<http://transformunify.org/ontologies/TURBO_0022064> rdf:type owl:NamedIndividual ,
+                                                              <http://transformunify.org/ontologies/TURBO_0022059> ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022060> "defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medlabel+tokens&q=acetaminophen" ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022061> """http://purl.bioontology.org/ontology/RXNORM/161
+http://purl.obolibrary.org/obo/CHEBI_46195""" ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022062> "acetaminophen" ;
+                                                     rdfs:label "Solr query for acetaminophen as an active_ingredient or IN"@en ;
+                                                     rdfs:seeAlso mydata:active_ingredient ,
+                                                                  <http://example.com/resource/RXNORM_TTY/IN> .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022065
+<http://transformunify.org/ontologies/TURBO_0022065> rdf:type owl:NamedIndividual ,
+                                                              <http://transformunify.org/ontologies/TURBO_0022059> ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022060> "defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&q=(tylenol active_ingredient)&qf=medlabel tokens employment" ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022061> "http://purl.bioontology.org/ontology/RXNORM/202433" ,
+                                                                                                          "http://purl.obolibrary.org/obo/CHEBI_46195" ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022062> "active_ingredient" ,
+                                                                                                          "tylenol" ;
+                                                     rdfs:comment "ChEBI  provides the brand name \"tylenol\" for CHEBI:46195 'paracetamol' via KEGG DRUG. That means users searching for \"tylenol\" (and several other common brands) will get BN hits from RxNorm, but can also be redirected to active_ingredient hits with the query below. We'll have to decide whether it's appropriate to broaden the scope from a brand to any product that contains the active ingredient that is most closely associated with the submitted brand." ;
+                                                     rdfs:label "Solr query for tylenol as an active_ingredient"@en ;
+                                                     rdfs:seeAlso mydata:active_ingredient .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022066
+<http://transformunify.org/ontologies/TURBO_0022066> rdf:type owl:NamedIndividual ,
+                                                              <http://transformunify.org/ontologies/TURBO_0022059> ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022060> "defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medlabel%20tokens&q=meperidine" ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022061> "http://purl.bioontology.org/ontology/RXNORM/6754" ,
+                                                                                                          "http://purl.obolibrary.org/obo/DRON_00016917" ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022062> "meperidine" ;
+                                                     rdfs:comment "This is not currently expected to return CHEBI:6754" ;
+                                                     rdfs:label "Solr query for meperidine"@en ;
+                                                     rdfs:seeAlso mydata:active_ingredient ,
+                                                                  <http://example.com/resource/RXNORM_TTY/IN> ,
+                                                                  <http://transformunify.org/ontologies/TURBO_0022069> .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022067
+<http://transformunify.org/ontologies/TURBO_0022067> rdf:type owl:NamedIndividual ,
+                                                              <http://transformunify.org/ontologies/TURBO_0022059> ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022060> "select?defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medlabel+tokens&q=pethidine" ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022061> "http://purl.bioontology.org/ontology/RXNORM/6754" ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022062> "pethidine" ;
+                                                     rdfs:comment "ChEBI asserts the preferred label \"pethidine\" for CHEBI:6754, but it is not currently expected to appear in this query's results" ;
+                                                     rdfs:label "Solr query for pethidine"@en ;
+                                                     rdfs:seeAlso mydata:active_ingredient ,
+                                                                  <http://example.com/resource/RXNORM_TTY/IN> ,
+                                                                  <http://transformunify.org/ontologies/TURBO_0022069> .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022068
+<http://transformunify.org/ontologies/TURBO_0022068> rdf:type owl:NamedIndividual ,
+                                                              <http://transformunify.org/ontologies/TURBO_0022059> ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022060> "defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medlabel+tokens&q=terbinafine" ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022061> "http://purl.bioontology.org/ontology/RXNORM/37801" ,
+                                                                                                          "http://purl.obolibrary.org/obo/DRON_00016960" ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022062> "terbinafine" ;
+                                                     rdfs:label "Solr query for terbinafine"@en ;
+                                                     rdfs:seeAlso mydata:active_ingredient ,
+                                                                  <http://example.com/resource/RXNORM_TTY/IN> ,
+                                                                  <http://transformunify.org/ontologies/TURBO_0022069> .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022069
+<http://transformunify.org/ontologies/TURBO_0022069> rdf:type owl:NamedIndividual ;
+                                                     rdfs:comment """Solr queries will not return expected ChEBI terms if DrOn doesn't include those terms in \"has active ingredient\" axioms (informally speaking). This will be the case if DrOn has minited its own term for the same entity.
+
+That TMM rule could be loosened, but that would almost certainly add noise to the Solr core, increase its size, increase query times, and generally decrease the usefulness of the matches.""" ;
+                                                     rdfs:label "no employed ChEBI term"@en .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022070
+<http://transformunify.org/ontologies/TURBO_0022070> rdf:type owl:NamedIndividual ,
+                                                              <http://transformunify.org/ontologies/TURBO_0022059> ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022021> "http://purl.bioontology.org/ontology/RXNORM/301542" ,
+                                                                                                          "http://purl.obolibrary.org/obo/DRON_00018679" ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022062> "rosuvastatin" ;
+                                                     rdfs:label "Solr query for rosuvastatin"@en ;
+                                                     rdfs:seeAlso mydata:active_ingredient ,
+                                                                  <http://example.com/resource/RXNORM_TTY/IN> ,
+                                                                  <http://transformunify.org/ontologies/TURBO_0022069> .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022071
+<http://transformunify.org/ontologies/TURBO_0022071> rdf:type owl:NamedIndividual ,
+                                                              <http://transformunify.org/ontologies/TURBO_0022059> ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022060> "defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medlabel+tokens&q=(statin)" ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022061> "http://purl.obolibrary.org/obo/CHEBI_87631" ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022062> "statin" ,
+                                                                                                          "statins" ;
+                                                     rdfs:label "Solr query for statins"@en ;
+                                                     rdfs:seeAlso mydata:clinrel_structclass .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022072
+<http://transformunify.org/ontologies/TURBO_0022072> rdf:type owl:NamedIndividual ,
+                                                              <http://transformunify.org/ontologies/TURBO_0022059> ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022060> "defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medlabel+tokens&q=anti-inflammatory" ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022061> "http://purl.obolibrary.org/obo/CHEBI_35472" ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022062> "anti-inflammatory" ;
+                                                     rdfs:comment """Hayden has pointed out that CHEBI:35472 would ideally be ranked higher than RXNORM:1043480 'surpass anti-inflammatory'
+
+CHEBI:35472 does come to the top if \"drug\" is included in the query, or if the query is scoped to roles
+
+defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medlabel+tokens&q=(anti-inflammatory+drug)
+
+or
+
+defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medlabel+tokens+employment&q=(anti-inflammatory+curated+drug+role)""" ;
+                                                     rdfs:label "Solr query for anti-inflammatory drugs"@en ;
+                                                     rdfs:seeAlso mydata:curated_role .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022073
+<http://transformunify.org/ontologies/TURBO_0022073> rdf:type owl:NamedIndividual ,
+                                                              <http://transformunify.org/ontologies/TURBO_0022059> ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022060> "defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medlabel+tokens&q=(analgesic)" ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022061> "http://purl.obolibrary.org/obo/CHEBI_35480" ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022062> "analgesic" ,
+                                                                                                          "analgesics" ;
+                                                     rdfs:label "Solr query for analgesics"@en ;
+                                                     rdfs:seeAlso mydata:curated_role .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022074
+<http://transformunify.org/ontologies/TURBO_0022074> rdf:type owl:NamedIndividual ,
+                                                              <http://transformunify.org/ontologies/TURBO_0022059> ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022060> "select?defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medlabel+tokens&q=(500+mg+acetaminophen+tablet)" ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022061> "http://purl.bioontology.org/ontology/RXNORM/198440" ,
+                                                                                                          "http://purl.obolibrary.org/obo/DRON_00036033" ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022062> "500 mg acetaminophen tablet" ,
+                                                                                                          "500 mg acetaminophen tablets" ,
+                                                                                                          "500 mg tylenol tablet" ;
+                                                     rdfs:comment """'500 mg tylenol tablet' would also be a reasonable query
+
+select?defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medlabel+tokens&q=(500+mg+tylenol+tablets)
+
+retrieves good results when searching medlabel alone or along with tokens. I wouldn't the results perfect because RXNORM:570070 , without \"tablet\" comes to the top. If that was passed on to the semantic part of the search, it would also get people who had orders for 500 mg Tylenol capsules (or injections, or suppositories, if they are available at 500 mg).""" ,
+                                                                  """DRON:00073389, \"acetaminophen 500 mg oral tablet [panex 500]\" contains a total of 3 occurrences of \"500\", so it rises to the top.
+
+We are not currently differentiating the type or source of the non-preferred terms. We could retain all of them in separate fields but not query over them, just the current medlabel and tokens fields.
+
+The optimal results do come to the to if the Solr query is applied to tokens only and not medlabel:
+
+select?defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=tokens&q=(500+mg+acetaminophen+tablet)""" ,
+                                                                  """One can imagine that many users would type in \"500 mg acetaminophen tablets\".
+
+The results of submitting that to either medlabel alone or medlabel+tokens are not at all relevant. Some modification of the query should be applied before or during the Solr query parsing. Solr has spell checking, the ~ fuzzy match operator, a suggester, an aggressive Porter stemming filter, and a more minimal stemmer. There's also a synonyms.txt file in each core or collection's config directory. For now, I have put tablet,tablets into the synonyms files""" ;
+                                                     rdfs:label "Solr query for '500 mg acetaminophen tablet'"@en ;
+                                                     rdfs:seeAlso mydata:product .
+
+
 ###  https://bioportal.bioontology.org/ontologies/RXNORM
 <https://bioportal.bioontology.org/ontologies/RXNORM> rdf:type owl:NamedIndividual ,
                                                                <http://xmlns.com/foaf/0.1/Document> ;
@@ -4938,8 +5137,8 @@ subject and predicate are both roles""" .
 
 
 dcterms:Agent rdfs:label "Agent"@en ;
-              rdfs:isDefinedBy dcterms: ;
-              rdfs:comment "A resource that acts or has the power to act."@en .
+              rdfs:comment "A resource that acts or has the power to act."@en ;
+              rdfs:isDefinedBy dcterms: .
 
 
 dcterms:AgentClass rdfs:isDefinedBy dcterms: ;
@@ -4958,8 +5157,8 @@ dcterms:Box rdfs:comment "The set of regions in space defined by their geographi
             rdfs:seeAlso <https://www.dublincore.org/specifications/dublin-core/dcmi-box/> .
 
 
-dcterms:FileFormat rdfs:comment "A digital resource format."@en ;
-                   rdfs:label "File Format"@en ;
+dcterms:FileFormat rdfs:label "File Format"@en ;
+                   rdfs:comment "A digital resource format."@en ;
                    rdfs:isDefinedBy dcterms: .
 
 
@@ -4987,12 +5186,12 @@ dcterms:ISO639-3 rdfs:label "ISO 639-3"@en ;
 
 
 dcterms:Jurisdiction rdfs:label "Jurisdiction"@en ;
-                     rdfs:isDefinedBy dcterms: ;
-                     rdfs:comment "The extent or range of judicial, law enforcement, or other authority."@en .
+                     rdfs:comment "The extent or range of judicial, law enforcement, or other authority."@en ;
+                     rdfs:isDefinedBy dcterms: .
 
 
-dcterms:LicenseDocument rdfs:isDefinedBy dcterms: ;
-                        rdfs:label "License Document"@en ;
+dcterms:LicenseDocument rdfs:label "License Document"@en ;
+                        rdfs:isDefinedBy dcterms: ;
                         rdfs:comment "A legal document giving official permission to do something with a resource."@en .
 
 
@@ -5013,8 +5212,8 @@ dcterms:LocationPeriodOrJurisdiction rdfs:label "Location, Period, or Jurisdicti
 
 
 dcterms:MediaType rdfs:comment "A file format or physical medium."@en ;
-                  rdfs:label "Media Type"@en ;
-                  rdfs:isDefinedBy dcterms: .
+                  rdfs:isDefinedBy dcterms: ;
+                  rdfs:label "Media Type"@en .
 
 
 dcterms:MediaTypeOrExtent rdfs:isDefinedBy dcterms: ;
@@ -5022,8 +5221,8 @@ dcterms:MediaTypeOrExtent rdfs:isDefinedBy dcterms: ;
                           rdfs:label "Media Type or Extent"@en .
 
 
-dcterms:MethodOfAccrual rdfs:comment "A method by which resources are added to a collection."@en ;
-                        rdfs:isDefinedBy dcterms: ;
+dcterms:MethodOfAccrual rdfs:isDefinedBy dcterms: ;
+                        rdfs:comment "A method by which resources are added to a collection."@en ;
                         rdfs:label "Method of Accrual"@en .
 
 
@@ -5044,8 +5243,8 @@ dcterms:PeriodOfTime rdfs:comment "An interval of time that is named or defined 
 
 
 dcterms:PhysicalMedium dcterms:description "Examples include paper, canvas, or DVD."@en ;
-                       rdfs:isDefinedBy dcterms: ;
                        rdfs:label "Physical Medium"@en ;
+                       rdfs:isDefinedBy dcterms: ;
                        rdfs:comment "A physical material or carrier."@en .
 
 
@@ -5060,8 +5259,8 @@ dcterms:Point rdfs:comment "The set of points in space defined by their geograph
               rdfs:isDefinedBy dcterms: .
 
 
-dcterms:Policy rdfs:isDefinedBy dcterms: ;
-               rdfs:label "Policy"@en ;
+dcterms:Policy rdfs:label "Policy"@en ;
+               rdfs:isDefinedBy dcterms: ;
                rdfs:comment "A plan or course of action by an authority, intended to influence and determine decisions, actions, and other matters."@en .
 
 
@@ -5071,8 +5270,8 @@ dcterms:ProvenanceStatement rdfs:label "Provenance Statement"@en ;
 
 
 dcterms:RFC1766 rdfs:isDefinedBy dcterms: ;
-                rdfs:comment "The set of tags, constructed according to RFC 1766, for the identification of languages."@en ;
                 rdfs:seeAlso <http://www.ietf.org/rfc/rfc1766.txt> ;
+                rdfs:comment "The set of tags, constructed according to RFC 1766, for the identification of languages."@en ;
                 rdfs:label "RFC 1766"@en .
 
 
@@ -5113,8 +5312,8 @@ dcterms:Standard rdfs:comment "A reference point against which other things can 
                  rdfs:isDefinedBy dcterms: .
 
 
-dcterms:URI rdfs:isDefinedBy dcterms: ;
-            rdfs:comment "The set of identifiers constructed according to the generic syntax for Uniform Resource Identifiers as specified by the Internet Engineering Task Force."@en ;
+dcterms:URI rdfs:comment "The set of identifiers constructed according to the generic syntax for Uniform Resource Identifiers as specified by the Internet Engineering Task Force."@en ;
+            rdfs:isDefinedBy dcterms: ;
             rdfs:seeAlso <http://www.ietf.org/rfc/rfc3986.txt> ;
             rdfs:label "URI"@en .
 
@@ -5129,8 +5328,8 @@ dcterms:accrualMethod rdfs:label "Accrual Method"@en ;
                       <http://purl.org/dc/dcam/domainIncludes> <http://purl.org/dc/dcmitype/Collection> ;
                       dcterms:description "Recommended practice is to use a value from the Collection Description Accrual Method Vocabulary [[DCMI-ACCRUALMETHOD](https://dublincore.org/groups/collections/accrual-method/)]."@en ;
                       rdfs:comment "The method by which items are added to a collection."@en ;
-                      rdfs:isDefinedBy dcterms: ;
-                      <http://purl.org/dc/dcam/rangeIncludes> dcterms:MethodOfAccrual .
+                      <http://purl.org/dc/dcam/rangeIncludes> dcterms:MethodOfAccrual ;
+                      rdfs:isDefinedBy dcterms: .
 
 
 dcterms:accrualPeriodicity dcterms:description "Recommended practice is to use a value from the Collection Description Frequency Vocabulary [[DCMI-COLLFREQ](https://dublincore.org/groups/collections/frequency/)]."@en ;
@@ -5187,8 +5386,8 @@ dcterms:date rdfs:isDefinedBy dcterms: ;
 
 
 dcterms:dateAccepted dcterms:description "Recommended practice is to describe the date, date/time, or period of time as recommended for the property Date, of which this is a subproperty.  Examples of resources to which a date of acceptance may be relevant are a thesis (accepted by a university department) or an article (accepted by a journal)."@en ;
-                     rdfs:comment "Date of acceptance of the resource."@en ;
                      rdfs:label "Date Accepted"@en ;
+                     rdfs:comment "Date of acceptance of the resource."@en ;
                      rdfs:isDefinedBy dcterms: .
 
 
@@ -5239,8 +5438,8 @@ dcterms:title rdfs:label "Title"@en ;
               rdfs:isDefinedBy dcterms: .
 
 
-dcterms:valid dcterms:description "Recommended practice is to describe the date, date/time, or period of time as recommended for the property Date, of which this is a subproperty."@en ;
-              rdfs:comment "Date (often a range) of validity of a resource."@en ;
+dcterms:valid rdfs:comment "Date (often a range) of validity of a resource."@en ;
+              dcterms:description "Recommended practice is to describe the date, date/time, or period of time as recommended for the property Date, of which this is a subproperty."@en ;
               rdfs:label "Date Valid"@en ;
               rdfs:isDefinedBy dcterms: .
 
