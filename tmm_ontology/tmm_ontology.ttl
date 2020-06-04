@@ -266,7 +266,7 @@ mydata:transitively_materialized_drugrole rdf:type owl:AnnotationProperty ;
 
 ###  http://purl.bioontology.org/ontology/RXNORM/isa
 <http://purl.bioontology.org/ontology/RXNORM/isa> rdf:type owl:AnnotationProperty ;
-                                                  rdfs:seeAlso """isa and inverse_isa provide the only hierarchy in RxNorm
+                                                  rdfs:comment """isa and inverse_isa provide the only hierarchy in RxNorm
 
 SCDs are DFs are DFGs
 same thing for SBDs""" ;
@@ -983,7 +983,7 @@ dcterms:Standard rdf:type owl:Class .
                                                      rdfs:subClassOf <http://transformunify.org/ontologies/TURBO_0022023> ;
                                                      rdfs:label "RxNorm employable term types"@en ;
                                                      rdfs:seeAlso <http://transformunify.org/ontologies/TURBO_0022044> ,
-                                                                  "https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html" .
+                                                                  <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> .
 
 
 ###  http://transformunify.org/ontologies/TURBO_0022037
@@ -1037,7 +1037,7 @@ dcterms:Standard rdf:type owl:Class .
 ###  http://transformunify.org/ontologies/TURBO_0022045
 <http://transformunify.org/ontologies/TURBO_0022045> rdf:type owl:Class ;
                                                      rdfs:label "TMM search result classification"@en ;
-                                                     rdfs:seeAlso "http://transformunify.org/ontologies/TURBO_0022035"@en .
+                                                     rdfs:seeAlso <http://transformunify.org/ontologies/TURBO_0022035> .
 
 
 ###  http://transformunify.org/ontologies/TURBO_0022058
@@ -5064,8 +5064,8 @@ where {
 #    Annotations
 #################################################################
 
-mydata:bioportal_mapping rdfs:seeAlso "https://www.bioontology.org/wiki/BioPortal_Mappings" ;
-                         rdfs:label "maps to" .
+mydata:bioportal_mapping rdfs:label "maps to" ;
+                         rdfs:seeAlso <https://www.bioontology.org/wiki/BioPortal_Mappings> .
 
 
 mydata:defined_in rdfs:label "defined in" ;
