@@ -48,27 +48,29 @@ same thing with predicates and RF search results classifications
 pick one URI style for each pair and stick with it""" ,
                                                                                                    "There are several terms that are shared between (punned) a property and a named graph individual" ,
                                                                                                    "This ontology file probably doesn't say anything about the medication string normalization process yet... but do we really need to duplicate the documentation here? We have mentioned normalization in the http://example.com/resource/source_normalized_full_name context." ,
-                                                                                                   "add expected solr results" ,
                                                                                                    """https://www.dublincore.org/specifications/dublin-core/dcmi-terms/dublin_core_terms.rdf
-
 https://www.dublincore.org/specifications/dublin-core/collection-description/frequency/freq.rdf
-
 http://xmlns.com/foaf/0.1/
+http://www.w3.org/2004/02/skos/core
 
-http://www.w3.org/2004/02/skos/core""" ,
-                                                                                                   """importing skos and foaf seems to go as planned... they remain as import statements
+####
+
+importing skos and foaf seems to go as planned... they remain as import statements
 
 although faof has a suboptimal filename, \"index.rdf\"
 
 dc freq just disappears
 
-de elements disappears from the imports section but all of its terms get saved into eh importing ontology!""" ,
-                                                                                                   """mydata: <http://example.com/resource>
+de elements disappears from the imports section but all of its terms get saved into eh importing ontology!
+
+####
+
+mydata: <http://example.com/resource>
 rxn_tty: <http://example.com/resource/rxn_tty/>
 CHEBI: <http://purl.obolibrary.org/obo/CHEBI_>
 DRON: <http://purl.obolibrary.org/obo/DRON_>
 RXNORM: <<http://purl.bioontology.org/ontology/RXNORM/>""" ,
-                                                                                                   "the namespaces for locally asserted terms are mydata: and turbo:" .
+                                                                                                   "mydata: and turbo: are both used for locally defiend terms" .
 
 #################################################################
 #    Annotation properties
@@ -1065,8 +1067,10 @@ foaf:Document rdf:type owl:Class .
 ###  http://example.com/resource/BN_has_precise_ingredient_PIN
 mydata:BN_has_precise_ingredient_PIN rdf:type owl:NamedIndividual ,
                                               mydata:rxnorm_relationship_tuple ;
-                                     <http://purl.org/dc/dcam/domainIncludes> rxnorm:BN ;
-                                     <http://purl.org/dc/dcam/rangeIncludes> rxnorm:PIN ;
+                                     <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/BN> ,
+                                                                              rxnorm:BN ;
+                                     <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/PIN> ,
+                                                                             rxnorm:PIN ;
                                      terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                                      rdfs:seeAlso rxnorm:has_precise_ingredient .
 
@@ -1074,8 +1078,10 @@ mydata:BN_has_precise_ingredient_PIN rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/BN_ingredient_of_SBD
 mydata:BN_ingredient_of_SBD rdf:type owl:NamedIndividual ,
                                      mydata:rxnorm_relationship_tuple ;
-                            <http://purl.org/dc/dcam/domainIncludes> rxnorm:BN ;
-                            <http://purl.org/dc/dcam/rangeIncludes> rxnorm:SBD ;
+                            <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/BN> ,
+                                                                     rxnorm:BN ;
+                            <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/SBD> ,
+                                                                    rxnorm:SBD ;
                             terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                             rdfs:seeAlso rxnorm:ingredient_of .
 
@@ -1083,8 +1089,10 @@ mydata:BN_ingredient_of_SBD rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/BN_ingredient_of_SBDC
 mydata:BN_ingredient_of_SBDC rdf:type owl:NamedIndividual ,
                                       mydata:rxnorm_relationship_tuple ;
-                             <http://purl.org/dc/dcam/domainIncludes> rxnorm:BN ;
-                             <http://purl.org/dc/dcam/rangeIncludes> rxnorm:SBDC ;
+                             <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/BN> ,
+                                                                      rxnorm:BN ;
+                             <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/SBDC> ,
+                                                                     rxnorm:SBDC ;
                              terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                              rdfs:seeAlso rxnorm:ingredient_of .
 
@@ -1092,8 +1100,10 @@ mydata:BN_ingredient_of_SBDC rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/BN_ingredient_of_SBDF
 mydata:BN_ingredient_of_SBDF rdf:type owl:NamedIndividual ,
                                       mydata:rxnorm_relationship_tuple ;
-                             <http://purl.org/dc/dcam/domainIncludes> rxnorm:BN ;
-                             <http://purl.org/dc/dcam/rangeIncludes> rxnorm:SBDF ;
+                             <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/BN> ,
+                                                                      rxnorm:BN ;
+                             <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/SBDF> ,
+                                                                     rxnorm:SBDF ;
                              terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                              rdfs:seeAlso rxnorm:ingredient_of .
 
@@ -1101,7 +1111,8 @@ mydata:BN_ingredient_of_SBDF rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/BN_ingredient_of_SBDG
 mydata:BN_ingredient_of_SBDG rdf:type owl:NamedIndividual ,
                                       mydata:rxnorm_relationship_tuple ;
-                             <http://purl.org/dc/dcam/domainIncludes> rxnorm:BN ;
+                             <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/BN> ,
+                                                                      rxnorm:BN ;
                              <http://purl.org/dc/dcam/rangeIncludes> rxnorm:SBDG ;
                              terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                              rdfs:seeAlso rxnorm:ingredient_of .
@@ -1110,8 +1121,10 @@ mydata:BN_ingredient_of_SBDG rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/BN_reformulated_to_BN
 mydata:BN_reformulated_to_BN rdf:type owl:NamedIndividual ,
                                       mydata:rxnorm_relationship_tuple ;
-                             <http://purl.org/dc/dcam/domainIncludes> rxnorm:BN ;
-                             <http://purl.org/dc/dcam/rangeIncludes> rxnorm:BN ;
+                             <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/BN> ,
+                                                                      rxnorm:BN ;
+                             <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/BN> ,
+                                                                     rxnorm:BN ;
                              terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                              rdfs:seeAlso rxnorm:reformulated_to .
 
@@ -1119,8 +1132,10 @@ mydata:BN_reformulated_to_BN rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/BN_reformulation_of_BN
 mydata:BN_reformulation_of_BN rdf:type owl:NamedIndividual ,
                                        mydata:rxnorm_relationship_tuple ;
-                              <http://purl.org/dc/dcam/domainIncludes> rxnorm:BN ;
-                              <http://purl.org/dc/dcam/rangeIncludes> rxnorm:BN ;
+                              <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/BN> ,
+                                                                       rxnorm:BN ;
+                              <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/BN> ,
+                                                                      rxnorm:BN ;
                               terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                               rdfs:seeAlso rxnorm:reformulation_of .
 
@@ -1128,8 +1143,10 @@ mydata:BN_reformulation_of_BN rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/BN_tradename_of_IN
 mydata:BN_tradename_of_IN rdf:type owl:NamedIndividual ,
                                    mydata:rxnorm_relationship_tuple ;
-                          <http://purl.org/dc/dcam/domainIncludes> rxnorm:BN ;
-                          <http://purl.org/dc/dcam/rangeIncludes> rxnorm:IN ;
+                          <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/BN> ,
+                                                                   rxnorm:BN ;
+                          <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/IN> ,
+                                                                  rxnorm:IN ;
                           terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                           rdfs:seeAlso rxnorm:tradename_of .
 
@@ -1137,8 +1154,10 @@ mydata:BN_tradename_of_IN rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/BPCK_contains_SBD
 mydata:BPCK_contains_SBD rdf:type owl:NamedIndividual ,
                                   mydata:rxnorm_relationship_tuple ;
-                         <http://purl.org/dc/dcam/domainIncludes> rxnorm:BPCK ;
-                         <http://purl.org/dc/dcam/rangeIncludes> rxnorm:SBD ;
+                         <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/BPCK> ,
+                                                                  rxnorm:BPCK ;
+                         <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/SBD> ,
+                                                                 rxnorm:SBD ;
                          terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                          rdfs:seeAlso rxnorm:contains .
 
@@ -1146,8 +1165,10 @@ mydata:BPCK_contains_SBD rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/BPCK_contains_SCD
 mydata:BPCK_contains_SCD rdf:type owl:NamedIndividual ,
                                   mydata:rxnorm_relationship_tuple ;
-                         <http://purl.org/dc/dcam/domainIncludes> rxnorm:BPCK ;
-                         <http://purl.org/dc/dcam/rangeIncludes> rxnorm:SCD ;
+                         <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/BPCK> ,
+                                                                  rxnorm:BPCK ;
+                         <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/SCD> ,
+                                                                 rxnorm:SCD ;
                          terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                          rdfs:seeAlso rxnorm:contains .
 
@@ -1155,8 +1176,10 @@ mydata:BPCK_contains_SCD rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/BPCK_has_dose_form_DF
 mydata:BPCK_has_dose_form_DF rdf:type owl:NamedIndividual ,
                                       mydata:rxnorm_relationship_tuple ;
-                             <http://purl.org/dc/dcam/domainIncludes> rxnorm:BPCK ;
-                             <http://purl.org/dc/dcam/rangeIncludes> rxnorm:DF ;
+                             <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/BPCK> ,
+                                                                      rxnorm:BPCK ;
+                             <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/DF> ,
+                                                                     rxnorm:DF ;
                              terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                              rdfs:seeAlso rxnorm:has_dose_form .
 
@@ -1164,8 +1187,10 @@ mydata:BPCK_has_dose_form_DF rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/BPCK_tradename_of_GPCK
 mydata:BPCK_tradename_of_GPCK rdf:type owl:NamedIndividual ,
                                        mydata:rxnorm_relationship_tuple ;
-                              <http://purl.org/dc/dcam/domainIncludes> rxnorm:BPCK ;
-                              <http://purl.org/dc/dcam/rangeIncludes> rxnorm:GPCK ;
+                              <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/BPCK> ,
+                                                                       rxnorm:BPCK ;
+                              <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/GPCK> ,
+                                                                      rxnorm:GPCK ;
                               terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                               rdfs:seeAlso rxnorm:tradename_of .
 
@@ -1173,7 +1198,8 @@ mydata:BPCK_tradename_of_GPCK rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/DFG_doseformgroup_of_SBDG
 mydata:DFG_doseformgroup_of_SBDG rdf:type owl:NamedIndividual ,
                                           mydata:rxnorm_relationship_tuple ;
-                                 <http://purl.org/dc/dcam/domainIncludes> rxnorm:DFG ;
+                                 <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/DFG> ,
+                                                                          rxnorm:DFG ;
                                  <http://purl.org/dc/dcam/rangeIncludes> rxnorm:SBDG ;
                                  terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                                  rdfs:seeAlso rxnorm:doseformgroup_of .
@@ -1182,7 +1208,8 @@ mydata:DFG_doseformgroup_of_SBDG rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/DFG_doseformgroup_of_SCDG
 mydata:DFG_doseformgroup_of_SCDG rdf:type owl:NamedIndividual ,
                                           mydata:rxnorm_relationship_tuple ;
-                                 <http://purl.org/dc/dcam/domainIncludes> rxnorm:DFG ;
+                                 <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/DFG> ,
+                                                                          rxnorm:DFG ;
                                  <http://purl.org/dc/dcam/rangeIncludes> rxnorm:SCDG ;
                                  terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                                  rdfs:seeAlso rxnorm:doseformgroup_of .
@@ -1191,8 +1218,10 @@ mydata:DFG_doseformgroup_of_SCDG rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/DFG_inverse_isa_DF
 mydata:DFG_inverse_isa_DF rdf:type owl:NamedIndividual ,
                                    mydata:rxnorm_relationship_tuple ;
-                          <http://purl.org/dc/dcam/domainIncludes> rxnorm:DFG ;
-                          <http://purl.org/dc/dcam/rangeIncludes> rxnorm:DF ;
+                          <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/DFG> ,
+                                                                   rxnorm:DFG ;
+                          <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/DF> ,
+                                                                  rxnorm:DF ;
                           terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                           rdfs:seeAlso rxnorm:inverse_isa .
 
@@ -1200,8 +1229,10 @@ mydata:DFG_inverse_isa_DF rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/DF_dose_form_of_BPCK
 mydata:DF_dose_form_of_BPCK rdf:type owl:NamedIndividual ,
                                      mydata:rxnorm_relationship_tuple ;
-                            <http://purl.org/dc/dcam/domainIncludes> rxnorm:DF ;
-                            <http://purl.org/dc/dcam/rangeIncludes> rxnorm:BPCK ;
+                            <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/DF> ,
+                                                                     rxnorm:DF ;
+                            <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/BPCK> ,
+                                                                    rxnorm:BPCK ;
                             terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                             rdfs:seeAlso rxnorm:dose_form_of .
 
@@ -1209,8 +1240,10 @@ mydata:DF_dose_form_of_BPCK rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/DF_dose_form_of_GPCK
 mydata:DF_dose_form_of_GPCK rdf:type owl:NamedIndividual ,
                                      mydata:rxnorm_relationship_tuple ;
-                            <http://purl.org/dc/dcam/domainIncludes> rxnorm:DF ;
-                            <http://purl.org/dc/dcam/rangeIncludes> rxnorm:GPCK ;
+                            <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/DF> ,
+                                                                     rxnorm:DF ;
+                            <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/GPCK> ,
+                                                                    rxnorm:GPCK ;
                             terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                             rdfs:seeAlso rxnorm:dose_form_of .
 
@@ -1218,8 +1251,10 @@ mydata:DF_dose_form_of_GPCK rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/DF_dose_form_of_SBD
 mydata:DF_dose_form_of_SBD rdf:type owl:NamedIndividual ,
                                     mydata:rxnorm_relationship_tuple ;
-                           <http://purl.org/dc/dcam/domainIncludes> rxnorm:DF ;
-                           <http://purl.org/dc/dcam/rangeIncludes> rxnorm:SBD ;
+                           <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/DF> ,
+                                                                    rxnorm:DF ;
+                           <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/SBD> ,
+                                                                   rxnorm:SBD ;
                            terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                            rdfs:seeAlso rxnorm:dose_form_of .
 
@@ -1227,8 +1262,10 @@ mydata:DF_dose_form_of_SBD rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/DF_dose_form_of_SBDF
 mydata:DF_dose_form_of_SBDF rdf:type owl:NamedIndividual ,
                                      mydata:rxnorm_relationship_tuple ;
-                            <http://purl.org/dc/dcam/domainIncludes> rxnorm:DF ;
-                            <http://purl.org/dc/dcam/rangeIncludes> rxnorm:SBDF ;
+                            <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/DF> ,
+                                                                     rxnorm:DF ;
+                            <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/SBDF> ,
+                                                                    rxnorm:SBDF ;
                             terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                             rdfs:seeAlso rxnorm:dose_form_of .
 
@@ -1236,8 +1273,10 @@ mydata:DF_dose_form_of_SBDF rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/DF_dose_form_of_SCD
 mydata:DF_dose_form_of_SCD rdf:type owl:NamedIndividual ,
                                     mydata:rxnorm_relationship_tuple ;
-                           <http://purl.org/dc/dcam/domainIncludes> rxnorm:DF ;
-                           <http://purl.org/dc/dcam/rangeIncludes> rxnorm:SCD ;
+                           <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/DF> ,
+                                                                    rxnorm:DF ;
+                           <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/SCD> ,
+                                                                   rxnorm:SCD ;
                            terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                            rdfs:seeAlso rxnorm:dose_form_of .
 
@@ -1245,8 +1284,10 @@ mydata:DF_dose_form_of_SCD rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/DF_dose_form_of_SCDF
 mydata:DF_dose_form_of_SCDF rdf:type owl:NamedIndividual ,
                                      mydata:rxnorm_relationship_tuple ;
-                            <http://purl.org/dc/dcam/domainIncludes> rxnorm:DF ;
-                            <http://purl.org/dc/dcam/rangeIncludes> rxnorm:SCDF ;
+                            <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/DF> ,
+                                                                     rxnorm:DF ;
+                            <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/SCDF> ,
+                                                                    rxnorm:SCDF ;
                             terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                             rdfs:seeAlso rxnorm:dose_form_of .
 
@@ -1254,8 +1295,10 @@ mydata:DF_dose_form_of_SCDF rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/DF_isa_DFG
 mydata:DF_isa_DFG rdf:type owl:NamedIndividual ,
                            mydata:rxnorm_relationship_tuple ;
-                  <http://purl.org/dc/dcam/domainIncludes> rxnorm:DF ;
-                  <http://purl.org/dc/dcam/rangeIncludes> rxnorm:DFG ;
+                  <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/DF> ,
+                                                           rxnorm:DF ;
+                  <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/DFG> ,
+                                                          rxnorm:DFG ;
                   terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                   rdfs:seeAlso rxnorm:isa .
 
@@ -1263,8 +1306,10 @@ mydata:DF_isa_DFG rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/GPCK_contains_SCD
 mydata:GPCK_contains_SCD rdf:type owl:NamedIndividual ,
                                   mydata:rxnorm_relationship_tuple ;
-                         <http://purl.org/dc/dcam/domainIncludes> rxnorm:GPCK ;
-                         <http://purl.org/dc/dcam/rangeIncludes> rxnorm:SCD ;
+                         <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/GPCK> ,
+                                                                  rxnorm:GPCK ;
+                         <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/SCD> ,
+                                                                 rxnorm:SCD ;
                          terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                          rdfs:seeAlso rxnorm:contains .
 
@@ -1272,8 +1317,10 @@ mydata:GPCK_contains_SCD rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/GPCK_has_dose_form_DF
 mydata:GPCK_has_dose_form_DF rdf:type owl:NamedIndividual ,
                                       mydata:rxnorm_relationship_tuple ;
-                             <http://purl.org/dc/dcam/domainIncludes> rxnorm:GPCK ;
-                             <http://purl.org/dc/dcam/rangeIncludes> rxnorm:DF ;
+                             <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/GPCK> ,
+                                                                      rxnorm:GPCK ;
+                             <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/DF> ,
+                                                                     rxnorm:DF ;
                              terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                              rdfs:seeAlso rxnorm:has_dose_form .
 
@@ -1281,8 +1328,10 @@ mydata:GPCK_has_dose_form_DF rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/GPCK_has_tradename_BPCK
 mydata:GPCK_has_tradename_BPCK rdf:type owl:NamedIndividual ,
                                         mydata:rxnorm_relationship_tuple ;
-                               <http://purl.org/dc/dcam/domainIncludes> rxnorm:GPCK ;
-                               <http://purl.org/dc/dcam/rangeIncludes> rxnorm:BPCK ;
+                               <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/GPCK> ,
+                                                                        rxnorm:GPCK ;
+                               <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/BPCK> ,
+                                                                       rxnorm:BPCK ;
                                terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                                rdfs:seeAlso rxnorm:has_tradename .
 
@@ -1290,8 +1339,10 @@ mydata:GPCK_has_tradename_BPCK rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/IN_has_form_PIN
 mydata:IN_has_form_PIN rdf:type owl:NamedIndividual ,
                                 mydata:rxnorm_relationship_tuple ;
-                       <http://purl.org/dc/dcam/domainIncludes> rxnorm:IN ;
-                       <http://purl.org/dc/dcam/rangeIncludes> rxnorm:PIN ;
+                       <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/IN> ,
+                                                                rxnorm:IN ;
+                       <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/PIN> ,
+                                                               rxnorm:PIN ;
                        terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                        rdfs:seeAlso rxnorm:has_form .
 
@@ -1299,8 +1350,10 @@ mydata:IN_has_form_PIN rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/IN_has_tradename_BN
 mydata:IN_has_tradename_BN rdf:type owl:NamedIndividual ,
                                     mydata:rxnorm_relationship_tuple ;
-                           <http://purl.org/dc/dcam/domainIncludes> rxnorm:IN ;
-                           <http://purl.org/dc/dcam/rangeIncludes> rxnorm:BN ;
+                           <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/IN> ,
+                                                                    rxnorm:IN ;
+                           <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/BN> ,
+                                                                   rxnorm:BN ;
                            terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                            rdfs:seeAlso rxnorm:has_tradename .
 
@@ -1308,8 +1361,10 @@ mydata:IN_has_tradename_BN rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/IN_ingredient_of_SCDC
 mydata:IN_ingredient_of_SCDC rdf:type owl:NamedIndividual ,
                                       mydata:rxnorm_relationship_tuple ;
-                             <http://purl.org/dc/dcam/domainIncludes> rxnorm:IN ;
-                             <http://purl.org/dc/dcam/rangeIncludes> rxnorm:SCDC ;
+                             <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/IN> ,
+                                                                      rxnorm:IN ;
+                             <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/SCDC> ,
+                                                                     rxnorm:SCDC ;
                              terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                              rdfs:seeAlso rxnorm:ingredient_of .
 
@@ -1317,8 +1372,10 @@ mydata:IN_ingredient_of_SCDC rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/IN_ingredient_of_SCDF
 mydata:IN_ingredient_of_SCDF rdf:type owl:NamedIndividual ,
                                       mydata:rxnorm_relationship_tuple ;
-                             <http://purl.org/dc/dcam/domainIncludes> rxnorm:IN ;
-                             <http://purl.org/dc/dcam/rangeIncludes> rxnorm:SCDF ;
+                             <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/IN> ,
+                                                                      rxnorm:IN ;
+                             <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/SCDF> ,
+                                                                     rxnorm:SCDF ;
                              terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                              rdfs:seeAlso rxnorm:ingredient_of .
 
@@ -1326,7 +1383,8 @@ mydata:IN_ingredient_of_SCDF rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/IN_ingredient_of_SCDG
 mydata:IN_ingredient_of_SCDG rdf:type owl:NamedIndividual ,
                                       mydata:rxnorm_relationship_tuple ;
-                             <http://purl.org/dc/dcam/domainIncludes> rxnorm:IN ;
+                             <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/IN> ,
+                                                                      rxnorm:IN ;
                              <http://purl.org/dc/dcam/rangeIncludes> rxnorm:SCDG ;
                              terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                              rdfs:seeAlso rxnorm:ingredient_of .
@@ -1335,8 +1393,10 @@ mydata:IN_ingredient_of_SCDG rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/IN_part_of_MIN
 mydata:IN_part_of_MIN rdf:type owl:NamedIndividual ,
                                mydata:rxnorm_relationship_tuple ;
-                      <http://purl.org/dc/dcam/domainIncludes> rxnorm:IN ;
-                      <http://purl.org/dc/dcam/rangeIncludes> rxnorm:MIN ;
+                      <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/IN> ,
+                                                               rxnorm:IN ;
+                      <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/MIN> ,
+                                                              rxnorm:MIN ;
                       terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                       rdfs:seeAlso rxnorm:part_of .
 
@@ -1344,8 +1404,10 @@ mydata:IN_part_of_MIN rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/MIN_has_part_IN
 mydata:MIN_has_part_IN rdf:type owl:NamedIndividual ,
                                 mydata:rxnorm_relationship_tuple ;
-                       <http://purl.org/dc/dcam/domainIncludes> rxnorm:MIN ;
-                       <http://purl.org/dc/dcam/rangeIncludes> rxnorm:IN ;
+                       <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/MIN> ,
+                                                                rxnorm:MIN ;
+                       <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/IN> ,
+                                                               rxnorm:IN ;
                        terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                        rdfs:seeAlso rxnorm:has_part .
 
@@ -1353,8 +1415,10 @@ mydata:MIN_has_part_IN rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/MIN_has_part_PIN
 mydata:MIN_has_part_PIN rdf:type owl:NamedIndividual ,
                                  mydata:rxnorm_relationship_tuple ;
-                        <http://purl.org/dc/dcam/domainIncludes> rxnorm:MIN ;
-                        <http://purl.org/dc/dcam/rangeIncludes> rxnorm:PIN ;
+                        <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/MIN> ,
+                                                                 rxnorm:MIN ;
+                        <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/PIN> ,
+                                                                rxnorm:PIN ;
                         terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                         rdfs:seeAlso rxnorm:has_part .
 
@@ -1362,8 +1426,10 @@ mydata:MIN_has_part_PIN rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/MIN_ingredients_of_SCD
 mydata:MIN_ingredients_of_SCD rdf:type owl:NamedIndividual ,
                                        mydata:rxnorm_relationship_tuple ;
-                              <http://purl.org/dc/dcam/domainIncludes> rxnorm:MIN ;
-                              <http://purl.org/dc/dcam/rangeIncludes> rxnorm:SCD ;
+                              <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/MIN> ,
+                                                                       rxnorm:MIN ;
+                              <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/SCD> ,
+                                                                      rxnorm:SCD ;
                               terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                               rdfs:seeAlso rxnorm:ingredients_of .
 
@@ -1371,8 +1437,10 @@ mydata:MIN_ingredients_of_SCD rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/PIN_form_of_IN
 mydata:PIN_form_of_IN rdf:type owl:NamedIndividual ,
                                mydata:rxnorm_relationship_tuple ;
-                      <http://purl.org/dc/dcam/domainIncludes> rxnorm:PIN ;
-                      <http://purl.org/dc/dcam/rangeIncludes> rxnorm:IN ;
+                      <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/PIN> ,
+                                                               rxnorm:PIN ;
+                      <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/IN> ,
+                                                              rxnorm:IN ;
                       terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                       rdfs:seeAlso rxnorm:form_of .
 
@@ -1380,8 +1448,10 @@ mydata:PIN_form_of_IN rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/PIN_part_of_MIN
 mydata:PIN_part_of_MIN rdf:type owl:NamedIndividual ,
                                 mydata:rxnorm_relationship_tuple ;
-                       <http://purl.org/dc/dcam/domainIncludes> rxnorm:PIN ;
-                       <http://purl.org/dc/dcam/rangeIncludes> rxnorm:MIN ;
+                       <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/PIN> ,
+                                                                rxnorm:PIN ;
+                       <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/MIN> ,
+                                                               rxnorm:MIN ;
                        terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                        rdfs:seeAlso rxnorm:part_of .
 
@@ -1389,8 +1459,10 @@ mydata:PIN_part_of_MIN rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/PIN_precise_ingredient_of_BN
 mydata:PIN_precise_ingredient_of_BN rdf:type owl:NamedIndividual ,
                                              mydata:rxnorm_relationship_tuple ;
-                                    <http://purl.org/dc/dcam/domainIncludes> rxnorm:PIN ;
-                                    <http://purl.org/dc/dcam/rangeIncludes> rxnorm:BN ;
+                                    <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/PIN> ,
+                                                                             rxnorm:PIN ;
+                                    <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/BN> ,
+                                                                            rxnorm:BN ;
                                     terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                                     rdfs:seeAlso rxnorm:precise_ingredient_of .
 
@@ -1398,8 +1470,10 @@ mydata:PIN_precise_ingredient_of_BN rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/PIN_precise_ingredient_of_SCDC
 mydata:PIN_precise_ingredient_of_SCDC rdf:type owl:NamedIndividual ,
                                                mydata:rxnorm_relationship_tuple ;
-                                      <http://purl.org/dc/dcam/domainIncludes> rxnorm:PIN ;
-                                      <http://purl.org/dc/dcam/rangeIncludes> rxnorm:SCDC ;
+                                      <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/PIN> ,
+                                                                               rxnorm:PIN ;
+                                      <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/SCDC> ,
+                                                                              rxnorm:SCDC ;
                                       terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                                       rdfs:seeAlso rxnorm:precise_ingredient_of .
 
@@ -1407,8 +1481,10 @@ mydata:PIN_precise_ingredient_of_SCDC rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/SBDC_constitutes_SBD
 mydata:SBDC_constitutes_SBD rdf:type owl:NamedIndividual ,
                                      mydata:rxnorm_relationship_tuple ;
-                            <http://purl.org/dc/dcam/domainIncludes> rxnorm:SBDC ;
-                            <http://purl.org/dc/dcam/rangeIncludes> rxnorm:SBD ;
+                            <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/SBDC> ,
+                                                                     rxnorm:SBDC ;
+                            <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/SBD> ,
+                                                                    rxnorm:SBD ;
                             terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                             rdfs:seeAlso rxnorm:constitutes .
 
@@ -1416,8 +1492,10 @@ mydata:SBDC_constitutes_SBD rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/SBDC_has_ingredient_BN
 mydata:SBDC_has_ingredient_BN rdf:type owl:NamedIndividual ,
                                        mydata:rxnorm_relationship_tuple ;
-                              <http://purl.org/dc/dcam/domainIncludes> rxnorm:SBDC ;
-                              <http://purl.org/dc/dcam/rangeIncludes> rxnorm:BN ;
+                              <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/SBDC> ,
+                                                                       rxnorm:SBDC ;
+                              <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/BN> ,
+                                                                      rxnorm:BN ;
                               terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                               rdfs:seeAlso rxnorm:has_ingredient .
 
@@ -1425,8 +1503,10 @@ mydata:SBDC_has_ingredient_BN rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/SBDC_tradename_of_SCDC
 mydata:SBDC_tradename_of_SCDC rdf:type owl:NamedIndividual ,
                                        mydata:rxnorm_relationship_tuple ;
-                              <http://purl.org/dc/dcam/domainIncludes> rxnorm:SBDC ;
-                              <http://purl.org/dc/dcam/rangeIncludes> rxnorm:SCDC ;
+                              <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/SBDC> ,
+                                                                       rxnorm:SBDC ;
+                              <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/SCDC> ,
+                                                                      rxnorm:SCDC ;
                               terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                               rdfs:seeAlso rxnorm:tradename_of .
 
@@ -1434,8 +1514,10 @@ mydata:SBDC_tradename_of_SCDC rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/SBDF_has_dose_form_DF
 mydata:SBDF_has_dose_form_DF rdf:type owl:NamedIndividual ,
                                       mydata:rxnorm_relationship_tuple ;
-                             <http://purl.org/dc/dcam/domainIncludes> rxnorm:SBDF ;
-                             <http://purl.org/dc/dcam/rangeIncludes> rxnorm:DF ;
+                             <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/SBDF> ,
+                                                                      rxnorm:SBDF ;
+                             <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/DF> ,
+                                                                     rxnorm:DF ;
                              terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                              rdfs:seeAlso rxnorm:has_dose_form .
 
@@ -1443,8 +1525,10 @@ mydata:SBDF_has_dose_form_DF rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/SBDF_has_ingredient_BN
 mydata:SBDF_has_ingredient_BN rdf:type owl:NamedIndividual ,
                                        mydata:rxnorm_relationship_tuple ;
-                              <http://purl.org/dc/dcam/domainIncludes> rxnorm:SBDF ;
-                              <http://purl.org/dc/dcam/rangeIncludes> rxnorm:BN ;
+                              <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/SBDF> ,
+                                                                       rxnorm:SBDF ;
+                              <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/BN> ,
+                                                                      rxnorm:BN ;
                               terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                               rdfs:seeAlso rxnorm:has_ingredient .
 
@@ -1452,8 +1536,10 @@ mydata:SBDF_has_ingredient_BN rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/SBDF_inverse_isa_SBD
 mydata:SBDF_inverse_isa_SBD rdf:type owl:NamedIndividual ,
                                      mydata:rxnorm_relationship_tuple ;
-                            <http://purl.org/dc/dcam/domainIncludes> rxnorm:SBDF ;
-                            <http://purl.org/dc/dcam/rangeIncludes> rxnorm:SBD ;
+                            <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/SBDF> ,
+                                                                     rxnorm:SBDF ;
+                            <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/SBD> ,
+                                                                    rxnorm:SBD ;
                             terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                             rdfs:seeAlso rxnorm:inverse_isa .
 
@@ -1461,7 +1547,8 @@ mydata:SBDF_inverse_isa_SBD rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/SBDF_isa_SBDG
 mydata:SBDF_isa_SBDG rdf:type owl:NamedIndividual ,
                               mydata:rxnorm_relationship_tuple ;
-                     <http://purl.org/dc/dcam/domainIncludes> rxnorm:SBDF ;
+                     <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/SBDF> ,
+                                                              rxnorm:SBDF ;
                      <http://purl.org/dc/dcam/rangeIncludes> rxnorm:SBDG ;
                      terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                      rdfs:seeAlso rxnorm:isa .
@@ -1470,8 +1557,10 @@ mydata:SBDF_isa_SBDG rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/SBDF_tradename_of_SCDF
 mydata:SBDF_tradename_of_SCDF rdf:type owl:NamedIndividual ,
                                        mydata:rxnorm_relationship_tuple ;
-                              <http://purl.org/dc/dcam/domainIncludes> rxnorm:SBDF ;
-                              <http://purl.org/dc/dcam/rangeIncludes> rxnorm:SCDF ;
+                              <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/SBDF> ,
+                                                                       rxnorm:SBDF ;
+                              <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/SCDF> ,
+                                                                      rxnorm:SCDF ;
                               terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                               rdfs:seeAlso rxnorm:tradename_of .
 
@@ -1480,7 +1569,8 @@ mydata:SBDF_tradename_of_SCDF rdf:type owl:NamedIndividual ,
 mydata:SBDG_has_doseformgroup_DFG rdf:type owl:NamedIndividual ,
                                            mydata:rxnorm_relationship_tuple ;
                                   <http://purl.org/dc/dcam/domainIncludes> rxnorm:SBDG ;
-                                  <http://purl.org/dc/dcam/rangeIncludes> rxnorm:DFG ;
+                                  <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/DFG> ,
+                                                                          rxnorm:DFG ;
                                   terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                                   rdfs:seeAlso rxnorm:has_doseformgroup .
 
@@ -1489,7 +1579,8 @@ mydata:SBDG_has_doseformgroup_DFG rdf:type owl:NamedIndividual ,
 mydata:SBDG_has_ingredient_BN rdf:type owl:NamedIndividual ,
                                        mydata:rxnorm_relationship_tuple ;
                               <http://purl.org/dc/dcam/domainIncludes> rxnorm:SBDG ;
-                              <http://purl.org/dc/dcam/rangeIncludes> rxnorm:BN ;
+                              <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/BN> ,
+                                                                      rxnorm:BN ;
                               terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                               rdfs:seeAlso rxnorm:has_ingredient .
 
@@ -1498,7 +1589,8 @@ mydata:SBDG_has_ingredient_BN rdf:type owl:NamedIndividual ,
 mydata:SBDG_inverse_isa_SBD rdf:type owl:NamedIndividual ,
                                      mydata:rxnorm_relationship_tuple ;
                             <http://purl.org/dc/dcam/domainIncludes> rxnorm:SBDG ;
-                            <http://purl.org/dc/dcam/rangeIncludes> rxnorm:SBD ;
+                            <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/SBD> ,
+                                                                    rxnorm:SBD ;
                             terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                             rdfs:seeAlso rxnorm:inverse_isa .
 
@@ -1507,7 +1599,8 @@ mydata:SBDG_inverse_isa_SBD rdf:type owl:NamedIndividual ,
 mydata:SBDG_inverse_isa_SBDF rdf:type owl:NamedIndividual ,
                                       mydata:rxnorm_relationship_tuple ;
                              <http://purl.org/dc/dcam/domainIncludes> rxnorm:SBDG ;
-                             <http://purl.org/dc/dcam/rangeIncludes> rxnorm:SBDF ;
+                             <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/SBDF> ,
+                                                                     rxnorm:SBDF ;
                              terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                              rdfs:seeAlso rxnorm:inverse_isa .
 
@@ -1524,8 +1617,10 @@ mydata:SBDG_tradename_of_SCDG rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/SBD_consists_of_SBDC
 mydata:SBD_consists_of_SBDC rdf:type owl:NamedIndividual ,
                                      mydata:rxnorm_relationship_tuple ;
-                            <http://purl.org/dc/dcam/domainIncludes> rxnorm:SBD ;
-                            <http://purl.org/dc/dcam/rangeIncludes> rxnorm:SBDC ;
+                            <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/SBD> ,
+                                                                     rxnorm:SBD ;
+                            <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/SBDC> ,
+                                                                    rxnorm:SBDC ;
                             terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                             rdfs:seeAlso rxnorm:consists_of .
 
@@ -1533,8 +1628,10 @@ mydata:SBD_consists_of_SBDC rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/SBD_consists_of_SCDC
 mydata:SBD_consists_of_SCDC rdf:type owl:NamedIndividual ,
                                      mydata:rxnorm_relationship_tuple ;
-                            <http://purl.org/dc/dcam/domainIncludes> rxnorm:SBD ;
-                            <http://purl.org/dc/dcam/rangeIncludes> rxnorm:SCDC ;
+                            <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/SBD> ,
+                                                                     rxnorm:SBD ;
+                            <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/SCDC> ,
+                                                                    rxnorm:SCDC ;
                             terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                             rdfs:seeAlso rxnorm:consists_of .
 
@@ -1542,8 +1639,10 @@ mydata:SBD_consists_of_SCDC rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/SBD_contained_in_BPCK
 mydata:SBD_contained_in_BPCK rdf:type owl:NamedIndividual ,
                                       mydata:rxnorm_relationship_tuple ;
-                             <http://purl.org/dc/dcam/domainIncludes> rxnorm:SBD ;
-                             <http://purl.org/dc/dcam/rangeIncludes> rxnorm:BPCK ;
+                             <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/SBD> ,
+                                                                      rxnorm:SBD ;
+                             <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/BPCK> ,
+                                                                     rxnorm:BPCK ;
                              terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                              rdfs:seeAlso rxnorm:contained_in .
 
@@ -1551,8 +1650,10 @@ mydata:SBD_contained_in_BPCK rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/SBD_has_dose_form_DF
 mydata:SBD_has_dose_form_DF rdf:type owl:NamedIndividual ,
                                      mydata:rxnorm_relationship_tuple ;
-                            <http://purl.org/dc/dcam/domainIncludes> rxnorm:SBD ;
-                            <http://purl.org/dc/dcam/rangeIncludes> rxnorm:DF ;
+                            <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/SBD> ,
+                                                                     rxnorm:SBD ;
+                            <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/DF> ,
+                                                                    rxnorm:DF ;
                             terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                             rdfs:seeAlso rxnorm:has_dose_form .
 
@@ -1560,8 +1661,10 @@ mydata:SBD_has_dose_form_DF rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/SBD_has_ingredient_BN
 mydata:SBD_has_ingredient_BN rdf:type owl:NamedIndividual ,
                                       mydata:rxnorm_relationship_tuple ;
-                             <http://purl.org/dc/dcam/domainIncludes> rxnorm:SBD ;
-                             <http://purl.org/dc/dcam/rangeIncludes> rxnorm:BN ;
+                             <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/SBD> ,
+                                                                      rxnorm:SBD ;
+                             <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/BN> ,
+                                                                     rxnorm:BN ;
                              terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                              rdfs:seeAlso rxnorm:has_ingredient .
 
@@ -1569,8 +1672,10 @@ mydata:SBD_has_ingredient_BN rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/SBD_has_quantified_form_SBD
 mydata:SBD_has_quantified_form_SBD rdf:type owl:NamedIndividual ,
                                             mydata:rxnorm_relationship_tuple ;
-                                   <http://purl.org/dc/dcam/domainIncludes> rxnorm:SBD ;
-                                   <http://purl.org/dc/dcam/rangeIncludes> rxnorm:SBD ;
+                                   <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/SBD> ,
+                                                                            rxnorm:SBD ;
+                                   <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/SBD> ,
+                                                                           rxnorm:SBD ;
                                    terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                                    rdfs:seeAlso rxnorm:has_quantified_form .
 
@@ -1578,8 +1683,10 @@ mydata:SBD_has_quantified_form_SBD rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/SBD_isa_SBDF
 mydata:SBD_isa_SBDF rdf:type owl:NamedIndividual ,
                              mydata:rxnorm_relationship_tuple ;
-                    <http://purl.org/dc/dcam/domainIncludes> rxnorm:SBD ;
-                    <http://purl.org/dc/dcam/rangeIncludes> rxnorm:SBDF ;
+                    <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/SBD> ,
+                                                             rxnorm:SBD ;
+                    <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/SBDF> ,
+                                                            rxnorm:SBDF ;
                     terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                     rdfs:seeAlso rxnorm:isa .
 
@@ -1587,7 +1694,8 @@ mydata:SBD_isa_SBDF rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/SBD_isa_SBDG
 mydata:SBD_isa_SBDG rdf:type owl:NamedIndividual ,
                              mydata:rxnorm_relationship_tuple ;
-                    <http://purl.org/dc/dcam/domainIncludes> rxnorm:SBD ;
+                    <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/SBD> ,
+                                                             rxnorm:SBD ;
                     <http://purl.org/dc/dcam/rangeIncludes> rxnorm:SBDG ;
                     terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                     rdfs:seeAlso rxnorm:isa .
@@ -1596,8 +1704,10 @@ mydata:SBD_isa_SBDG rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/SBD_quantified_form_of_SBD
 mydata:SBD_quantified_form_of_SBD rdf:type owl:NamedIndividual ,
                                            mydata:rxnorm_relationship_tuple ;
-                                  <http://purl.org/dc/dcam/domainIncludes> rxnorm:SBD ;
-                                  <http://purl.org/dc/dcam/rangeIncludes> rxnorm:SBD ;
+                                  <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/SBD> ,
+                                                                           rxnorm:SBD ;
+                                  <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/SBD> ,
+                                                                          rxnorm:SBD ;
                                   terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                                   rdfs:seeAlso rxnorm:quantified_form_of .
 
@@ -1605,8 +1715,10 @@ mydata:SBD_quantified_form_of_SBD rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/SBD_tradename_of_SCD
 mydata:SBD_tradename_of_SCD rdf:type owl:NamedIndividual ,
                                      mydata:rxnorm_relationship_tuple ;
-                            <http://purl.org/dc/dcam/domainIncludes> rxnorm:SBD ;
-                            <http://purl.org/dc/dcam/rangeIncludes> rxnorm:SCD ;
+                            <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/SBD> ,
+                                                                     rxnorm:SBD ;
+                            <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/SCD> ,
+                                                                    rxnorm:SCD ;
                             terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                             rdfs:seeAlso rxnorm:tradename_of .
 
@@ -1614,8 +1726,10 @@ mydata:SBD_tradename_of_SCD rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/SCDC_constitutes_SBD
 mydata:SCDC_constitutes_SBD rdf:type owl:NamedIndividual ,
                                      mydata:rxnorm_relationship_tuple ;
-                            <http://purl.org/dc/dcam/domainIncludes> rxnorm:SCDC ;
-                            <http://purl.org/dc/dcam/rangeIncludes> rxnorm:SBD ;
+                            <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/SCDC> ,
+                                                                     rxnorm:SCDC ;
+                            <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/SBD> ,
+                                                                    rxnorm:SBD ;
                             terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                             rdfs:seeAlso rxnorm:constitutes .
 
@@ -1623,8 +1737,10 @@ mydata:SCDC_constitutes_SBD rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/SCDC_constitutes_SCD
 mydata:SCDC_constitutes_SCD rdf:type owl:NamedIndividual ,
                                      mydata:rxnorm_relationship_tuple ;
-                            <http://purl.org/dc/dcam/domainIncludes> rxnorm:SCDC ;
-                            <http://purl.org/dc/dcam/rangeIncludes> rxnorm:SCD ;
+                            <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/SCDC> ,
+                                                                     rxnorm:SCDC ;
+                            <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/SCD> ,
+                                                                    rxnorm:SCD ;
                             terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                             rdfs:seeAlso rxnorm:constitutes .
 
@@ -1632,8 +1748,10 @@ mydata:SCDC_constitutes_SCD rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/SCDC_has_ingredient_IN
 mydata:SCDC_has_ingredient_IN rdf:type owl:NamedIndividual ,
                                        mydata:rxnorm_relationship_tuple ;
-                              <http://purl.org/dc/dcam/domainIncludes> rxnorm:SCDC ;
-                              <http://purl.org/dc/dcam/rangeIncludes> rxnorm:IN ;
+                              <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/SCDC> ,
+                                                                       rxnorm:SCDC ;
+                              <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/IN> ,
+                                                                      rxnorm:IN ;
                               terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                               rdfs:seeAlso rxnorm:has_ingredient .
 
@@ -1641,8 +1759,10 @@ mydata:SCDC_has_ingredient_IN rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/SCDC_has_precise_ingredient_PIN
 mydata:SCDC_has_precise_ingredient_PIN rdf:type owl:NamedIndividual ,
                                                 mydata:rxnorm_relationship_tuple ;
-                                       <http://purl.org/dc/dcam/domainIncludes> rxnorm:SCDC ;
-                                       <http://purl.org/dc/dcam/rangeIncludes> rxnorm:PIN ;
+                                       <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/SCDC> ,
+                                                                                rxnorm:SCDC ;
+                                       <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/PIN> ,
+                                                                               rxnorm:PIN ;
                                        terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                                        rdfs:seeAlso rxnorm:has_precise_ingredient .
 
@@ -1650,8 +1770,10 @@ mydata:SCDC_has_precise_ingredient_PIN rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/SCDC_has_tradename_SBDC
 mydata:SCDC_has_tradename_SBDC rdf:type owl:NamedIndividual ,
                                         mydata:rxnorm_relationship_tuple ;
-                               <http://purl.org/dc/dcam/domainIncludes> rxnorm:SCDC ;
-                               <http://purl.org/dc/dcam/rangeIncludes> rxnorm:SBDC ;
+                               <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/SCDC> ,
+                                                                        rxnorm:SCDC ;
+                               <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/SBDC> ,
+                                                                       rxnorm:SBDC ;
                                terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                                rdfs:seeAlso rxnorm:has_tradename .
 
@@ -1659,8 +1781,10 @@ mydata:SCDC_has_tradename_SBDC rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/SCDF_has_dose_form_DF
 mydata:SCDF_has_dose_form_DF rdf:type owl:NamedIndividual ,
                                       mydata:rxnorm_relationship_tuple ;
-                             <http://purl.org/dc/dcam/domainIncludes> rxnorm:SCDF ;
-                             <http://purl.org/dc/dcam/rangeIncludes> rxnorm:DF ;
+                             <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/SCDF> ,
+                                                                      rxnorm:SCDF ;
+                             <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/DF> ,
+                                                                     rxnorm:DF ;
                              terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                              rdfs:seeAlso rxnorm:has_dose_form .
 
@@ -1668,8 +1792,10 @@ mydata:SCDF_has_dose_form_DF rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/SCDF_has_ingredient_IN
 mydata:SCDF_has_ingredient_IN rdf:type owl:NamedIndividual ,
                                        mydata:rxnorm_relationship_tuple ;
-                              <http://purl.org/dc/dcam/domainIncludes> rxnorm:SCDF ;
-                              <http://purl.org/dc/dcam/rangeIncludes> rxnorm:IN ;
+                              <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/SCDF> ,
+                                                                       rxnorm:SCDF ;
+                              <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/IN> ,
+                                                                      rxnorm:IN ;
                               terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                               rdfs:seeAlso rxnorm:has_ingredient .
 
@@ -1677,8 +1803,10 @@ mydata:SCDF_has_ingredient_IN rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/SCDF_has_tradename_SBDF
 mydata:SCDF_has_tradename_SBDF rdf:type owl:NamedIndividual ,
                                         mydata:rxnorm_relationship_tuple ;
-                               <http://purl.org/dc/dcam/domainIncludes> rxnorm:SCDF ;
-                               <http://purl.org/dc/dcam/rangeIncludes> rxnorm:SBDF ;
+                               <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/SCDF> ,
+                                                                        rxnorm:SCDF ;
+                               <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/SBDF> ,
+                                                                       rxnorm:SBDF ;
                                terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                                rdfs:seeAlso rxnorm:has_tradename .
 
@@ -1686,8 +1814,10 @@ mydata:SCDF_has_tradename_SBDF rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/SCDF_inverse_isa_SCD
 mydata:SCDF_inverse_isa_SCD rdf:type owl:NamedIndividual ,
                                      mydata:rxnorm_relationship_tuple ;
-                            <http://purl.org/dc/dcam/domainIncludes> rxnorm:SCDF ;
-                            <http://purl.org/dc/dcam/rangeIncludes> rxnorm:SCD ;
+                            <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/SCDF> ,
+                                                                     rxnorm:SCDF ;
+                            <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/SCD> ,
+                                                                    rxnorm:SCD ;
                             terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                             rdfs:seeAlso rxnorm:inverse_isa .
 
@@ -1695,7 +1825,8 @@ mydata:SCDF_inverse_isa_SCD rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/SCDF_isa_SCDG
 mydata:SCDF_isa_SCDG rdf:type owl:NamedIndividual ,
                               mydata:rxnorm_relationship_tuple ;
-                     <http://purl.org/dc/dcam/domainIncludes> rxnorm:SCDF ;
+                     <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/SCDF> ,
+                                                              rxnorm:SCDF ;
                      <http://purl.org/dc/dcam/rangeIncludes> rxnorm:SCDG ;
                      terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                      rdfs:seeAlso rxnorm:isa .
@@ -1705,7 +1836,8 @@ mydata:SCDF_isa_SCDG rdf:type owl:NamedIndividual ,
 mydata:SCDG_has_doseformgroup_DFG rdf:type owl:NamedIndividual ,
                                            mydata:rxnorm_relationship_tuple ;
                                   <http://purl.org/dc/dcam/domainIncludes> rxnorm:SCDG ;
-                                  <http://purl.org/dc/dcam/rangeIncludes> rxnorm:DFG ;
+                                  <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/DFG> ,
+                                                                          rxnorm:DFG ;
                                   terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                                   rdfs:seeAlso rxnorm:has_doseformgroup .
 
@@ -1714,7 +1846,8 @@ mydata:SCDG_has_doseformgroup_DFG rdf:type owl:NamedIndividual ,
 mydata:SCDG_has_ingredient_IN rdf:type owl:NamedIndividual ,
                                        mydata:rxnorm_relationship_tuple ;
                               <http://purl.org/dc/dcam/domainIncludes> rxnorm:SCDG ;
-                              <http://purl.org/dc/dcam/rangeIncludes> rxnorm:IN ;
+                              <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/IN> ,
+                                                                      rxnorm:IN ;
                               terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                               rdfs:seeAlso rxnorm:has_ingredient .
 
@@ -1732,7 +1865,8 @@ mydata:SCDG_has_tradename_SBDG rdf:type owl:NamedIndividual ,
 mydata:SCDG_inverse_isa_SCD rdf:type owl:NamedIndividual ,
                                      mydata:rxnorm_relationship_tuple ;
                             <http://purl.org/dc/dcam/domainIncludes> rxnorm:SCDG ;
-                            <http://purl.org/dc/dcam/rangeIncludes> rxnorm:SCD ;
+                            <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/SCD> ,
+                                                                    rxnorm:SCD ;
                             terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                             rdfs:seeAlso rxnorm:inverse_isa .
 
@@ -1741,7 +1875,8 @@ mydata:SCDG_inverse_isa_SCD rdf:type owl:NamedIndividual ,
 mydata:SCDG_inverse_isa_SCDF rdf:type owl:NamedIndividual ,
                                       mydata:rxnorm_relationship_tuple ;
                              <http://purl.org/dc/dcam/domainIncludes> rxnorm:SCDG ;
-                             <http://purl.org/dc/dcam/rangeIncludes> rxnorm:SCDF ;
+                             <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/SCDF> ,
+                                                                     rxnorm:SCDF ;
                              terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                              rdfs:seeAlso rxnorm:inverse_isa .
 
@@ -1749,8 +1884,10 @@ mydata:SCDG_inverse_isa_SCDF rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/SCD_consists_of_SCDC
 mydata:SCD_consists_of_SCDC rdf:type owl:NamedIndividual ,
                                      mydata:rxnorm_relationship_tuple ;
-                            <http://purl.org/dc/dcam/domainIncludes> rxnorm:SCD ;
-                            <http://purl.org/dc/dcam/rangeIncludes> rxnorm:SCDC ;
+                            <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/SCD> ,
+                                                                     rxnorm:SCD ;
+                            <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/SCDC> ,
+                                                                    rxnorm:SCDC ;
                             terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                             rdfs:seeAlso rxnorm:consists_of .
 
@@ -1758,8 +1895,10 @@ mydata:SCD_consists_of_SCDC rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/SCD_contained_in_BPCK
 mydata:SCD_contained_in_BPCK rdf:type owl:NamedIndividual ,
                                       mydata:rxnorm_relationship_tuple ;
-                             <http://purl.org/dc/dcam/domainIncludes> rxnorm:SCD ;
-                             <http://purl.org/dc/dcam/rangeIncludes> rxnorm:BPCK ;
+                             <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/SCD> ,
+                                                                      rxnorm:SCD ;
+                             <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/BPCK> ,
+                                                                     rxnorm:BPCK ;
                              terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                              rdfs:seeAlso rxnorm:contained_in .
 
@@ -1767,8 +1906,10 @@ mydata:SCD_contained_in_BPCK rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/SCD_contained_in_GPCK
 mydata:SCD_contained_in_GPCK rdf:type owl:NamedIndividual ,
                                       mydata:rxnorm_relationship_tuple ;
-                             <http://purl.org/dc/dcam/domainIncludes> rxnorm:SCD ;
-                             <http://purl.org/dc/dcam/rangeIncludes> rxnorm:GPCK ;
+                             <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/SCD> ,
+                                                                      rxnorm:SCD ;
+                             <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/GPCK> ,
+                                                                     rxnorm:GPCK ;
                              terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                              rdfs:seeAlso rxnorm:contained_in .
 
@@ -1776,8 +1917,10 @@ mydata:SCD_contained_in_GPCK rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/SCD_has_dose_form_DF
 mydata:SCD_has_dose_form_DF rdf:type owl:NamedIndividual ,
                                      mydata:rxnorm_relationship_tuple ;
-                            <http://purl.org/dc/dcam/domainIncludes> rxnorm:SCD ;
-                            <http://purl.org/dc/dcam/rangeIncludes> rxnorm:DF ;
+                            <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/SCD> ,
+                                                                     rxnorm:SCD ;
+                            <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/DF> ,
+                                                                    rxnorm:DF ;
                             terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                             rdfs:seeAlso rxnorm:has_dose_form .
 
@@ -1785,8 +1928,10 @@ mydata:SCD_has_dose_form_DF rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/SCD_has_ingredients_MIN
 mydata:SCD_has_ingredients_MIN rdf:type owl:NamedIndividual ,
                                         mydata:rxnorm_relationship_tuple ;
-                               <http://purl.org/dc/dcam/domainIncludes> rxnorm:SCD ;
-                               <http://purl.org/dc/dcam/rangeIncludes> rxnorm:MIN ;
+                               <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/SCD> ,
+                                                                        rxnorm:SCD ;
+                               <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/MIN> ,
+                                                                       rxnorm:MIN ;
                                terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                                rdfs:seeAlso rxnorm:has_ingredients .
 
@@ -1794,8 +1939,10 @@ mydata:SCD_has_ingredients_MIN rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/SCD_has_quantified_form_SCD
 mydata:SCD_has_quantified_form_SCD rdf:type owl:NamedIndividual ,
                                             mydata:rxnorm_relationship_tuple ;
-                                   <http://purl.org/dc/dcam/domainIncludes> rxnorm:SCD ;
-                                   <http://purl.org/dc/dcam/rangeIncludes> rxnorm:SCD ;
+                                   <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/SCD> ,
+                                                                            rxnorm:SCD ;
+                                   <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/SCD> ,
+                                                                           rxnorm:SCD ;
                                    terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                                    rdfs:seeAlso rxnorm:has_quantified_form .
 
@@ -1803,8 +1950,10 @@ mydata:SCD_has_quantified_form_SCD rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/SCD_has_tradename_SBD
 mydata:SCD_has_tradename_SBD rdf:type owl:NamedIndividual ,
                                       mydata:rxnorm_relationship_tuple ;
-                             <http://purl.org/dc/dcam/domainIncludes> rxnorm:SCD ;
-                             <http://purl.org/dc/dcam/rangeIncludes> rxnorm:SBD ;
+                             <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/SCD> ,
+                                                                      rxnorm:SCD ;
+                             <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/SBD> ,
+                                                                     rxnorm:SBD ;
                              terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                              rdfs:seeAlso rxnorm:has_tradename .
 
@@ -1812,8 +1961,10 @@ mydata:SCD_has_tradename_SBD rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/SCD_isa_SCDF
 mydata:SCD_isa_SCDF rdf:type owl:NamedIndividual ,
                              mydata:rxnorm_relationship_tuple ;
-                    <http://purl.org/dc/dcam/domainIncludes> rxnorm:SCD ;
-                    <http://purl.org/dc/dcam/rangeIncludes> rxnorm:SCDF ;
+                    <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/SCD> ,
+                                                             rxnorm:SCD ;
+                    <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/SCDF> ,
+                                                            rxnorm:SCDF ;
                     terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                     rdfs:seeAlso rxnorm:isa .
 
@@ -1821,7 +1972,8 @@ mydata:SCD_isa_SCDF rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/SCD_isa_SCDG
 mydata:SCD_isa_SCDG rdf:type owl:NamedIndividual ,
                              mydata:rxnorm_relationship_tuple ;
-                    <http://purl.org/dc/dcam/domainIncludes> rxnorm:SCD ;
+                    <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/SCD> ,
+                                                             rxnorm:SCD ;
                     <http://purl.org/dc/dcam/rangeIncludes> rxnorm:SCDG ;
                     terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                     rdfs:seeAlso rxnorm:isa .
@@ -1830,8 +1982,10 @@ mydata:SCD_isa_SCDG rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/SCD_quantified_form_of_SCD
 mydata:SCD_quantified_form_of_SCD rdf:type owl:NamedIndividual ,
                                            mydata:rxnorm_relationship_tuple ;
-                                  <http://purl.org/dc/dcam/domainIncludes> rxnorm:SCD ;
-                                  <http://purl.org/dc/dcam/rangeIncludes> rxnorm:SCD ;
+                                  <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/SCD> ,
+                                                                           rxnorm:SCD ;
+                                  <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/SCD> ,
+                                                                          rxnorm:SCD ;
                                   terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                                   rdfs:seeAlso rxnorm:quantified_form_of .
 
@@ -2034,14 +2188,17 @@ mydata:turbo_med_mapping_hand rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/RXNORM_TTY/BN
 <http://example.com/resource/RXNORM_TTY/BN> rdf:type owl:NamedIndividual ,
                                                      <http://transformunify.org/ontologies/TURBO_0022044> ;
-                                            owl:sameAs rxnorm:BN ;
+                                            owl:sameAs <http://example.com/resource/rxn_tty/BN> ,
+                                                       rxnorm:BN ;
                                             rdfs:label "http://example.com/resource/RXNORM_TTY/BN (a SPARQL domain)" ;
-                                            rdfs:seeAlso rxnorm:BN .
+                                            rdfs:seeAlso <http://example.com/resource/RXNORM_TTY/BN> ,
+                                                         rxnorm:BN .
 
 
 ###  http://example.com/resource/RXNORM_TTY/BPCK
 <http://example.com/resource/RXNORM_TTY/BPCK> rdf:type owl:NamedIndividual ,
-                                                       <http://transformunify.org/ontologies/TURBO_0022044> .
+                                                       <http://transformunify.org/ontologies/TURBO_0022044> ;
+                                              owl:sameAs <http://example.com/resource/rxn_tty/BPCK> .
 
 
 ###  http://example.com/resource/RXNORM_TTY/CD
@@ -2071,12 +2228,14 @@ mydata:turbo_med_mapping_hand rdf:type owl:NamedIndividual ,
 
 ###  http://example.com/resource/RXNORM_TTY/DF
 <http://example.com/resource/RXNORM_TTY/DF> rdf:type owl:NamedIndividual ,
-                                                     <http://transformunify.org/ontologies/TURBO_0022044> .
+                                                     <http://transformunify.org/ontologies/TURBO_0022044> ;
+                                            owl:sameAs <http://example.com/resource/rxn_tty/DF> .
 
 
 ###  http://example.com/resource/RXNORM_TTY/DFG
 <http://example.com/resource/RXNORM_TTY/DFG> rdf:type owl:NamedIndividual ,
-                                                      <http://transformunify.org/ontologies/TURBO_0022044> .
+                                                      <http://transformunify.org/ontologies/TURBO_0022044> ;
+                                             owl:sameAs <http://example.com/resource/rxn_tty/DFG> .
 
 
 ###  http://example.com/resource/RXNORM_TTY/DP
@@ -2091,12 +2250,17 @@ mydata:turbo_med_mapping_hand rdf:type owl:NamedIndividual ,
 
 ###  http://example.com/resource/RXNORM_TTY/GPCK
 <http://example.com/resource/RXNORM_TTY/GPCK> rdf:type owl:NamedIndividual ,
-                                                       <http://transformunify.org/ontologies/TURBO_0022044> .
+                                                       <http://transformunify.org/ontologies/TURBO_0022044> ;
+                                              owl:sameAs <http://example.com/resource/rxn_tty/GPCK> .
 
 
 ###  http://example.com/resource/RXNORM_TTY/IN
 <http://example.com/resource/RXNORM_TTY/IN> rdf:type owl:NamedIndividual ,
                                                      <http://transformunify.org/ontologies/TURBO_0022044> ;
+                                            owl:sameAs <http://example.com/resource/rxn_tty/IN> ;
+                                            rdfs:comment """has see also relationships with solr queries
+is the object of match_tty triples""" ;
+                                            rdfs:label "http://example.com/resource/RXNORM_TTY/IN" ;
                                             rdfs:seeAlso <http://transformunify.org/ontologies/TURBO_0022063> ,
                                                          <http://transformunify.org/ontologies/TURBO_0022064> ,
                                                          <http://transformunify.org/ontologies/TURBO_0022066> ,
@@ -2112,7 +2276,8 @@ mydata:turbo_med_mapping_hand rdf:type owl:NamedIndividual ,
 
 ###  http://example.com/resource/RXNORM_TTY/MIN
 <http://example.com/resource/RXNORM_TTY/MIN> rdf:type owl:NamedIndividual ,
-                                                      <http://transformunify.org/ontologies/TURBO_0022044> .
+                                                      <http://transformunify.org/ontologies/TURBO_0022044> ;
+                                             owl:sameAs <http://example.com/resource/rxn_tty/MIN> .
 
 
 ###  http://example.com/resource/RXNORM_TTY/MS
@@ -2157,12 +2322,14 @@ mydata:turbo_med_mapping_hand rdf:type owl:NamedIndividual ,
 
 ###  http://example.com/resource/RXNORM_TTY/PIN
 <http://example.com/resource/RXNORM_TTY/PIN> rdf:type owl:NamedIndividual ,
-                                                      <http://transformunify.org/ontologies/TURBO_0022044> .
+                                                      <http://transformunify.org/ontologies/TURBO_0022044> ;
+                                             owl:sameAs <http://example.com/resource/rxn_tty/PIN> .
 
 
 ###  http://example.com/resource/RXNORM_TTY/PSN
 <http://example.com/resource/RXNORM_TTY/PSN> rdf:type owl:NamedIndividual ,
-                                                      <http://transformunify.org/ontologies/TURBO_0022044> .
+                                                      <http://transformunify.org/ontologies/TURBO_0022044> ;
+                                             owl:sameAs <http://example.com/resource/rxn_tty/PSN> .
 
 
 ###  http://example.com/resource/RXNORM_TTY/RXN_IN
@@ -2177,37 +2344,44 @@ mydata:turbo_med_mapping_hand rdf:type owl:NamedIndividual ,
 
 ###  http://example.com/resource/RXNORM_TTY/SBD
 <http://example.com/resource/RXNORM_TTY/SBD> rdf:type owl:NamedIndividual ,
-                                                      <http://transformunify.org/ontologies/TURBO_0022044> .
+                                                      <http://transformunify.org/ontologies/TURBO_0022044> ;
+                                             owl:sameAs <http://example.com/resource/rxn_tty/SBD> .
 
 
 ###  http://example.com/resource/RXNORM_TTY/SBDC
 <http://example.com/resource/RXNORM_TTY/SBDC> rdf:type owl:NamedIndividual ,
-                                                       <http://transformunify.org/ontologies/TURBO_0022044> .
+                                                       <http://transformunify.org/ontologies/TURBO_0022044> ;
+                                              owl:sameAs <http://example.com/resource/rxn_tty/SBDC> .
 
 
 ###  http://example.com/resource/RXNORM_TTY/SBDF
 <http://example.com/resource/RXNORM_TTY/SBDF> rdf:type owl:NamedIndividual ,
-                                                       <http://transformunify.org/ontologies/TURBO_0022044> .
+                                                       <http://transformunify.org/ontologies/TURBO_0022044> ;
+                                              owl:sameAs <http://example.com/resource/rxn_tty/SBDF> .
 
 
 ###  http://example.com/resource/RXNORM_TTY/SCD
 <http://example.com/resource/RXNORM_TTY/SCD> rdf:type owl:NamedIndividual ,
-                                                      <http://transformunify.org/ontologies/TURBO_0022044> .
+                                                      <http://transformunify.org/ontologies/TURBO_0022044> ;
+                                             owl:sameAs <http://example.com/resource/rxn_tty/SCD> .
 
 
 ###  http://example.com/resource/RXNORM_TTY/SCDC
 <http://example.com/resource/RXNORM_TTY/SCDC> rdf:type owl:NamedIndividual ,
-                                                       <http://transformunify.org/ontologies/TURBO_0022044> .
+                                                       <http://transformunify.org/ontologies/TURBO_0022044> ;
+                                              owl:sameAs <http://example.com/resource/rxn_tty/SCDC> .
 
 
 ###  http://example.com/resource/RXNORM_TTY/SCDF
 <http://example.com/resource/RXNORM_TTY/SCDF> rdf:type owl:NamedIndividual ,
-                                                       <http://transformunify.org/ontologies/TURBO_0022044> .
+                                                       <http://transformunify.org/ontologies/TURBO_0022044> ;
+                                              owl:sameAs <http://example.com/resource/rxn_tty/SCDF> .
 
 
 ###  http://example.com/resource/RXNORM_TTY/SY
 <http://example.com/resource/RXNORM_TTY/SY> rdf:type owl:NamedIndividual ,
-                                                     <http://transformunify.org/ontologies/TURBO_0022044> .
+                                                     <http://transformunify.org/ontologies/TURBO_0022044> ;
+                                            owl:sameAs <http://example.com/resource/rxn_tty/SY> .
 
 
 ###  http://example.com/resource/query_source/lowercased_GENERIC_NAME
@@ -2293,7 +2467,9 @@ mydata:turbo_med_mapping_hand rdf:type owl:NamedIndividual ,
                                          skos:relatedMatch rxnorm: ;
                                          skos:notation "IN" ;
                                          terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
-                                         rdfs:label "Ingredient" ;
+                                         rdfs:comment """has example, notation, etc.
+object of mydata:emplyment tripels on rxnorm terms""" ;
+                                         rdfs:label "http://example.com/resource/rxn_tty/IN Ingredient" ;
                                          skos:definition "A compound or moiety that gives the drug its distinctive clinical properties. Ingredients generally use the United States Adopted Name (USAN)." ;
                                          skos:example "Fluoxetine" .
 
@@ -2599,7 +2775,10 @@ rxnorm:GPCK rdf:type owl:NamedIndividual ,
 
 ###  http://purl.bioontology.org/ontology/RXNORM/IN
 rxnorm:IN rdf:type owl:NamedIndividual ,
-                   mydata:AlternativeTtyNotation .
+                   mydata:AlternativeTtyNotation ;
+          rdfs:comment """an alternativeTtyNotation
+object of domain or range includes statemetns from sparql queries""" ;
+          rdfs:label "http://purl.bioontology.org/ontology/RXNORM/IN" .
 
 
 ###  http://purl.bioontology.org/ontology/RXNORM/MIN
