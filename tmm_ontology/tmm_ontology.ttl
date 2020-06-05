@@ -58,6 +58,7 @@ CHEBI: <http://purl.obolibrary.org/obo/CHEBI_>
 DRON: <http://purl.obolibrary.org/obo/DRON_>
 RXNORM: <<http://purl.bioontology.org/ontology/RXNORM/>""" ,
                                                                                                    "mydata: and turbo: are both used for locally defiend terms" .
+
 #################################################################
 #    Annotation properties
 #################################################################
@@ -930,7 +931,9 @@ terms:PeriodOfTime rdf:type owl:Class ;
 
 ###  http://transformunify.org/ontologies/TURBO_0022023
 <http://transformunify.org/ontologies/TURBO_0022023> rdf:type owl:Class ;
-                                                     rdfs:label "TMM employment"@en .
+                                                     rdfs:comment "In what ways can medicaiton term be useful in a TMM graph?" ;
+                                                     rdfs:label "TMM employment"@en ;
+                                                     rdfs:seeAlso mydata:employment .
 
 
 ###  http://transformunify.org/ontologies/TURBO_0022026
@@ -943,14 +946,13 @@ terms:PeriodOfTime rdf:type owl:Class ;
 <http://transformunify.org/ontologies/TURBO_0022036> rdf:type owl:Class ;
                                                      rdfs:subClassOf <http://transformunify.org/ontologies/TURBO_0022023> ;
                                                      rdfs:label "RxNorm employable term types"@en ;
-                                                     rdfs:seeAlso <http://transformunify.org/ontologies/TURBO_0022044> ,
-                                                                  <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> .
+                                                     rdfs:seeAlso <http://transformunify.org/ontologies/TURBO_0022044> .
 
 
 ###  http://transformunify.org/ontologies/TURBO_0022037
 <http://transformunify.org/ontologies/TURBO_0022037> rdf:type owl:Class ;
                                                      rdfs:subClassOf <http://transformunify.org/ontologies/TURBO_0022023> ;
-                                                     rdfs:comment "These are either synonym strings (not entities) or they are too vague to be useful, like the <http://example.com/resource/rxn_tty/DFG> of \"oral product\""@en ;
+                                                     rdfs:comment "These are either synonym strings (i.e. not really entities) or they are too vague to be useful, like the <http://example.com/resource/rxn_tty/DFG> of \"oral product\""@en ;
                                                      rdfs:label "Unemployed RxNorm term types"@en .
 
 
@@ -992,6 +994,7 @@ terms:PeriodOfTime rdf:type owl:Class ;
         ?s <http://example.com/resource/match_tty> ?o .
     }
 }"""@en ;
+                                                     rdfs:isDefinedBy <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
                                                      rdfs:label "RxNorm String Bearers"@en ;
                                                      rdfs:seeAlso <http://transformunify.org/ontologies/TURBO_0022036> .
 
@@ -1960,6 +1963,7 @@ mydata:SCD_quantified_form_of_SCD rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/active_ingredient
 mydata:active_ingredient rdf:type owl:NamedIndividual ,
                                   <http://transformunify.org/ontologies/TURBO_0022023> ;
+                         skos:exactMatch <http://example.com/resource/RXNORM_TTY/IN> ;
                          skos:relatedMatch obo:chebi.owl ,
                                            <http://purl.obolibrary.org/obo/dron/dron-hand.owl> ,
                                            <http://purl.obolibrary.org/obo/dron/dron-ingredient.owl> ;
@@ -1999,6 +2003,7 @@ mydata:clinrel_structclass rdf:type owl:NamedIndividual ,
                            skos:relatedMatch obo:chebi.owl ,
                                              <http://purl.obolibrary.org/obo/dron/dron-hand.owl> ,
                                              <http://purl.obolibrary.org/obo/dron/dron-ingredient.owl> ;
+                           skos:notation "clinrel_structclass" ;
                            rdfs:comment """See create_clinrel_structclass in rxnav_med_mapping.yaml. Clinically relevant structural classes are defined by entities in ChEBI that bear an curated role (see bootstrapping notes) AND have subclasses of their own. This includes amphetamines, benzodiazepines, statins, etc. (Where an member in the same structural series is expected to exhibit the therapeutic role.) 
 
 ChEBI compounds and their supercalsses, up to something like 'molecular entity' are all of type owl:Class, are the roles themselves. owl:Class and TMM clinically relevant structural class have almost nothing in common.
@@ -2015,6 +2020,7 @@ That case may be exacerbated by the fact that some of those ChEBI terms are cons
 mydata:curated_role rdf:type owl:NamedIndividual ,
                              <http://transformunify.org/ontologies/TURBO_0022023> ;
                     skos:relatedMatch obo:chebi.owl ;
+                    skos:notation "curated_role" ;
                     rdfs:comment """Not all ChEBI roles (like 'fuel') are included. The curated set was bootstrapped by examining the roles borne by the  RxNorm terms that were elected (as classified search results) for the source/reference medications. This was informally performed in comparison with the roles that are most commonly asserted for any ChEBI term.
 
 See curated.role.employment in rxnav_med_mapping.yaml
@@ -2044,6 +2050,7 @@ mydata:product rdf:type owl:NamedIndividual ,
                         <http://transformunify.org/ontologies/TURBO_0022023> ;
                skos:relatedMatch <http://purl.obolibrary.org/obo/dron/dron-ingredient.owl> ,
                                  <http://purl.obolibrary.org/obo/dron/dron-rxnorm.owl> ;
+               skos:notation "product" ;
                rdfs:comment "see ing.prod.employment in rxnav_med_mapping.yaml" ;
                rdfs:seeAlso <http://transformunify.org/ontologies/TURBO_0022074> .
 
