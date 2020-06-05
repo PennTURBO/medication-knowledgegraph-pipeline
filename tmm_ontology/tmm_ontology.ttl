@@ -103,8 +103,8 @@ mydata:imports rdf:type owl:AnnotationProperty ;
 
 ###  http://example.com/resource/match_rxcui
 mydata:match_rxcui rdf:type owl:AnnotationProperty ;
-                   <http://purl.org/dc/dcam/domainIncludes> "eligible RxNorm term" ;
-                   <http://purl.org/dc/dcam/rangeIncludes> dron:OBI_0001909 ;
+                   <http://purl.org/dc/dcam/domainIncludes> dron:OBI_0001909 ,
+                                                            <http://transformunify.org/ontologies/TURBO_0022036> ;
                    rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022057> .
 
 
@@ -889,6 +889,10 @@ skos:notation rdf:type owl:DatatypeProperty ;
 #    Classes
 #################################################################
 
+###  http://example.com/resource/AlternativeTtyNotation
+mydata:AlternativeTtyNotation rdf:type owl:Class .
+
+
 ###  http://example.com/resource/rxnorm_relationship_tuple
 mydata:rxnorm_relationship_tuple rdf:type owl:Class ;
                                  rdfs:label "RxNorm allowed { subject predicate object . } tuple" .
@@ -1021,8 +1025,8 @@ terms:PeriodOfTime rdf:type owl:Class ;
 
 ###  http://transformunify.org/ontologies/TURBO_0022059
 <http://transformunify.org/ontologies/TURBO_0022059> rdf:type owl:Class ;
-                                                     rdfs:label "TMM Solr illustration"@en ;
-                                                     owl:deprecated "That gets correct search results even though ChEBI's preferred label for this entity is \"paracetamol\". (The Solr core was created in a way that prioritizes DrOn labels on ChEBI labels over ChEBI terms.)" .
+                                                     rdfs:comment "" ;
+                                                     rdfs:label "TMM Solr illustration"@en .
 
 
 ###  http://transformunify.org/ontologies/definer
@@ -2030,6 +2034,8 @@ mydata:turbo_med_mapping_hand rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/RXNORM_TTY/BN
 <http://example.com/resource/RXNORM_TTY/BN> rdf:type owl:NamedIndividual ,
                                                      <http://transformunify.org/ontologies/TURBO_0022044> ;
+                                            owl:sameAs rxnorm:BN ;
+                                            rdfs:label "http://example.com/resource/RXNORM_TTY/BN (a SPARQL domain)" ;
                                             rdfs:seeAlso rxnorm:BN .
 
 
@@ -2289,8 +2295,7 @@ mydata:turbo_med_mapping_hand rdf:type owl:NamedIndividual ,
                                          terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
                                          rdfs:label "Ingredient" ;
                                          skos:definition "A compound or moiety that gives the drug its distinctive clinical properties. Ingredients generally use the United States Adopted Name (USAN)." ;
-                                         skos:example "" ,
-                                                      "Fluoxetine" .
+                                         skos:example "Fluoxetine" .
 
 
 ###  http://example.com/resource/rxn_tty/MIN
@@ -2564,6 +2569,87 @@ May be difficult to load from BioPortal URL into password protected GraphDB repo
    owl:annotatedTarget <http://data.bioontology.org/ontologies/RXNORM/download/download?apikey> ;
    rdfs:comment <http://transformunify.org/ontologies/TURBO_0022027>
  ] .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/BN
+rxnorm:BN rdf:type owl:NamedIndividual ,
+                   mydata:AlternativeTtyNotation ;
+          rdfs:label "http://purl.bioontology.org/ontology/RXNORM/BN a relationship domain" .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/BPCK
+rxnorm:BPCK rdf:type owl:NamedIndividual ,
+                     mydata:AlternativeTtyNotation .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/DF
+rxnorm:DF rdf:type owl:NamedIndividual ,
+                   mydata:AlternativeTtyNotation .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/DFG
+rxnorm:DFG rdf:type owl:NamedIndividual ,
+                    mydata:AlternativeTtyNotation .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/GPCK
+rxnorm:GPCK rdf:type owl:NamedIndividual ,
+                     mydata:AlternativeTtyNotation .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/IN
+rxnorm:IN rdf:type owl:NamedIndividual ,
+                   mydata:AlternativeTtyNotation .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/MIN
+rxnorm:MIN rdf:type owl:NamedIndividual ,
+                    mydata:AlternativeTtyNotation .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/PIN
+rxnorm:PIN rdf:type owl:NamedIndividual ,
+                    mydata:AlternativeTtyNotation .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/SBD
+rxnorm:SBD rdf:type owl:NamedIndividual ,
+                    mydata:AlternativeTtyNotation .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/SBDC
+rxnorm:SBDC rdf:type owl:NamedIndividual ,
+                     mydata:AlternativeTtyNotation .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/SBDF
+rxnorm:SBDF rdf:type owl:NamedIndividual ,
+                     mydata:AlternativeTtyNotation .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/SBDG
+rxnorm:SBDG rdf:type owl:NamedIndividual ,
+                     mydata:AlternativeTtyNotation .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/SCD
+rxnorm:SCD rdf:type owl:NamedIndividual ,
+                    mydata:AlternativeTtyNotation .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/SCDC
+rxnorm:SCDC rdf:type owl:NamedIndividual ,
+                     mydata:AlternativeTtyNotation .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/SCDF
+rxnorm:SCDF rdf:type owl:NamedIndividual ,
+                     mydata:AlternativeTtyNotation .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/SCDG
+rxnorm:SCDG rdf:type owl:NamedIndividual ,
+                     mydata:AlternativeTtyNotation .
 
 
 ###  http://purl.obolibrary.org/obo/chebi.owl
@@ -3316,6 +3402,7 @@ group by ?emp1 ?o1 ?emp2 ?o2""" ;
                                                      <http://transformunify.org/ontologies/TURBO_0022061> """http://purl.bioontology.org/ontology/RXNORM/161
 http://purl.obolibrary.org/obo/CHEBI_46195""" ;
                                                      <http://transformunify.org/ontologies/TURBO_0022062> "acetaminophen" ;
+                                                     rdfs:comment "That gets correct search results even though ChEBI's preferred label for this entity is \"paracetamol\". (The Solr core was created in a way that prioritizes DrOn labels on ChEBI labels over ChEBI terms.)" ;
                                                      rdfs:label "Solr query for acetaminophen as an active_ingredient or IN"@en ;
                                                      rdfs:seeAlso mydata:active_ingredient ,
                                                                   <http://example.com/resource/RXNORM_TTY/IN> .
@@ -3465,6 +3552,22 @@ select?defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&q
 The results of submitting that to either medlabel alone or medlabel+tokens are not at all relevant. Some modification of the query should be applied before or during the Solr query parsing. Solr has spell checking, the ~ fuzzy match operator, a suggester, an aggressive Porter stemming filter, and a more minimal stemmer. There's also a synonyms.txt file in each core or collection's config directory. For now, I have put tablet,tablets into the synonyms files""" ;
                                                      rdfs:label "Solr query for '500 mg acetaminophen tablet'"@en ;
                                                      rdfs:seeAlso mydata:product .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022078
+<http://transformunify.org/ontologies/TURBO_0022078> rdf:type owl:NamedIndividual ,
+                                                              <http://transformunify.org/ontologies/TURBO_0022059> ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022060> "defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&qf=medlabel+tokens&q=(search keywords)" ;
+                                                     rdfs:comment """Solr queries all start with http://<solrhost>:<solrport>/solr/<TMM solr core>/select?
+
+As of May 2020, the PennTURBO teams TMM Solr core is med_mapping_kb_labels_exp
+
+use something like this to limit the number of rows returned: &rows=10
+
+You don't HAVE to use the example field list
+
+A modification that currently improves some queries is changing the query fields to just medlabel, just tokens, or both""" ;
+                                                     rdfs:label "Standard TMM Solr query"@en .
 
 
 ###  https://bioportal.bioontology.org/ontologies/RXNORM
