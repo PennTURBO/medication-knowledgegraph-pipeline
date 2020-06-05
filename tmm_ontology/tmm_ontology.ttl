@@ -998,6 +998,7 @@ terms:PeriodOfTime rdf:type owl:Class ;
 
 ###  http://transformunify.org/ontologies/TURBO_0022044
 <http://transformunify.org/ontologies/TURBO_0022044> rdf:type owl:Class ;
+                                                     rdfs:subClassOf <http://transformunify.org/ontologies/TURBO_0022023> ;
                                                      rdfs:comment """construct {
     ?o a <http://example.com/resource/match_tty> 
 } where {
@@ -1063,8 +1064,7 @@ foaf:Document rdf:type owl:Class .
 ###  http://example.com/resource/BN_has_precise_ingredient_PIN
 mydata:BN_has_precise_ingredient_PIN rdf:type owl:NamedIndividual ,
                                               mydata:rxnorm_relationship_tuple ;
-                                     <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/BN> ,
-                                                                              rxnorm:BN ;
+                                     <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/BN> ;
                                      <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/PIN> ,
                                                                              rxnorm:PIN ;
                                      terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
@@ -1074,8 +1074,7 @@ mydata:BN_has_precise_ingredient_PIN rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/BN_ingredient_of_SBD
 mydata:BN_ingredient_of_SBD rdf:type owl:NamedIndividual ,
                                      mydata:rxnorm_relationship_tuple ;
-                            <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/BN> ,
-                                                                     rxnorm:BN ;
+                            <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/BN> ;
                             <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/SBD> ,
                                                                     rxnorm:SBD ;
                             terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
@@ -1085,8 +1084,7 @@ mydata:BN_ingredient_of_SBD rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/BN_ingredient_of_SBDC
 mydata:BN_ingredient_of_SBDC rdf:type owl:NamedIndividual ,
                                       mydata:rxnorm_relationship_tuple ;
-                             <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/BN> ,
-                                                                      rxnorm:BN ;
+                             <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/BN> ;
                              <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/SBDC> ,
                                                                      rxnorm:SBDC ;
                              terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
@@ -1096,8 +1094,7 @@ mydata:BN_ingredient_of_SBDC rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/BN_ingredient_of_SBDF
 mydata:BN_ingredient_of_SBDF rdf:type owl:NamedIndividual ,
                                       mydata:rxnorm_relationship_tuple ;
-                             <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/BN> ,
-                                                                      rxnorm:BN ;
+                             <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/BN> ;
                              <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/SBDF> ,
                                                                      rxnorm:SBDF ;
                              terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
@@ -1107,8 +1104,7 @@ mydata:BN_ingredient_of_SBDF rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/BN_ingredient_of_SBDG
 mydata:BN_ingredient_of_SBDG rdf:type owl:NamedIndividual ,
                                       mydata:rxnorm_relationship_tuple ;
-                             <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/BN> ,
-                                                                      rxnorm:BN ;
+                             <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/BN> ;
                              <http://purl.org/dc/dcam/rangeIncludes> rxnorm:SBDG ;
                              terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                              rdfs:seeAlso rxnorm:ingredient_of .
@@ -1117,10 +1113,8 @@ mydata:BN_ingredient_of_SBDG rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/BN_reformulated_to_BN
 mydata:BN_reformulated_to_BN rdf:type owl:NamedIndividual ,
                                       mydata:rxnorm_relationship_tuple ;
-                             <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/BN> ,
-                                                                      rxnorm:BN ;
-                             <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/BN> ,
-                                                                     rxnorm:BN ;
+                             <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/BN> ;
+                             <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/BN> ;
                              terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                              rdfs:seeAlso rxnorm:reformulated_to .
 
@@ -1128,10 +1122,8 @@ mydata:BN_reformulated_to_BN rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/BN_reformulation_of_BN
 mydata:BN_reformulation_of_BN rdf:type owl:NamedIndividual ,
                                        mydata:rxnorm_relationship_tuple ;
-                              <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/BN> ,
-                                                                       rxnorm:BN ;
-                              <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/BN> ,
-                                                                      rxnorm:BN ;
+                              <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/BN> ;
+                              <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/BN> ;
                               terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                               rdfs:seeAlso rxnorm:reformulation_of .
 
@@ -1139,8 +1131,7 @@ mydata:BN_reformulation_of_BN rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/BN_tradename_of_IN
 mydata:BN_tradename_of_IN rdf:type owl:NamedIndividual ,
                                    mydata:rxnorm_relationship_tuple ;
-                          <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/BN> ,
-                                                                   rxnorm:BN ;
+                          <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/BN> ;
                           <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/IN> ,
                                                                   rxnorm:IN ;
                           terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
@@ -1348,8 +1339,7 @@ mydata:IN_has_tradename_BN rdf:type owl:NamedIndividual ,
                                     mydata:rxnorm_relationship_tuple ;
                            <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/IN> ,
                                                                     rxnorm:IN ;
-                           <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/BN> ,
-                                                                   rxnorm:BN ;
+                           <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/BN> ;
                            terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                            rdfs:seeAlso rxnorm:has_tradename .
 
@@ -1457,8 +1447,7 @@ mydata:PIN_precise_ingredient_of_BN rdf:type owl:NamedIndividual ,
                                              mydata:rxnorm_relationship_tuple ;
                                     <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/PIN> ,
                                                                              rxnorm:PIN ;
-                                    <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/BN> ,
-                                                                            rxnorm:BN ;
+                                    <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/BN> ;
                                     terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                                     rdfs:seeAlso rxnorm:precise_ingredient_of .
 
@@ -1490,8 +1479,7 @@ mydata:SBDC_has_ingredient_BN rdf:type owl:NamedIndividual ,
                                        mydata:rxnorm_relationship_tuple ;
                               <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/SBDC> ,
                                                                        rxnorm:SBDC ;
-                              <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/BN> ,
-                                                                      rxnorm:BN ;
+                              <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/BN> ;
                               terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                               rdfs:seeAlso rxnorm:has_ingredient .
 
@@ -1523,8 +1511,7 @@ mydata:SBDF_has_ingredient_BN rdf:type owl:NamedIndividual ,
                                        mydata:rxnorm_relationship_tuple ;
                               <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/SBDF> ,
                                                                        rxnorm:SBDF ;
-                              <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/BN> ,
-                                                                      rxnorm:BN ;
+                              <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/BN> ;
                               terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                               rdfs:seeAlso rxnorm:has_ingredient .
 
@@ -1575,8 +1562,7 @@ mydata:SBDG_has_doseformgroup_DFG rdf:type owl:NamedIndividual ,
 mydata:SBDG_has_ingredient_BN rdf:type owl:NamedIndividual ,
                                        mydata:rxnorm_relationship_tuple ;
                               <http://purl.org/dc/dcam/domainIncludes> rxnorm:SBDG ;
-                              <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/BN> ,
-                                                                      rxnorm:BN ;
+                              <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/BN> ;
                               terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                               rdfs:seeAlso rxnorm:has_ingredient .
 
@@ -1659,8 +1645,7 @@ mydata:SBD_has_ingredient_BN rdf:type owl:NamedIndividual ,
                                       mydata:rxnorm_relationship_tuple ;
                              <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/SBD> ,
                                                                       rxnorm:SBD ;
-                             <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/BN> ,
-                                                                     rxnorm:BN ;
+                             <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/BN> ;
                              terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix1.html> ;
                              rdfs:seeAlso rxnorm:has_ingredient .
 
@@ -1989,7 +1974,6 @@ mydata:SCD_quantified_form_of_SCD rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/active_ingredient
 mydata:active_ingredient rdf:type owl:NamedIndividual ,
                                   <http://transformunify.org/ontologies/TURBO_0022023> ;
-                         skos:exactMatch <http://example.com/resource/rxn_tty/IN> ;
                          skos:relatedMatch dron:chebi.owl ,
                                            <http://purl.obolibrary.org/obo/dron/dron-hand.owl> ,
                                            <http://purl.obolibrary.org/obo/dron/dron-ingredient.owl> ;
@@ -2072,9 +2056,6 @@ mydata:employment rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/product
 mydata:product rdf:type owl:NamedIndividual ,
                         <http://transformunify.org/ontologies/TURBO_0022023> ;
-               skos:narrowMatch <http://example.com/resource/rxn_tty/SBD> ,
-                                <http://example.com/resource/rxn_tty/SCD> ,
-                                <http://example.com/resource/rxn_tty/SCDF> ;
                skos:relatedMatch <http://purl.obolibrary.org/obo/dron/dron-ingredient.owl> ,
                                  <http://purl.obolibrary.org/obo/dron/dron-rxnorm.owl> ;
                rdfs:comment "see ing.prod.employment in rxnav_med_mapping.yaml" ;
@@ -2184,17 +2165,11 @@ mydata:turbo_med_mapping_hand rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/RXNORM_TTY/BN
 <http://example.com/resource/RXNORM_TTY/BN> rdf:type owl:NamedIndividual ,
                                                      <http://transformunify.org/ontologies/TURBO_0022044> ;
-                                            owl:sameAs <http://example.com/resource/rxn_tty/BN> ,
-                                                       rxnorm:BN ;
                                             skos:relatedMatch rxnorm: ;
                                             skos:notation "BN" ;
                                             terms:creator rxnorm: ,
                                                           <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
-                                            rdfs:label "Brand Name" ,
-                                                       "brand name" ,
-                                                       "http://example.com/resource/RXNORM_TTY/BN (a SPARQL domain)" ;
-                                            rdfs:seeAlso <http://example.com/resource/RXNORM_TTY/BN> ,
-                                                         rxnorm:BN ;
+                                            rdfs:label "Brand Name" ;
                                             skos:definition "A proprietary name for a family of products containing a specific active ingredient." ;
                                             skos:example "Prozac" .
 
@@ -2202,7 +2177,6 @@ mydata:turbo_med_mapping_hand rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/RXNORM_TTY/BPCK
 <http://example.com/resource/RXNORM_TTY/BPCK> rdf:type owl:NamedIndividual ,
                                                        <http://transformunify.org/ontologies/TURBO_0022044> ;
-                                              owl:sameAs <http://example.com/resource/rxn_tty/BPCK> ;
                                               skos:relatedMatch rxnorm: ;
                                               skos:notation "BPCK" ;
                                               terms:creator rxnorm: ,
@@ -2262,7 +2236,6 @@ mydata:turbo_med_mapping_hand rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/RXNORM_TTY/GPCK
 <http://example.com/resource/RXNORM_TTY/GPCK> rdf:type owl:NamedIndividual ,
                                                        <http://transformunify.org/ontologies/TURBO_0022044> ;
-                                              owl:sameAs <http://example.com/resource/rxn_tty/GPCK> ;
                                               skos:relatedMatch rxnorm: ;
                                               skos:notation "GPCK" ;
                                               terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
@@ -2274,18 +2247,11 @@ mydata:turbo_med_mapping_hand rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/RXNORM_TTY/IN
 <http://example.com/resource/RXNORM_TTY/IN> rdf:type owl:NamedIndividual ,
                                                      <http://transformunify.org/ontologies/TURBO_0022044> ;
-                                            owl:sameAs <http://example.com/resource/rxn_tty/IN> ;
                                             skos:exactMatch mydata:active_ingredient ;
                                             skos:relatedMatch rxnorm: ;
                                             skos:notation "IN" ;
                                             terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
-                                            rdfs:comment """has example, notation, etc.
-object of mydata:emplyment tripels on rxnorm terms""" ,
-                                                         """has see also relationships with solr queries
-domains and ranges of sparql queries
-is the object of match_tty triples""" ;
-                                            rdfs:label "http://example.com/resource/RXNORM_TTY/IN" ,
-                                                       "http://example.com/resource/rxn_tty/IN Ingredient" ;
+                                            rdfs:label "Ingredient" ;
                                             rdfs:seeAlso <http://transformunify.org/ontologies/TURBO_0022063> ,
                                                          <http://transformunify.org/ontologies/TURBO_0022064> ,
                                                          <http://transformunify.org/ontologies/TURBO_0022066> ,
@@ -2304,7 +2270,6 @@ is the object of match_tty triples""" ;
 ###  http://example.com/resource/RXNORM_TTY/MIN
 <http://example.com/resource/RXNORM_TTY/MIN> rdf:type owl:NamedIndividual ,
                                                       <http://transformunify.org/ontologies/TURBO_0022044> ;
-                                             owl:sameAs <http://example.com/resource/rxn_tty/MIN> ;
                                              skos:relatedMatch rxnorm: ;
                                              skos:notation "MIN" ;
                                              terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
@@ -2356,7 +2321,6 @@ is the object of match_tty triples""" ;
 ###  http://example.com/resource/RXNORM_TTY/PIN
 <http://example.com/resource/RXNORM_TTY/PIN> rdf:type owl:NamedIndividual ,
                                                       <http://transformunify.org/ontologies/TURBO_0022044> ;
-                                             owl:sameAs <http://example.com/resource/rxn_tty/PIN> ;
                                              skos:relatedMatch rxnorm: ;
                                              skos:notation "PIN" ;
                                              terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
@@ -2384,7 +2348,6 @@ is the object of match_tty triples""" ;
 ###  http://example.com/resource/RXNORM_TTY/SBD
 <http://example.com/resource/RXNORM_TTY/SBD> rdf:type owl:NamedIndividual ,
                                                       <http://transformunify.org/ontologies/TURBO_0022044> ;
-                                             owl:sameAs <http://example.com/resource/rxn_tty/SBD> ;
                                              skos:broadMatch mydata:product ;
                                              skos:relatedMatch rxnorm: ;
                                              skos:notation "SBD" ;
@@ -2397,7 +2360,6 @@ is the object of match_tty triples""" ;
 ###  http://example.com/resource/RXNORM_TTY/SBDC
 <http://example.com/resource/RXNORM_TTY/SBDC> rdf:type owl:NamedIndividual ,
                                                        <http://transformunify.org/ontologies/TURBO_0022044> ;
-                                              owl:sameAs <http://example.com/resource/rxn_tty/SBDC> ;
                                               skos:relatedMatch rxnorm: ;
                                               skos:notation "SBDC" ;
                                               terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
@@ -2409,7 +2371,6 @@ is the object of match_tty triples""" ;
 ###  http://example.com/resource/RXNORM_TTY/SBDF
 <http://example.com/resource/RXNORM_TTY/SBDF> rdf:type owl:NamedIndividual ,
                                                        <http://transformunify.org/ontologies/TURBO_0022044> ;
-                                              owl:sameAs <http://example.com/resource/rxn_tty/SBDF> ;
                                               skos:relatedMatch rxnorm: ;
                                               skos:notation "SBDF" ;
                                               terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
@@ -2421,7 +2382,6 @@ is the object of match_tty triples""" ;
 ###  http://example.com/resource/RXNORM_TTY/SCD
 <http://example.com/resource/RXNORM_TTY/SCD> rdf:type owl:NamedIndividual ,
                                                       <http://transformunify.org/ontologies/TURBO_0022044> ;
-                                             owl:sameAs <http://example.com/resource/rxn_tty/SCD> ;
                                              skos:broadMatch mydata:product ;
                                              skos:relatedMatch rxnorm: ;
                                              skos:notation "SCD" ;
@@ -2434,7 +2394,6 @@ is the object of match_tty triples""" ;
 ###  http://example.com/resource/RXNORM_TTY/SCDC
 <http://example.com/resource/RXNORM_TTY/SCDC> rdf:type owl:NamedIndividual ,
                                                        <http://transformunify.org/ontologies/TURBO_0022044> ;
-                                              owl:sameAs <http://example.com/resource/rxn_tty/SCDC> ;
                                               skos:relatedMatch rxnorm: ;
                                               skos:notation "SCDC" ;
                                               terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
@@ -2446,7 +2405,6 @@ is the object of match_tty triples""" ;
 ###  http://example.com/resource/RXNORM_TTY/SCDF
 <http://example.com/resource/RXNORM_TTY/SCDF> rdf:type owl:NamedIndividual ,
                                                        <http://transformunify.org/ontologies/TURBO_0022044> ;
-                                              owl:sameAs <http://example.com/resource/rxn_tty/SCDF> ;
                                               skos:broadMatch mydata:product ;
                                               skos:relatedMatch rxnorm: ;
                                               skos:notation "SCDF" ;
@@ -2470,31 +2428,6 @@ is the object of match_tty triples""" ;
 ###  http://example.com/resource/query_source/normalized_FULL_NAME
 <http://example.com/resource/query_source/normalized_FULL_NAME> rdf:type owl:NamedIndividual ,
                                                                          <http://transformunify.org/ontologies/TURBO_0022042> .
-
-
-###  http://example.com/resource/rxn_tty/BN
-<http://example.com/resource/rxn_tty/BN> rdf:type owl:NamedIndividual ,
-                                                  <http://transformunify.org/ontologies/TURBO_0022036> ;
-                                         skos:relatedMatch rxnorm: ;
-                                         skos:notation "BN" ;
-                                         terms:creator rxnorm: ,
-                                                       <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
-                                         rdfs:label "Brand Name" ,
-                                                    "brand name" ;
-                                         skos:definition "A proprietary name for a family of products containing a specific active ingredient." ;
-                                         skos:example "Prozac" .
-
-
-###  http://example.com/resource/rxn_tty/BPCK
-<http://example.com/resource/rxn_tty/BPCK> rdf:type owl:NamedIndividual ,
-                                                    <http://transformunify.org/ontologies/TURBO_0022036> ;
-                                           skos:relatedMatch rxnorm: ;
-                                           skos:notation "BPCK" ;
-                                           terms:creator rxnorm: ,
-                                                         <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
-                                           rdfs:label "Brand Name Pack" ;
-                                           skos:definition "{# (Ingredient Strength Dose Form) / # (Ingredient Strength Dose Form)} Pack [Brand Name]" ;
-                                           skos:example "{12 (Ethinyl Estradiol 0.035 MG / Norethindrone 0.5 MG Oral Tablet) / 9 (Ethinyl Estradiol 0.035 MG / Norethindrone 1 MG Oral Tablet) / 7 (Inert Ingredients 1 MG Oral Tablet) } Pack [Leena 28 Day]" .
 
 
 ###  http://example.com/resource/rxn_tty/DF
@@ -2527,53 +2460,6 @@ is the object of match_tty triples""" ;
                                          skos:example "Nasal Drops" .
 
 
-###  http://example.com/resource/rxn_tty/GPCK
-<http://example.com/resource/rxn_tty/GPCK> rdf:type owl:NamedIndividual ,
-                                                    <http://transformunify.org/ontologies/TURBO_0022036> ;
-                                           skos:relatedMatch rxnorm: ;
-                                           skos:notation "GPCK" ;
-                                           terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
-                                           rdfs:label "Generic Pack" ;
-                                           skos:definition "{# (Ingredient + Strength + Dose Form) / # (Ingredient + Strength + Dose Form)} Pack" ;
-                                           skos:example "{11 (varenicline 0.5 MG Oral Tablet) / 42 (varenicline 1 MG Oral Tablet) } Pack" .
-
-
-###  http://example.com/resource/rxn_tty/IN
-<http://example.com/resource/rxn_tty/IN> rdf:type owl:NamedIndividual ,
-                                                  <http://transformunify.org/ontologies/TURBO_0022036> ;
-                                         skos:exactMatch mydata:active_ingredient ;
-                                         skos:relatedMatch rxnorm: ;
-                                         skos:notation "IN" ;
-                                         terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
-                                         rdfs:comment """has example, notation, etc.
-object of mydata:emplyment tripels on rxnorm terms""" ;
-                                         rdfs:label "http://example.com/resource/rxn_tty/IN Ingredient" ;
-                                         skos:definition "A compound or moiety that gives the drug its distinctive clinical properties. Ingredients generally use the United States Adopted Name (USAN)." ;
-                                         skos:example "Fluoxetine" .
-
-
-###  http://example.com/resource/rxn_tty/MIN
-<http://example.com/resource/rxn_tty/MIN> rdf:type owl:NamedIndividual ,
-                                                   <http://transformunify.org/ontologies/TURBO_0022036> ;
-                                          skos:relatedMatch rxnorm: ;
-                                          skos:notation "MIN" ;
-                                          terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
-                                          rdfs:label "Multiple Ingredients" ;
-                                          skos:definition "Two or more ingredients appearing together in a single drug preparation, created from SCDF. In rare cases when IN/PIN or PIN/PIN combinations of the same base ingredient exist, created from SCD." ;
-                                          skos:example "Fluoxetine / Olanzapine" .
-
-
-###  http://example.com/resource/rxn_tty/PIN
-<http://example.com/resource/rxn_tty/PIN> rdf:type owl:NamedIndividual ,
-                                                   <http://transformunify.org/ontologies/TURBO_0022036> ;
-                                          skos:relatedMatch rxnorm: ;
-                                          skos:notation "PIN" ;
-                                          terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
-                                          rdfs:label "Precise Ingredient" ;
-                                          skos:definition "A specified form of the ingredient that may or may not be clinically active. Most precise ingredients are salt or isomer forms." ;
-                                          skos:example "Fluoxetine Hydrochloride" .
-
-
 ###  http://example.com/resource/rxn_tty/PSN
 <http://example.com/resource/rxn_tty/PSN> rdf:type owl:NamedIndividual ,
                                                    <http://transformunify.org/ontologies/TURBO_0022037> ;
@@ -2582,97 +2468,6 @@ object of mydata:emplyment tripels on rxnorm terms""" ;
                                           rdfs:label "Prescribable Name" ;
                                           skos:definition "Synonym of another TTY, given for clarity and for display purposes in electronic prescribing applications. Only one PSN per concept." ;
                                           skos:example "Leena 28 Day Pack" .
-
-
-###  http://example.com/resource/rxn_tty/SBD
-<http://example.com/resource/rxn_tty/SBD> rdf:type owl:NamedIndividual ,
-                                                   <http://transformunify.org/ontologies/TURBO_0022036> ;
-                                          skos:broadMatch mydata:product ;
-                                          skos:relatedMatch rxnorm: ;
-                                          skos:notation "SBD" ;
-                                          terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
-                                          rdfs:label "Semantic Branded Drug" ;
-                                          skos:definition "Ingredient + Strength + Dose Form + Brand Name" ;
-                                          skos:example "Fluoxetine 4 MG/ML Oral Solution [Prozac]" .
-
-
-###  http://example.com/resource/rxn_tty/SBDC
-<http://example.com/resource/rxn_tty/SBDC> rdf:type owl:NamedIndividual ,
-                                                    <http://transformunify.org/ontologies/TURBO_0022036> ;
-                                           skos:relatedMatch rxnorm: ;
-                                           skos:notation "SBDC" ;
-                                           terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
-                                           rdfs:label "Semantic Branded Drug Component" ;
-                                           skos:definition "Ingredient + Strength + Brand Name" ;
-                                           skos:example "Fluoxetine 4 MG/ML [Prozac]" .
-
-
-###  http://example.com/resource/rxn_tty/SBDF
-<http://example.com/resource/rxn_tty/SBDF> rdf:type owl:NamedIndividual ,
-                                                    <http://transformunify.org/ontologies/TURBO_0022036> ;
-                                           skos:relatedMatch rxnorm: ;
-                                           skos:notation "SBDF" ;
-                                           terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
-                                           rdfs:label "Semantic Branded Drug Form" ;
-                                           skos:definition "Ingredient + Dose Form + Brand Name" ;
-                                           skos:example "Fluoxetine Oral Solution [Prozac]" .
-
-
-###  http://example.com/resource/rxn_tty/SBDG
-<http://example.com/resource/rxn_tty/SBDG> rdf:type owl:NamedIndividual ,
-                                                    <http://transformunify.org/ontologies/TURBO_0022036> ;
-                                           skos:relatedMatch rxnorm: ;
-                                           skos:notation "SBDG" ;
-                                           terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
-                                           rdfs:label "Semantic Branded Dose Form Group" ;
-                                           skos:definition "Brand Name + Dose Form Group" ;
-                                           skos:example "Prozac Pill" .
-
-
-###  http://example.com/resource/rxn_tty/SCD
-<http://example.com/resource/rxn_tty/SCD> rdf:type owl:NamedIndividual ,
-                                                   <http://transformunify.org/ontologies/TURBO_0022036> ;
-                                          skos:broadMatch mydata:product ;
-                                          skos:relatedMatch rxnorm: ;
-                                          skos:notation "SCD" ;
-                                          terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
-                                          rdfs:label "Semantic Clinical Drug" ;
-                                          skos:definition "Ingredient + Strength + Dose Form" ;
-                                          skos:example "Fluoxetine 4 MG/ML Oral Solution" .
-
-
-###  http://example.com/resource/rxn_tty/SCDC
-<http://example.com/resource/rxn_tty/SCDC> rdf:type owl:NamedIndividual ,
-                                                    <http://transformunify.org/ontologies/TURBO_0022036> ;
-                                           skos:relatedMatch rxnorm: ;
-                                           skos:notation "SCDC" ;
-                                           terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
-                                           rdfs:label "Semantic Clinical Drug Component" ;
-                                           skos:definition "Ingredient + Strength" ;
-                                           skos:example "Fluoxetine 4 MG/ML" .
-
-
-###  http://example.com/resource/rxn_tty/SCDF
-<http://example.com/resource/rxn_tty/SCDF> rdf:type owl:NamedIndividual ,
-                                                    <http://transformunify.org/ontologies/TURBO_0022036> ;
-                                           skos:broadMatch mydata:product ;
-                                           skos:relatedMatch rxnorm: ;
-                                           skos:notation "SCDF" ;
-                                           terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
-                                           rdfs:label "Semantic Clinical Drug Form" ;
-                                           skos:definition "Ingredient + Dose Form" ;
-                                           skos:example "Fluoxetine Oral Solution" .
-
-
-###  http://example.com/resource/rxn_tty/SCDG
-<http://example.com/resource/rxn_tty/SCDG> rdf:type owl:NamedIndividual ,
-                                                    <http://transformunify.org/ontologies/TURBO_0022036> ;
-                                           skos:relatedMatch rxnorm: ;
-                                           skos:notation "SCDG" ;
-                                           terms:creator <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
-                                           rdfs:label "Semantic Clinical Dose Form Group" ;
-                                           skos:definition "Ingredient + Dose Form Group" ;
-                                           skos:example "Fluoxetine Oral Product" .
 
 
 ###  http://example.com/resource/rxn_tty/SY
@@ -2823,10 +2618,6 @@ May be difficult to load from BioPortal URL into password protected GraphDB repo
    owl:annotatedTarget <http://data.bioontology.org/ontologies/RXNORM/download/download?apikey> ;
    rdfs:comment <http://transformunify.org/ontologies/TURBO_0022027>
  ] .
-
-
-###  http://purl.bioontology.org/ontology/RXNORM/BN
-rxnorm:BN rdf:type owl:NamedIndividual .
 
 
 ###  http://purl.obolibrary.org/obo/chebi.owl
@@ -3934,8 +3725,8 @@ where {
         ?order skos:notation ?order_id .
     }
 }""" ;
-                                                                                                                                  <http://purl.org/dc/dcam/domainIncludes> mydata:curated_role ,
-                                                                                                                                                                           <http://transformunify.org/ontologies/TURBO_0022036> ;
+                                                                                                                                  <http://purl.org/dc/dcam/domainIncludes> mydata:curated_role ;
+                                                                                                                                  <http://purl.org/dc/dcam/rangeIncludes> <http://transformunify.org/ontologies/TURBO_0022036> ;
                                                                                                                                   rdfs:comment "semantic expansion: from a role, though any compound that bears that role, through DrOn or RxNorm ingredient/product assertion paths." .
 
 
@@ -4556,8 +4347,8 @@ terms:description rdfs:label "Description"@en ;
                   terms:description "Description may include but is not limited to: an abstract, a table of contents, a graphical representation, or a free-text account of the resource."@en .
 
 
-terms:identifier rdfs:isDefinedBy terms: ;
-                 terms:description "Recommended practice is to identify the resource by means of a string conforming to an identification system. Examples include International Standard Book Number (ISBN), Digital Object Identifier (DOI), and Uniform Resource Name (URN).  Persistent identifiers should be provided as HTTP URIs."@en ;
+terms:identifier terms:description "Recommended practice is to identify the resource by means of a string conforming to an identification system. Examples include International Standard Book Number (ISBN), Digital Object Identifier (DOI), and Uniform Resource Name (URN).  Persistent identifiers should be provided as HTTP URIs."@en ;
+                 rdfs:isDefinedBy terms: ;
                  rdfs:comment "An unambiguous reference to the resource within a given context."@en ;
                  rdfs:label "Identifier"@en .
 
