@@ -1,0 +1,8 @@
+select
+?employment ?SPARQL
+where {
+    graph <https://raw.githubusercontent.com/PennTURBO/med_mapping/master/tmm_ontology/tmm_ontology.ttl> {
+        ?SPARQL a <http://transformunify.org/ontologies/TURBO_0022058> ;
+           <http://purl.org/dc/dcam/domainIncludes> ?employment .
+    }
+}
