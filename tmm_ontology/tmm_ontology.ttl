@@ -33,22 +33,9 @@
 A special emphasis is placed on explaining the relationships between the ways in which a medication term can be employed in the graph and SPARQL queries that can find orders related to medication terms.
 
 This is intended to be computable, but also to replace stale TMM documentaion.""" ;
-                                                                                      rdfs:comment "Define EHR and CDW!" ,
-                                                                                                   "I have been inconsistently using the terms \"source\"- or \"reference medication\" to refer to the medication strings from a source like a EHR or CDW." ,
-                                                                                                   """Probably don't need defined_in statements for 
+                                                                                      rdfs:comment """IMPORT AND PREFIX NOTES
 
-BioPortal mappings... no classes or individuals asserted
-Reference Medications or Classified Search Results... individuals are typed, unlike vague owl:Class assertions in ChEBI, DrOn, RxNorm, etc.
-
-Those vague owl:Class assertions and RxNorm's sparse isa assertions  are the reason for TMM employment assertions""" ,
-                                                                                                   """Some duplication in RxNorm term types for employment vs as a source of strings
-
-same thing with predicates and RF search results classifications
-
-pick one URI style for each pair and stick with it""" ,
-                                                                                                   "There are several terms that are shared between (punned) a property and a named graph individual" ,
-                                                                                                   "This ontology file probably doesn't say anything about the medication string normalization process yet... but do we really need to duplicate the documentation here? We have mentioned normalization in the http://example.com/resource/source_normalized_full_name context." ,
-                                                                                                   """https://www.dublincore.org/specifications/dublin-core/dcmi-terms/dublin_core_terms.rdf
+https://www.dublincore.org/specifications/dublin-core/dcmi-terms/dublin_core_terms.rdf
 https://www.dublincore.org/specifications/dublin-core/collection-description/frequency/freq.rdf
 http://xmlns.com/foaf/0.1/
 http://www.w3.org/2004/02/skos/core
@@ -70,8 +57,30 @@ rxn_tty: <http://example.com/resource/rxn_tty/>
 CHEBI: <http://purl.obolibrary.org/obo/CHEBI_>
 DRON: <http://purl.obolibrary.org/obo/DRON_>
 RXNORM: <<http://purl.bioontology.org/ontology/RXNORM/>""" ,
-                                                                                                   "mydata: and turbo: are both used for locally defiend terms" ;
-                                                                                      skos:note "xxx" .
+                                                                                                   """Probably don't need defined_in statements for 
+
+BioPortal mappings... no classes or individuals asserted
+Reference Medications or Classified Search Results... individuals are typed, unlike vague owl:Class assertions in ChEBI, DrOn, RxNorm, etc.
+
+Those vague owl:Class assertions and RxNorm's sparse isa assertions  are the reason for TMM employment assertions""" ,
+                                                                                                   """Some duplication in RxNorm term types for employment vs as a source of strings
+
+same thing with predicates and RF search results classifications
+
+pick one URI style for each pair and stick with it""" ,
+                                                                                                   """The terms that are defined here (as opposed to the TURBO ontology) use two different bases/prefixes:
+
+mydata: <http://example.com/resource>
+
+and
+
+turbo: <http://transformunify.org/ontologies/>
+
+But it would be nice to just use one, and for that to be resolvable.""" ,
+                                                                                                   """There are several terms that are shared between (punned) a property and a named graph individual, like
+
+'defined in' <http://example.com/resource/defined_in>""" ,
+                                                                                                   "This ontology file probably doesn't say anything about the medication string normalization process yet... but do we really need to duplicate the documentation here? We have mentioned normalization in the http://example.com/resource/source_normalized_full_name context." .
 
 #################################################################
 #    Annotation properties
@@ -497,6 +506,10 @@ terms:title rdf:type owl:AnnotationProperty ;
 
 ###  http://www.w3.org/2002/07/owl#imports
 owl:imports rdf:type owl:AnnotationProperty .
+
+
+###  http://www.w3.org/2004/02/skos/core#altLabel
+skos:altLabel rdf:type owl:AnnotationProperty .
 
 
 ###  http://www.w3.org/2004/02/skos/core#definition
@@ -969,7 +982,10 @@ TMM reference/source medications are intances of this class.
 
 But some EHRs or CDWs may have values in thier medication table that clearly do not denote a drug, like \"wheelchair\". So it may be more appropriator for Drivetrain to instantiate PDRO_0000001, \"health care prescription\"
 
-Even ignoring wheelchairs... are these things really drug prescriptions? In PennMedicine's CDW, they appear in a \"reference medications\" table."""@en ;
+Even ignoring wheelchairs... are these things really drug prescriptions? In PennMedicine's CDW, they appear in a \"reference medications\" table."""@en ,
+                               """TODO: \"TMM reference/source medications are intances of this class.\"
+
+WE SHOULD PICK ONE OF THOSE TWO TERMS AND STICK TO IT""" ;
                   rdfs:label "drug prescription"@en ;
                   rdfs:seeAlso <https://raw.githubusercontent.com/OpenLHS/PDRO/master/pdro.owl> .
 
@@ -1006,7 +1022,7 @@ terms:PeriodOfTime rdf:type owl:Class ;
 
 ###  http://transformunify.org/ontologies/TURBO_0022023
 <http://transformunify.org/ontologies/TURBO_0022023> rdf:type owl:Class ;
-                                                     rdfs:comment "In what ways can medicaiton term be useful in a TMM graph?" ,
+                                                     rdfs:comment "In what ways can medication term be useful in a TMM graph?" ,
                                                                   "this needs tidying" ;
                                                      rdfs:label "TMM employment"@en ;
                                                      rdfs:seeAlso mydata:employment .
@@ -1028,7 +1044,7 @@ terms:PeriodOfTime rdf:type owl:Class ;
 ###  http://transformunify.org/ontologies/TURBO_0022037
 <http://transformunify.org/ontologies/TURBO_0022037> rdf:type owl:Class ;
                                                      rdfs:comment "These are either synonym strings (i.e. not really entities) or they are too vague to be useful, like the <http://example.com/resource/rxn_tty/DFG> of \"oral product\". In either case, terms of these types are not employed in a TMM knowledgebase."@en ;
-                                                     rdfs:label "Unemployed RxNorm term type"@en .
+                                                     rdfs:label "RxNorm term type, Unemployed"@en .
 
 
 ###  http://transformunify.org/ontologies/TURBO_0022038
@@ -1094,12 +1110,36 @@ terms:PeriodOfTime rdf:type owl:Class ;
 ###  http://transformunify.org/ontologies/TURBO_0022093
 <http://transformunify.org/ontologies/TURBO_0022093> rdf:type owl:Class ;
                                                      rdfs:subClassOf <http://transformunify.org/ontologies/TURBO_0022023> ;
-                                                     rdfs:label "TMM native employment"@en .
+                                                     rdfs:label """TMM native employment. IE, these employment terms weren’t taken directly from another source like RxNorm. 
+
+These concepts were minted by the TURBO team. The SAPRQL insert statements can be found in the 
+
+materializastion.projection.sparqls 
+
+block in
+
+https://github.com/PennTURBO/med_mapping/blob/master/rxnav_med_mapping.yaml.template"""@en .
 
 
 ###  http://transformunify.org/ontologies/TURBO_0022094
 <http://transformunify.org/ontologies/TURBO_0022094> rdf:type owl:Class ;
                                                      rdfs:label "UMLS string bearer"@en .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022095
+<http://transformunify.org/ontologies/TURBO_0022095> rdf:type owl:Class ;
+                                                     rdfs:label "Electronic Health Record"@en ;
+                                                     rdfs:seeAlso <https://en.wikipedia.org/wiki/Electronic_health_record> ;
+                                                     skos:altLabel "EHR" ,
+                                                                   "EMR" .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022096
+<http://transformunify.org/ontologies/TURBO_0022096> rdf:type owl:Class ;
+                                                     rdfs:label "Clinical Data Warehouse"@en ;
+                                                     rdfs:seeAlso <https://en.wikipedia.org/wiki/Clinical_data_repository> ;
+                                                     skos:altLabel "CDR" ,
+                                                                   "CDW" .
 
 
 ###  http://transformunify.org/ontologies/definer
