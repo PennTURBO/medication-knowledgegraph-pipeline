@@ -42,7 +42,7 @@ https://www.dublincore.org/specifications/dublin-core/collection-description/fre
 http://xmlns.com/foaf/0.1/
 http://www.w3.org/2004/02/skos/core
 
-Importing skos and foaf seems to go as planned... they remain as import statements. Unfortunately, foaf has a suboptimal filename, \"index.rdf\"
+Importing skos and foaf seems to go as planned... they remain as import statements. Unfortunately, foaf has a very general filename, \"index.rdf\"
 
 However, the dc elements and terms import statements disappear and all of their terms get permanently saved into this importing ontology!
 
@@ -460,6 +460,10 @@ terms:creator rdf:type owl:AnnotationProperty .
 terms:description rdf:type owl:AnnotationProperty .
 
 
+###  http://purl.org/dc/terms/hasVersion
+terms:hasVersion rdf:type owl:AnnotationProperty .
+
+
 ###  http://purl.org/dc/terms/title
 terms:title rdf:type owl:AnnotationProperty ;
             rdfs:range rdfs:Literal .
@@ -507,6 +511,11 @@ terms:title rdf:type owl:AnnotationProperty ;
 <http://transformunify.org/ontologies/TURBO_0022057> rdf:type owl:AnnotationProperty ;
                                                      rdfs:label "TMM attribute of classified search result"@en ;
                                                      rdfs:domain dron:OBI_0001909 .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022110
+<http://transformunify.org/ontologies/TURBO_0022110> rdf:type owl:AnnotationProperty ;
+                                                     rdfs:label "last tested with"@en .
 
 
 ###  http://www.w3.org/2002/07/owl#imports
@@ -1096,6 +1105,7 @@ construct {
 
 ###  http://transformunify.org/ontologies/TURBO_0022059
 <http://transformunify.org/ontologies/TURBO_0022059> rdf:type owl:Class ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022110> <http://transformunify.org/ontologies/TURBO_0022100> ;
                                                      rdfs:label "TMM Solr illustration"@en .
 
 
@@ -1173,13 +1183,106 @@ Clinical- and Branded does form groups like 'acetaminophen Oral Tablet' [RxCUI =
                                                      rdfs:label "synonym placeholder"@en .
 
 
+###  http://transformunify.org/ontologies/TURBO_0022099
+<http://transformunify.org/ontologies/TURBO_0022099> rdf:type owl:Class ;
+                                                     rdfs:comment "using the term \"database\" because it could be implemented as a core or a collection." ;
+                                                     rdfs:label "TMM Solr database"@en .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022101
+<http://transformunify.org/ontologies/TURBO_0022101> rdf:type owl:Class ;
+                                                     rdfs:subClassOf <http://transformunify.org/ontologies/TURBO_0022096> ;
+                                                     rdfs:label "Software"@en .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022103
+<http://transformunify.org/ontologies/TURBO_0022103> rdf:type owl:Class ;
+                                                     rdfs:label "GitHub commit"@en .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022106
+<http://transformunify.org/ontologies/TURBO_0022106> rdf:type owl:Class ;
+                                                     rdfs:subClassOf <http://transformunify.org/ontologies/TURBO_0022026> ;
+                                                     rdfs:comment """Available in OWL or OBO formats, with or without gz compression. 
+
+Three versions are available, but they all share the same ontology IRI
+
+LITE - Only ids, name, subsets and relationships are available. Small size if you are interested in our ontology only
+CORE - As above plus chemical data (mass, charge, formula) and structures (inchis, inchikeys, smiles)
+FULL - As above plus name synonyms and manually added cross-reference.
+
+see https://www.ebi.ac.uk/chebi/downloadsForward.do""" ;
+                                                     rdfs:label "ChEBI"@en .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022107
+<http://transformunify.org/ontologies/TURBO_0022107> rdf:type owl:Class ;
+                                                     rdfs:subClassOf <http://transformunify.org/ontologies/TURBO_0022026> ;
+                                                     terms:accrualPeriodicity <http://purl.org/cld/freq/monthly> ;
+                                                     rdfs:comment """BioPortal download URLs require an apikey. A public key is available for some ontologies... see the ontologies homepage. 
+
+https://bioportal.bioontology.org/ontologies/RXNORM
+
+http://data.bioontology.org/ontologies/RXNORM/submissions/18/download?apikey=9cf735c3-a44a-404f-8b2f-c49d48b2b8b2
+
+TMM users should really get their own apikeys.
+
+https://bioportal.bioontology.org/help#Getting_an_API_key
+
+http://data.bioontology.org/ontologies/RXNORM/download/download?apikey=<secret>
+
+Can also build RXNORM by downloading UMLS, extracting with MetaMorphoSys, loading into MySQL, and then converting with umls2rdf
+
+Native RRF comes out monthly, but UMLS and derived BioPortal versions only come out twice per year.
+
+https://download.nlm.nih.gov/umls/kss/rxnorm/RxNorm_full_05042020.zip
+
+https://www.nlm.nih.gov/research/umls/rxnorm/docs/rxnormfiles.html
+
+Working on writing RRF -> RDF direct converter
+
+https://download.nlm.nih.gov/umls/kss/rxnorm/RxNorm_full_05042020.zip
+
+May be difficult to load from BioPortal URL into password protected GraphDB repo, so loading from locally staged file may be required. Redirect involved? GraphDB tries to autosense formats, but can't tell that BioPortal’s files are generally TTL from the URL.""" ;
+                                                     rdfs:label "BioPortal RxNorm ontology"@en ;
+                                                     foaf:homepage <https://bioportal.bioontology.org/ontologies/RXNORM> ,
+                                                                   <https://www.nlm.nih.gov/research/umls/rxnorm/docs/rxnormfiles.html> ;
+                                                     foaf:page "http://data.bioontology.org/ontologies/RXNORM/download/download?apikey" .
+
+[ rdf:type owl:Axiom ;
+   owl:annotatedSource <http://transformunify.org/ontologies/TURBO_0022107> ;
+   owl:annotatedProperty terms:accrualPeriodicity ;
+   owl:annotatedTarget <http://purl.org/cld/freq/monthly> ;
+   rdfs:seeAlso <https://www.nlm.nih.gov/research/umls/rxnorm/docs/rxnormfiles.html>
+ ] .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022108
+<http://transformunify.org/ontologies/TURBO_0022108> rdf:type owl:Class ;
+                                                     rdfs:subClassOf <http://transformunify.org/ontologies/TURBO_0022026> ;
+                                                     mydata:imports <http://purl.obolibrary.org/obo/dron/dron-chebi.owl> ,
+                                                                    <http://purl.obolibrary.org/obo/dron/dron-hand.owl> ,
+                                                                    <http://purl.obolibrary.org/obo/dron/dron-ingredient.owl> ,
+                                                                    <http://purl.obolibrary.org/obo/dron/dron-ndc.owl> ,
+                                                                    <http://purl.obolibrary.org/obo/dron/dron-pro.owl> ,
+                                                                    <http://purl.obolibrary.org/obo/dron/dron-rxnorm.owl> ,
+                                                                    <http://purl.obolibrary.org/obo/dron/dron-upper.owl> ;
+                                                     rdfs:label "dron.owl"@en .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022109
+<http://transformunify.org/ontologies/TURBO_0022109> rdf:type owl:Class ;
+                                                     rdfs:subClassOf foaf:Document ;
+                                                     rdfs:label "web page"@en .
+
+
 ###  http://transformunify.org/ontologies/definer
 <http://transformunify.org/ontologies/definer> rdf:type owl:Class ;
-                                               rdfs:subClassOf foaf:Document ;
+                                               rdfs:subClassOf <http://transformunify.org/ontologies/TURBO_0022038> ;
                                                rdfs:comment """a definer is an ontology file (and corresponding named graph) that asserts 
 
 { ?x a owl:Class . }""" ;
-                                               rdfs:label "Graph/Ontology defining TMM employed terms"@en .
+                                               rdfs:label "Graph defining TMM employed terms"@en .
 
 
 ###  http://www.w3.org/2004/02/skos/core#Concept
@@ -1189,6 +1292,16 @@ skos:Concept rdf:type owl:Class .
 ###  http://xmlns.com/foaf/0.1/Document
 foaf:Document rdf:type owl:Class ;
               rdfs:comment "In TMM, we are using this parent class to include websites, RDF or OWL files in any serialization, and named graphs within a triplestore" .
+
+
+###  https://github.com/PennTURBO/med_mapping/blob/master/rxnav_med_mapping_load_materialize_etc.R
+<https://github.com/PennTURBO/med_mapping/blob/master/rxnav_med_mapping_load_materialize_etc.R> rdf:type owl:Class ;
+                                                                                                rdfs:subClassOf <http://transformunify.org/ontologies/TURBO_0022101> .
+
+
+###  https://github.com/PennTURBO/med_mapping/blob/master/rxnav_med_mapping_solr_upload_post.R
+<https://github.com/PennTURBO/med_mapping/blob/master/rxnav_med_mapping_solr_upload_post.R> rdf:type owl:Class ;
+                                                                                            rdfs:subClassOf <http://transformunify.org/ontologies/TURBO_0022101> .
 
 
 #################################################################
@@ -4441,70 +4554,19 @@ mydata:turbo_med_mapping_hand rdf:type owl:NamedIndividual ,
 
 ###  http://purl.bioontology.org/ontology/RXNORM/
 rxnorm: rdf:type owl:NamedIndividual ,
+                 <http://transformunify.org/ontologies/TURBO_0022107> ,
                  <http://transformunify.org/ontologies/definer> ;
-        terms:accrualPeriodicity <http://purl.org/cld/freq/monthly> ;
-        rdfs:comment """BioPortal download URLs require an apikey. A public key is available for some ontologies... see the ontologies homepage. 
-
-https://bioportal.bioontology.org/ontologies/RXNORM
-
-http://data.bioontology.org/ontologies/RXNORM/submissions/18/download?apikey=9cf735c3-a44a-404f-8b2f-c49d48b2b8b2
-
-TMM users should really get their own apikeys.
-
-https://bioportal.bioontology.org/help#Getting_an_API_key
-
-http://data.bioontology.org/ontologies/RXNORM/download/download?apikey=<secret>
-
-Can also build RXNORM by downloading UMLS, extracting with MetaMorphoSys, loading into MySQL, and then converting with umls2rdf
-
-Native RRF comes out monthly, but UMLS and derived BioPortal versions only come out twice per year.
-
-https://download.nlm.nih.gov/umls/kss/rxnorm/RxNorm_full_05042020.zip
-
-https://www.nlm.nih.gov/research/umls/rxnorm/docs/rxnormfiles.html
-
-Working on writing RRF -> RDF direct converter
-
-https://download.nlm.nih.gov/umls/kss/rxnorm/RxNorm_full_05042020.zip
-
-May be difficult to load from BioPortal URL into password protected GraphDB repo, so loading from locally staged file may be required. Redirect involved? GraphDB tries to autosense formats, but can't tell that BioPortal’s files are generally TTL from the URL.""" ;
-        rdfs:label "BioPortal RxNorm ontology"@en ;
-        foaf:homepage <https://bioportal.bioontology.org/ontologies/RXNORM> ,
-                      <https://www.nlm.nih.gov/research/umls/rxnorm/docs/rxnormfiles.html> ;
-        foaf:page <http://data.bioontology.org/ontologies/RXNORM/download/download?apikey> .
-
-[ rdf:type owl:Axiom ;
-   owl:annotatedSource rxnorm: ;
-   owl:annotatedProperty terms:accrualPeriodicity ;
-   owl:annotatedTarget <http://purl.org/cld/freq/monthly> ;
-   rdfs:seeAlso <https://www.nlm.nih.gov/research/umls/rxnorm/docs/rxnormfiles.html>
- ] .
-
-[ rdf:type owl:Axiom ;
-   owl:annotatedSource rxnorm: ;
-   owl:annotatedProperty foaf:page ;
-   owl:annotatedTarget <http://data.bioontology.org/ontologies/RXNORM/download/download?apikey> ;
-   rdfs:comment <http://transformunify.org/ontologies/TURBO_0022027>
- ] .
+        rdfs:label "BioPortal RxNorm ontology 2020aa"@en .
 
 
 ###  http://purl.obolibrary.org/obo/chebi.owl
 dron:chebi.owl rdf:type owl:NamedIndividual ,
-                        <http://transformunify.org/ontologies/definer> ;
+                        <http://transformunify.org/ontologies/TURBO_0022106> ;
                skos:narrowMatch <http://transformunify.org/ontologies/TURBO_0022011> ,
                                 <http://transformunify.org/ontologies/TURBO_0022012> ,
                                 <http://transformunify.org/ontologies/TURBO_0022013> ;
                terms:accrualPeriodicity <http://purl.org/cld/freq/monthly> ;
-               rdfs:comment """Available in OWL or OBO formats, with or without gz compression. 
-
-Three versions are available, but they all share the same ontology IRI
-
-LITE - Only ids, name, subsets and relationships are available. Small size if you are interested in our ontology only
-CORE - As above plus chemical data (mass, charge, formula) and structures (inchis, inchikeys, smiles)
-FULL - As above plus name synonyms and manually added cross-reference.
-
-see https://www.ebi.ac.uk/chebi/downloadsForward.do""" ,
-                            """Sample annotations
+               rdfs:comment """Sample annotations
 
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -4526,7 +4588,7 @@ see https://www.ebi.ac.uk/chebi/downloadsForward.do""" ,
   ns0:saved-by \"chebi\"^^xsd:string ;
   ns0:hasOBOFormatVersion \"1.2\"^^xsd:string ;
   ns0:default-namespace \"chebi_ontology\"^^xsd:string .""" ;
-               rdfs:label "ChEBI"@en ;
+               rdfs:label "ChEBI 187"@en ;
                foaf:page <ftp://ftp.ebi.ac.uk/pub/databases/chebi/ontology/chebi.owl.gz> .
 
 [ rdf:type owl:Axiom ;
@@ -4546,14 +4608,9 @@ see https://www.ebi.ac.uk/chebi/downloadsForward.do""" ,
 
 ###  http://purl.obolibrary.org/obo/dron.owl
 dron:dron.owl rdf:type owl:NamedIndividual ,
+                       <http://transformunify.org/ontologies/TURBO_0022108> ,
                        <http://transformunify.org/ontologies/definer> ;
-              mydata:imports <http://purl.obolibrary.org/obo/dron/dron-chebi.owl> ,
-                             <http://purl.obolibrary.org/obo/dron/dron-hand.owl> ,
-                             <http://purl.obolibrary.org/obo/dron/dron-ingredient.owl> ,
-                             <http://purl.obolibrary.org/obo/dron/dron-ndc.owl> ,
-                             <http://purl.obolibrary.org/obo/dron/dron-pro.owl> ,
-                             <http://purl.obolibrary.org/obo/dron/dron-rxnorm.owl> ,
-                             <http://purl.obolibrary.org/obo/dron/dron-upper.owl> .
+              rdfs:label "DrOn 2020-01-06" .
 
 
 ###  http://purl.obolibrary.org/obo/dron/dron-chebi.owl
@@ -4782,34 +4839,8 @@ dron:dron.owl rdf:type owl:NamedIndividual ,
 <http://purl.org/cld/terms/Frequency> rdf:type owl:NamedIndividual .
 
 
-###  http://purl.org/dc/elements/1.1/
-dc: rdf:type owl:NamedIndividual ;
-    terms:title "Dublin Core Metadata Element Set, Version 1.1"@en .
-
-
-###  http://purl.org/dc/terms/
-terms: rdf:type owl:NamedIndividual ;
-       terms:title "DCMI Metadata Terms - other"@en .
-
-
 ###  http://purl.org/dc/terms/Frequency
 terms:Frequency rdf:type owl:NamedIndividual .
-
-
-###  http://purl.org/dc/terms/LocationPeriodOrJurisdiction
-terms:LocationPeriodOrJurisdiction rdf:type owl:NamedIndividual .
-
-
-###  http://purl.org/dc/terms/Period
-terms:Period rdf:type owl:NamedIndividual .
-
-
-###  http://purl.org/dc/terms/PeriodOfTime
-terms:PeriodOfTime rdf:type owl:NamedIndividual .
-
-
-###  http://purl.org/dc/terms/URI
-terms:URI rdf:type owl:NamedIndividual .
 
 
 ###  http://purl.org/dc/terms/W3CDTF
@@ -4940,11 +4971,6 @@ group by ?o""" ;
 | http://example.com/resource/reference_medications       | 1      |
 +---------------------------------------------------------+--------+""" ;
                                                      rdfs:label "find TMM definers"@en .
-
-
-###  http://transformunify.org/ontologies/TURBO_0022027
-<http://transformunify.org/ontologies/TURBO_0022027> rdf:type owl:NamedIndividual ;
-                                                     rdfs:label "requires BioPortal API key"@en .
 
 
 ###  http://transformunify.org/ontologies/TURBO_0022030
@@ -5406,10 +5432,42 @@ A modification that currently improves some queries is changing the query fields
                                                      rdfs:label "Standard TMM Solr query"@en .
 
 
+###  http://transformunify.org/ontologies/TURBO_0022100
+<http://transformunify.org/ontologies/TURBO_0022100> rdf:type owl:NamedIndividual ,
+                                                              <http://transformunify.org/ontologies/TURBO_0022099> ;
+                                                     terms:date "2020-06-03"^^xsd:date ;
+                                                     skos:notation 857514 ,
+                                                                   "med_mapping_kb_labels_exp" ;
+                                                     rdfs:label "TMM Solr database med_mapping_kb_labels_exp version 857514"@en ;
+                                                     rdfs:seeAlso rxnorm: ,
+                                                                  dron:chebi.owl ,
+                                                                  dron:dron.owl ,
+                                                                  <http://transformunify.org/ontologies/TURBO_0022104> ,
+                                                                  <http://transformunify.org/ontologies/TURBO_0022105> .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022104
+<http://transformunify.org/ontologies/TURBO_0022104> rdf:type owl:NamedIndividual ,
+                                                              <https://github.com/PennTURBO/med_mapping/blob/master/rxnav_med_mapping_load_materialize_etc.R> ;
+                                                     rdfs:label "rxnav_med_mapping_load_materialize_etc.R 32b4637"@en ;
+                                                     owl:versionInfo <https://github.com/PennTURBO/med_mapping/tree/32b4637b67065bf9ba7975a618cfaec5aa9e9ebc> .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022105
+<http://transformunify.org/ontologies/TURBO_0022105> rdf:type owl:NamedIndividual ,
+                                                              <https://github.com/PennTURBO/med_mapping/blob/master/rxnav_med_mapping_solr_upload_post.R> ;
+                                                     rdfs:label "rxnav_med_mapping_solr_upload_post.R prior to first commit"@en .
+
+
 ###  https://bioportal.bioontology.org/ontologies/RXNORM
 <https://bioportal.bioontology.org/ontologies/RXNORM> rdf:type owl:NamedIndividual ,
                                                                foaf:Document ;
                                                       rdfs:label "BioPortal's homepage for RxNorm" .
+
+
+###  https://github.com/PennTURBO/med_mapping/tree/32b4637b67065bf9ba7975a618cfaec5aa9e9ebc
+<https://github.com/PennTURBO/med_mapping/tree/32b4637b67065bf9ba7975a618cfaec5aa9e9ebc> rdf:type owl:NamedIndividual ,
+                                                                                                  <http://transformunify.org/ontologies/TURBO_0022103> .
 
 
 ###  https://raw.githubusercontent.com/PennTURBO/med_mapping/master/cohort_building_medmap_traversals/chebi_or_dron_ing_to_rxn_any_order.rq
@@ -6175,19 +6233,11 @@ subject and predicate are both roles""" ;
 
 
 terms:Frequency rdfs:label "Frequency"@en ;
-                rdfs:isDefinedBy terms: ;
                 rdfs:comment "A rate at which something recurs."@en .
-
-
-terms:Period rdfs:seeAlso <https://www.dublincore.org/specifications/dublin-core/dcmi-period/> ;
-             rdfs:comment "The set of time intervals defined by their limits according to the DCMI Period Encoding Scheme."@en ;
-             rdfs:label "DCMI Period"@en ;
-             rdfs:isDefinedBy terms: .
 
 
 terms:W3CDTF rdfs:label "W3C-DTF"@en ;
              rdfs:comment "The set of dates and times constructed according to the W3C Date and Time Formats Specification."@en ;
-             rdfs:isDefinedBy terms: ;
              rdfs:seeAlso <http://www.w3.org/TR/NOTE-datetime> .
 
 
@@ -6195,30 +6245,25 @@ terms:accrualPeriodicity terms:description "Recommended practice is to use a val
                          <http://purl.org/dc/dcam/domainIncludes> <http://purl.org/dc/dcmitype/Collection> ;
                          rdfs:label "Accrual Periodicity"@en ;
                          rdfs:comment "The frequency with which items are added to a collection."@en ;
-                         rdfs:isDefinedBy terms: ;
                          <http://purl.org/dc/dcam/rangeIncludes> terms:Frequency .
 
 
-terms:creator rdfs:isDefinedBy terms: ;
-              terms:description "Recommended practice is to identify the creator with a URI.  If this is not possible or feasible, a literal value that identifies the creator may be provided."@en ;
+terms:creator terms:description "Recommended practice is to identify the creator with a URI.  If this is not possible or feasible, a literal value that identifies the creator may be provided."@en ;
               rdfs:comment "An entity responsible for making the resource."@en ;
               rdfs:label "Creator"@en .
 
 
-terms:date rdfs:isDefinedBy terms: ;
-           rdfs:comment "A point or period of time associated with an event in the lifecycle of the resource."@en ;
+terms:date rdfs:comment "A point or period of time associated with an event in the lifecycle of the resource."@en ;
            rdfs:label "Date"@en ;
            terms:description "Date may be used to express temporal information at any level of granularity.  Recommended practice is to express the date, date/time, or period of time according to ISO 8601-1 [[ISO 8601-1](https://www.iso.org/iso-8601-date-and-time-format.html)] or a published profile of the ISO standard, such as the W3C Note on Date and Time Formats [[W3CDTF](https://www.w3.org/TR/NOTE-datetime)] or the Extended Date/Time Format Specification [[EDTF](http://www.loc.gov/standards/datetime/)].  If the full date is unknown, month and year (YYYY-MM) or just year (YYYY) may be used. Date ranges may be specified using ISO 8601 period of time specification in which start and end dates are separated by a '/' (slash) character.  Either the start or end date may be missing."@en .
 
 
 terms:description rdfs:label "Description"@en ;
-                  rdfs:isDefinedBy terms: ;
                   rdfs:comment "An account of the resource."@en ;
                   terms:description "Description may include but is not limited to: an abstract, a table of contents, a graphical representation, or a free-text account of the resource."@en .
 
 
 terms:identifier terms:description "Recommended practice is to identify the resource by means of a string conforming to an identification system. Examples include International Standard Book Number (ISBN), Digital Object Identifier (DOI), and Uniform Resource Name (URN).  Persistent identifiers should be provided as HTTP URIs."@en ;
-                 rdfs:isDefinedBy terms: ;
                  rdfs:comment "An unambiguous reference to the resource within a given context."@en ;
                  rdfs:label "Identifier"@en .
 
