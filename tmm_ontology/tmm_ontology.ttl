@@ -28,47 +28,28 @@
 @base <https://github.com/PennTURBO/med_mapping/blob/master/tmm_ontology/tmm_ontology.ttl> .
 
 <https://github.com/PennTURBO/med_mapping/blob/master/tmm_ontology/tmm_ontology.ttl> rdf:type owl:Ontology ;
-                                                                                      terms:description """This RDF file (OWL ontology) models all terms used in a TURBO medication Knowledgebase, beyond those modeled accorinfing to OBO priniciples in the TURBO ontology.
+                                                                                      terms:description """This RDF file (or SKOS/OWL hybrid ontology) models all terms used in a TURBO medication Knowledgebase, beyond those modeled accordioning to OBO principles in the TURBO ontology.
 
 A special emphasis is placed on explaining the relationships between the ways in which a medication term can be employed in the graph and SPARQL queries that can find orders related to medication terms.
 
-This is intended to be computable, but also to replace stale TMM documentaion.""" ;
-                                                                                      rdfs:comment """IMPORT AND PREFIX NOTES
+This is intended to be computable, but also to replace stale TMM documentation.""" ;
+                                                                                      rdfs:comment """IMPORT NOTES
+
+Would like for all of the following to be regular owl imports: when this ontology is saved with Protege etc., only the foreign terms USED in this ontology should appear in the file. Other terms should only appear when opened in an import-aware editor, like Protege.
 
 https://www.dublincore.org/specifications/dublin-core/dcmi-terms/dublin_core_terms.rdf
 https://www.dublincore.org/specifications/dublin-core/collection-description/frequency/freq.rdf
 http://xmlns.com/foaf/0.1/
 http://www.w3.org/2004/02/skos/core
 
-####
+Importing skos and foaf seems to go as planned... they remain as import statements. Unfortunately, foaf has a suboptimal filename, \"index.rdf\"
 
-importing skos and foaf seems to go as planned... they remain as import statements
+However, the dc elements and terms import statements disappear and all of their terms get permanently saved into this importing ontology!
 
-although faof has a suboptimal filename, \"index.rdf\"
+There may be some different problem with the dc frequency terms""" ,
+                                                                                                   """PREFIX NOTES
 
-dc freq just disappears
-
-de elements disappears from the imports section but all of its terms get saved into the importing ontology!
-
-####
-
-mydata: <http://example.com/resource>
-rxn_tty: <http://example.com/resource/rxn_tty/>
-CHEBI: <http://purl.obolibrary.org/obo/CHEBI_>
-DRON: <http://purl.obolibrary.org/obo/DRON_>
-RXNORM: <<http://purl.bioontology.org/ontology/RXNORM/>""" ,
-                                                                                                   """Probably don't need defined_in statements for 
-
-BioPortal mappings... no classes or individuals asserted
-Reference Medications or Classified Search Results... individuals are typed, unlike vague owl:Class assertions in ChEBI, DrOn, RxNorm, etc.
-
-Those vague owl:Class assertions and RxNorm's sparse isa assertions  are the reason for TMM employment assertions""" ,
-                                                                                                   """Some duplication in RxNorm term types for employment vs as a source of strings
-
-same thing with predicates and RF search results classifications
-
-pick one URI style for each pair and stick with it""" ,
-                                                                                                   """The terms that are defined here (as opposed to the TURBO ontology) use two different bases/prefixes:
+The terms that are defined here (as opposed to the TURBO ontology) use two different bases/prefixes:
 
 mydata: <http://example.com/resource>
 
@@ -76,10 +57,34 @@ and
 
 turbo: <http://transformunify.org/ontologies/>
 
-But it would be nice to just use one, and for that to be resolvable.""" ,
+But it would be nice to just use one, and for that to be resolvable.
+
+ALSO:
+
+CHEBI: <http://purl.obolibrary.org/obo/CHEBI_>
+DRON: <http://purl.obolibrary.org/obo/DRON_>
+RXNORM: <<http://purl.bioontology.org/ontology/RXNORM/>
+
+is this one relevant anymore?
+
+rxn_tty: <http://example.com/resource/rxn_tty/>""" ,
                                                                                                    """There are several terms that are shared between (punned) a property and a named graph individual, like
 
-'defined in' <http://example.com/resource/defined_in>""" ,
+'defined in' <http://example.com/resource/defined_in>
+
+construct {
+    ?s <http://www.w3.org/2000/01/rdf-schema#seeAlso> <http://transformunify.org/ontologies/TURBO_0022039> .
+}
+where {
+    ?s a ?t1 , ?t2 .
+    filter(?t1 = <http://www.w3.org/2002/07/owl#AnnotationProperty>)
+    filter(?t2 = <http://transformunify.org/ontologies/TURBO_0022038>)
+}""" ,
+                                                                                                   """There has been some duplication in RxNorm term types for employment vs as string sources
+
+same thing for RxNorm predicates and RF search results classifications
+
+TODO pick one URI style for each pair and stick with it""" ,
                                                                                                    "This ontology file probably doesn't say anything about the medication string normalization process yet... but do we really need to duplicate the documentation here? We have mentioned normalization in the http://example.com/resource/source_normalized_full_name context." .
 
 #################################################################
@@ -882,14 +887,6 @@ terms:title rdf:type owl:DatatypeProperty .
                                                      rdfs:label "TMM source/reference medication attributes"@en .
 
 
-###  http://transformunify.org/ontologies/TURBO_0022049
-<http://transformunify.org/ontologies/TURBO_0022049> rdf:type owl:DatatypeProperty ;
-                                                     rdfs:subPropertyOf owl:topDataProperty ;
-                                                     rdfs:domain dron:OBI_0001909 ;
-                                                     rdfs:label "TMM classification outputs"@en ;
-                                                     owl:deprecated "true"^^xsd:boolean .
-
-
 ###  http://transformunify.org/ontologies/TURBO_0022050
 <http://transformunify.org/ontologies/TURBO_0022050> rdf:type owl:DatatypeProperty ;
                                                      rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022047> ;
@@ -943,14 +940,6 @@ terms:title rdf:type owl:DatatypeProperty .
                                                      rdfs:label "TMM property of SPARQL query"@en .
 
 
-###  http://transformunify.org/ontologies/TURBO_0022092
-<http://transformunify.org/ontologies/TURBO_0022092> rdf:type owl:DatatypeProperty ;
-                                                     rdfs:domain dron:OBI_0001909 ;
-                                                     rdfs:range xsd:string ;
-                                                     rdfs:label "TMM property of classified search result"@en ;
-                                                     owl:deprecated "true"^^xsd:boolean .
-
-
 ###  http://www.w3.org/2004/02/skos/core#notation
 skos:notation rdf:type owl:DatatypeProperty ;
               rdfs:comment "TMM uses this predicate to tie an ID to source/reference medications" .
@@ -962,12 +951,13 @@ skos:notation rdf:type owl:DatatypeProperty ;
 
 ###  http://example.com/resource/rxnorm_relationship_tuple
 mydata:rxnorm_relationship_tuple rdf:type owl:Class ;
+                                 rdfs:comment "These can be used for building SPARQL property chains towards or away from any given RxNorm term type. They can also be used for evaluating whether a classified search result is reasonable, in terms of its's type and it's most probable RxNorm predicate. For example, a prediction of type \"Ingredient\" with elected mapping \"ingredient of\" doesn't make sense, because ingredients cant have ingredients." ;
                                  rdfs:label "RxNorm allowed { subject predicate object . } tuple" .
 
 
 ###  http://purl.obolibrary.org/obo/OBI_0001909
 dron:OBI_0001909 rdf:type owl:Class ;
-                 rdfs:comment """Label and IRI hand pasted into this ontology. (No ROBOT, Onto Animals, etc.)
+                 rdfs:comment """This terms label and IRI were hand pasted into this ontology. (No ROBOT, Onto Animals, etc.)
 
 TMM classified search results are intances of this class.""" ;
                  rdfs:label "conclusion based on data" ;
@@ -976,16 +966,16 @@ TMM classified search results are intances of this class.""" ;
 
 ###  http://purl.obolibrary.org/obo/PDRO_0000024
 dron:PDRO_0000024 rdf:type owl:Class ;
-                  rdfs:comment """Label and IRI hand pasted into this ontology. (No ROBOT, Onto Animals, etc.)
+                  rdfs:comment """TODO: \"TMM reference/source medications are intances of this class.\"
+
+WE SHOULD PICK ONE OF THOSE TWO TERMS AND STICK TO IT""" ,
+                               """This terms label and IRI were hand pasted into this ontology. (No ROBOT, Onto Animals, etc.)
 
 TMM reference/source medications are intances of this class.
 
 But some EHRs or CDWs may have values in thier medication table that clearly do not denote a drug, like \"wheelchair\". So it may be more appropriator for Drivetrain to instantiate PDRO_0000001, \"health care prescription\"
 
-Even ignoring wheelchairs... are these things really drug prescriptions? In PennMedicine's CDW, they appear in a \"reference medications\" table."""@en ,
-                               """TODO: \"TMM reference/source medications are intances of this class.\"
-
-WE SHOULD PICK ONE OF THOSE TWO TERMS AND STICK TO IT""" ;
+Even ignoring wheelchairs... are these things really drug prescriptions? In PennMedicine's CDW, they appear in a \"reference medications\" table."""@en ;
                   rdfs:label "drug prescription"@en ;
                   rdfs:seeAlso <https://raw.githubusercontent.com/OpenLHS/PDRO/master/pdro.owl> .
 
@@ -994,36 +984,14 @@ WE SHOULD PICK ONE OF THOSE TWO TERMS AND STICK TO IT""" ;
 terms:Frequency rdf:type owl:Class .
 
 
-###  http://purl.org/dc/terms/LocationPeriodOrJurisdiction
-terms:LocationPeriodOrJurisdiction rdf:type owl:Class .
-
-
-###  http://purl.org/dc/terms/PeriodOfTime
-terms:PeriodOfTime rdf:type owl:Class ;
-                   rdfs:subClassOf terms:LocationPeriodOrJurisdiction .
-
-
 ###  http://transformunify.org/ontologies/TURBO_0022016
 <http://transformunify.org/ontologies/TURBO_0022016> rdf:type owl:Class ;
                                                      rdfs:label "TMM SPARQL illustration"@en .
 
 
-###  http://transformunify.org/ontologies/TURBO_0022017
-<http://transformunify.org/ontologies/TURBO_0022017> rdf:type owl:Class ;
-                                                     rdfs:label "TMM SPARQL select query"@en ;
-                                                     owl:deprecated "true"^^xsd:boolean .
-
-
-###  http://transformunify.org/ontologies/TURBO_0022018
-<http://transformunify.org/ontologies/TURBO_0022018> rdf:type owl:Class ;
-                                                     rdfs:label "TMM SPARQL select result"@en ;
-                                                     owl:deprecated "true"^^xsd:boolean .
-
-
 ###  http://transformunify.org/ontologies/TURBO_0022023
 <http://transformunify.org/ontologies/TURBO_0022023> rdf:type owl:Class ;
-                                                     rdfs:comment "In what ways can medication term be useful in a TMM graph?" ,
-                                                                  "this needs tidying" ;
+                                                     rdfs:comment "In what ways can medication term be useful in a TMM graph?" ;
                                                      rdfs:label "TMM employment"@en ;
                                                      rdfs:seeAlso mydata:employment .
 
@@ -1036,20 +1004,34 @@ terms:PeriodOfTime rdf:type owl:Class ;
 
 ###  http://transformunify.org/ontologies/TURBO_0022036
 <http://transformunify.org/ontologies/TURBO_0022036> rdf:type owl:Class ;
-                                                     rdfs:comment "Not all term types get employed in a TMM graph" ;
-                                                     rdfs:label "RxNorm employable term type"@en ;
+                                                     rdfs:subClassOf <http://transformunify.org/ontologies/TURBO_0022023> ;
+                                                     rdfs:comment """Not all term types get employed in a TMM graph. For example, the vague  'dose for group' <http://example.com/resource/rxn_tty/DFG>, with valueslike \"oral product\". 
+
+These are the ones that have been employed so far, based on the empirical query:
+
+construct {
+    ?e a <http://transformunify.org/ontologies/TURBO_0022036>
+}
+where {
+    graph <http://example.com/resource/employment> {
+        ?s <http://example.com/resource/employment> ?e .
+        filter(strstarts(str(?e), \"http://example.com/resource/RXNORM_TTY/\"))
+    }
+}""" ;
+                                                     rdfs:label "RxNorm employed term type"@en ;
                                                      rdfs:seeAlso <http://transformunify.org/ontologies/TURBO_0022044> .
 
 
 ###  http://transformunify.org/ontologies/TURBO_0022037
 <http://transformunify.org/ontologies/TURBO_0022037> rdf:type owl:Class ;
-                                                     rdfs:comment "These are either synonym strings (i.e. not really entities) or they are too vague to be useful, like the <http://example.com/resource/rxn_tty/DFG> of \"oral product\". In either case, terms of these types are not employed in a TMM knowledgebase."@en ;
-                                                     rdfs:label "RxNorm term type, Unemployed"@en .
+                                                     rdfs:subClassOf <http://transformunify.org/ontologies/TURBO_0022044> ;
+                                                     rdfs:comment "These are either synonym placeholders  (i.e. not really entities) or they are so underspecific to be useful, like the <http://example.com/resource/rxn_tty/DFG> of \"oral product\". In either case, terms of these types are not employed in a TMM knowledgebase."@en ;
+                                                     rdfs:label "RxNorm term type, unemployed"@en .
 
 
 ###  http://transformunify.org/ontologies/TURBO_0022038
 <http://transformunify.org/ontologies/TURBO_0022038> rdf:type owl:Class ;
-                                                     rdfs:subClassOf <http://transformunify.org/ontologies/TURBO_0022026> ;
+                                                     rdfs:subClassOf foaf:Document ;
                                                      rdfs:label "TMM named graph"@en .
 
 
@@ -1065,7 +1047,9 @@ terms:PeriodOfTime rdf:type owl:Class ;
 
 ###  http://transformunify.org/ontologies/TURBO_0022043
 <http://transformunify.org/ontologies/TURBO_0022043> rdf:type owl:Class ;
-                                                     rdfs:comment """construct {
+                                                     rdfs:comment """These are the upstream sources from which RxNorm gets its knowledge.
+
+construct {
     ?o a <http://transformunify.org/ontologies/TURBO_0022043> 
 }{
     graph <http://example.com/resource/classified_search_results> {
@@ -1077,7 +1061,12 @@ terms:PeriodOfTime rdf:type owl:Class ;
 
 ###  http://transformunify.org/ontologies/TURBO_0022044
 <http://transformunify.org/ontologies/TURBO_0022044> rdf:type owl:Class ;
-                                                     rdfs:comment """construct {
+                                                     rdfs:subClassOf <http://transformunify.org/ontologies/TURBO_0022094> ;
+                                                     rdfs:comment """Each row in RxNorm's RXNCONSO table has a . 
+
+THIS MAY NOT BE THE CORRECT QUERY
+
+construct {
     ?o a <http://example.com/resource/match_tty> 
 } where {
     graph <http://example.com/resource/classified_search_results> {
@@ -1085,12 +1074,16 @@ terms:PeriodOfTime rdf:type owl:Class ;
     }
 }"""@en ;
                                                      rdfs:isDefinedBy <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
-                                                     rdfs:label "RxNorm string bearer"@en ;
+                                                     rdfs:label "RxNorm term type"@en ;
                                                      rdfs:seeAlso <http://transformunify.org/ontologies/TURBO_0022036> .
 
 
 ###  http://transformunify.org/ontologies/TURBO_0022045
 <http://transformunify.org/ontologies/TURBO_0022045> rdf:type owl:Class ;
+                                                     rdfs:comment """Each TMM search result classification indicates 
+
+1) what RxNorm term best models an input medication string
+2) whether the RxNorm term is believed to be identical in meaning to the input, or whether it is closely related by one RxNorm predicate""" ;
                                                      rdfs:label "TMM search result classification"@en ;
                                                      rdfs:seeAlso <http://transformunify.org/ontologies/TURBO_0022035> .
 
@@ -1103,14 +1096,13 @@ terms:PeriodOfTime rdf:type owl:Class ;
 
 ###  http://transformunify.org/ontologies/TURBO_0022059
 <http://transformunify.org/ontologies/TURBO_0022059> rdf:type owl:Class ;
-                                                     rdfs:comment "" ;
                                                      rdfs:label "TMM Solr illustration"@en .
 
 
 ###  http://transformunify.org/ontologies/TURBO_0022093
 <http://transformunify.org/ontologies/TURBO_0022093> rdf:type owl:Class ;
                                                      rdfs:subClassOf <http://transformunify.org/ontologies/TURBO_0022023> ;
-                                                     rdfs:label """TMM native employment. IE, these employment terms weren’t taken directly from another source like RxNorm. 
+                                                     rdfs:comment """IE, these employment terms weren’t taken directly from another source like RxNorm. 
 
 These concepts were minted by the TURBO team. The SAPRQL insert statements can be found in the 
 
@@ -1118,12 +1110,35 @@ materializastion.projection.sparqls
 
 block in
 
-https://github.com/PennTURBO/med_mapping/blob/master/rxnav_med_mapping.yaml.template"""@en .
+https://github.com/PennTURBO/med_mapping/blob/master/rxnav_med_mapping.yaml.template
+
+ALSO
+
+construct {
+    ?e a <http://transformunify.org/ontologies/TURBO_0022093>
+}
+where {
+    graph <http://example.com/resource/employment> {
+        ?s <http://example.com/resource/employment> ?e .
+        filter(!strstarts(str(?e), \"http://example.com/resource/RXNORM_TTY/\"))
+    }
+}""" ;
+                                                     rdfs:label "TMM native employment"@en .
 
 
 ###  http://transformunify.org/ontologies/TURBO_0022094
 <http://transformunify.org/ontologies/TURBO_0022094> rdf:type owl:Class ;
-                                                     rdfs:label "UMLS string bearer"@en .
+                                                     rdfs:comment "" ,
+                                                                  """RxNorm term type is a subclass
+
+UMLS and RxNorm concepts can be associated with string values, so they are useful for searching over with RxNav in a box or Solr. 
+
+Some of the term type instances have been reused as TMM employment types
+
+Generally speaking, there are limited relationships that can hold between concepts of type A and B
+
+Some of the term types are synonym placeholders and can only appear in the right hand position of an object-like relation. These are not employed in TM graphs.""" ;
+                                                     rdfs:label "UMLS Term Type"@en .
 
 
 ###  http://transformunify.org/ontologies/TURBO_0022095
@@ -1142,13 +1157,29 @@ https://github.com/PennTURBO/med_mapping/blob/master/rxnav_med_mapping.yaml.temp
                                                                    "CDW" .
 
 
+###  http://transformunify.org/ontologies/TURBO_0022097
+<http://transformunify.org/ontologies/TURBO_0022097> rdf:type owl:Class ;
+                                                     rdfs:subClassOf <http://transformunify.org/ontologies/TURBO_0022037> ;
+                                                     rdfs:comment """These are not currently employed in TMM graphs, under the assumption that EHR medication orders are very unlikely to have texts like \"take one oral tablet\" and that TMM users are unlikely to search for a dose form or group alone.
+
+Clinical- and Branded does form groups like 'acetaminophen Oral Tablet' [RxCUI = 369097] ARE employed in TMM graphs.""" ;
+                                                     rdfs:label "underspecific term type"@en .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022098
+<http://transformunify.org/ontologies/TURBO_0022098> rdf:type owl:Class ;
+                                                     rdfs:subClassOf <http://transformunify.org/ontologies/TURBO_0022037> ;
+                                                     rdfs:comment "Concepts of these types may bear string values that are useful for finding or mapping medications from an EHR, but they are not orderable medications, ingredients of orderable medications, packages of orderable medications, etc." ;
+                                                     rdfs:label "synonym placeholder"@en .
+
+
 ###  http://transformunify.org/ontologies/definer
 <http://transformunify.org/ontologies/definer> rdf:type owl:Class ;
-                                               rdfs:subClassOf <http://transformunify.org/ontologies/TURBO_0022038> ;
+                                               rdfs:subClassOf foaf:Document ;
                                                rdfs:comment """a definer is an ontology file (and corresponding named graph) that asserts 
 
 { ?x a owl:Class . }""" ;
-                                               rdfs:label "TMM term definer"@en .
+                                               rdfs:label "Graph/Ontology defining TMM employed terms"@en .
 
 
 ###  http://www.w3.org/2004/02/skos/core#Concept
@@ -1156,7 +1187,8 @@ skos:Concept rdf:type owl:Class .
 
 
 ###  http://xmlns.com/foaf/0.1/Document
-foaf:Document rdf:type owl:Class .
+foaf:Document rdf:type owl:Class ;
+              rdfs:comment "In TMM, we are using this parent class to include websites, RDF or OWL files in any serialization, and named graphs within a triplestore" .
 
 
 #################################################################
@@ -1957,18 +1989,21 @@ mydata:active_ingredient rdf:type owl:NamedIndividual ,
                                            <http://purl.obolibrary.org/obo/dron/dron-hand.owl> ,
                                            <http://purl.obolibrary.org/obo/dron/dron-ingredient.owl> ;
                          skos:notation "active_ingredient" ;
-                         rdfs:comment """active ingredient
-
-see ing.prod.employment in rxnav_med_mapping.yaml
-
-doesn't apply to ChEBI compounds with clinically relevant roles, like rosuvastatin CHEBI:38545, if they are not asserted as the active ingredient of a DrOn product. This is often the case is DrOn has minted its own term for the same molecular entity.""" ;
+                         rdfs:comment "This doesn't apply to ChEBI compounds with clinically relevant roles, like rosuvastatin CHEBI:38545, if they are not asserted as the active ingredient of a DrOn product. This is often the case is DrOn has minted its own term for the same molecular entity." ;
+                         rdfs:isDefinedBy <https://github.com/PennTURBO/med_mapping/blob/master/tmm_ontology/tmm_ontology.ttl> ;
+                         rdfs:label "active ingredient employment" ;
                          rdfs:seeAlso <http://transformunify.org/ontologies/TURBO_0022063> ,
                                       <http://transformunify.org/ontologies/TURBO_0022064> ,
                                       <http://transformunify.org/ontologies/TURBO_0022065> ,
                                       <http://transformunify.org/ontologies/TURBO_0022066> ,
                                       <http://transformunify.org/ontologies/TURBO_0022067> ,
                                       <http://transformunify.org/ontologies/TURBO_0022068> ,
-                                      <http://transformunify.org/ontologies/TURBO_0022070> .
+                                      <http://transformunify.org/ontologies/TURBO_0022070> ;
+                         skos:definition """<product instance> is a subclass of 
+has_proper_part some (scattered molecular aggregate and (is bearer of some active ingredient) and (has granular part some <active ingredient instance>))
+
+see ing.prod.employment in rxnav_med_mapping.yaml for SPARQL definition""" ;
+                         skos:example dron:CHEBI_46195 .
 
 
 ###  http://example.com/resource/bioportal_mapping
@@ -2040,8 +2075,14 @@ mydata:product rdf:type owl:NamedIndividual ,
                skos:relatedMatch <http://purl.obolibrary.org/obo/dron/dron-ingredient.owl> ,
                                  <http://purl.obolibrary.org/obo/dron/dron-rxnorm.owl> ;
                skos:notation "product" ;
-               rdfs:comment "see ing.prod.employment in rxnav_med_mapping.yaml" ;
-               rdfs:seeAlso <http://transformunify.org/ontologies/TURBO_0022074> .
+               rdfs:isDefinedBy <https://github.com/PennTURBO/med_mapping/blob/master/tmm_ontology/tmm_ontology.ttl> ;
+               rdfs:label "product employment" ;
+               rdfs:seeAlso <http://transformunify.org/ontologies/TURBO_0022074> ;
+               skos:definition """<product instance> is a subclass of 
+has_proper_part some (scattered molecular aggregate and (is bearer of some active ingredient) and (has granular part some <active ingredient instance>))
+
+see ing.prod.employment in rxnav_med_mapping.yaml for the SAPRQL definition""" ;
+               skos:example dron:DRON_00020450 .
 
 
 ###  http://example.com/resource/reference_medications
@@ -2136,6 +2177,7 @@ mydata:turbo_med_mapping_hand rdf:type owl:NamedIndividual ,
 
 ###  http://example.com/resource/RXNORM_TTY/BN
 <http://example.com/resource/RXNORM_TTY/BN> rdf:type owl:NamedIndividual ,
+                                                     <http://transformunify.org/ontologies/TURBO_0022036> ,
                                                      <http://transformunify.org/ontologies/TURBO_0022044> ;
                                             skos:relatedMatch rxnorm: ;
                                             skos:notation "BN" ;
@@ -2148,6 +2190,7 @@ mydata:turbo_med_mapping_hand rdf:type owl:NamedIndividual ,
 
 ###  http://example.com/resource/RXNORM_TTY/BPCK
 <http://example.com/resource/RXNORM_TTY/BPCK> rdf:type owl:NamedIndividual ,
+                                                       <http://transformunify.org/ontologies/TURBO_0022036> ,
                                                        <http://transformunify.org/ontologies/TURBO_0022044> ;
                                               skos:relatedMatch rxnorm: ;
                                               skos:notation "BPCK" ;
@@ -2160,7 +2203,7 @@ mydata:turbo_med_mapping_hand rdf:type owl:NamedIndividual ,
 
 ###  http://example.com/resource/RXNORM_TTY/DF
 <http://example.com/resource/RXNORM_TTY/DF> rdf:type owl:NamedIndividual ,
-                                                     <http://transformunify.org/ontologies/TURBO_0022044> ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022097> ;
                                             skos:notation "DF" ;
                                             rdfs:isDefinedBy <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
                                             rdfs:label "Dose Form" ;
@@ -2170,7 +2213,7 @@ mydata:turbo_med_mapping_hand rdf:type owl:NamedIndividual ,
 
 ###  http://example.com/resource/RXNORM_TTY/DFG
 <http://example.com/resource/RXNORM_TTY/DFG> rdf:type owl:NamedIndividual ,
-                                                      <http://transformunify.org/ontologies/TURBO_0022044> ;
+                                                      <http://transformunify.org/ontologies/TURBO_0022097> ;
                                              skos:notation "DFG" ;
                                              rdfs:isDefinedBy <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
                                              rdfs:label "Dose Form Group" ;
@@ -2189,6 +2232,7 @@ mydata:turbo_med_mapping_hand rdf:type owl:NamedIndividual ,
 
 ###  http://example.com/resource/RXNORM_TTY/GPCK
 <http://example.com/resource/RXNORM_TTY/GPCK> rdf:type owl:NamedIndividual ,
+                                                       <http://transformunify.org/ontologies/TURBO_0022036> ,
                                                        <http://transformunify.org/ontologies/TURBO_0022044> ;
                                               skos:relatedMatch rxnorm: ;
                                               skos:notation "GPCK" ;
@@ -2200,6 +2244,7 @@ mydata:turbo_med_mapping_hand rdf:type owl:NamedIndividual ,
 
 ###  http://example.com/resource/RXNORM_TTY/IN
 <http://example.com/resource/RXNORM_TTY/IN> rdf:type owl:NamedIndividual ,
+                                                     <http://transformunify.org/ontologies/TURBO_0022036> ,
                                                      <http://transformunify.org/ontologies/TURBO_0022044> ;
                                             skos:exactMatch mydata:active_ingredient ;
                                             skos:relatedMatch rxnorm: ;
@@ -2218,6 +2263,7 @@ mydata:turbo_med_mapping_hand rdf:type owl:NamedIndividual ,
 
 ###  http://example.com/resource/RXNORM_TTY/MIN
 <http://example.com/resource/RXNORM_TTY/MIN> rdf:type owl:NamedIndividual ,
+                                                      <http://transformunify.org/ontologies/TURBO_0022036> ,
                                                       <http://transformunify.org/ontologies/TURBO_0022044> ;
                                              skos:relatedMatch rxnorm: ;
                                              skos:notation "MIN" ;
@@ -2229,6 +2275,7 @@ mydata:turbo_med_mapping_hand rdf:type owl:NamedIndividual ,
 
 ###  http://example.com/resource/RXNORM_TTY/PIN
 <http://example.com/resource/RXNORM_TTY/PIN> rdf:type owl:NamedIndividual ,
+                                                      <http://transformunify.org/ontologies/TURBO_0022036> ,
                                                       <http://transformunify.org/ontologies/TURBO_0022044> ;
                                              skos:relatedMatch rxnorm: ;
                                              skos:notation "PIN" ;
@@ -2240,7 +2287,7 @@ mydata:turbo_med_mapping_hand rdf:type owl:NamedIndividual ,
 
 ###  http://example.com/resource/RXNORM_TTY/PSN
 <http://example.com/resource/RXNORM_TTY/PSN> rdf:type owl:NamedIndividual ,
-                                                      <http://transformunify.org/ontologies/TURBO_0022044> ;
+                                                      <http://transformunify.org/ontologies/TURBO_0022098> ;
                                              skos:notation "PSN" ;
                                              rdfs:isDefinedBy <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
                                              rdfs:label "Prescribable Name" ;
@@ -2250,6 +2297,7 @@ mydata:turbo_med_mapping_hand rdf:type owl:NamedIndividual ,
 
 ###  http://example.com/resource/RXNORM_TTY/SBD
 <http://example.com/resource/RXNORM_TTY/SBD> rdf:type owl:NamedIndividual ,
+                                                      <http://transformunify.org/ontologies/TURBO_0022036> ,
                                                       <http://transformunify.org/ontologies/TURBO_0022044> ;
                                              skos:broadMatch mydata:product ;
                                              skos:relatedMatch rxnorm: ;
@@ -2262,6 +2310,7 @@ mydata:turbo_med_mapping_hand rdf:type owl:NamedIndividual ,
 
 ###  http://example.com/resource/RXNORM_TTY/SBDC
 <http://example.com/resource/RXNORM_TTY/SBDC> rdf:type owl:NamedIndividual ,
+                                                       <http://transformunify.org/ontologies/TURBO_0022036> ,
                                                        <http://transformunify.org/ontologies/TURBO_0022044> ;
                                               skos:relatedMatch rxnorm: ;
                                               skos:notation "SBDC" ;
@@ -2273,6 +2322,7 @@ mydata:turbo_med_mapping_hand rdf:type owl:NamedIndividual ,
 
 ###  http://example.com/resource/RXNORM_TTY/SBDF
 <http://example.com/resource/RXNORM_TTY/SBDF> rdf:type owl:NamedIndividual ,
+                                                       <http://transformunify.org/ontologies/TURBO_0022036> ,
                                                        <http://transformunify.org/ontologies/TURBO_0022044> ;
                                               skos:relatedMatch rxnorm: ;
                                               skos:notation "SBDF" ;
@@ -2284,6 +2334,7 @@ mydata:turbo_med_mapping_hand rdf:type owl:NamedIndividual ,
 
 ###  http://example.com/resource/RXNORM_TTY/SBDG
 <http://example.com/resource/RXNORM_TTY/SBDG> rdf:type owl:NamedIndividual ,
+                                                       <http://transformunify.org/ontologies/TURBO_0022036> ,
                                                        <http://transformunify.org/ontologies/TURBO_0022044> ;
                                               rdfs:isDefinedBy <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
                                               rdfs:label "Semantic Branded Dose Form Group" ;
@@ -2293,6 +2344,7 @@ mydata:turbo_med_mapping_hand rdf:type owl:NamedIndividual ,
 
 ###  http://example.com/resource/RXNORM_TTY/SCD
 <http://example.com/resource/RXNORM_TTY/SCD> rdf:type owl:NamedIndividual ,
+                                                      <http://transformunify.org/ontologies/TURBO_0022036> ,
                                                       <http://transformunify.org/ontologies/TURBO_0022044> ;
                                              skos:broadMatch mydata:product ;
                                              skos:relatedMatch rxnorm: ;
@@ -2305,6 +2357,7 @@ mydata:turbo_med_mapping_hand rdf:type owl:NamedIndividual ,
 
 ###  http://example.com/resource/RXNORM_TTY/SCDC
 <http://example.com/resource/RXNORM_TTY/SCDC> rdf:type owl:NamedIndividual ,
+                                                       <http://transformunify.org/ontologies/TURBO_0022036> ,
                                                        <http://transformunify.org/ontologies/TURBO_0022044> ;
                                               skos:relatedMatch rxnorm: ;
                                               skos:notation "SCDC" ;
@@ -2316,6 +2369,7 @@ mydata:turbo_med_mapping_hand rdf:type owl:NamedIndividual ,
 
 ###  http://example.com/resource/RXNORM_TTY/SCDF
 <http://example.com/resource/RXNORM_TTY/SCDF> rdf:type owl:NamedIndividual ,
+                                                       <http://transformunify.org/ontologies/TURBO_0022036> ,
                                                        <http://transformunify.org/ontologies/TURBO_0022044> ;
                                               skos:broadMatch mydata:product ;
                                               skos:relatedMatch rxnorm: ;
@@ -2328,6 +2382,7 @@ mydata:turbo_med_mapping_hand rdf:type owl:NamedIndividual ,
 
 ###  http://example.com/resource/RXNORM_TTY/SCDG
 <http://example.com/resource/RXNORM_TTY/SCDG> rdf:type owl:NamedIndividual ,
+                                                       <http://transformunify.org/ontologies/TURBO_0022036> ,
                                                        <http://transformunify.org/ontologies/TURBO_0022044> ;
                                               rdfs:isDefinedBy <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
                                               rdfs:label "Semantic Clinical Dose Form Group" ;
@@ -2337,7 +2392,7 @@ mydata:turbo_med_mapping_hand rdf:type owl:NamedIndividual ,
 
 ###  http://example.com/resource/RXNORM_TTY/SY
 <http://example.com/resource/RXNORM_TTY/SY> rdf:type owl:NamedIndividual ,
-                                                     <http://transformunify.org/ontologies/TURBO_0022044> ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022098> ;
                                             skos:notation "SY" ;
                                             rdfs:isDefinedBy <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
                                             rdfs:label "Synonym" ;
@@ -2346,7 +2401,8 @@ mydata:turbo_med_mapping_hand rdf:type owl:NamedIndividual ,
 
 
 ###  http://example.com/resource/RXNORM_TTY/TMSY
-<http://example.com/resource/RXNORM_TTY/TMSY> rdf:type owl:NamedIndividual ;
+<http://example.com/resource/RXNORM_TTY/TMSY> rdf:type owl:NamedIndividual ,
+                                                       <http://transformunify.org/ontologies/TURBO_0022098> ;
                                               skos:notation "TMSY" ;
                                               rdfs:isDefinedBy <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
                                               rdfs:label "Tall Man Lettering Synonym" ;
@@ -6039,11 +6095,13 @@ where {
 #    Annotations
 #################################################################
 
-mydata:bioportal_mapping rdfs:label "maps to" ;
+mydata:bioportal_mapping rdfs:seeAlso <http://transformunify.org/ontologies/TURBO_0022039> ;
+                         rdfs:label "maps to" ;
                          rdfs:seeAlso <https://www.bioontology.org/wiki/BioPortal_Mappings> .
 
 
 mydata:defined_in rdfs:label "defined in" ;
+                  rdfs:seeAlso <http://transformunify.org/ontologies/TURBO_0022039> ;
                   rdfs:comment """At least one defined_in statement is asserted about all classes in the TMM graph. The objects of those statements are the IRIs of any ontology that asserts the term to be an owl:Class. In Turtle notation:
 
 graph ?ontology { ?term a owl:Class . }
@@ -6079,6 +6137,7 @@ mydata:elected_mapping rdfs:comment """links a \"reference medication\" to an rx
 domain = http://purl.obolibrary.org/obo/PDRO_0000024 drug prescription
 
 add to this ontology""" ;
+                       rdfs:seeAlso <http://transformunify.org/ontologies/TURBO_0022039> ;
                        <http://purl.org/dc/dcam/domainIncludes> dron:OBI_0001909 .
 
 
@@ -6095,20 +6154,24 @@ The relational RxNorm artefacts assert a term type (TTY) for each term, and thes
 
 In some cases, there are correspondences between the employments: if some ChEBI or DrOn term, employed as an http://example.com/resource/active_ingredient, are also modeled in RxNorm, the RxNorm term will be employed as an http://example.com/resource/rxn_tty/IN. Most of the DrOn terms employed as product will correspond to a term from RxNorm with SBD, SCD or SCDF employment (using the same IRI bases as before).""" ;
                   <http://purl.org/dc/dcam/rangeIncludes> <http://transformunify.org/ontologies/TURBO_0022023> ;
-                  rdfs:seeAlso <http://example.com/resource/search_res_classification/isa> ;
+                  rdfs:seeAlso <http://example.com/resource/search_res_classification/isa> ,
+                               <http://transformunify.org/ontologies/TURBO_0022039> ;
                   <http://transformunify.org/ontologies/TURBO_0022019> <http://transformunify.org/ontologies/TURBO_0022022> .
 
 
-mydata:transitive_role_of_class rdfs:comment """as a predicate:
+mydata:transitive_role_of_class rdfs:seeAlso <http://transformunify.org/ontologies/TURBO_0022039> ;
+                                rdfs:comment """as a predicate:
 subjects should probably all be ChEBI active ingredients
 only curated roles are eligible as objects""" .
 
 
-mydata:transitively_materialized_dron_ingredient rdfs:comment "as a predicate, links a DrOn product to a DrOn or ChEBI active_ingredient" .
+mydata:transitively_materialized_dron_ingredient rdfs:comment "as a predicate, links a DrOn product to a DrOn or ChEBI active_ingredient" ;
+                                                 rdfs:seeAlso <http://transformunify.org/ontologies/TURBO_0022039> .
 
 
 mydata:transitively_materialized_drugrole rdfs:comment """as a predicate
-subject and predicate are both roles""" .
+subject and predicate are both roles""" ;
+                                          rdfs:seeAlso <http://transformunify.org/ontologies/TURBO_0022039> .
 
 
 terms:Frequency rdfs:label "Frequency"@en ;
@@ -6116,20 +6179,10 @@ terms:Frequency rdfs:label "Frequency"@en ;
                 rdfs:comment "A rate at which something recurs."@en .
 
 
-terms:LocationPeriodOrJurisdiction rdfs:label "Location, Period, or Jurisdiction"@en ;
-                                   rdfs:comment "A location, period of time, or jurisdiction."@en ;
-                                   rdfs:isDefinedBy terms: .
-
-
 terms:Period rdfs:seeAlso <https://www.dublincore.org/specifications/dublin-core/dcmi-period/> ;
              rdfs:comment "The set of time intervals defined by their limits according to the DCMI Period Encoding Scheme."@en ;
              rdfs:label "DCMI Period"@en ;
              rdfs:isDefinedBy terms: .
-
-
-terms:PeriodOfTime rdfs:comment "An interval of time that is named or defined by its start and end dates."@en ;
-                   rdfs:isDefinedBy terms: ;
-                   rdfs:label "Period of Time"@en .
 
 
 terms:W3CDTF rdfs:label "W3C-DTF"@en ;
