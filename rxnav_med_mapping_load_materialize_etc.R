@@ -455,3 +455,5 @@ write_lines(temp, path = "medlabels_for_chebi_for_solr.json")
 
 # curl 'http://localhost:8983/solr/med_mapping_kb_labels/update?commit=true&overwrite=false' \
 # --data-binary  @medlabels_for_chebi_for_solr.json  -H 'Content-type:application/json'
+
+# now run rxnav_med_mapping_solr_upload_post.R
