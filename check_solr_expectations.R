@@ -1,5 +1,7 @@
 library(devtools)
 
+max.solr.rows <- 3
+
 # this script queries a private database and may require a VPN, a ssh tunnel, or other similar measures
 
 # requires a properly formatted "turbo_R_setup.yaml" in the home directory of the user who started this script
@@ -82,7 +84,7 @@ results.by.qf <- lapply(qf.options, function(the.qf) {
           q = current.kw ,
           defType = "edismax",
           qf = the.qf ,
-          rows = 4,
+          rows = max.solr.rows ,
           fl = "id,medlabel,employment,definedin,tokens,score"
         )
       )
@@ -120,7 +122,8 @@ results.by.qf <- lapply(qf.options, function(the.qf) {
 
 results.by.qf <- do.call(rbind.data.frame, results.by.qf)
 
-results.by.qf$qf <- factor(x = results.by.qf$qf, levels = unlist(qf.options))
+results.by.qf$qf <-
+  factor(x = results.by.qf$qf, levels = unlist(qf.options))
 
-# which qf combination has the most failures?
+# which qf combination has the least failures?
 table(results.by.qf$qf)
