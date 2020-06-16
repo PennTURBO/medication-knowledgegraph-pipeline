@@ -5382,8 +5382,8 @@ defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medla
                                                               <http://transformunify.org/ontologies/TURBO_0022059> ;
                                                      <http://transformunify.org/ontologies/TURBO_0022060> "defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medlabel+tokens&q=(analgesic)" ;
                                                      <http://transformunify.org/ontologies/TURBO_0022061> "http://purl.obolibrary.org/obo/CHEBI_35480" ;
-                                                     <http://transformunify.org/ontologies/TURBO_0022062> "analgesic" ,
-                                                                                                          "analgesics" ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022062> "analgesic" ;
+                                                     rdfs:comment "would be nice to get the right match from \"analgesics\" too, but that's not asserted by ChEBI" ;
                                                      rdfs:label "Solr query for analgesics"@en ;
                                                      rdfs:seeAlso mydata:curated_role .
 
