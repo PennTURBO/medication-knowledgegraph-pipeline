@@ -5250,7 +5250,6 @@ group by ?emp1 ?o1 ?emp2 ?o2""" ;
 ###  http://transformunify.org/ontologies/TURBO_0022063
 <http://transformunify.org/ontologies/TURBO_0022063> rdf:type owl:NamedIndividual ,
                                                               <http://transformunify.org/ontologies/TURBO_0022059> ;
-                                                     <http://transformunify.org/ontologies/TURBO_0022060> "defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medlabel+tokens&q=aspirin" ;
                                                      <http://transformunify.org/ontologies/TURBO_0022061> "http://purl.bioontology.org/ontology/RXNORM/1191" ,
                                                                                                           "http://purl.obolibrary.org/obo/CHEBI_15365" ;
                                                      <http://transformunify.org/ontologies/TURBO_0022062> "aspirin" ;
@@ -5262,7 +5261,6 @@ group by ?emp1 ?o1 ?emp2 ?o2""" ;
 ###  http://transformunify.org/ontologies/TURBO_0022064
 <http://transformunify.org/ontologies/TURBO_0022064> rdf:type owl:NamedIndividual ,
                                                               <http://transformunify.org/ontologies/TURBO_0022059> ;
-                                                     <http://transformunify.org/ontologies/TURBO_0022060> "defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medlabel+tokens&q=acetaminophen" ;
                                                      <http://transformunify.org/ontologies/TURBO_0022061> "http://purl.bioontology.org/ontology/RXNORM/161" ,
                                                                                                           "http://purl.obolibrary.org/obo/CHEBI_46195" ;
                                                      <http://transformunify.org/ontologies/TURBO_0022062> "acetaminophen" ;
@@ -5278,8 +5276,7 @@ group by ?emp1 ?o1 ?emp2 ?o2""" ;
                                                      <http://transformunify.org/ontologies/TURBO_0022060> "defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&q=(tylenol active_ingredient)&qf=medlabel tokens employment" ;
                                                      <http://transformunify.org/ontologies/TURBO_0022061> "http://purl.bioontology.org/ontology/RXNORM/202433" ,
                                                                                                           "http://purl.obolibrary.org/obo/CHEBI_46195" ;
-                                                     <http://transformunify.org/ontologies/TURBO_0022062> "active_ingredient" ,
-                                                                                                          "tylenol" ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022062> "tylenol active_ingredient" ;
                                                      rdfs:comment "ChEBI  provides the brand name \"tylenol\" for CHEBI:46195 'paracetamol' via KEGG DRUG. That means users searching for \"tylenol\" (and several other common brands) will get BN hits from RxNorm, but can also be redirected to active_ingredient hits with the query below. We'll have to decide whether it's appropriate to broaden the scope from a brand to any product that contains the active ingredient that is most closely associated with the submitted brand." ;
                                                      rdfs:label "Solr query for tylenol as an active_ingredient"@en ;
                                                      rdfs:seeAlso mydata:active_ingredient .
@@ -5288,7 +5285,6 @@ group by ?emp1 ?o1 ?emp2 ?o2""" ;
 ###  http://transformunify.org/ontologies/TURBO_0022066
 <http://transformunify.org/ontologies/TURBO_0022066> rdf:type owl:NamedIndividual ,
                                                               <http://transformunify.org/ontologies/TURBO_0022059> ;
-                                                     <http://transformunify.org/ontologies/TURBO_0022060> "defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medlabel%20tokens&q=meperidine" ;
                                                      <http://transformunify.org/ontologies/TURBO_0022061> "http://purl.bioontology.org/ontology/RXNORM/6754" ,
                                                                                                           "http://purl.obolibrary.org/obo/DRON_00016917" ;
                                                      <http://transformunify.org/ontologies/TURBO_0022062> "meperidine" ;
@@ -5302,7 +5298,6 @@ group by ?emp1 ?o1 ?emp2 ?o2""" ;
 ###  http://transformunify.org/ontologies/TURBO_0022067
 <http://transformunify.org/ontologies/TURBO_0022067> rdf:type owl:NamedIndividual ,
                                                               <http://transformunify.org/ontologies/TURBO_0022059> ;
-                                                     <http://transformunify.org/ontologies/TURBO_0022060> "select?defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medlabel+tokens&q=pethidine" ;
                                                      <http://transformunify.org/ontologies/TURBO_0022061> "http://purl.bioontology.org/ontology/RXNORM/6754" ;
                                                      <http://transformunify.org/ontologies/TURBO_0022062> "pethidine" ;
                                                      rdfs:comment "ChEBI asserts the preferred label \"pethidine\" for CHEBI:6754, but it is not currently expected to appear in this query's results" ;
@@ -5315,7 +5310,6 @@ group by ?emp1 ?o1 ?emp2 ?o2""" ;
 ###  http://transformunify.org/ontologies/TURBO_0022068
 <http://transformunify.org/ontologies/TURBO_0022068> rdf:type owl:NamedIndividual ,
                                                               <http://transformunify.org/ontologies/TURBO_0022059> ;
-                                                     <http://transformunify.org/ontologies/TURBO_0022060> "defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medlabel+tokens&q=terbinafine" ;
                                                      <http://transformunify.org/ontologies/TURBO_0022061> "http://purl.bioontology.org/ontology/RXNORM/37801" ,
                                                                                                           "http://purl.obolibrary.org/obo/DRON_00016960" ;
                                                      <http://transformunify.org/ontologies/TURBO_0022062> "terbinafine" ;
@@ -5352,7 +5346,6 @@ That TMM rule could be loosened, but that would almost certainly add noise to th
 ###  http://transformunify.org/ontologies/TURBO_0022071
 <http://transformunify.org/ontologies/TURBO_0022071> rdf:type owl:NamedIndividual ,
                                                               <http://transformunify.org/ontologies/TURBO_0022059> ;
-                                                     <http://transformunify.org/ontologies/TURBO_0022060> "defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medlabel+tokens&q=(statin)" ;
                                                      <http://transformunify.org/ontologies/TURBO_0022061> "http://purl.obolibrary.org/obo/CHEBI_87631" ;
                                                      <http://transformunify.org/ontologies/TURBO_0022062> "statin" ,
                                                                                                           "statins" ;
@@ -5363,7 +5356,6 @@ That TMM rule could be loosened, but that would almost certainly add noise to th
 ###  http://transformunify.org/ontologies/TURBO_0022072
 <http://transformunify.org/ontologies/TURBO_0022072> rdf:type owl:NamedIndividual ,
                                                               <http://transformunify.org/ontologies/TURBO_0022059> ;
-                                                     <http://transformunify.org/ontologies/TURBO_0022060> "defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medlabel+tokens&q=anti-inflammatory" ;
                                                      <http://transformunify.org/ontologies/TURBO_0022061> "http://purl.obolibrary.org/obo/CHEBI_35472" ;
                                                      <http://transformunify.org/ontologies/TURBO_0022062> "anti-inflammatory" ;
                                                      rdfs:comment """Hayden has pointed out that CHEBI:35472 would ideally be ranked higher than RXNORM:1043480 'surpass anti-inflammatory'
@@ -5382,7 +5374,6 @@ defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medla
 ###  http://transformunify.org/ontologies/TURBO_0022073
 <http://transformunify.org/ontologies/TURBO_0022073> rdf:type owl:NamedIndividual ,
                                                               <http://transformunify.org/ontologies/TURBO_0022059> ;
-                                                     <http://transformunify.org/ontologies/TURBO_0022060> "defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medlabel+tokens&q=(analgesic)" ;
                                                      <http://transformunify.org/ontologies/TURBO_0022061> "http://purl.obolibrary.org/obo/CHEBI_35480" ;
                                                      <http://transformunify.org/ontologies/TURBO_0022062> "analgesic" ;
                                                      rdfs:comment "would be nice to get the right match from \"analgesics\" too, but that's not asserted by ChEBI" ;
@@ -5423,28 +5414,27 @@ The results of submitting that to either medlabel alone or medlabel+tokens are n
                                                      <http://transformunify.org/ontologies/TURBO_0022060> "defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&qf=medlabel+tokens&q=(search keywords)" ;
                                                      rdfs:comment """Solr queries all start with http://<solrhost>:<solrport>/solr/<TMM solr core>/select?
 
-As of May 2020, the PennTURBO teams TMM Solr core is med_mapping_kb_labels_exp
+Use something like this to limit the number of rows returned: &rows=10
 
-use something like this to limit the number of rows returned: &rows=10
+There are lots of opportunities for tuning, like applying per-field boots.
 
-You don't HAVE to use the example field list
-
-A modification that currently improves some queries is changing the query fields to just medlabel, just tokens, or both""" ;
-                                                     rdfs:label "Standard TMM Solr query"@en .
+You don't HAVE to use the example return field list""" ;
+                                                     rdfs:label "Standard TMM Solr query"@en ;
+                                                     rdfs:seeAlso <http://transformunify.org/ontologies/TURBO_0022100> .
 
 
 ###  http://transformunify.org/ontologies/TURBO_0022100
 <http://transformunify.org/ontologies/TURBO_0022100> rdf:type owl:NamedIndividual ,
                                                               <http://transformunify.org/ontologies/TURBO_0022099> ;
                                                      terms:date "2020-06-03"^^xsd:date ;
-                                                     skos:notation 857514 ,
-                                                                   "med_mapping_kb_labels_exp" ;
+                                                     skos:notation "med_mapping_kb_labels_exp" ;
                                                      rdfs:label "TMM Solr database med_mapping_kb_labels_exp version 857514"@en ;
                                                      rdfs:seeAlso rxnorm: ,
                                                                   dron:chebi.owl ,
                                                                   dron:dron.owl ,
                                                                   <http://transformunify.org/ontologies/TURBO_0022104> ,
-                                                                  <http://transformunify.org/ontologies/TURBO_0022105> .
+                                                                  <http://transformunify.org/ontologies/TURBO_0022105> ;
+                                                     owl:versionInfo 857514 .
 
 
 ###  http://transformunify.org/ontologies/TURBO_0022104
