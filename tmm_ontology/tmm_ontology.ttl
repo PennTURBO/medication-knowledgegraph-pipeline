@@ -863,7 +863,8 @@ terms:identifier rdf:type owl:DatatypeProperty ;
 ###  http://transformunify.org/ontologies/TURBO_0022020
 <http://transformunify.org/ontologies/TURBO_0022020> rdf:type owl:DatatypeProperty ;
                                                      rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022091> ;
-                                                     rdfs:label "has SPARQL select query"@en .
+                                                     rdfs:comment "[template] must be a tuple of one or more terms, like..." ;
+                                                     rdfs:label "has tempalted SPARQL select query"@en .
 
 
 ###  http://transformunify.org/ontologies/TURBO_0022021
