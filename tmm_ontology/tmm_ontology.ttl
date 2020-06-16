@@ -860,10 +860,6 @@ terms:identifier rdf:type owl:DatatypeProperty ;
                  rdfs:range rdfs:Literal .
 
 
-###  http://purl.org/dc/terms/title
-terms:title rdf:type owl:DatatypeProperty .
-
-
 ###  http://transformunify.org/ontologies/TURBO_0022020
 <http://transformunify.org/ontologies/TURBO_0022020> rdf:type owl:DatatypeProperty ;
                                                      rdfs:subPropertyOf <http://transformunify.org/ontologies/TURBO_0022091> ;
@@ -1274,6 +1270,12 @@ May be difficult to load from BioPortal URL into password protected GraphDB repo
 <http://transformunify.org/ontologies/TURBO_0022109> rdf:type owl:Class ;
                                                      rdfs:subClassOf foaf:Document ;
                                                      rdfs:label "web page"@en .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022111
+<http://transformunify.org/ontologies/TURBO_0022111> rdf:type owl:Class ;
+                                                     rdfs:subClassOf <http://transformunify.org/ontologies/TURBO_0022059> ;
+                                                     rdfs:label "Currently unsuccessful Solr query"@en .
 
 
 ###  http://transformunify.org/ontologies/definer
@@ -5272,7 +5274,7 @@ group by ?emp1 ?o1 ?emp2 ?o2""" ;
 
 ###  http://transformunify.org/ontologies/TURBO_0022065
 <http://transformunify.org/ontologies/TURBO_0022065> rdf:type owl:NamedIndividual ,
-                                                              <http://transformunify.org/ontologies/TURBO_0022059> ;
+                                                              <http://transformunify.org/ontologies/TURBO_0022111> ;
                                                      <http://transformunify.org/ontologies/TURBO_0022060> "defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&q=(tylenol active_ingredient)&qf=medlabel tokens employment" ;
                                                      <http://transformunify.org/ontologies/TURBO_0022061> "http://purl.bioontology.org/ontology/RXNORM/202433" ,
                                                                                                           "http://purl.obolibrary.org/obo/CHEBI_46195" ;
