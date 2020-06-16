@@ -5448,7 +5448,8 @@ You don't HAVE to use the example return field list""" ;
 
 ###  https://github.com/PennTURBO/med_mapping/tree/32b4637b67065bf9ba7975a618cfaec5aa9e9ebc
 <https://github.com/PennTURBO/med_mapping/tree/32b4637b67065bf9ba7975a618cfaec5aa9e9ebc> rdf:type owl:NamedIndividual ,
-                                                                                                  <http://transformunify.org/ontologies/TURBO_0022103> .
+                                                                                                  <http://transformunify.org/ontologies/TURBO_0022103> ;
+                                                                                         skos:notation "32b4637b67065bf9ba7975a618cfaec5aa9e9ebc" .
 
 
 ###  https://raw.githubusercontent.com/PennTURBO/med_mapping/master/cohort_building_medmap_traversals/chebi_or_dron_ing_to_rxn_any_order.rq
