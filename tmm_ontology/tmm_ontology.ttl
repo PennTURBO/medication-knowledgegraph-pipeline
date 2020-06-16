@@ -5250,7 +5250,7 @@ group by ?emp1 ?o1 ?emp2 ?o2""" ;
                                                               <http://transformunify.org/ontologies/TURBO_0022059> ;
                                                      <http://transformunify.org/ontologies/TURBO_0022060> "defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medlabel+tokens&q=aspirin" ;
                                                      <http://transformunify.org/ontologies/TURBO_0022061> "http://purl.bioontology.org/ontology/RXNORM/1191" ,
-                                                                                                          "http://purl.bioontology.org/ontology/RXNORM/368457" ;
+                                                                                                          "http://purl.obolibrary.org/obo/CHEBI_15365" ;
                                                      <http://transformunify.org/ontologies/TURBO_0022062> "aspirin" ;
                                                      rdfs:label "Solr query for aspirin"@en ;
                                                      rdfs:seeAlso mydata:active_ingredient ,
@@ -5261,8 +5261,8 @@ group by ?emp1 ?o1 ?emp2 ?o2""" ;
 <http://transformunify.org/ontologies/TURBO_0022064> rdf:type owl:NamedIndividual ,
                                                               <http://transformunify.org/ontologies/TURBO_0022059> ;
                                                      <http://transformunify.org/ontologies/TURBO_0022060> "defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medlabel+tokens&q=acetaminophen" ;
-                                                     <http://transformunify.org/ontologies/TURBO_0022061> """http://purl.bioontology.org/ontology/RXNORM/161
-http://purl.obolibrary.org/obo/CHEBI_46195""" ;
+                                                     <http://transformunify.org/ontologies/TURBO_0022061> "http://purl.bioontology.org/ontology/RXNORM/161" ,
+                                                                                                          "http://purl.obolibrary.org/obo/CHEBI_46195" ;
                                                      <http://transformunify.org/ontologies/TURBO_0022062> "acetaminophen" ;
                                                      rdfs:comment "That gets correct search results even though ChEBI's preferred label for this entity is \"paracetamol\". (The Solr core was created in a way that prioritizes DrOn labels on ChEBI labels over ChEBI terms.)" ;
                                                      rdfs:label "Solr query for acetaminophen as an active_ingredient or IN"@en ;
