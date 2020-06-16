@@ -960,6 +960,48 @@ mydata:rxnorm_relationship_tuple rdf:type owl:Class ;
                                  rdfs:label "RxNorm allowed { subject predicate object . } tuple" .
 
 
+###  http://purl.bioontology.org/ontology/RXNORM/
+rxnorm: rdf:type owl:Class ;
+        rdfs:subClassOf <http://transformunify.org/ontologies/TURBO_0022026> ;
+        terms:accrualPeriodicity <http://purl.org/cld/freq/monthly> ;
+        rdfs:comment """BioPortal download URLs require an apikey. A public key is available for some ontologies... see the ontologies homepage. 
+
+https://bioportal.bioontology.org/ontologies/RXNORM
+
+http://data.bioontology.org/ontologies/RXNORM/submissions/18/download?apikey=9cf735c3-a44a-404f-8b2f-c49d48b2b8b2
+
+TMM users should really get their own apikeys.
+
+https://bioportal.bioontology.org/help#Getting_an_API_key
+
+http://data.bioontology.org/ontologies/RXNORM/download/download?apikey=<secret>
+
+Can also build RXNORM by downloading UMLS, extracting with MetaMorphoSys, loading into MySQL, and then converting with umls2rdf
+
+Native RRF comes out monthly, but UMLS and derived BioPortal versions only come out twice per year.
+
+https://download.nlm.nih.gov/umls/kss/rxnorm/RxNorm_full_05042020.zip
+
+https://www.nlm.nih.gov/research/umls/rxnorm/docs/rxnormfiles.html
+
+Working on writing RRF -> RDF direct converter
+
+https://download.nlm.nih.gov/umls/kss/rxnorm/RxNorm_full_05042020.zip
+
+May be difficult to load from BioPortal URL into password protected GraphDB repo, so loading from locally staged file may be required. Redirect involved? GraphDB tries to autosense formats, but can't tell that BioPortal’s files are generally TTL from the URL.""" ;
+        rdfs:label "BioPortal RxNorm ontology"@en ;
+        foaf:homepage <https://bioportal.bioontology.org/ontologies/RXNORM> ,
+                      <https://www.nlm.nih.gov/research/umls/rxnorm/docs/rxnormfiles.html> ;
+        foaf:page "http://data.bioontology.org/ontologies/RXNORM/download/download?apikey" .
+
+[ rdf:type owl:Axiom ;
+   owl:annotatedSource rxnorm: ;
+   owl:annotatedProperty terms:accrualPeriodicity ;
+   owl:annotatedTarget <http://purl.org/cld/freq/monthly> ;
+   rdfs:seeAlso <https://www.nlm.nih.gov/research/umls/rxnorm/docs/rxnormfiles.html>
+ ] .
+
+
 ###  http://purl.obolibrary.org/obo/OBI_0001909
 dron:OBI_0001909 rdf:type owl:Class ;
                  rdfs:comment """This terms label and IRI were hand pasted into this ontology. (No ROBOT, Onto Animals, etc.)
@@ -983,6 +1025,34 @@ But some EHRs or CDWs may have values in thier medication table that clearly do 
 Even ignoring wheelchairs... are these things really drug prescriptions? In PennMedicine's CDW, they appear in a \"reference medications\" table."""@en ;
                   rdfs:label "drug prescription"@en ;
                   rdfs:seeAlso <https://raw.githubusercontent.com/OpenLHS/PDRO/master/pdro.owl> .
+
+
+###  http://purl.obolibrary.org/obo/chebi.owl
+dron:chebi.owl rdf:type owl:Class ;
+               rdfs:subClassOf <http://transformunify.org/ontologies/TURBO_0022026> ;
+               rdfs:comment """Available in OWL or OBO formats, with or without gz compression. 
+
+Three versions are available, but they all share the same ontology IRI
+
+LITE - Only ids, name, subsets and relationships are available. Small size if you are interested in our ontology only
+CORE - As above plus chemical data (mass, charge, formula) and structures (inchis, inchikeys, smiles)
+FULL - As above plus name synonyms and manually added cross-reference.""" ,
+                            """Sample annotations
+
+    <owl:Ontology rdf:about=\"http://purl.obolibrary.org/obo/chebi.owl\">
+        <owl:versionIRI rdf:resource=\"http://purl.obolibrary.org/obo/chebi/187/chebi.owl\"/>
+        <rdfs:comment rdf:datatype=\"http://www.w3.org/2001/XMLSchema#string\">ChEBI subsumes and replaces the Chemical Ontology first</rdfs:comment>
+        <oboInOwl:date rdf:datatype=\"http://www.w3.org/2001/XMLSchema#string\">27:04:2020 18:57</oboInOwl:date>
+        <rdfs:comment rdf:datatype=\"http://www.w3.org/2001/XMLSchema#string\">ChEBI Release version 187</rdfs:comment>
+        <rdfs:comment rdf:datatype=\"http://www.w3.org/2001/XMLSchema#string\">Author: ChEBI curation team</rdfs:comment>
+        <rdfs:comment rdf:datatype=\"http://www.w3.org/2001/XMLSchema#string\">developed by Michael Ashburner &amp; Pankaj Jaiswal.</rdfs:comment>
+        <oboInOwl:saved-by rdf:datatype=\"http://www.w3.org/2001/XMLSchema#string\">chebi</oboInOwl:saved-by>
+        <oboInOwl:hasOBOFormatVersion rdf:datatype=\"http://www.w3.org/2001/XMLSchema#string\">1.2</oboInOwl:hasOBOFormatVersion>
+        <oboInOwl:default-namespace rdf:datatype=\"http://www.w3.org/2001/XMLSchema#string\">chebi_ontology</oboInOwl:default-namespace>
+        <rdfs:comment rdf:datatype=\"http://www.w3.org/2001/XMLSchema#string\">For any queries contact chebi-help@ebi.ac.uk</rdfs:comment>
+    </owl:Ontology>""" ;
+               rdfs:label "ChEBI"@en ;
+               foaf:homepage "https://www.ebi.ac.uk/chebi/downloadsForward.do" .
 
 
 ###  http://purl.org/dc/terms/Frequency
@@ -1196,63 +1266,6 @@ Clinical- and Branded does form groups like 'acetaminophen Oral Tablet' [RxCUI =
                                                      rdfs:label "GitHub commit"@en .
 
 
-###  http://transformunify.org/ontologies/TURBO_0022106
-<http://transformunify.org/ontologies/TURBO_0022106> rdf:type owl:Class ;
-                                                     rdfs:subClassOf <http://transformunify.org/ontologies/TURBO_0022026> ;
-                                                     rdfs:comment """Available in OWL or OBO formats, with or without gz compression. 
-
-Three versions are available, but they all share the same ontology IRI
-
-LITE - Only ids, name, subsets and relationships are available. Small size if you are interested in our ontology only
-CORE - As above plus chemical data (mass, charge, formula) and structures (inchis, inchikeys, smiles)
-FULL - As above plus name synonyms and manually added cross-reference.
-
-see https://www.ebi.ac.uk/chebi/downloadsForward.do""" ;
-                                                     rdfs:label "ChEBI"@en .
-
-
-###  http://transformunify.org/ontologies/TURBO_0022107
-<http://transformunify.org/ontologies/TURBO_0022107> rdf:type owl:Class ;
-                                                     rdfs:subClassOf <http://transformunify.org/ontologies/TURBO_0022026> ;
-                                                     terms:accrualPeriodicity <http://purl.org/cld/freq/monthly> ;
-                                                     rdfs:comment """BioPortal download URLs require an apikey. A public key is available for some ontologies... see the ontologies homepage. 
-
-https://bioportal.bioontology.org/ontologies/RXNORM
-
-http://data.bioontology.org/ontologies/RXNORM/submissions/18/download?apikey=9cf735c3-a44a-404f-8b2f-c49d48b2b8b2
-
-TMM users should really get their own apikeys.
-
-https://bioportal.bioontology.org/help#Getting_an_API_key
-
-http://data.bioontology.org/ontologies/RXNORM/download/download?apikey=<secret>
-
-Can also build RXNORM by downloading UMLS, extracting with MetaMorphoSys, loading into MySQL, and then converting with umls2rdf
-
-Native RRF comes out monthly, but UMLS and derived BioPortal versions only come out twice per year.
-
-https://download.nlm.nih.gov/umls/kss/rxnorm/RxNorm_full_05042020.zip
-
-https://www.nlm.nih.gov/research/umls/rxnorm/docs/rxnormfiles.html
-
-Working on writing RRF -> RDF direct converter
-
-https://download.nlm.nih.gov/umls/kss/rxnorm/RxNorm_full_05042020.zip
-
-May be difficult to load from BioPortal URL into password protected GraphDB repo, so loading from locally staged file may be required. Redirect involved? GraphDB tries to autosense formats, but can't tell that BioPortal’s files are generally TTL from the URL.""" ;
-                                                     rdfs:label "BioPortal RxNorm ontology"@en ;
-                                                     foaf:homepage <https://bioportal.bioontology.org/ontologies/RXNORM> ,
-                                                                   <https://www.nlm.nih.gov/research/umls/rxnorm/docs/rxnormfiles.html> ;
-                                                     foaf:page "http://data.bioontology.org/ontologies/RXNORM/download/download?apikey" .
-
-[ rdf:type owl:Axiom ;
-   owl:annotatedSource <http://transformunify.org/ontologies/TURBO_0022107> ;
-   owl:annotatedProperty terms:accrualPeriodicity ;
-   owl:annotatedTarget <http://purl.org/cld/freq/monthly> ;
-   rdfs:seeAlso <https://www.nlm.nih.gov/research/umls/rxnorm/docs/rxnormfiles.html>
- ] .
-
-
 ###  http://transformunify.org/ontologies/TURBO_0022108
 <http://transformunify.org/ontologies/TURBO_0022108> rdf:type owl:Class ;
                                                      rdfs:subClassOf <http://transformunify.org/ontologies/TURBO_0022026> ;
@@ -1276,6 +1289,24 @@ May be difficult to load from BioPortal URL into password protected GraphDB repo
 <http://transformunify.org/ontologies/TURBO_0022111> rdf:type owl:Class ;
                                                      rdfs:subClassOf <http://transformunify.org/ontologies/TURBO_0022059> ;
                                                      rdfs:label "Currently unsuccessful Solr query"@en .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022114
+<http://transformunify.org/ontologies/TURBO_0022114> rdf:type owl:Class ;
+                                                     rdfs:subClassOf dron:chebi.owl ;
+                                                     rdfs:label "ChEBI lite"@en .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022115
+<http://transformunify.org/ontologies/TURBO_0022115> rdf:type owl:Class ;
+                                                     rdfs:subClassOf dron:chebi.owl ;
+                                                     rdfs:label "ChEBI core"@en .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022116
+<http://transformunify.org/ontologies/TURBO_0022116> rdf:type owl:Class ;
+                                                     rdfs:subClassOf dron:chebi.owl ;
+                                                     rdfs:label "ChEBI full"@en .
 
 
 ###  http://transformunify.org/ontologies/definer
@@ -2100,9 +2131,9 @@ mydata:SCD_quantified_form_of_SCD rdf:type owl:NamedIndividual ,
 mydata:active_ingredient rdf:type owl:NamedIndividual ,
                                   <http://transformunify.org/ontologies/TURBO_0022093> ;
                          skos:exactMatch <http://example.com/resource/RXNORM_TTY/IN> ;
-                         skos:relatedMatch dron:chebi.owl ,
-                                           <http://purl.obolibrary.org/obo/dron/dron-hand.owl> ,
-                                           <http://purl.obolibrary.org/obo/dron/dron-ingredient.owl> ;
+                         skos:relatedMatch <http://purl.obolibrary.org/obo/dron/dron-hand.owl> ,
+                                           <http://purl.obolibrary.org/obo/dron/dron-ingredient.owl> ,
+                                           <http://transformunify.org/ontologies/TURBO_0022113> ;
                          skos:notation "active_ingredient" ;
                          rdfs:comment "This doesn't apply to ChEBI compounds with clinically relevant roles, like rosuvastatin CHEBI:38545, if they are not asserted as the active ingredient of a DrOn product. This is often the case is DrOn has minted its own term for the same molecular entity." ;
                          rdfs:isDefinedBy <https://github.com/PennTURBO/med_mapping/blob/master/tmm_ontology/tmm_ontology.ttl> ;
@@ -2139,9 +2170,9 @@ mydata:classified_search_results rdf:type owl:NamedIndividual ,
 ###  http://example.com/resource/clinrel_structclass
 mydata:clinrel_structclass rdf:type owl:NamedIndividual ,
                                     <http://transformunify.org/ontologies/TURBO_0022093> ;
-                           skos:relatedMatch dron:chebi.owl ,
-                                             <http://purl.obolibrary.org/obo/dron/dron-hand.owl> ,
-                                             <http://purl.obolibrary.org/obo/dron/dron-ingredient.owl> ;
+                           skos:relatedMatch <http://purl.obolibrary.org/obo/dron/dron-hand.owl> ,
+                                             <http://purl.obolibrary.org/obo/dron/dron-ingredient.owl> ,
+                                             <http://transformunify.org/ontologies/TURBO_0022113> ;
                            skos:notation "clinrel_structclass" ;
                            rdfs:comment """See create_clinrel_structclass in rxnav_med_mapping.yaml. Clinically relevant structural classes are defined by entities in ChEBI that bear an curated role (see bootstrapping notes) AND have subclasses of their own. This includes amphetamines, benzodiazepines, statins, etc. (Where an member in the same structural series is expected to exhibit the therapeutic role.) 
 
@@ -2158,7 +2189,7 @@ That case may be exacerbated by the fact that some of those ChEBI terms are cons
 ###  http://example.com/resource/curated_role
 mydata:curated_role rdf:type owl:NamedIndividual ,
                              <http://transformunify.org/ontologies/TURBO_0022093> ;
-                    skos:relatedMatch dron:chebi.owl ;
+                    skos:relatedMatch <http://transformunify.org/ontologies/TURBO_0022113> ;
                     skos:notation "curated_role" ;
                     rdfs:comment """Not all ChEBI roles (like 'fuel') are included. The curated set was bootstrapped by examining the roles borne by the  RxNorm terms that were elected (as classified search results) for the source/reference medications. This was informally performed in comparison with the roles that are most commonly asserted for any ChEBI term.
 
@@ -2294,7 +2325,7 @@ mydata:turbo_med_mapping_hand rdf:type owl:NamedIndividual ,
 <http://example.com/resource/RXNORM_TTY/BN> rdf:type owl:NamedIndividual ,
                                                      <http://transformunify.org/ontologies/TURBO_0022036> ,
                                                      <http://transformunify.org/ontologies/TURBO_0022044> ;
-                                            skos:relatedMatch rxnorm: ;
+                                            skos:relatedMatch <http://transformunify.org/ontologies/TURBO_0022112> ;
                                             skos:notation "BN" ;
                                             rdfs:isDefinedBy rxnorm: ,
                                                              <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
@@ -2307,7 +2338,7 @@ mydata:turbo_med_mapping_hand rdf:type owl:NamedIndividual ,
 <http://example.com/resource/RXNORM_TTY/BPCK> rdf:type owl:NamedIndividual ,
                                                        <http://transformunify.org/ontologies/TURBO_0022036> ,
                                                        <http://transformunify.org/ontologies/TURBO_0022044> ;
-                                              skos:relatedMatch rxnorm: ;
+                                              skos:relatedMatch <http://transformunify.org/ontologies/TURBO_0022112> ;
                                               skos:notation "BPCK" ;
                                               rdfs:isDefinedBy rxnorm: ,
                                                                <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
@@ -2349,7 +2380,7 @@ mydata:turbo_med_mapping_hand rdf:type owl:NamedIndividual ,
 <http://example.com/resource/RXNORM_TTY/GPCK> rdf:type owl:NamedIndividual ,
                                                        <http://transformunify.org/ontologies/TURBO_0022036> ,
                                                        <http://transformunify.org/ontologies/TURBO_0022044> ;
-                                              skos:relatedMatch rxnorm: ;
+                                              skos:relatedMatch <http://transformunify.org/ontologies/TURBO_0022112> ;
                                               skos:notation "GPCK" ;
                                               rdfs:isDefinedBy <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
                                               rdfs:label "Generic Pack" ;
@@ -2362,7 +2393,7 @@ mydata:turbo_med_mapping_hand rdf:type owl:NamedIndividual ,
                                                      <http://transformunify.org/ontologies/TURBO_0022036> ,
                                                      <http://transformunify.org/ontologies/TURBO_0022044> ;
                                             skos:exactMatch mydata:active_ingredient ;
-                                            skos:relatedMatch rxnorm: ;
+                                            skos:relatedMatch <http://transformunify.org/ontologies/TURBO_0022112> ;
                                             skos:notation "IN" ;
                                             rdfs:isDefinedBy <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
                                             rdfs:label "Ingredient" ;
@@ -2380,7 +2411,7 @@ mydata:turbo_med_mapping_hand rdf:type owl:NamedIndividual ,
 <http://example.com/resource/RXNORM_TTY/MIN> rdf:type owl:NamedIndividual ,
                                                       <http://transformunify.org/ontologies/TURBO_0022036> ,
                                                       <http://transformunify.org/ontologies/TURBO_0022044> ;
-                                             skos:relatedMatch rxnorm: ;
+                                             skos:relatedMatch <http://transformunify.org/ontologies/TURBO_0022112> ;
                                              skos:notation "MIN" ;
                                              rdfs:isDefinedBy <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
                                              rdfs:label "Multiple Ingredients" ;
@@ -2392,7 +2423,7 @@ mydata:turbo_med_mapping_hand rdf:type owl:NamedIndividual ,
 <http://example.com/resource/RXNORM_TTY/PIN> rdf:type owl:NamedIndividual ,
                                                       <http://transformunify.org/ontologies/TURBO_0022036> ,
                                                       <http://transformunify.org/ontologies/TURBO_0022044> ;
-                                             skos:relatedMatch rxnorm: ;
+                                             skos:relatedMatch <http://transformunify.org/ontologies/TURBO_0022112> ;
                                              skos:notation "PIN" ;
                                              rdfs:isDefinedBy <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
                                              rdfs:label "Precise Ingredient" ;
@@ -2415,7 +2446,7 @@ mydata:turbo_med_mapping_hand rdf:type owl:NamedIndividual ,
                                                       <http://transformunify.org/ontologies/TURBO_0022036> ,
                                                       <http://transformunify.org/ontologies/TURBO_0022044> ;
                                              skos:broadMatch mydata:product ;
-                                             skos:relatedMatch rxnorm: ;
+                                             skos:relatedMatch <http://transformunify.org/ontologies/TURBO_0022112> ;
                                              skos:notation "SBD" ;
                                              rdfs:isDefinedBy <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
                                              rdfs:label "Semantic Branded Drug" ;
@@ -2427,7 +2458,7 @@ mydata:turbo_med_mapping_hand rdf:type owl:NamedIndividual ,
 <http://example.com/resource/RXNORM_TTY/SBDC> rdf:type owl:NamedIndividual ,
                                                        <http://transformunify.org/ontologies/TURBO_0022036> ,
                                                        <http://transformunify.org/ontologies/TURBO_0022044> ;
-                                              skos:relatedMatch rxnorm: ;
+                                              skos:relatedMatch <http://transformunify.org/ontologies/TURBO_0022112> ;
                                               skos:notation "SBDC" ;
                                               rdfs:isDefinedBy <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
                                               rdfs:label "Semantic Branded Drug Component" ;
@@ -2439,7 +2470,7 @@ mydata:turbo_med_mapping_hand rdf:type owl:NamedIndividual ,
 <http://example.com/resource/RXNORM_TTY/SBDF> rdf:type owl:NamedIndividual ,
                                                        <http://transformunify.org/ontologies/TURBO_0022036> ,
                                                        <http://transformunify.org/ontologies/TURBO_0022044> ;
-                                              skos:relatedMatch rxnorm: ;
+                                              skos:relatedMatch <http://transformunify.org/ontologies/TURBO_0022112> ;
                                               skos:notation "SBDF" ;
                                               rdfs:isDefinedBy <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
                                               rdfs:label "Semantic Branded Drug Form" ;
@@ -2462,7 +2493,7 @@ mydata:turbo_med_mapping_hand rdf:type owl:NamedIndividual ,
                                                       <http://transformunify.org/ontologies/TURBO_0022036> ,
                                                       <http://transformunify.org/ontologies/TURBO_0022044> ;
                                              skos:broadMatch mydata:product ;
-                                             skos:relatedMatch rxnorm: ;
+                                             skos:relatedMatch <http://transformunify.org/ontologies/TURBO_0022112> ;
                                              skos:notation "SCD" ;
                                              rdfs:isDefinedBy <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
                                              rdfs:label "Semantic Clinical Drug" ;
@@ -2474,7 +2505,7 @@ mydata:turbo_med_mapping_hand rdf:type owl:NamedIndividual ,
 <http://example.com/resource/RXNORM_TTY/SCDC> rdf:type owl:NamedIndividual ,
                                                        <http://transformunify.org/ontologies/TURBO_0022036> ,
                                                        <http://transformunify.org/ontologies/TURBO_0022044> ;
-                                              skos:relatedMatch rxnorm: ;
+                                              skos:relatedMatch <http://transformunify.org/ontologies/TURBO_0022112> ;
                                               skos:notation "SCDC" ;
                                               rdfs:isDefinedBy <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
                                               rdfs:label "Semantic Clinical Drug Component" ;
@@ -2487,7 +2518,7 @@ mydata:turbo_med_mapping_hand rdf:type owl:NamedIndividual ,
                                                        <http://transformunify.org/ontologies/TURBO_0022036> ,
                                                        <http://transformunify.org/ontologies/TURBO_0022044> ;
                                               skos:broadMatch mydata:product ;
-                                              skos:relatedMatch rxnorm: ;
+                                              skos:relatedMatch <http://transformunify.org/ontologies/TURBO_0022112> ;
                                               skos:notation "SCDF" ;
                                               rdfs:isDefinedBy <https://www.nlm.nih.gov/research/umls/rxnorm/docs/appendix5.html> ;
                                               rdfs:label "Semantic Clinical Drug Form" ;
@@ -4554,60 +4585,6 @@ mydata:turbo_med_mapping_hand rdf:type owl:NamedIndividual ,
                                                                               <http://transformunify.org/ontologies/TURBO_0022045> .
 
 
-###  http://purl.bioontology.org/ontology/RXNORM/
-rxnorm: rdf:type owl:NamedIndividual ,
-                 <http://transformunify.org/ontologies/TURBO_0022107> ,
-                 <http://transformunify.org/ontologies/definer> ;
-        rdfs:label "BioPortal RxNorm ontology 2020aa"@en .
-
-
-###  http://purl.obolibrary.org/obo/chebi.owl
-dron:chebi.owl rdf:type owl:NamedIndividual ,
-                        <http://transformunify.org/ontologies/TURBO_0022106> ;
-               skos:narrowMatch <http://transformunify.org/ontologies/TURBO_0022011> ,
-                                <http://transformunify.org/ontologies/TURBO_0022012> ,
-                                <http://transformunify.org/ontologies/TURBO_0022013> ;
-               terms:accrualPeriodicity <http://purl.org/cld/freq/monthly> ;
-               rdfs:comment """Sample annotations
-
-@prefix owl: <http://www.w3.org/2002/07/owl#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix ns0: <http://www.geneontology.org/formats/oboInOwl#> .
-@prefix ns1: <http://purl.obolibrary.org/obo/> .
-
-<http://purl.obolibrary.org/obo/chebi.owl>
-  a owl:Ontology ;
-  owl:versionIRI <http://purl.obolibrary.org/obo/chebi/187/chebi.owl> ;
-
-  rdfs:comment \"ChEBI subsumes and replaces the Chemical Ontology first\"^^xsd:string, 
-\"ChEBI Release version 187\"^^xsd:string, 
-\"Author: ChEBI curation team\"^^xsd:string, 
-\"developed by Michael Ashburner & Pankaj Jaiswal.\"^^xsd:string, 
-\"For any queries contact chebi-help@ebi.ac.uk\"^^xsd:string ;
-
-  ns0:date \"27:04:2020 18:51\"^^xsd:string ;
-  ns0:saved-by \"chebi\"^^xsd:string ;
-  ns0:hasOBOFormatVersion \"1.2\"^^xsd:string ;
-  ns0:default-namespace \"chebi_ontology\"^^xsd:string .""" ;
-               rdfs:label "ChEBI 187"@en ;
-               foaf:page <ftp://ftp.ebi.ac.uk/pub/databases/chebi/ontology/chebi.owl.gz> .
-
-[ rdf:type owl:Axiom ;
-   owl:annotatedSource dron:chebi.owl ;
-   owl:annotatedProperty terms:accrualPeriodicity ;
-   owl:annotatedTarget <http://purl.org/cld/freq/monthly> ;
-   rdfs:seeAlso <ftp://ftp.ebi.ac.uk/pub/databases/chebi/archive/>
- ] .
-
-[ rdf:type owl:Axiom ;
-   owl:annotatedSource dron:chebi.owl ;
-   owl:annotatedProperty foaf:page ;
-   owl:annotatedTarget <ftp://ftp.ebi.ac.uk/pub/databases/chebi/ontology/chebi.owl.gz> ;
-   owl:versionInfo <http://transformunify.org/ontologies/TURBO_0022011>
- ] .
-
-
 ###  http://purl.obolibrary.org/obo/dron.owl
 dron:dron.owl rdf:type owl:NamedIndividual ,
                        <http://transformunify.org/ontologies/TURBO_0022108> ,
@@ -5448,6 +5425,41 @@ You don't HAVE to use the example return field list""" ;
 <http://transformunify.org/ontologies/TURBO_0022105> rdf:type owl:NamedIndividual ,
                                                               <https://github.com/PennTURBO/med_mapping/blob/master/rxnav_med_mapping_solr_upload_post.R> ;
                                                      rdfs:label "rxnav_med_mapping_solr_upload_post.R prior to first commit"@en .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022112
+<http://transformunify.org/ontologies/TURBO_0022112> rdf:type owl:NamedIndividual ,
+                                                              rxnorm: ,
+                                                              <http://transformunify.org/ontologies/definer> ;
+                                                     rdfs:label "BioPortal RxNorm ontology 2020aa"@en ;
+                                                     owl:versionInfo "2020aa" .
+
+
+###  http://transformunify.org/ontologies/TURBO_0022113
+<http://transformunify.org/ontologies/TURBO_0022113> rdf:type owl:NamedIndividual ,
+                                                              <http://transformunify.org/ontologies/TURBO_0022116> ,
+                                                              <http://transformunify.org/ontologies/definer> ;
+                                                     skos:narrowMatch <http://transformunify.org/ontologies/TURBO_0022011> ,
+                                                                      <http://transformunify.org/ontologies/TURBO_0022012> ,
+                                                                      <http://transformunify.org/ontologies/TURBO_0022013> ;
+                                                     terms:accrualPeriodicity <http://purl.org/cld/freq/monthly> ;
+                                                     rdfs:label "ChEBI full 187"@en ;
+                                                     owl:versionInfo 187 ;
+                                                     foaf:page <ftp://ftp.ebi.ac.uk/pub/databases/chebi/ontology/chebi.owl.gz> .
+
+[ rdf:type owl:Axiom ;
+   owl:annotatedSource <http://transformunify.org/ontologies/TURBO_0022113> ;
+   owl:annotatedProperty terms:accrualPeriodicity ;
+   owl:annotatedTarget <http://purl.org/cld/freq/monthly> ;
+   rdfs:seeAlso <ftp://ftp.ebi.ac.uk/pub/databases/chebi/archive/>
+ ] .
+
+[ rdf:type owl:Axiom ;
+   owl:annotatedSource <http://transformunify.org/ontologies/TURBO_0022113> ;
+   owl:annotatedProperty foaf:page ;
+   owl:annotatedTarget <ftp://ftp.ebi.ac.uk/pub/databases/chebi/ontology/chebi.owl.gz> ;
+   owl:versionInfo <http://transformunify.org/ontologies/TURBO_0022011>
+ ] .
 
 
 ###  https://bioportal.bioontology.org/ontologies/RXNORM
