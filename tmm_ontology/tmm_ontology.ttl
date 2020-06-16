@@ -5403,11 +5403,11 @@ You don't HAVE to use the example return field list""" ;
                                                      terms:date "2020-06-03"^^xsd:date ;
                                                      skos:notation "med_mapping_kb_labels_exp" ;
                                                      rdfs:label "TMM Solr database med_mapping_kb_labels_exp version 857514"@en ;
-                                                     rdfs:seeAlso rxnorm: ,
-                                                                  dron:chebi.owl ,
-                                                                  dron:dron.owl ,
+                                                     rdfs:seeAlso dron:dron.owl ,
                                                                   <http://transformunify.org/ontologies/TURBO_0022104> ,
-                                                                  <http://transformunify.org/ontologies/TURBO_0022105> ;
+                                                                  <http://transformunify.org/ontologies/TURBO_0022105> ,
+                                                                  <http://transformunify.org/ontologies/TURBO_0022112> ,
+                                                                  <http://transformunify.org/ontologies/TURBO_0022113> ;
                                                      owl:versionInfo 857514 .
 
 
