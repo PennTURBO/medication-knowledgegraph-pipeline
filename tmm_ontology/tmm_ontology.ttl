@@ -5395,8 +5395,7 @@ defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medla
                                                      <http://transformunify.org/ontologies/TURBO_0022061> "http://purl.bioontology.org/ontology/RXNORM/198440" ,
                                                                                                           "http://purl.obolibrary.org/obo/DRON_00036033" ;
                                                      <http://transformunify.org/ontologies/TURBO_0022062> "500 mg acetaminophen tablet" ,
-                                                                                                          "500 mg acetaminophen tablets" ,
-                                                                                                          "500 mg tylenol tablet" ;
+                                                                                                          "500 mg acetaminophen tablets" ;
                                                      rdfs:comment """'500 mg tylenol tablet' would also be a reasonable query
 
 select?defType=edismax&fl=id,medlabel,employment,definedin,tokens,score&rows=3&qf=medlabel+tokens&q=(500+mg+tylenol+tablets)
