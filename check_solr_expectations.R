@@ -57,6 +57,7 @@ solr.expectations.res$esr.len <- nchar(solr.expectations.res$esr)
 ####
 
 # for a reality check, let's try querying all combinations of the two fields intended for searching
+
 qf.options <- list("medlabel", "tokens", "medlabel tokens")
 
 results.by.qf <- lapply(qf.options, function(the.qf) {
@@ -118,6 +119,8 @@ results.by.qf <- lapply(qf.options, function(the.qf) {
 })
 
 results.by.qf <- do.call(rbind.data.frame, results.by.qf)
+
+results.by.qf$qf <- factor(x = results.by.qf$qf, levels = unlist(qf.options))
 
 # which qf combination has the most failures?
 table(results.by.qf$qf)
