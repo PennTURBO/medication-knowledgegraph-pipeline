@@ -5462,11 +5462,11 @@ PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 select 
-distinct ?order_id ?source_full_name
+distinct 
+?query_input ?order_id ?source_full_name
 where {
-    values ?solr_mediri {
-        obo:CHEBI_28787
-    }
+    # example obo:CHEBI_28787
+    values ?query_input {}
     values ?source_employment {
         mydata:active_ingredient
     }
@@ -5478,10 +5478,10 @@ where {
         <http://purl.obolibrary.org/obo/dron/dron-ingredient.owl>
     }
     graph mydata:employment {
-        ?solr_mediri mydata:employment ?source_employment .
+        ?query_input mydata:employment ?source_employment .
     }
     graph mydata:defined_in {
-        ?solr_mediri mydata:defined_in ?source_definer .
+        ?query_input mydata:defined_in ?source_definer .
     }
     # for ChEBI/DrOn ingredient to rxnorm ingredient:
     #   union together direct BioPortal mappings
@@ -5489,11 +5489,11 @@ where {
     {
         {
             graph mydata:bioportal_mapping {
-                ?solr_mediri mydata:bioportal_mapping ?mapped_rxn
+                ?query_input mydata:bioportal_mapping ?mapped_rxn
             }
         } union {
             graph ?g {
-                ?dronprod mydata:transitively_materialized_dron_ingredient ?solr_mediri
+                ?dronprod mydata:transitively_materialized_dron_ingredient ?query_input
             }
             # add triples patterns about the ?dronprod's definer and employment?
             graph mydata:bioportal_mapping {
@@ -5536,7 +5536,8 @@ where {
                                                                                                                                          <http://purl.org/dc/dcam/rangeIncludes> <http://transformunify.org/ontologies/TURBO_0022036> ;
                                                                                                                                          rdfs:comment """semantic expansion: from an active_ingredient asserted by DrOn or ChEBI to any RxNorm term that contains the ingredient, as determined by the chain (rxnorm:constitutes|rxnorm:contained_in|rxnorm:has_dose_form|rxnorm:has_doseformgroup|rxnorm:has_form|rxnorm:has_tradename|rxnorm:ingredient_of|rxnorm:ingredients_of|rxnorm:isa|rxnorm:part_of|rxnorm:precise_ingredient_of|rxnorm:quantified_form_of|rxnorm:reformulation_of)*
 
-The chain can be of any length and the allowed predicates can appear in any order.""" .
+The chain can be of any length and the allowed predicates can appear in any order.""" ;
+                                                                                                                                         rdfs:label "chebi_or_dron_ing_to_rxn_any_order" .
 
 
 ###  https://raw.githubusercontent.com/PennTURBO/med_mapping/master/cohort_building_medmap_traversals/chebi_role_to_rxn_any_order.rq
@@ -5549,11 +5550,11 @@ PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 select 
-distinct ?order_id ?source_full_name
+distinct 
+?query_input ?order_id ?source_full_name
 where {
-    values ?chebirole {
-        obo:CHEBI_35482 
-    }
+    # example obo:CHEBI_35482
+    values ?query_input {}
     values ?role_employment {
         mydata:curated_role
     }
@@ -5561,13 +5562,13 @@ where {
         obo:chebi.owl
     }
     graph mydata:employment {
-        ?chebirole mydata:employment ?role_employment .
+        ?query_input mydata:employment ?role_employment .
     }
     graph mydata:defined_in {
-        ?chebirole mydata:defined_in ?role_definer .
+        ?query_input mydata:defined_in ?role_definer .
     }
     graph mydata:transitive_role_of_class {
-        ?solr_mediri mydata:transitive_role_of_class ?chebirole .
+        ?solr_mediri mydata:transitive_role_of_class ?query_input .
     }
     values ?source_employment {
         mydata:active_ingredient
@@ -5635,7 +5636,8 @@ where {
 }""" ;
                                                                                                                                   <http://purl.org/dc/dcam/domainIncludes> mydata:curated_role ;
                                                                                                                                   <http://purl.org/dc/dcam/rangeIncludes> <http://transformunify.org/ontologies/TURBO_0022036> ;
-                                                                                                                                  rdfs:comment "semantic expansion: from a role, though any compound that bears that role, through DrOn or RxNorm ingredient/product assertion paths." .
+                                                                                                                                  rdfs:comment "semantic expansion: from a role, though any compound that bears that role, through DrOn or RxNorm ingredient/product assertion paths." ;
+                                                                                                                                  rdfs:label "chebi_role_to_rxn_any_order" .
 
 
 ###  https://raw.githubusercontent.com/PennTURBO/med_mapping/master/cohort_building_medmap_traversals/clinrel_structclass_to_rxn_any_order.rq
@@ -5731,12 +5733,11 @@ PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX rxn_tty: <http://example.com/resource/rxn_tty/>
 select 
 distinct
-?order_id ?source_full_name
+?query_input ?order_id ?source_full_name
 where {
     # value or values come from upstream input, like user-requested Solr search
-    values ?dronprod {
-        <http://purl.obolibrary.org/obo/DRON_00082861>
-    }
+    # example <http://purl.obolibrary.org/obo/DRON_00082861>
+    values ?query_input {}
     values ?dpemp {
         mydata:product
     }
@@ -5744,13 +5745,13 @@ where {
         <http://purl.obolibrary.org/obo/dron/dron-ingredient.owl> <http://purl.obolibrary.org/obo/dron/dron-rxnorm.owl>
     }
     graph mydata:employment {
-        ?dronprod mydata:employment ?dpemp
+        ?query_input mydata:employment ?dpemp
     }
     graph mydata:defined_in {
-        ?dronprod mydata:defined_in ?dpdi
+        ?query_input mydata:defined_in ?dpdi
     }
     graph mydata:bioportal_mapping {
-        ?dronprod mydata:bioportal_mapping ?mapped_rxn
+        ?query_input mydata:bioportal_mapping ?mapped_rxn
     }
     # the next two constraints can be applied in the SPARQL query, or could be ensured by some upstream logic
     values ?rxemployment {
@@ -5783,7 +5784,8 @@ where {
                                                                                                                                 <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/SBD> ,
                                                                                                                                                                         <http://example.com/resource/RXNORM_TTY/SCD> ,
                                                                                                                                                                         <http://example.com/resource/RXNORM_TTY/SCDF> ;
-                                                                                                                                rdfs:comment "semantic expansion: from DrOn product to RxNorm SBD, SCD and SCDF. These destination types were determined empirically and make sense... the things that contain active ingredients, according to DrOn, are branded drugs, generic (semantic clinical) drugs, or generic doseforms like \"500 mg acetaminophen tablet\"" .
+                                                                                                                                rdfs:comment "semantic expansion: from DrOn product to RxNorm SBD, SCD and SCDF. These destination types were determined empirically and make sense... the things that contain active ingredients, according to DrOn, are branded drugs, generic (semantic clinical) drugs, or generic doseforms like \"500 mg acetaminophen tablet\"" ;
+                                                                                                                                rdfs:label "dronprod_to_rxnprod_order" .
 
 
 ###  https://raw.githubusercontent.com/PennTURBO/med_mapping/master/cohort_building_medmap_traversals/rxn_brandname_to_rxn_branded_entities.rq
@@ -5794,25 +5796,25 @@ PREFIX rxnorm: <http://purl.bioontology.org/ontology/RXNORM/>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX obo: <http://purl.obolibrary.org/obo/>
 select 
-distinct ?order_id ?source_full_name
+distinct 
+?query_input ?order_id ?source_full_name
 where {
-    values ?rxnbrand {
-        <http://purl.bioontology.org/ontology/RXNORM/202702> 
-    }
+    # example <http://purl.bioontology.org/ontology/RXNORM/202702> 
+    values ?query_input {}
     values ?rxemployment {
         <http://example.com/resource/rxn_tty/BN>
     }
     graph mydata:employment {
-        ?rxnbrand mydata:employment ?rxemployment .
+        ?query_input mydata:employment ?rxemployment .
     }
     values ?source_definer {
         rxnorm:
     }
     graph mydata:defined_in {
-        ?rxnbrand mydata:defined_in ?source_definer .
+        ?query_input mydata:defined_in ?source_definer .
     }
     graph rxnorm: {
-        ?rxnbrand  (rxnorm:ingredient_of|rxnorm:inverse_isa|rxnorm:contained_in|rxnorm:constitutes)* ?rxnrelated .
+        ?query_input  (rxnorm:ingredient_of|rxnorm:inverse_isa|rxnorm:contained_in|rxnorm:constitutes)* ?rxnrelated .
         ?rxnrelated skos:prefLabel ?rrpl .
     }
     graph mydata:elected_mapping {
@@ -5903,7 +5905,8 @@ Showing results from 1 to 12 of 12. Query took 8.8s, minutes ago.
 +------------------------------------------+-------+
 | http://example.com/resource/rxn_tty/SCDG | 8     |
 +------------------------------------------+-------+""" ,
-                                                                                                                                                         "semantic expansion: from BN, via any chain of any length and any ordering of (rxnorm:ingredient_of|rxnorm:inverse_isa|rxnorm:contained_in|rxnorm:constitutes)*, to any RxNorm term. A very small number of non-branded entitles appear in the results." .
+                                                                                                                                                         "semantic expansion: from BN, via any chain of any length and any ordering of (rxnorm:ingredient_of|rxnorm:inverse_isa|rxnorm:contained_in|rxnorm:constitutes)*, to any RxNorm term. A very small number of non-branded entitles appear in the results." ;
+                                                                                                                                            rdfs:label "rxn_brandname_to_rxn_branded_entities" .
 
 
 ###  https://raw.githubusercontent.com/PennTURBO/med_mapping/master/cohort_building_medmap_traversals/rxning_to_rxn_any_order.rq
@@ -5915,44 +5918,33 @@ PREFIX rxnorm: <http://purl.bioontology.org/ontology/RXNORM/>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX rxn_tty: <http://example.com/resource/rxn_tty/>
 select 
-distinct ?order_id ?source_full_name
+distinct
+?query_input ?order_id ?source_full_name
 where {
     # value or values come from upstream input, like user-requested Solr search
-    values ?rxning {
-        rxnorm:4917 
-    }
+    # example rxnorm:209459
+    values ?query_input {}
     # the next two constraints can be applied in the SPARQL query, or could be ensured by some upstream logic
     values ?rxemployment {
-        <http://example.com/resource/rxn_tty/IN>
-    }
-    graph mydata:employment {
-        ?rxning mydata:employment ?rxemployment .
+        rxn_tty:SBD rxn_tty:SCD rxn_tty:SCDF
     }
     values ?source_definer {
         rxnorm:
     }
+    graph mydata:employment {
+        ?query_input mydata:employment ?rxemployment .
+    }
     graph mydata:defined_in {
-        ?rxning mydata:defined_in ?source_definer .
+        ?query_input mydata:defined_in ?source_definer .
     }
-    # this is the \"away from ingredient\" RxNorm predicate whitelist
-    graph rxnorm: {
-        ?rxning  (rxnorm:constitutes|rxnorm:contained_in|rxnorm:has_dose_form|rxnorm:has_doseformgroup|rxnorm:has_form|rxnorm:has_tradename|rxnorm:ingredient_of|rxnorm:ingredients_of|rxnorm:isa|rxnorm:part_of|rxnorm:precise_ingredient_of|rxnorm:quantified_form_of|rxnorm:reformulation_of)* ?rxnprod .
+    #    # find orders for the bare ingredient or products containing the ingredient
+    #    # probably won't find orders for a bare brand name
+    graph mydata:elected_mapping {
+        ?order mydata:elected_mapping ?query_input .
     }
-    # find orders for the bare ingredient or products containing the ingredient
-    # probably won't find orders for a bare brand name
-    {
-        {
-            graph mydata:elected_mapping {
-                ?order mydata:elected_mapping ?rxning .
-            }
-        } union {
-            graph mydata:elected_mapping {
-                ?order mydata:elected_mapping ?rxnprod .
-            }
-        }
-    }
-    # get properties of the order
+    #    # get properties of the order
     graph mydata:reference_medications {
         ?order a obo:PDRO_0000024 ;
                mydata:source_full_name ?source_full_name .
@@ -6051,7 +6043,8 @@ Showing results from 1 to 14 of 14. Query took 2m 47s, minutes ago.
 +------------------------------------------+---------+
 | http://example.com/resource/rxn_tty/SCDG | 567     |
 +------------------------------------------+---------+""" ,
-                                                                                                                                           "Semantic expansion: include any CDW medications that are classified to contain the specified ingredient, following RxNorm semantics only." .
+                                                                                                                                           "Semantic expansion: include any CDW medications that are classified to contain the specified ingredient, following RxNorm semantics only." ;
+                                                                                                                              rdfs:label "rxning_to_rxn_any_order" .
 
 
 ###  https://raw.githubusercontent.com/PennTURBO/med_mapping/master/cohort_building_medmap_traversals/rxnprod_to_rxn_sameprod_order.rq
@@ -6105,7 +6098,8 @@ where {
                                                                                                                                     <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/SBD> ,
                                                                                                                                                                             <http://example.com/resource/RXNORM_TTY/SCD> ,
                                                                                                                                                                             <http://example.com/resource/RXNORM_TTY/SCDF> ;
-                                                                                                                                    rdfs:comment "No semantic expansion. This could be rewritten to go from any RxNorm TTY to any CDW medication classified to the same type." .
+                                                                                                                                    rdfs:comment "No semantic expansion. This could be rewritten to go from any RxNorm TTY to any CDW medication classified to the same type." ;
+                                                                                                                                    rdfs:label "rxnprod_to_rxn_sameprod_order" .
 
 
 ###  https://www.nlm.nih.gov/research/umls/knowledge_sources/metathesaurus/release/abbreviations.html#TTY
