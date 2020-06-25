@@ -5648,11 +5648,12 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX mydata: <http://example.com/resource/>
 PREFIX rxnorm: <http://purl.bioontology.org/ontology/RXNORM/>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-select distinct ?order_id  ?source_full_name ?source_generic_name ?source_count  ?mapped_rxn_employment
+select 
+distinct 
+?query_input ?order_id ?source_full_name
 where {
-    values ?iri_from_solr {
-        <http://purl.obolibrary.org/obo/CHEBI_87631>
-    } 
+	# example <http://purl.obolibrary.org/obo/CHEBI_87631>
+    values ?query_input {}
     values ?definedin {
         obo:chebi.owl
     }
@@ -5718,7 +5719,8 @@ where {
 }""" ;
                                                                                                                                            <http://purl.org/dc/dcam/domainIncludes> mydata:clinrel_structclass ;
                                                                                                                                            <http://purl.org/dc/dcam/rangeIncludes> <http://transformunify.org/ontologies/TURBO_0022036> ;
-                                                                                                                                           rdfs:comment "semantic expansion: similar to roles and ingredients" .
+                                                                                                                                           rdfs:comment "semantic expansion: similar to roles and ingredients" ;
+                                                                                                                                           rdfs:label "clinrel_structclass_to_rxn_any_order" .
 
 
 ###  https://raw.githubusercontent.com/PennTURBO/med_mapping/master/cohort_building_medmap_traversals/dronprod_to_rxnprod_order.rq
