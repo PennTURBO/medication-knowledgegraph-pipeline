@@ -4596,6 +4596,104 @@ mydata:turbo_med_mapping_hand rdf:type owl:NamedIndividual ,
                                                                               <http://transformunify.org/ontologies/TURBO_0022045> .
 
 
+###  http://purl.bioontology.org/ontology/RXNORM/1001009
+<http://purl.bioontology.org/ontology/RXNORM/1001009> rdf:type owl:NamedIndividual ;
+                                                      skos:notation "1001009" ;
+                                                      mydata:employment <http://example.com/resource/rxn_tty/SBDF> ;
+                                                      skos:prefLabel "Oxymetazoline Nasal Spray [Duration]"@en .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/1160837
+<http://purl.bioontology.org/ontology/RXNORM/1160837> rdf:type owl:NamedIndividual ;
+                                                      skos:notation "1160837" ;
+                                                      mydata:employment <http://example.com/resource/rxn_tty/SCDG> ;
+                                                      skos:prefLabel "Fluoxetine Pill"@en .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/1182487
+<http://purl.bioontology.org/ontology/RXNORM/1182487> rdf:type owl:NamedIndividual ;
+                                                      skos:notation "1182487" ;
+                                                      mydata:employment <http://example.com/resource/rxn_tty/SBDG> ;
+                                                      skos:prefLabel "Prozac Pill"@en .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/205535
+<http://purl.bioontology.org/ontology/RXNORM/205535> rdf:type owl:NamedIndividual ;
+                                                     skos:notation "205535" ;
+                                                     mydata:employment <http://example.com/resource/rxn_tty/SBD> ;
+                                                     skos:prefLabel "Fluoxetine 10 MG Oral Capsule [Prozac]"@en .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/227224
+<http://purl.bioontology.org/ontology/RXNORM/227224> rdf:type owl:NamedIndividual ;
+                                                     skos:notation "227224" ;
+                                                     mydata:employment <http://example.com/resource/rxn_tty/PIN> ;
+                                                     skos:prefLabel "Fluoxetine Hydrochloride"@en .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/310384
+<http://purl.bioontology.org/ontology/RXNORM/310384> rdf:type owl:NamedIndividual ;
+                                                     skos:notation "310384" ;
+                                                     mydata:employment <http://example.com/resource/rxn_tty/SCD> ;
+                                                     skos:prefLabel "Fluoxetine 10 MG Oral Capsule"@en .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/315951
+<http://purl.bioontology.org/ontology/RXNORM/315951> rdf:type owl:NamedIndividual ;
+                                                     skos:notation "315951" ;
+                                                     mydata:employment <http://example.com/resource/rxn_tty/SCDC> ;
+                                                     skos:prefLabel "Fluoxetine 10 MG"@en .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/370506
+<http://purl.bioontology.org/ontology/RXNORM/370506> rdf:type owl:NamedIndividual ;
+                                                     skos:notation "370506" ;
+                                                     mydata:employment <http://example.com/resource/rxn_tty/SCDF> ;
+                                                     skos:prefLabel "Acetaminophen Oral Solution"@en .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/4493
+<http://purl.bioontology.org/ontology/RXNORM/4493> rdf:type owl:NamedIndividual ;
+                                                   skos:notation "4493" ;
+                                                   mydata:employment <http://example.com/resource/rxn_tty/IN> ;
+                                                   skos:prefLabel "Fluoxetine"@en .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/566436
+<http://purl.bioontology.org/ontology/RXNORM/566436> rdf:type owl:NamedIndividual ;
+                                                     skos:notation "566436" ;
+                                                     mydata:employment <http://example.com/resource/rxn_tty/SBDC> ;
+                                                     skos:prefLabel "Fluoxetine 10 MG [Prozac]"@en .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/58827
+<http://purl.bioontology.org/ontology/RXNORM/58827> rdf:type owl:NamedIndividual ;
+                                                    skos:notation "58827" ;
+                                                    mydata:employment <http://example.com/resource/rxn_tty/BN> ;
+                                                    skos:prefLabel "Prozac"@en .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/611247
+<http://purl.bioontology.org/ontology/RXNORM/611247> rdf:type owl:NamedIndividual ;
+                                                     skos:notation "611247" ;
+                                                     mydata:employment <http://example.com/resource/rxn_tty/MIN> ;
+                                                     skos:prefLabel "Fluoxetine / olanzapine"@en .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/762675
+<http://purl.bioontology.org/ontology/RXNORM/762675> rdf:type owl:NamedIndividual ;
+                                                     skos:notation "762675" ;
+                                                     mydata:employment <http://example.com/resource/rxn_tty/GPCK> ;
+                                                     skos:prefLabel "methylPREDNISolone 4 MG Tablet 6 Day 21 Count Pack"@en .
+
+
+###  http://purl.bioontology.org/ontology/RXNORM/834023
+<http://purl.bioontology.org/ontology/RXNORM/834023> rdf:type owl:NamedIndividual ;
+                                                     skos:notation "834023" ;
+                                                     mydata:employment <http://example.com/resource/rxn_tty/BPCK> ;
+                                                     skos:prefLabel "Medrol Dosepak 4 MG Tablet 6 Day 21 Count Pack"@en .
+
+
 ###  http://purl.obolibrary.org/obo/dron.owl
 dron:dron.owl rdf:type owl:NamedIndividual ,
                        <http://transformunify.org/ontologies/TURBO_0022108> ,
@@ -5465,8 +5563,9 @@ select
 distinct 
 ?query_input ?order_id ?source_full_name
 where {
-    # example obo:CHEBI_28787
     values ?query_input {}
+    # example <http://purl.obolibrary.org/obo/CHEBI_28787>
+    # nitroglycerin
     values ?source_employment {
         mydata:active_ingredient
     }
@@ -5553,8 +5652,8 @@ select
 distinct 
 ?query_input ?order_id ?source_full_name
 where {
-    # example obo:CHEBI_35482
     values ?query_input {}
+    # example obo:CHEBI_35482
     values ?role_employment {
         mydata:curated_role
     }
@@ -5652,8 +5751,9 @@ select
 distinct 
 ?query_input ?order_id ?source_full_name
 where {
-	# example <http://purl.obolibrary.org/obo/CHEBI_87631>
     values ?query_input {}
+    # example <http://purl.obolibrary.org/obo/CHEBI_87631>
+    # statin
     values ?definedin {
         obo:chebi.owl
     }
@@ -5661,11 +5761,11 @@ where {
         <http://example.com/resource/clinrel_structclass> 
     }
     graph <http://example.com/resource/employment> {
-        ?iri_from_solr <http://example.com/resource/employment>  
+        ?query_input <http://example.com/resource/employment>  
                 ?employment_iri .
     }
     graph ?definedin {
-        ?chebisubclasses rdfs:subClassOf* ?iri_from_solr
+        ?chebisubclasses rdfs:subClassOf* ?query_input
     }
     {
         {
@@ -5734,12 +5834,12 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX rxn_tty: <http://example.com/resource/rxn_tty/>
 select 
-distinct
+distinct 
 ?query_input ?order_id ?source_full_name
 where {
-    # value or values come from upstream input, like user-requested Solr search
-    # example <http://purl.obolibrary.org/obo/DRON_00082861>
     values ?query_input {}
+    # example <http://purl.obolibrary.org/obo/DRON_00082861>
+    # value or values come from upstream input, like user-requested Solr search
     values ?dpemp {
         mydata:product
     }
@@ -5783,10 +5883,13 @@ where {
     }
 }""" ;
                                                                                                                                 <http://purl.org/dc/dcam/domainIncludes> mydata:product ;
-                                                                                                                                <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/SBD> ,
-                                                                                                                                                                        <http://example.com/resource/RXNORM_TTY/SCD> ,
-                                                                                                                                                                        <http://example.com/resource/RXNORM_TTY/SCDF> ;
-                                                                                                                                rdfs:comment "semantic expansion: from DrOn product to RxNorm SBD, SCD and SCDF. These destination types were determined empirically and make sense... the things that contain active ingredients, according to DrOn, are branded drugs, generic (semantic clinical) drugs, or generic doseforms like \"500 mg acetaminophen tablet\"" ;
+                                                                                                                                rdfs:comment """had clained that this query was also applicable to 
+SBD (205535	PROzac 10 MG Oral Capsule)
+SCD (310384	FLUoxetine 10 MG Oral Capsule)
+SCDF
+hadn't claimed SCDG, but an example of that is:
+1160837	FLUoxetine Pill""" ,
+                                                                                                                                             "semantic expansion: from DrOn product to RxNorm SBD, SCD and SCDF. These destination types were determined empirically and make sense... the things that contain active ingredients, according to DrOn, are branded drugs, generic (semantic clinical) drugs, or generic doseforms like \"500 mg acetaminophen tablet\"" ;
                                                                                                                                 rdfs:label "dronprod_to_rxnprod_order" .
 
 
@@ -5801,8 +5904,9 @@ select
 distinct 
 ?query_input ?order_id ?source_full_name
 where {
-    # example <http://purl.bioontology.org/ontology/RXNORM/202702> 
     values ?query_input {}
+    # example <http://purl.bioontology.org/ontology/RXNORM/202702> <http://purl.bioontology.org/ontology/RXNORM/58827> <http://purl.bioontology.org/ontology/RXNORM/202433>
+    # Medrol Prozac Tylenol
     values ?rxemployment {
         <http://example.com/resource/rxn_tty/BN>
     }
@@ -5816,8 +5920,11 @@ where {
         ?query_input mydata:defined_in ?source_definer .
     }
     graph rxnorm: {
-        ?query_input  (rxnorm:ingredient_of|rxnorm:inverse_isa|rxnorm:contained_in|rxnorm:constitutes)* ?rxnrelated .
+        ?query_input  (rxnorm:ingredient_of|rxnorm:isa|rxnorm:contained_in|rxnorm:consists_of|rxnorm:has_quantified_form|rxnorm:reformulated_to)* ?rxnrelated .
         ?rxnrelated skos:prefLabel ?rrpl .
+    }
+    graph mydata:employment {
+        ?rxnrelated mydata:employment ?related_employment .
     }
     graph mydata:elected_mapping {
         ?order mydata:elected_mapping ?rxnrelated .
@@ -5832,53 +5939,13 @@ where {
     }
 }""" ;
                                                                                                                                             <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/BN> ;
-                                                                                                                                            rdfs:comment """prefix mydata: <http://example.com/resource/>
-PREFIX rxnorm: <http://purl.bioontology.org/ontology/RXNORM/>
-PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-PREFIX obo: <http://purl.obolibrary.org/obo/>
-select 
-?empchecked (count(?checkemp) as ?count)
-where {
-    values ?rxemployment {
-        <http://example.com/resource/rxn_tty/BN>
-    }
-    graph mydata:employment {
-        ?rxnbrand mydata:employment ?rxemployment .
-    }
-    values ?source_definer {
-        rxnorm:
-    }
-    graph mydata:defined_in {
-        ?rxnbrand mydata:defined_in ?source_definer .
-    }
-    graph rxnorm: {
-        ?rxnbrand  (rxnorm:ingredient_of|rxnorm:inverse_isa|rxnorm:contained_in|rxnorm:constitutes)* ?rxnrelated .
-        ?rxnrelated skos:prefLabel ?rrpl .
-    }
-    graph mydata:elected_mapping {
-        ?order mydata:elected_mapping ?rxnrelated .
-    }
-    graph mydata:reference_medications {
-        ?order a obo:PDRO_0000024 ;
-               mydata:source_full_name ?source_full_name .
-    }
-    graph mydata:source_med_id  {
-        ?order skos:notation ?order_id .
-    }
-    graph mydata:elected_mapping {
-        ?order mydata:elected_mapping ?checkemp .
-    }
-    graph mydata:employment {
-        ?checkemp mydata:employment ?empchecked .
-    }
-}
-group by ?empchecked
-
-####
-
-Showing results from 1 to 12 of 12. Query took 8.8s, minutes ago. 
-
-####
+                                                                                                                                            <http://purl.org/dc/dcam/rangeIncludes> <http://example.com/resource/RXNORM_TTY/BN> ,
+                                                                                                                                                                                    <http://example.com/resource/RXNORM_TTY/BPCK> ,
+                                                                                                                                                                                    <http://example.com/resource/RXNORM_TTY/SBD> ,
+                                                                                                                                                                                    <http://example.com/resource/RXNORM_TTY/SBDC> ,
+                                                                                                                                                                                    <http://example.com/resource/RXNORM_TTY/SBDF> ,
+                                                                                                                                                                                    <http://example.com/resource/RXNORM_TTY/SBDG> ;
+                                                                                                                                            rdfs:comment """Showing results from 1 to 12 of 12. Query took 8.8s, minutes ago. 
 
 +------------------------------------------+-------+
 | empchecked                               | count |
@@ -5907,7 +5974,13 @@ Showing results from 1 to 12 of 12. Query took 8.8s, minutes ago.
 +------------------------------------------+-------+
 | http://example.com/resource/rxn_tty/SCDG | 8     |
 +------------------------------------------+-------+""" ,
-                                                                                                                                                         "semantic expansion: from BN, via any chain of any length and any ordering of (rxnorm:ingredient_of|rxnorm:inverse_isa|rxnorm:contained_in|rxnorm:constitutes)*, to any RxNorm term. A very small number of non-branded entitles appear in the results." ;
+                                                                                                                                                         """semantic expansion: from BN, via any chain of any length and any ordering of (
+
+(rxnorm:ingredient_of|rxnorm:isa|rxnorm:contained_in|rxnorm:consists_of|rxnorm:has_quantified_form|rxnorm:reformulated_to)*
+
+to any RxNorm term. Certainly includes BN, BPCK, SBD, SBDC, SBDF. Might include SBDG too.
+
+A very small number of non-branded entitles appear in the results ?""" ;
                                                                                                                                             rdfs:label "rxn_brandname_to_rxn_branded_entities" .
 
 
@@ -5920,33 +5993,38 @@ PREFIX rxnorm: <http://purl.bioontology.org/ontology/RXNORM/>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-PREFIX rxn_tty: <http://example.com/resource/rxn_tty/>
 select 
-distinct
+distinct 
 ?query_input ?order_id ?source_full_name
 where {
-    # value or values come from upstream input, like user-requested Solr search
-    # example rxnorm:209459
     values ?query_input {}
-    # the next two constraints can be applied in the SPARQL query, or could be ensured by some upstream logic
-    values ?rxemployment {
-        rxn_tty:SBD rxn_tty:SCD rxn_tty:SCDF
+    # example <http://purl.bioontology.org/ontology/RXNORM/4493> 
+    #  Fluoxetine
+    # IN BN (has seperate query already) MIN (incompatibel) PIN (incompatible)
+    #        <http://purl.bioontology.org/ontology/RXNORM/58827>
+    #        <http://purl.bioontology.org/ontology/RXNORM/227224>
+    #        <http://purl.bioontology.org/ontology/RXNORM/611247>
+    values ?mapped_rxn_employment {
+        <http://example.com/resource/rxn_tty/IN>
     }
     values ?source_definer {
-        rxnorm:
+        <http://purl.bioontology.org/ontology/RXNORM/>
     }
     graph mydata:employment {
-        ?query_input mydata:employment ?rxemployment .
+        ?query_input mydata:employment ?mapped_rxn_employment .
     }
     graph mydata:defined_in {
         ?query_input mydata:defined_in ?source_definer .
     }
-    #    # find orders for the bare ingredient or products containing the ingredient
-    #    # probably won't find orders for a bare brand name
+    graph rxnorm: {
+        ?query_input  (rxnorm:constitutes|rxnorm:contained_in|rxnorm:has_dose_form|rxnorm:has_doseformgroup|rxnorm:has_form|rxnorm:has_tradename|rxnorm:ingredient_of|rxnorm:ingredients_of|rxnorm:isa|rxnorm:part_of|rxnorm:precise_ingredient_of|rxnorm:quantified_form_of|rxnorm:reformulation_of)* ?rxnprod .
+    }
+    # find orders for the bare ingredient or products containing the ingredient
+    # probably won't find orders for a bare brand name
     graph mydata:elected_mapping {
         ?order mydata:elected_mapping ?query_input .
     }
-    #    # get properties of the order
+    # get properties of the order
     graph mydata:reference_medications {
         ?order a obo:PDRO_0000024 ;
                mydata:source_full_name ?source_full_name .
@@ -5957,60 +6035,8 @@ where {
 }""" ;
                                                                                                                               <http://purl.org/dc/dcam/domainIncludes> <http://example.com/resource/RXNORM_TTY/IN> ;
                                                                                                                               <http://purl.org/dc/dcam/rangeIncludes> <http://transformunify.org/ontologies/TURBO_0022036> ;
-                                                                                                                              rdfs:comment """PREFIX mydata: <http://example.com/resource/>
-PREFIX obo: <http://purl.obolibrary.org/obo/>
-PREFIX rxnorm: <http://purl.bioontology.org/ontology/RXNORM/>
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-select ?empchecked (count(?checkemp) as ?count)
-where {
-    values ?rxemployment {
-        <http://example.com/resource/rxn_tty/IN>
-    }
-    graph mydata:employment {
-        ?rxning mydata:employment ?rxemployment .
-    }
-    values ?source_definer {
-        rxnorm:
-    }
-    graph mydata:defined_in {
-        ?rxning mydata:defined_in ?source_definer .
-    }
-    graph rxnorm: {
-        ?rxning  (rxnorm:constitutes|rxnorm:contained_in|rxnorm:has_dose_form|rxnorm:has_doseformgroup|rxnorm:has_form|rxnorm:has_tradename|rxnorm:ingredient_of|rxnorm:ingredients_of|rxnorm:isa|rxnorm:part_of|rxnorm:precise_ingredient_of|rxnorm:quantified_form_of|rxnorm:reformulation_of)* ?rxnprod .
-    }
-    {
-        {
-            graph mydata:elected_mapping {
-                ?order mydata:elected_mapping ?rxning .
-            }
-        } union {
-            graph mydata:elected_mapping {
-                ?order mydata:elected_mapping ?rxnprod .
-            }
-        }
-    }
-    graph mydata:reference_medications {
-        ?order a obo:PDRO_0000024 ;
-               mydata:source_full_name ?source_full_name .
-    }
-    graph mydata:source_med_id  {
-        ?order skos:notation ?order_id .
-    }
-    graph mydata:elected_mapping {
-        ?order mydata:elected_mapping ?checkemp .
-    }
-    graph mydata:employment {
-        ?checkemp mydata:employment ?empchecked .
-    }
-}
-group by ?empchecked
-
-
-####
-
-Showing results from 1 to 14 of 14. Query took 2m 47s, minutes ago. 
+                                                                                                                              rdfs:comment "Semantic expansion: include any CDW medications that are classified to contain the specified ingredient, following RxNorm semantics only." ,
+                                                                                                                                           """Showing results from 1 to 14 of 14. Query took 2m 47s, minutes ago. 
 
 ####
 
@@ -6044,8 +6070,7 @@ Showing results from 1 to 14 of 14. Query took 2m 47s, minutes ago.
 | http://example.com/resource/rxn_tty/SCDF | 5756    |
 +------------------------------------------+---------+
 | http://example.com/resource/rxn_tty/SCDG | 567     |
-+------------------------------------------+---------+""" ,
-                                                                                                                                           "Semantic expansion: include any CDW medications that are classified to contain the specified ingredient, following RxNorm semantics only." ;
++------------------------------------------+---------+""" ;
                                                                                                                               rdfs:label "rxning_to_rxn_any_order" .
 
 
@@ -6060,30 +6085,30 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX rxn_tty: <http://example.com/resource/rxn_tty/>
 select 
-distinct
-?order_id ?source_full_name
+distinct 
+?query_input ?rxemployment ?order_id ?source_full_name
 where {
+    values ?query_input {}
+    # example <http://purl.bioontology.org/ontology/RXNORM/209459>
+    # Acetaminophen 500 MG Oral Tablet [Tylenol]
     # value or values come from upstream input, like user-requested Solr search
-    values ?rxnprod {
-        rxnorm:209459 
-    }
     # the next two constraints can be applied in the SPARQL query, or could be ensured by some upstream logic
-    values ?rxemployment {
-        rxn_tty:SBD rxn_tty:SCD rxn_tty:SCDF
-    }
+#    values ?rxemployment {
+#        rxn_tty:SBD rxn_tty:SCD rxn_tty:SCDF
+#    }
     values ?source_definer {
         rxnorm:
     }
     graph mydata:employment {
-        ?rxnprod mydata:employment ?rxemployment .
+        ?query_input mydata:employment ?rxemployment .
     }
     graph mydata:defined_in {
-        ?rxnprod mydata:defined_in ?source_definer .
+        ?query_input mydata:defined_in ?source_definer .
     }
     #    # find orders for the bare ingredient or products containing the ingredient
     #    # probably won't find orders for a bare brand name
     graph mydata:elected_mapping {
-        ?order mydata:elected_mapping ?rxnprod .
+        ?order mydata:elected_mapping ?query_input .
     }
     #    # get properties of the order
     graph mydata:reference_medications {
