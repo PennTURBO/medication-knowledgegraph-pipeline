@@ -13,6 +13,8 @@ source_gist(id = "https://gist.github.com/turbomam/f082295aafb95e71d109d15ca4535
 # currently unused
 # config$tune.rf Boolean
 
+# MAM 20200721 swtich to try catch
+
 rxnCon <-   dbConnect(
   rxnDriver,
   paste0(
