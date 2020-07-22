@@ -1,3 +1,5 @@
 rxnav_med_mapping.yaml
 get_bioportal_mappings.yaml
 
+*.Rdata
+.DS_Store
