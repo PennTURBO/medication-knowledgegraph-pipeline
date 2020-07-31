@@ -2,7 +2,7 @@
 
 * [SQL Query for Statin Drugs in our Clinical Data Warehouse (CDW)](#sql-query-for-statin-drugs-in-our-clinical-data-warehouse--cdw-)
 * [Relation Between our CDW's `PHARMACY_CLASS` and `PHARMACY_SUBCLASS` Columns](#relation-between-our-cdw-s--pharmacy-class--and--pharmacy-subclass--columns)
-* [Confidential Information in Single-Oatient `MEDICATION` Records](#confidential-information-in-single-oatient--medication--records)
+* [Confidential Information in Single-Patient `MEDICATION` Records](#confidential-information-in-single-oatient--medication--records)
 * [Factor Importance for Random Forest (RF) Training](#factor-importance-for-random-forest--rf--training)
 * [Tuning of TMM RF](#tuning-of-tmm-rf)
 * [Software Libraries Required for TMM's R Scripts](#software-libraries-required-for-tmm-s-r-scripts)
@@ -76,7 +76,7 @@ HAVING
 
 
 
-## Confidential Information in Single-Oatient `MEDICATION` Records
+## Confidential Information in Single-Patient `MEDICATION` Records
 
 There are 1,464 `MEDICATION`s in our CDW whose `FULL_NAME` contains the substring “william'' and have been ordered for 0 or 1 patients, but 0 “william” orders that have been ordered for 2 or more patients. The same pattern holds for the substring “karen”.
 
@@ -1011,7 +1011,7 @@ These queries could start with a term obtained with Solr (see above). The SPARQL
 | 6159057  | Simvastatin 10 mg or tabs                                    |                                                             | 3                    |                            |
 | 6191018  | Simvastatin 40 mg daily                                      |                                                             | 3                    |                            |
 | 6217023  | Simvastatin (zocor) 40 mg or tabs, 1 tablet at bedtime       |                                                             | 3                    |                            |
-| 6240022  | Lovastatin 40 MG OR TABS 1 TABLET DAILY AT DINNER            |                                                             | 3                    |                            |
+| 6240022  | Lovastatin 40 MG OR TABS 1 TABLET DAILY AT DINNER            |                                                             | 3                    |                            |
 | 6274045  | Simvastatin 40mg qHS                                         |                                                             | 3                    |                            |
 | 6494143  | lipitor 40 mg oral daily                                     |                                                             | 3                    |                            |
 | 6501115  | Pravastatin Sodium Tab 40 MG                                 |                                                             | 3                    |                            |
@@ -1175,11 +1175,11 @@ These queries could start with a term obtained with Solr (see above). The SPARQL
 | 6189036  | atorvastain                                                  |                                                             | 2                    |                            |
 | 6200016  | Atorvastatin 40mg PO daily                                   |                                                             | 2                    |                            |
 | 6218026  | Rosuvastatin calcium (crestor) 5 mg or tabs, 1 tab daily (home med) |                                                             | 2                    |                            |
-| 6222037  | Atorvastatin Calcium 20 MG OR TABS 1 TABLET DAILY            |                                                             | 2                    |                            |
-| 6228023  | Simvastatin 20 MG OR TABS 1 TABLET AT BEDTIME                |                                                             | 2                    |                            |
+| 6222037  | Atorvastatin Calcium 20 MG OR TABS 1 TABLET DAILY            |                                                             | 2                    |                            |
+| 6228023  | Simvastatin 20 MG OR TABS 1 TABLET AT BEDTIME                |                                                             | 2                    |                            |
 | 6238023  | Atorvastatin 80mg daily                                      |                                                             | 2                    |                            |
 | 6283016  | Simvastatin (zocor) 20 mg or tabs, 1 tablet at bedtime       |                                                             | 2                    |                            |
-| 6329026  | Pravastatin Sodium 20 MG OR TABS 1 TABLET AT BEDTIME         |                                                             | 2                    |                            |
+| 6329026  | Pravastatin Sodium 20 MG OR TABS 1 TABLET AT BEDTIME         |                                                             | 2                    |                            |
 | 6373027  | Isosorbide Mononitrate Tab SR 24HR 60 MG                     |                                                             | 2                    | TRUE                       |
 | 6457015  | Simvastatin Tab 10 MG (ZOCOR)                                |                                                             | 2                    |                            |
 | 6480026  | Atorvastatin Calcium Tab 40 MG (Base Equivalent)             |                                                             | 2                    |                            |
