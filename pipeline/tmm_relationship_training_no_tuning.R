@@ -1,5 +1,3 @@
-# outer.start <- Sys.time()
-
 library(devtools)
 
 # requires a properly formatted "turbo_R_setup.yaml" in the home directory of the user who started this script
@@ -147,7 +145,7 @@ rxaui.asserted.string.res$bad.tty <-
 
 approximate.with.original <-
   base::merge(approximate.term.res, rxaui.asserted.string.res[!(rxaui.asserted.string.res$too.long |
-                                                                  rxaui.asserted.string.res$bad.tty) ,])
+                                                                  rxaui.asserted.string.res$bad.tty) , ])
 
 # anything lost in this merge?
 print(length(unique(approximate.term.res$rxaui)))
@@ -344,7 +342,7 @@ placeholder <-
   })
 
 unknowns.approximate.original.dists <-
-  unknowns.approximate.original.dists[complete.cases(unknowns.approximate.original.dists), ]
+  unknowns.approximate.original.dists[complete.cases(unknowns.approximate.original.dists),]
 
 
 #### STOP HERE FOR TUNING
@@ -358,7 +356,7 @@ coverage.check <-
   coverage.check[coverage.check.randos > (1 - config$coverage.check.fraction)]
 
 coverage.check.frame <-
-  unknowns.approximate.original.dists[unknowns.approximate.original.dists$STR.q %in% coverage.check , ]
+  unknowns.approximate.original.dists[unknowns.approximate.original.dists$STR.q %in% coverage.check ,]
 
 train.test <-
   unknowns.approximate.original.dists[!(unknowns.approximate.original.dists$STR.q %in% coverage.check) ,
@@ -383,21 +381,15 @@ test.frame <- strat.res[[2]]
 ###   ###   ###
 
 ### probably would require retuning (ntree, mtry, important factors)
-# if signficiant changes were made to veracity/proximity assessment
+# if significant changes were made to veracity/proximity assessment
 
-# 10 minutes with 30 000 labels queried from RxNorm
-# ~ 20 000 (case?) normalized unique queries
-# ~ 450 000 rows in trainframe
-
-# 20200512... 10 minutes for 147k trainframe?!
-# 25 minutes for 288k row trainframe from 20k terms from SQL
-# any improvement in performance Sn Sp coverage?
+# log time required to train given the starting number of RxNav queries
 
 target <- as.data.frame(train.frame)
 target <- target[, config$target.col]
 features <- as.data.frame(train.frame)
 drops <- config$target.col
-features <- features[,!(names(features) %in% drops)]
+features <- features[, !(names(features) %in% drops)]
 
 # hah! tuning determined that 11 was a good mtry, but only 9 features were deemd important
 # use |important features| - 1
@@ -445,10 +437,12 @@ table(performance.frame$overridden)
 
 ###   ###   ###
 
-print(confusionMatrix(performance.frame$rf_responses, test.frame$RELA, positive = "TRUE"))
-
-x <- confusionMatrix(performance.frame$rf_responses, test.frame$RELA, positive = "TRUE")
-x <- t(x$table)
+print(
+  confusionMatrix(performance.frame$rf_responses, test.frame$RELA, positive = "TRUE")
+)
+confusion.counts <-
+  confusionMatrix(performance.frame$rf_responses, test.frame$RELA, positive = "TRUE")
+confusion.counts <- t(confusion.counts$table)
 
 # write.csv(rf_classifier$confusion, file = config$testing.confusion.writepath)
 
@@ -472,44 +466,37 @@ x <- t(x$table)
 #
 # ###
 
-### non-more-distant COVERAGE HERE
-
+### in this context, coverage means the fraction of inputs that get at least one classification
+#   other than "more distant"
+# but more distant may frequently be acceptable
+# currently working on distance based prediction and centrality based election
 print(Sys.time())
 timed.system <- system.time(coverage_probs <-
                               predict(rf_classifier, coverage.check.frame, type = "prob"))
 print(Sys.time())
-
-
 print(Sys.time())
 timed.system <- system.time(
   coverage_responses <-
     predict(rf_classifier, coverage.check.frame, type = "response")
 )
 print(Sys.time())
-
 coverage.check.frame <-
   cbind.data.frame(coverage.check.frame, coverage_responses, coverage_probs)
-
 covered.rxcuis <-
   unique(coverage.check.frame$RXCUI[coverage.check.frame$coverage_responses != 'more distant'])
 attempted.rxcuis <- unique(coverage.check.frame$RXCUI)
 coverage <- length(covered.rxcuis) / length(attempted.rxcuis)
-
 print(coverage)
 
 # 24 MB... on the large size for github
-# save(rf_classifier, file = config$rf.model.savepath)
+save(rf_classifier, file = config$rf.model.savepath)
 
 # could even save all objects in memory for QC/debugging in the future
 # save.image("rxnav_med_mapping_proximity_training_no_tuning.Rdata")
 
-outer.end <- Sys.time()
-print(config$approximate.row.count)
-print(length(random.queries))
-print(nrow(train.frame))
-print(outer.end - outer.start)
-temp <-
+conf.mat.summary <-
   confusionMatrix(performance.frame$overridden, test.frame$RELA, positive = "TRUE")
-print(round(temp$overall, 3))
 
-print(temp$byClass)
+print(round(conf.mat.summary$overall, 3))
+
+print(conf.mat.summary$byClass)
