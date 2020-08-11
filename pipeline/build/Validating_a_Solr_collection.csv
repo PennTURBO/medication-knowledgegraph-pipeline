@@ -1,0 +1,10 @@
+solrQueryExample,keywords,expected
+http://transformunify.org/ontologies/TURBO_0022066,meperidine,http://purl.obolibrary.org/obo/DRON_00016917|http://purl.bioontology.org/ontology/RXNORM/6754
+http://transformunify.org/ontologies/TURBO_0022067,pethidine,http://purl.bioontology.org/ontology/RXNORM/6754
+http://transformunify.org/ontologies/TURBO_0022068,terbinafine,http://purl.obolibrary.org/obo/DRON_00016960|http://purl.bioontology.org/ontology/RXNORM/37801
+http://transformunify.org/ontologies/TURBO_0022073,analgesic,http://purl.obolibrary.org/obo/CHEBI_35480
+http://transformunify.org/ontologies/TURBO_0022063,aspirin,http://purl.obolibrary.org/obo/CHEBI_15365|http://purl.bioontology.org/ontology/RXNORM/1191
+http://transformunify.org/ontologies/TURBO_0022074,500 mg acetaminophen tablet|500 mg acetaminophen tablets,http://purl.bioontology.org/ontology/RXNORM/198440|http://purl.obolibrary.org/obo/DRON_00036033
+http://transformunify.org/ontologies/TURBO_0022064,acetaminophen,http://purl.obolibrary.org/obo/CHEBI_46195|http://purl.bioontology.org/ontology/RXNORM/161
+http://transformunify.org/ontologies/TURBO_0022071,statins|statin,http://purl.obolibrary.org/obo/CHEBI_87631
+http://transformunify.org/ontologies/TURBO_0022072,anti-inflammatory,http://purl.obolibrary.org/obo/CHEBI_35472

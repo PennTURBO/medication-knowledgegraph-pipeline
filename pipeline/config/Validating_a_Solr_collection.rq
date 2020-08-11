@@ -1,0 +1,21 @@
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+select 
+?solrQueryExample (group_CONCAT(distinct ?solrKeyword;
+        SEPARATOR="|") as ?keywords) (group_CONCAT(distinct str( ?expectedSolrResult) ;
+        SEPARATOR="|") as ?expected)
+where {
+    ?solrQueryExample a <http://transformunify.org/ontologies/TURBO_0022059> ;
+                      rdfs:seeAlso ?applicable_emp ;
+                      rdfs:label ?qlab ;
+                      <http://transformunify.org/ontologies/TURBO_0022062> ?solrKeyword ;
+                      <http://transformunify.org/ontologies/TURBO_0022061> ?expectedSolrResult .
+    ?applicable_emp a ?t .
+    optional {
+        ?applicable_emp rdfs:label ?apemplab .
+    }
+    ?t rdfs:subClassOf <http://transformunify.org/ontologies/TURBO_0022023> .
+}
+group by ?solrQueryExample
+
+# Validating_a_Solr_collection.rq
+# https://github.com/PennTURBO/medication-knowledgegraph-pipeline/tree/master/ontology

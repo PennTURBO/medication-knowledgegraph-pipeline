@@ -1,0 +1,12 @@
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+select
+?notation ?employment ?query
+where {
+        ?SPARQL a <http://transformunify.org/ontologies/TURBO_0022058> ;
+           <http://purl.org/dc/dcam/domainIncludes> ?employment ;
+           <http://transformunify.org/ontologies/TURBO_0022020> ?query .
+        ?employment skos:notation ?notation
+}
+
+# Selecting_queries_based_on_employment.rq
+# https://github.com/PennTURBO/medication-knowledgegraph-pipeline/tree/master/ontology
