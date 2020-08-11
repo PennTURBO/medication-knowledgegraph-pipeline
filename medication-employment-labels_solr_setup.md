@@ -82,6 +82,8 @@ If the core does not exist, create it with a command like this
 
 
 
+TODO customizastions & "reload" before laoding data?
+
 ----
 
 

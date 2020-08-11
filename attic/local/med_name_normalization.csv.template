@@ -1,0 +1,10 @@
+﻿pattern,replacement,mask,confidence,notes
+act,actuat,,high,
+acute,,mask,high,
+cp24,24 hr extended release oral capsule,,high,
+infusion,injectable solution,,high,"see also soln, suspn…"
+ischemic,,mask,high,
+po tabs,oral tablet,,high,
+neonate,,mask,low,substitue infant?
+non-addvantage,,mask,low,advantage IS in RxNorm corpus
+standard,,mask,low,see also PCEA Non-Standard Dose etc.
