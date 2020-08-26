@@ -1,5 +1,5 @@
 notation,employment,query
-curated_role,http://example.com/resource/curated_role,"PREFIX mydata: <http://example.com/resource/>
+active_ingredient,http://example.com/resource/active_ingredient,"PREFIX mydata: <http://example.com/resource/>
 PREFIX obo: <http://purl.obolibrary.org/obo/>
 PREFIX rxnorm: <http://purl.bioontology.org/ontology/RXNORM/>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -10,37 +10,23 @@ distinct
 ?query_input ?order_id ?source_full_name
 where {
     values ?query_input {}
-    # example <http://purl.obolibrary.org/obo/CHEBI_35482>
-    # opioid analgesic
-    values ?role_employment {
-        mydata:curated_role
-    }
-    values ?role_definer {
-        obo:chebi.owl
-    }
-    graph mydata:employment {
-        ?query_input mydata:employment ?role_employment .
-    }
-    graph mydata:defined_in {
-        ?query_input mydata:defined_in ?role_definer .
-    }
-    graph mydata:transitive_role_of_class {
-        ?solr_mediri mydata:transitive_role_of_class ?query_input .
-    }
+    # example <http://purl.obolibrary.org/obo/CHEBI_28787>
+    # nitroglycerin
     values ?source_employment {
         mydata:active_ingredient
     }
     values ?mapped_rxn_employment {
-        <http://example.com/resource/RXNORM_TTY/IN>
+        <http://example.com/resource/rxn_tty/IN>
     }
     values ?source_definer {
         obo:chebi.owl
+        <http://purl.obolibrary.org/obo/dron/dron-ingredient.owl>
     }
     graph mydata:employment {
-        ?solr_mediri mydata:employment ?source_employment .
+        ?query_input mydata:employment ?source_employment .
     }
     graph mydata:defined_in {
-        ?solr_mediri mydata:defined_in ?source_definer .
+        ?query_input mydata:defined_in ?source_definer .
     }
     # for ChEBI/DrOn ingredient to rxnorm ingredient:
     #   union together direct BioPortal mappings
@@ -48,11 +34,11 @@ where {
     {
         {
             graph mydata:bioportal_mapping {
-                ?solr_mediri mydata:bioportal_mapping ?mapped_rxn
+                ?query_input mydata:bioportal_mapping ?mapped_rxn
             }
         } union {
             graph ?g {
-                ?dronprod mydata:transitively_materialized_dron_ingredient ?solr_mediri
+                ?dronprod mydata:transitively_materialized_dron_ingredient ?query_input
             }
             # add triples patterns about the ?dronprod's definer and employment?
             graph mydata:bioportal_mapping {
@@ -81,6 +67,48 @@ where {
                 ?order mydata:elected_mapping ?rxnprod .
             }
         }
+    }
+    # get properties of the order
+    graph mydata:reference_medications {
+        ?order a obo:PDRO_0000024 ;
+               mydata:source_full_name ?source_full_name .
+    }
+    graph mydata:source_med_id  {
+        ?order skos:notation ?order_id .
+    }
+}"
+BN,http://example.com/resource/RXNORM_TTY/BN,"prefix mydata: <http://example.com/resource/>
+PREFIX rxnorm: <http://purl.bioontology.org/ontology/RXNORM/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+select 
+distinct 
+?query_input ?order_id ?source_full_name
+where {
+    values ?query_input {}
+    # example <http://purl.bioontology.org/ontology/RXNORM/202702> <http://purl.bioontology.org/ontology/RXNORM/58827> <http://purl.bioontology.org/ontology/RXNORM/202433>
+    # Medrol Prozac Tylenol
+    values ?rxemployment {
+        <http://example.com/resource/rxn_tty/BN>
+    }
+    graph mydata:employment {
+        ?query_input mydata:employment ?rxemployment .
+    }
+    values ?source_definer {
+        rxnorm:
+    }
+    graph mydata:defined_in {
+        ?query_input mydata:defined_in ?source_definer .
+    }
+    graph rxnorm: {
+        ?query_input  (rxnorm:ingredient_of|rxnorm:isa|rxnorm:contained_in|rxnorm:consists_of|rxnorm:has_quantified_form|rxnorm:reformulated_to)* ?rxnrelated .
+        ?rxnrelated skos:prefLabel ?rrpl .
+    }
+    graph mydata:employment {
+        ?rxnrelated mydata:employment ?related_employment .
+    }
+    graph mydata:elected_mapping {
+        ?order mydata:elected_mapping ?rxnrelated .
     }
     # get properties of the order
     graph mydata:reference_medications {
@@ -166,7 +194,7 @@ where {
         ?order skos:notation ?order_id .
     }
 }"
-MIN,http://example.com/resource/RXNORM_TTY/MIN,"PREFIX mydata: <http://example.com/resource/>
+curated_role,http://example.com/resource/curated_role,"PREFIX mydata: <http://example.com/resource/>
 PREFIX obo: <http://purl.obolibrary.org/obo/>
 PREFIX rxnorm: <http://purl.bioontology.org/ontology/RXNORM/>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -177,10 +205,105 @@ distinct
 ?query_input ?order_id ?source_full_name
 where {
     values ?query_input {}
-    # example <http://purl.bioontology.org/ontology/RXNORM/817579> 
-    #  acetaminophen / codeine
+    # example obo:CHEBI_35482
+    values ?role_employment {
+        mydata:curated_role
+    }
+    values ?role_definer {
+        obo:chebi.owl
+    }
+    graph mydata:employment {
+        ?query_input mydata:employment ?role_employment .
+    }
+    graph mydata:defined_in {
+        ?query_input mydata:defined_in ?role_definer .
+    }
+    graph mydata:transitive_role_of_class {
+        ?solr_mediri mydata:transitive_role_of_class ?query_input .
+    }
+    values ?source_employment {
+        mydata:active_ingredient
+    }
     values ?mapped_rxn_employment {
-        <http://example.com/resource/RXNORM_TTY/MIN>
+        <http://example.com/resource/rxn_tty/IN>
+    }
+    values ?source_definer {
+        obo:chebi.owl
+    }
+    graph mydata:employment {
+        ?solr_mediri mydata:employment ?source_employment .
+    }
+    graph mydata:defined_in {
+        ?solr_mediri mydata:defined_in ?source_definer .
+    }
+    # for ChEBI/DrOn ingredient to rxnorm ingredient:
+    #   union together direct BioPortal mappings
+    #   with assertions from DrOn
+    {
+        {
+            graph mydata:bioportal_mapping {
+                ?solr_mediri mydata:bioportal_mapping ?mapped_rxn
+            }
+        } union {
+            graph ?g {
+                ?dronprod mydata:transitively_materialized_dron_ingredient ?solr_mediri
+            }
+            # add triples patterns about the ?dronprod's definer and employment?
+            graph mydata:bioportal_mapping {
+                ?dronprod mydata:bioportal_mapping ?mapped_rxn
+            }
+        }
+    }
+    graph mydata:employment {
+        ?mapped_rxn mydata:employment ?mapped_rxn_employment .
+    }
+    graph mydata:defined_in {
+        ?mapped_rxn mydata:defined_in rxnorm: .
+    }
+    graph rxnorm: {
+        ?mapped_rxn  (rxnorm:constitutes|rxnorm:contained_in|rxnorm:has_dose_form|rxnorm:has_doseformgroup|rxnorm:has_form|rxnorm:has_tradename|rxnorm:ingredient_of|rxnorm:ingredients_of|rxnorm:isa|rxnorm:part_of|rxnorm:precise_ingredient_of|rxnorm:quantified_form_of|rxnorm:reformulation_of)* ?rxnprod .
+    }
+    # find orders for the bare ingredient or products containing the ingredient
+    # probably won't find orders for a bare brand name
+    {
+        {
+            graph mydata:elected_mapping {
+                ?order mydata:elected_mapping ?mapped_rxn .
+            }
+        } union {
+            graph mydata:elected_mapping {
+                ?order mydata:elected_mapping ?rxnprod .
+            }
+        }
+    }
+    # get properties of the order
+    graph mydata:reference_medications {
+        ?order a obo:PDRO_0000024 ;
+               mydata:source_full_name ?source_full_name .
+    }
+    graph mydata:source_med_id  {
+        ?order skos:notation ?order_id .
+    }
+}"
+IN,http://example.com/resource/RXNORM_TTY/IN,"PREFIX mydata: <http://example.com/resource/>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX rxnorm: <http://purl.bioontology.org/ontology/RXNORM/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+select 
+distinct 
+?query_input ?order_id ?source_full_name
+where {
+    values ?query_input {}
+    # example <http://purl.bioontology.org/ontology/RXNORM/4493> 
+    #  Fluoxetine
+    # IN BN (has seperate query already) MIN (incompatibel) PIN (incompatible)
+    #        <http://purl.bioontology.org/ontology/RXNORM/58827>
+    #        <http://purl.bioontology.org/ontology/RXNORM/227224>
+    #        <http://purl.bioontology.org/ontology/RXNORM/611247>
+    values ?mapped_rxn_employment {
+        <http://example.com/resource/rxn_tty/IN>
     }
     values ?source_definer {
         <http://purl.bioontology.org/ontology/RXNORM/>
@@ -192,7 +315,7 @@ where {
         ?query_input mydata:defined_in ?source_definer .
     }
     graph rxnorm: {
-        ?query_input  (rxnorm:ingredients_of|rxnorm:contained_in|rxnorm:has_tradename)* ?rxnprod .
+        ?query_input  (rxnorm:constitutes|rxnorm:contained_in|rxnorm:has_dose_form|rxnorm:has_doseformgroup|rxnorm:has_form|rxnorm:has_tradename|rxnorm:ingredient_of|rxnorm:ingredients_of|rxnorm:isa|rxnorm:part_of|rxnorm:precise_ingredient_of|rxnorm:quantified_form_of|rxnorm:reformulation_of)* ?rxnprod .
     }
     # find orders for the bare ingredient or products containing the ingredient
     # probably won't find orders for a bare brand name
@@ -214,7 +337,7 @@ PREFIX rxnorm: <http://purl.bioontology.org/ontology/RXNORM/>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-PREFIX rxn_tty: <http://example.com/resource/RXNORM_TTY/>
+PREFIX rxn_tty: <http://example.com/resource/rxn_tty/>
 select 
 distinct 
 ?query_input ?order_id ?source_full_name
@@ -264,91 +387,13 @@ where {
         ?order skos:notation ?order_id .
     }
 }"
-active_ingredient,http://example.com/resource/active_ingredient,"PREFIX mydata: <http://example.com/resource/>
+SBD,http://example.com/resource/RXNORM_TTY/SBD,"PREFIX mydata: <http://example.com/resource/>
 PREFIX obo: <http://purl.obolibrary.org/obo/>
 PREFIX rxnorm: <http://purl.bioontology.org/ontology/RXNORM/>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-select 
-distinct 
-?query_input ?order_id ?source_full_name
-where {
-    values ?query_input {}
-    # example <http://purl.obolibrary.org/obo/CHEBI_28787>
-    # nitroglycerin
-    values ?source_employment {
-        mydata:active_ingredient
-    }
-    values ?mapped_rxn_employment {
-        <http://example.com/resource/RXNORM_TTY/IN>
-    }
-    values ?source_definer {
-        obo:chebi.owl
-        <http://purl.obolibrary.org/obo/dron/dron-ingredient.owl>
-    }
-    graph mydata:employment {
-        ?query_input mydata:employment ?source_employment .
-    }
-    graph mydata:defined_in {
-        ?query_input mydata:defined_in ?source_definer .
-    }
-    # for ChEBI/DrOn ingredient to rxnorm ingredient:
-    #   union together direct BioPortal mappings
-    #   with assertions from DrOn
-    {
-        {
-            graph mydata:bioportal_mapping {
-                ?query_input mydata:bioportal_mapping ?mapped_rxn
-            }
-        } union {
-            graph ?g {
-                ?dronprod mydata:transitively_materialized_dron_ingredient ?query_input
-            }
-            # add triples patterns about the ?dronprod's definer and employment?
-            graph mydata:bioportal_mapping {
-                ?dronprod mydata:bioportal_mapping ?mapped_rxn
-            }
-        }
-    }
-    graph mydata:employment {
-        ?mapped_rxn mydata:employment ?mapped_rxn_employment .
-    }
-    graph mydata:defined_in {
-        ?mapped_rxn mydata:defined_in rxnorm: .
-    }
-    graph rxnorm: {
-        ?mapped_rxn  (rxnorm:constitutes|rxnorm:contained_in|rxnorm:has_dose_form|rxnorm:has_doseformgroup|rxnorm:has_form|rxnorm:has_tradename|rxnorm:ingredient_of|rxnorm:ingredients_of|rxnorm:isa|rxnorm:part_of|rxnorm:precise_ingredient_of|rxnorm:quantified_form_of|rxnorm:reformulation_of)* ?rxnprod .
-    }
-    # find orders for the bare ingredient or products containing the ingredient
-    # probably won't find orders for a bare brand name
-    {
-        {
-            graph mydata:elected_mapping {
-                ?order mydata:elected_mapping ?mapped_rxn .
-            }
-        } union {
-            graph mydata:elected_mapping {
-                ?order mydata:elected_mapping ?rxnprod .
-            }
-        }
-    }
-    # get properties of the order
-    graph mydata:reference_medications {
-        ?order a obo:PDRO_0000024 ;
-               mydata:source_full_name ?source_full_name .
-    }
-    graph mydata:source_med_id  {
-        ?order skos:notation ?order_id .
-    }
-}"
-SCD,http://example.com/resource/RXNORM_TTY/SCD,"PREFIX mydata: <http://example.com/resource/>
-PREFIX obo: <http://purl.obolibrary.org/obo/>
-PREFIX rxnorm: <http://purl.bioontology.org/ontology/RXNORM/>
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-PREFIX rxn_tty: <http://example.com/resource/RXNORM_TTY/>
+PREFIX rxn_tty: <http://example.com/resource/rxn_tty/>
 select 
 distinct 
 ?query_input ?rxemployment ?order_id ?source_full_name
@@ -384,13 +429,13 @@ where {
         ?order skos:notation ?order_id .
     }
 }"
-SBD,http://example.com/resource/RXNORM_TTY/SBD,"PREFIX mydata: <http://example.com/resource/>
+SCD,http://example.com/resource/RXNORM_TTY/SCD,"PREFIX mydata: <http://example.com/resource/>
 PREFIX obo: <http://purl.obolibrary.org/obo/>
 PREFIX rxnorm: <http://purl.bioontology.org/ontology/RXNORM/>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-PREFIX rxn_tty: <http://example.com/resource/RXNORM_TTY/>
+PREFIX rxn_tty: <http://example.com/resource/rxn_tty/>
 select 
 distinct 
 ?query_input ?rxemployment ?order_id ?source_full_name
@@ -432,7 +477,7 @@ PREFIX rxnorm: <http://purl.bioontology.org/ontology/RXNORM/>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-PREFIX rxn_tty: <http://example.com/resource/RXNORM_TTY/>
+PREFIX rxn_tty: <http://example.com/resource/rxn_tty/>
 select 
 distinct 
 ?query_input ?rxemployment ?order_id ?source_full_name
@@ -460,94 +505,6 @@ where {
         ?order mydata:elected_mapping ?query_input .
     }
     #    # get properties of the order
-    graph mydata:reference_medications {
-        ?order a obo:PDRO_0000024 ;
-               mydata:source_full_name ?source_full_name .
-    }
-    graph mydata:source_med_id  {
-        ?order skos:notation ?order_id .
-    }
-}"
-BN,http://example.com/resource/RXNORM_TTY/BN,"prefix mydata: <http://example.com/resource/>
-PREFIX rxnorm: <http://purl.bioontology.org/ontology/RXNORM/>
-PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-PREFIX obo: <http://purl.obolibrary.org/obo/>
-select 
-distinct 
-?query_input ?order_id ?source_full_name
-where {
-    values ?query_input {}
-    # example <http://purl.bioontology.org/ontology/RXNORM/202702> <http://purl.bioontology.org/ontology/RXNORM/58827> <http://purl.bioontology.org/ontology/RXNORM/202433>
-    # Medrol Prozac Tylenol
-    values ?rxemployment {
-        <http://example.com/resource/RXNORM_TTY/BN>
-    }
-    graph mydata:employment {
-        ?query_input mydata:employment ?rxemployment .
-    }
-    values ?source_definer {
-        rxnorm:
-    }
-    graph mydata:defined_in {
-        ?query_input mydata:defined_in ?source_definer .
-    }
-    graph rxnorm: {
-        ?query_input  (rxnorm:ingredient_of|rxnorm:isa|rxnorm:contained_in|rxnorm:consists_of|rxnorm:has_quantified_form|rxnorm:reformulated_to)* ?rxnrelated .
-        ?rxnrelated skos:prefLabel ?rrpl .
-    }
-    graph mydata:employment {
-        ?rxnrelated mydata:employment ?related_employment .
-    }
-    graph mydata:elected_mapping {
-        ?order mydata:elected_mapping ?rxnrelated .
-    }
-    # get properties of the order
-    graph mydata:reference_medications {
-        ?order a obo:PDRO_0000024 ;
-               mydata:source_full_name ?source_full_name .
-    }
-    graph mydata:source_med_id  {
-        ?order skos:notation ?order_id .
-    }
-}"
-IN,http://example.com/resource/RXNORM_TTY/IN,"PREFIX mydata: <http://example.com/resource/>
-PREFIX obo: <http://purl.obolibrary.org/obo/>
-PREFIX rxnorm: <http://purl.bioontology.org/ontology/RXNORM/>
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-select 
-distinct 
-?query_input ?order_id ?source_full_name
-where {
-    values ?query_input {}
-    # example <http://purl.bioontology.org/ontology/RXNORM/4493> 
-    #  Fluoxetine
-    # IN BN (has seperate query already) MIN (incompatibel) PIN (incompatible)
-    #        <http://purl.bioontology.org/ontology/RXNORM/58827>
-    #        <http://purl.bioontology.org/ontology/RXNORM/227224>
-    #        <http://purl.bioontology.org/ontology/RXNORM/611247>
-    values ?mapped_rxn_employment {
-        <http://example.com/resource/RXNORM_TTY/IN>
-    }
-    values ?source_definer {
-        <http://purl.bioontology.org/ontology/RXNORM/>
-    }
-    graph mydata:employment {
-        ?query_input mydata:employment ?mapped_rxn_employment .
-    }
-    graph mydata:defined_in {
-        ?query_input mydata:defined_in ?source_definer .
-    }
-    graph rxnorm: {
-        ?query_input  (rxnorm:constitutes|rxnorm:contained_in|rxnorm:has_dose_form|rxnorm:has_doseformgroup|rxnorm:has_form|rxnorm:has_tradename|rxnorm:ingredient_of|rxnorm:ingredients_of|rxnorm:isa|rxnorm:part_of|rxnorm:precise_ingredient_of|rxnorm:quantified_form_of|rxnorm:reformulation_of)* ?rxnprod .
-    }
-    # find orders for the bare ingredient or products containing the ingredient
-    # probably won't find orders for a bare brand name
-    graph mydata:elected_mapping {
-        ?order mydata:elected_mapping ?query_input .
-    }
-    # get properties of the order
     graph mydata:reference_medications {
         ?order a obo:PDRO_0000024 ;
                mydata:source_full_name ?source_full_name .
