@@ -1,7 +1,3 @@
-# todo paramterize
-# put in config
-# refactor
-
 # set the working directory to medication-knowledgegraph-pipeline/pipeline
 # for example,
 # setwd("~/GitHub/medication-knowledgegraph-pipeline/pipeline")
