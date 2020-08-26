@@ -25,9 +25,14 @@ print(getOption("java.parameters"))
 
 ####
 
-tryCatch(
+tryCatch({
   dbDisconnect(rxnCon)
-)
+},
+warning = function(w) {
+  
+}, error = function(e) {
+  print(e)
+})
 
 rxnCon <- NULL
 
