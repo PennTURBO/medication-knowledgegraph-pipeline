@@ -1,5 +1,7 @@
 rxnav_med_mapping.yaml
 get_bioportal_mappings.yaml
+turbo_R_setup.yaml
 
 *.Rdata
+.Rhistory
 .DS_Store
