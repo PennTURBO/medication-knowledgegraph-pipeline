@@ -15,3 +15,5 @@ robot -vvv template \
 --template build/classified_search_results_for_robot.tsv \
 --output build/classified_search_results_from_robot.ttl
 
+zip build/reference_medications_from_robot.ttl.zip build/reference_medications_from_robot.ttl
+zip build/classified_search_results_from_robot.ttl.zip build/classified_search_results_from_robot.ttl
