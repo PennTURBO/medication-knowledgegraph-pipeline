@@ -15,7 +15,7 @@ score,match_score,AT mydata:match_score^^xsd:float,classified_search_results,
 rank,match_rank,AT mydata:match_rank^^xsd:float,classified_search_results,
 STR,match_string,A mydata:match_string,classified_search_results,
 SAB.sr,match_sab,AI mydata:match_sab,classified_search_results,http://example.com/resource/RXNORM_SAB/
-TTY.sr,match_tty,AI mydata:match_tty,classified_search_results,http://example.com/resource/RXNORM_TTY/
+TTY.sr,match_tty,AI mydata:match_tty,classified_search_results,http://example.com/resource/rxn_tty/
 rxaui.freq,rxaui_freq,AT mydata:rxaui_freq^^xsd:float,classified_search_results,
 rxcui.freq,rxcui_freq,AT mydata:rxcui_freq^^xsd:float,classified_search_results,
 q.char,query_chars,AT mydata:query_chars^^xsd:int,classified_search_results,

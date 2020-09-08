@@ -218,7 +218,7 @@ one.per$RXCUI <-
          one.per$RXCUI)
 
 one.per$TTY <-
-  paste0('http://example.com/resource/RXNORM_TTY/', one.per$TTY)
+  paste0('http://example.com/resource/rxn_tty/', one.per$TTY)
 
 as.rdf <- as_rdf(x = one.per)
 
@@ -506,7 +506,7 @@ temp <- listed
 names(temp) <-  NULL
 temp <- toJSON(temp, pretty = TRUE)
 
-write_lines(temp, path = "medlabels_for_chebi_for_solr.json")
+write_lines(temp, path = paste0(config$json.source, "/", config$json.for.solr))
 
 ####
 
@@ -517,4 +517,4 @@ write_lines(temp, path = "medlabels_for_chebi_for_solr.json")
 
 # now run rxnav_med_mapping_solr_upload_post.R
 
-paste0(config$json.source, "/", config$json.for.solr)
+
