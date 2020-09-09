@@ -60,16 +60,15 @@ bp.mappings.to.minimal.df <- function(current.source.ontology) {
   
   # current.source.ontology <- "CHEBI"
   # current.source.ontology <- "DRON"
-  
   # current.source.ontology <- "RXNORM"
   
   current.page <<- 1
   next.page <<- 0
   my.page.count <<- 0
   
-  # current.page <<- 
-  # next.page <<- 
-  # my.page.count <<- 
+  # current.page <<- 58
+  # next.page <<- 0
+  # my.page.count <<- 0
   
   value.added <-
     setdiff(config$relevant.ontologies, current.source.ontology)
@@ -159,8 +158,10 @@ bp.mappings.to.minimal.df <- function(current.source.ontology) {
     } else {
       print(paste0("no rows in collection from page ", current.page))
       print(whole.prep.parse)
-      current.page <<- current.page + 1
-      next.page <<- next.page + 1
+      print(current.page)
+      current.page <- current.page + 1
+      print(current.page)
+      # next.page <<- next.page + 1
     }
     
   }
@@ -168,10 +169,10 @@ bp.mappings.to.minimal.df <- function(current.source.ontology) {
   return(aggregated.mapping)
 }
 
-no.dron.temp <- setdiff(config$my.source.ontolgies, "DRON")
+# no.dron.temp <- setdiff(config$my.source.ontolgies, "DRON")
 
 per.source.results <-
-  lapply(sort(no.dron.temp), function(current.outer) {
+  lapply(sort(config$my.source.ontolgies), function(current.outer) {
     temp <- bp.mappings.to.minimal.df(current.outer)
     return(temp)
   })
@@ -280,6 +281,8 @@ post.dest <-
   )
 
 print(post.dest)
+
+print(Sys.time())
 
 post.resp <-
   httr::POST(
