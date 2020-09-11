@@ -7,3 +7,5 @@ pipeline/build
 *.Rdata
 .Rhistory
 .DS_Store
+
+local/

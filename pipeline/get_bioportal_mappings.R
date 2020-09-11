@@ -21,30 +21,7 @@ print(getOption("java.parameters"))
 
 ####
 
-# try instantiating med maping RESULTS  with rdflib::as_rdf instead of robot?
-
-####
-
-# I've been using this with a same-host
-# bioportal virtual appliance
-# there's no error checking in place
-# might want to give other users the option for skipping the graphdb upload,
-# like jsut saving the triples and or the dataframe
-
-# # uploading/posting options
-# POST /rest/data/import/server/{repositoryID}
-# Import a server FILE into the repository
-#
-# POST /rest/data/import/upload/{repositoryID}/url
-# Import from data URL into the repository
-
-### using this, and puting a file in the body
-# POST /repositories/{repositoryID}/rdf-graphs/{graph}
-# Add STATEMENTS to a directly referenced named graph
-
-####
-
-# config <- config::get(file = "rxnav_med_mapping.yaml")
+library(gtools)
 
 more.pages <- NA
 current.page <- NA
@@ -52,60 +29,43 @@ next.page <- NA
 my.page.count <- NA
 aggregated.mapping <- data.frame()
 
-bp.mappings.to.minimal.df <- function(current.source.ontology) {
+bp.mappings.pair.to.minimal.df <- function(from.ont, to.ont) {
   # initialize global variables for while loop
   
   more.pages <<- TRUE
   aggregated.mapping <<- data.frame()
   
-  # current.source.ontology <- "CHEBI"
-  # current.source.ontology <- "DRON"
-  # current.source.ontology <- "RXNORM"
+  # from.ont <- 'CHEBI'
+  # to.ont <- 'DRON'
   
   current.page <<- 1
   next.page <<- 0
-  my.page.count <<- 0
-  
-  # current.page <<- 58
-  # next.page <<- 0
-  # my.page.count <<- 0
-  
-  value.added <-
-    setdiff(config$relevant.ontologies, current.source.ontology)
-  
-  print(paste0('Searching ', current.source.ontology, ' against: '))
-  print(sort(value.added))
-  
-  value.added <-
-    paste0(config$my.bioportal.api.base,
-           '/ontologies/',
-           value.added)
+  my.page.count <<- NA
   
   while (more.pages) {
-    print(
-      paste0(
-        current.source.ontology,
-        ': page ',
-        current.page,
-        ' of ',
-        my.page.count,
-        ' pages'
-      )
-    )
+    print(paste0('Searching ', from.ont, ' against ', to.ont))
     
-    source.class.uri <-
+    print(paste0('page ',
+                 current.page,
+                 ' of ',
+                 my.page.count,
+                 ' pages'))
+    
+    pair.uri <-
       paste0(
         config$my.bioportal.api.base,
-        '/ontologies/',
-        current.source.ontology,
-        '/mappings?apikey=',
+        '/mappings?ontologies=',
+        from.ont,
+        ',',
+        to.ont,
+        '&apikey=',
         config$my.apikey,
         '&pagesize=',
         config$my.pagesize,
         '&page=',
         current.page
       )
-    mappings.result <- httr::GET(source.class.uri)
+    mappings.result <- httr::GET(pair.uri)
     mappings.result <- rawToChar(mappings.result$content)
     whole.prep.parse <- mappings.result
     
@@ -118,16 +78,13 @@ bp.mappings.to.minimal.df <- function(current.source.ontology) {
     mappings.result <- mappings.result$collection
     
     if (length(mappings.result) > 0) {
-      mappings.result.source.methods <- mappings.result$source
-      
-      mappings.result <- mappings.result$classes
-      
+      mappings.result <-
+        mappings.result$classes[mappings.result$source == 'LOOM']
       inner.res <-
         lapply(mappings.result, function(current.result) {
+          # current.result <- mappings.result[[1]]
           current.ids <- current.result$`@id`
-          # print(current.ids)
           current.ontologies <- current.result$links$ontology
-          # print(current.ontologies)
           return(
             list(
               'source.term' = current.ids[[1]],
@@ -137,17 +94,14 @@ bp.mappings.to.minimal.df <- function(current.source.ontology) {
             )
           )
         })
+      
       inner.res <- do.call(rbind.data.frame, inner.res)
-      inner.res$source.method <- mappings.result.source.methods
-      inner.res <- inner.res[inner.res$source.method == 'LOOM' ,]
       inner.res <-
-        inner.res[as.character(inner.res$source.term) != as.character(inner.res$mapped.term), ]
-      inner.res <-
-        inner.res[inner.res$mapped.ontology %in% value.added , ]
+        inner.res[as.character(inner.res$source.term) != as.character(inner.res$mapped.term),]
       inner.res <-
         unique(inner.res[, c("source.term", "source.ontology", "mapped.term")])
       
-      if (current.page == my.page.count) {
+      if (current.page >= my.page.count) {
         more.pages <- FALSE
       } else {
         current.page <- next.page
@@ -158,10 +112,11 @@ bp.mappings.to.minimal.df <- function(current.source.ontology) {
     } else {
       print(paste0("no rows in collection from page ", current.page))
       print(whole.prep.parse)
-      print(current.page)
-      current.page <- current.page + 1
-      print(current.page)
-      # next.page <<- next.page + 1
+      if (current.page >= my.page.count) {
+        more.pages <- FALSE
+      } else {
+        current.page <- next.page
+      }
     }
     
   }
@@ -169,18 +124,27 @@ bp.mappings.to.minimal.df <- function(current.source.ontology) {
   return(aggregated.mapping)
 }
 
-# no.dron.temp <- setdiff(config$my.source.ontolgies, "DRON")
+onto.combos <- combinations(
+  n = length(config$my.source.ontolgies),
+  r = 2,
+  v = config$my.source.ontolgies,
+  repeats.allowed = F
+)
 
-per.source.results <-
-  lapply(sort(config$my.source.ontolgies), function(current.outer) {
-    temp <- bp.mappings.to.minimal.df(current.outer)
-    return(temp)
-  })
-
-####
+pair.results <-
+  apply(
+    X = onto.combos,
+    MARGIN = 1,
+    FUN = function(current_row) {
+      print(current_row)
+      inner.results <-
+        bp.mappings.pair.to.minimal.df(current_row[[1]], current_row[[2]])
+      return(inner.results)
+    }
+  )
 
 bound.source.results <-
-  do.call(rbind.data.frame, per.source.results)
+  do.call(rbind.data.frame, pair.results)
 bound.source.results$inversed <- FALSE
 
 inverse.results <- bound.source.results[, c(3, 2, 1, 4)]
@@ -188,14 +152,7 @@ colnames(inverse.results) <- colnames(bound.source.results)
 inverse.results$inversed <- TRUE
 
 bound.source.results <-
-  rbind.data.frame(bound.source.results, inverse.results)
-
-# bound.source.results$source.term <-
-#   paste0('<', bound.source.results$source.term , '>')
-# bound.source.results$source.ontology <-
-#   paste0('<', bound.source.results$source.ontology , '>')
-# bound.source.results$mapped.term <-
-#   paste0('<', bound.source.results$mapped.term , '>')
+  unique(rbind.data.frame(bound.source.results, inverse.results))
 
 bound.source.results$uuid <-
   uuid::UUIDgenerate(n = nrow(bound.source.results))
@@ -245,25 +202,61 @@ placeholder <-
       rdf_add(
         rdf = direct.rdf,
         subject = current.row[['source_term']],
-        predicate = "http://example.com/resource/bioportal_mapping",
+        predicate = paste0('http://example.com/resource/',
+                           config$bioportal.mapping.graph.name),
         object = current.row[['mapped_term']]
       )
     }
   )
 print(Sys.time())
 
+# really want to know the release dates/verions of tee included component
+# in the mean time, could add the IP address of the BioPortal server that was queried?
+
+tm <- as.POSIXlt(Sys.time(), "UTC", "%Y-%m-%dT%H:%M:%S")
+tm <- strftime(tm , "%Y-%m-%dT%H:%M:%S%z")
+
+rdf_add(
+  rdf = direct.rdf,
+  subject = paste0('http://example.com/resource/',
+                   config$bioportal.mapping.graph.name),
+  predicate = "http://www.w3.org/2002/07/versionInfo",
+  object = tm
+)
+
+lapply(config$my.source.ontolgies, function(current.source) {
+  # current.source <- "RXNORM"
+  print(current.source)
+  temp <-
+    paste0(
+      "http://data.bioontology.org/ontologies/",
+      current.source,
+      "/latest_submission?apikey=",
+      config$my.apikey
+    )
+  temp <- httr::GET(temp)
+  temp <- rawToChar(temp$content)
+  temp <- fromJSON(temp)
+  
+  
+  rdf_add(
+    rdf = direct.rdf,
+    subject = paste0(
+      'http://example.com/resource/',
+      config$bioportal.mapping.graph.name
+    ),
+    predicate = "http://purl.org/dc/terms/source",
+    object = temp[['@id']]
+  )
+  
+  print(temp[['@id']])
+  
+})
+
 ####
 
 rdf_serialize(rdf = direct.rdf,
               doc = config$bioportal.triples.destination)
-
-
-####
-
-# erroring out of searches from DRON
-# only doing 10 pages from the others
-# results ~ 0.1 x previous
-
 
 ####
 
@@ -275,7 +268,7 @@ post.dest <-
     '/rdf-graphs/service?graph=',
     URLencode(
       paste0('http://example.com/resource/',
-             config$my.selected.graph),
+             config$bioportal.mapping.graph.name),
       reserved = TRUE
     )
   )
@@ -298,3 +291,4 @@ post.resp <-
 
 print('Errors will be listed below:')
 print(rawToChar(post.resp$content))
+
