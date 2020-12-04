@@ -21,7 +21,7 @@ The pipeline steps are:
    1. Interpret the features as predictors of the semantic relations between searches and matches
    2. Classify matches as identical, related, more distant
 5. Convert matches and classifications to RDF with ROBOT. [tmm_robot.sh]
-6. Retrieve pairwise mappings between ChEBI, DrOn and RxNorm from BioPortal and save as a local RDF file. Can skip this step and reuse mappings until want to update source ontologies. [serialize_bioportal_mappings.R]
+6. Retrieve pairwise mappings between ChEBI, DrOn and RxNorm from BioPortal and save as a local RDF file. Can skip this step and reuse mappings until want to update source ontologies. [get_bioportal_mappings.R]
 7. Assemble a Medication Knowledge Graph
    1. Load the classification output, the BioPortal mappings, and additional ontologies/RDF models into a Graph DB repository to create the RDF knowledge graph. [rxnav_med_mapping_load_materialize_etc.]
-8. Create Solr core from with the labels and URIs of the entities in the ontologies and RDF data models. [build_insert_med_mapping_solr_json.R]
+8. Create Solr core from with the labels and URIs of the entities in the ontologies and RDF data models. [rxnav_med_mapping_solr_upload_post_test.R]
