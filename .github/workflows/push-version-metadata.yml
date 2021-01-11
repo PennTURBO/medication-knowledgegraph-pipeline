@@ -27,6 +27,7 @@ jobs:
           git status --short --branch --ignored > release_status.txt
           echo "show release_*.txt contents"
           cat release_*.txt
+          git add release_*.txt
 
       - name: Commit files
         run: |
