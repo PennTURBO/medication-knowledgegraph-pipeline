@@ -38,6 +38,6 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           # branch: ${{ github.ref }}
-          branch: main
+          branch: master
           force: true
           tags: true
