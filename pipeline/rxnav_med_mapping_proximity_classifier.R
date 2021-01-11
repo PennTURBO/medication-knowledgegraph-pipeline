@@ -355,7 +355,8 @@ outer.chunks <-
     }
   )
 
-approximate.term.res <- do.call(what = rbind.data.frame, args = outer.chunks)
+approximate.term.res <-
+  do.call(what = rbind.data.frame, args = outer.chunks)
 
 # # ~ 45 minutes for XXX
 # # break up into chunks of 10 or 20k?
@@ -599,7 +600,7 @@ uncovered.keys <- setdiff(all.keys, covered.keys)
 
 # save for followup?
 uncovered.frame <-
-  ehr.approximate.original.dists[ehr.approximate.original.dists$MEDICATION_ID %in% uncovered.keys ,]
+  ehr.approximate.original.dists[ehr.approximate.original.dists$MEDICATION_ID %in% uncovered.keys , ]
 
 ###
 
@@ -707,13 +708,13 @@ rxnorm.entities.in.repo <-
 ####
 
 classification.res.tidied.inactive.rxcui <-
-  classification.res.tidied[!(classification.res.tidied$rxcui %in% rxnorm.entities.in.repo),]
+  classification.res.tidied[!(classification.res.tidied$rxcui %in% rxnorm.entities.in.repo), ]
 
 classification.res.tidied <-
-  classification.res.tidied[classification.res.tidied$rxcui %in% rxnorm.entities.in.repo,]
+  classification.res.tidied[classification.res.tidied$rxcui %in% rxnorm.entities.in.repo, ]
 
 classification.res.tidied.id <-
-  classification.res.tidied[classification.res.tidied$override == "identical", ]
+  classification.res.tidied[classification.res.tidied$override == "identical",]
 best.identical <-
   aggregate(
     classification.res.tidied.id$identical,
@@ -730,7 +731,7 @@ classification.res.tidied.onehop <-
   classification.res.tidied[(
     classification.res.tidied$override != "identical" &
       classification.res.tidied$override != "more distant"
-  ) ,]
+  ) , ]
 
 probs.matrix <- classification.res.tidied.onehop[, c(
   "consists_of",
@@ -777,10 +778,10 @@ equal.or.better.Q$identical[is.na(equal.or.better.Q$identical)] <- 0
 equal.or.better.Q$probs.matrix.rowmax[is.na(equal.or.better.Q$probs.matrix.rowmax)] <-
   0
 equal.or.better.Q <-
-  equal.or.better.Q[equal.or.better.Q$probs.matrix.rowmax >= equal.or.better.Q$identical , ]
+  equal.or.better.Q[equal.or.better.Q$probs.matrix.rowmax >= equal.or.better.Q$identical ,]
 
 classification.res.tidied.onehop <-
-  classification.res.tidied.onehop[classification.res.tidied.onehop$MEDICATION_ID %in% equal.or.better.Q$MEDICATION_ID , ]
+  classification.res.tidied.onehop[classification.res.tidied.onehop$MEDICATION_ID %in% equal.or.better.Q$MEDICATION_ID ,]
 
 ####
 
@@ -795,7 +796,7 @@ classification.res.tidied.md <-
                                 !(
                                   classification.res.tidied$MEDICATION_ID %in% classification.res.tidied.onehop$MEDICATION_ID
                                 )
-                              ) , ]
+                              ) ,]
 
 probs.matrix <- classification.res.tidied.md[, c(
   "consists_of",
