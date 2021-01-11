@@ -1,0 +1,44 @@
+name: push-version-metadata
+
+on:
+  release:
+    types: [published]
+
+# Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  dump-commit-push:
+    runs-on: ubuntu-latest
+    
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
+          fetch-depth: 0 # otherwise, you will failed to push refs to dest repo
+
+      - name: dump version data to runners filesystem
+        run: |
+          # echo "show working directory"
+          # pwd
+          git describe --tags > release_tag.txt
+          date "+%Y-%m-%dT%H:%M:%S" > release_date.txt
+          git status --short --branch --ignored > release_status.txt
+          echo "show release_*.txt contents"
+          cat release_*.txt
+          git add release_*.txt
+
+      - name: Commit files
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git commit -m "dumped last version metadata to last_*.txt files" -a
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # branch: ${{ github.ref }}
+          branch: master
+          force: true
+          tags: true
