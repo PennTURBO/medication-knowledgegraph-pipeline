@@ -19,14 +19,14 @@ image.fn <- "build/rxnav_med_mapping_pds_proximity_classifier.Rdata"
 # source- vs ref- vs ehr (just to get rid of both legacy terms)
 
 ####
-  
+
 # set the working directory to medication-knowledgegraph-pipeline/pipeline
 # for example,
 # setwd("~/GitHub/medication-knowledgegraph-pipeline/pipeline")
 
 # get global settings, functions, etc. from https://raw.githubusercontent.com/PennTURBO/turbo-globals
 
-# some people (https://www.r-bloggers.com/reading-an-r-file-from-github/) 
+# some people (https://www.r-bloggers.com/reading-an-r-file-from-github/)
 # say it’s necessary to load the devtools package before sourcing from GitHub?
 # but the raw page is just a http-accessible page of text, right?
 
@@ -35,11 +35,29 @@ image.fn <- "build/rxnav_med_mapping_pds_proximity_classifier.Rdata"
 # see https://github.com/PennTURBO/turbo-globals/blob/master/turbo_R_setup.template.yaml
 
 source(
-  "https://raw.githubusercontent.com/PennTURBO/turbo-globals/master/turbo_R_setup.R"
+  "https://raw.githubusercontent.com/PennTURBO/turbo-globals/master/turbo_R_setup_action_versioning.R"
 )
 
 # Java memory is set in turbo_R_setup.R
 print(getOption("java.parameters"))
+
+# may also want to capture
+#   pre_commit_status.txt
+pre_commit_tags.fp <- "../release_tags.txt"
+# execution.timestamp determined fresh each time
+#   https://raw.githubusercontent.com/PennTURBO/turbo-globals/master/turbo_R_setup.R
+#   is sourced
+if (file.exists(pre_commit_tags.fp)) {
+  temp <- read_lines(pre_commit_tags.fp)
+  version.list <-
+    list(versioninfo = temp,
+         created = execution.timestamp)
+} else {
+  version.list <-
+    list(versioninfo = config$med.mapping.sw.version,
+         created = execution.timestamp)
+}
+
 
 ####
 
@@ -91,6 +109,11 @@ test.and.refresh <- function() {
 }
 
 # put in config file
+# could this possibly overwrite the software version and date asserted above
+# to document this execution of he classification?
+# see workaround at load(config$rf.model.loadpath)
+# load("build/source_medications.Rdata")
+# currently ony loads source.medications
 load(config$source.medications.Rdata.loadpath)
 
 post.res <- POST(update.endpoint,
@@ -311,7 +334,7 @@ query.list <-
 
 # todo parameterize
 # safe.rxnav.submission.size <- config$safe.rxnav.submission.size
-safe.rxnav.submission.size <- 20000
+safe.rxnav.submission.size <- 2000
 
 safe.rxnav.submission.count <-
   ceiling(length(query.list) / safe.rxnav.submission.size)
@@ -325,7 +348,7 @@ outer.chunks <-
     FUN = function(current.chunk) {
       print(Sys.time())
       inner.temp <- bulk.approximateTerm(current.chunk)
-      print("sleeping")
+      print("sleeping between chunk submissions")
       gc()
       Sys.sleep(30)
       return(inner.temp)
@@ -382,6 +405,7 @@ ehr.approximately <-
 
 ####
 
+# moodify global function to sort the string dis methods before looping
 string.dist.mat.res <-
   get.string.dist.mat(ehr.approximately[, c("query.val", "STR.lc")])
 
@@ -482,9 +506,18 @@ print(dput(sort(setdiff(
 ))))
 print(sort(table(accounted.cols)))
 
+
 ####
 
+current.version.list <- version.list
+
+# modifies version list!
+
 load(config$rf.model.loadpath)
+
+rf.model.version.list <- version.list
+
+version.list <- current.version.list
 
 ####
 
@@ -924,6 +957,13 @@ write.table(
   col.names = TRUE
 )
 
+build.source.med.classifications.annotations(
+  version.list = version.list,
+  onto.iri = more.specific$onto.iri ,
+  onto.file = more.specific$onto.file ,
+  onto.file.format = more.specific$onto.file.format
+)
+
 ####
 
 current.task <- 'reference_medications'
@@ -965,6 +1005,13 @@ write.table(
   sep = '\t',
   row.names = FALSE,
   col.names = TRUE
+)
+
+build.source.med.classifications.annotations(
+  version.list = version.list,
+  onto.iri = more.specific$onto.iri ,
+  onto.file = more.specific$onto.file ,
+  onto.file.format = more.specific$onto.file.format
 )
 
 # now run med_mapping_robot.sh
