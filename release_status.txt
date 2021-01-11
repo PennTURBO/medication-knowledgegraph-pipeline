@@ -1,4 +1,4 @@
 ## master...origin/master
  M release_date.txt
  M release_status.txt
-?? release_tag.txt
+ M release_tag.txt
