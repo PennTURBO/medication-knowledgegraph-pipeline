@@ -13,7 +13,7 @@
 # see https://github.com/PennTURBO/turbo-globals/blob/master/turbo_R_setup.template.yaml
 
 source(
-  "https://raw.githubusercontent.com/PennTURBO/turbo-globals/master/turbo_R_setup.R"
+  "https://raw.githubusercontent.com/PennTURBO/turbo-globals/master/turbo_R_setup_action_versioning.R"
 )
 
 # Java memory is set in turbo_R_setup.R

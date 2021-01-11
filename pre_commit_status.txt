@@ -1,12 +1,7 @@
-## action-versioning
-A  last_date.txt
-A  last_status.txt
-A  last_tags.txt
- M pre_commit_status.txt
- M pre_commit_tags.txt
-A  release_date.txt
-A  release_status.txt
-A  release_tags.txt
+## action-versioning...origin/action-versioning
+M  pre_commit_date.txt
+MM pre_commit_status.txt
+MM pre_commit_tags.txt
 ?? pipeline/acting.chebi.combo.wide.csv
 ?? pipeline/acting.chebi.superclasses.wide.csv
 !! .DS_Store
