@@ -1,6 +1,3 @@
-config.fn <- "config/turbo_R_setup.yaml"
-image.fn <- "build/rxnav_med_mapping_pds_proximity_classifier.Rdata"
-
 # need better terms for identical and more distant
 # no spaces
 # defined in ontology
@@ -37,6 +34,12 @@ image.fn <- "build/rxnav_med_mapping_pds_proximity_classifier.Rdata"
 source(
   "https://raw.githubusercontent.com/PennTURBO/turbo-globals/master/turbo_R_setup_action_versioning.R"
 )
+
+# config.fn <- "config/turbo_R_setup.yaml"
+# image.fn <- "build/rxnav_med_mapping_pds_proximity_classifier.Rdata"
+# config.fn <- config$config.fn
+# image.fn <- config$image.fn
+
 
 # Java memory is set in turbo_R_setup.R
 print(getOption("java.parameters"))
@@ -909,125 +912,97 @@ placeholder <-
 
 #####
 
-# graph name/column relationships are in graphs.cols
-# would theoretically be better to iterate over that
-# but will use  hard-coded names as special actions for now
-
-# # should really extract this from source.medications
-
-# > print(predlist)
-# [1] "source_med_id"               "source_full_name"            "source_generic_name"         "source_rxcui"
-# [5] "source_count"                "source_normalized_full_name"
-
-####
 
 classification.res.tidied$source_rxcui[classification.res.tidied$source_rxcui ==
                                          'http://purl.bioontology.org/ontology/RXNORM/'] <-
   ''
 
-# 90 minutes for rdflib::add... instantiating all search results, not filtered by best identical score etc.
-
-
-# refactor
-current.task <- 'classified_search_results'
-more.specific <-
-  config::get(file = config.fn, config = current.task)
-
-keepers <-
-  med_map_csv_cols$more_generic %in% setdiff(graphs.cols[[current.task]], "source_has_rxcui")
-
-body <- unique(classification.res.tidied[, keepers])
-pre.robot <- colnames(body)
-class.col <- rep(more.specific$my.class, nrow(body))
-body <- cbind.data.frame(class.col, body)
-pre.robot <- colnames(body)
-print(pre.robot)
-
-robot.line <-
-  med_map_csv_cols$robot[med_map_csv_cols$more_generic %in% pre.robot]
-robot.line[1] <- 'ID'
-robot.line <-
-  c('TYPE', robot.line)
-
-print(robot.line)
-
-body[] <- lapply(body[], as.character)
-
-body <- rbind.data.frame(robot.line, body)
-names(body) <- pre.robot
-
-write.table(
-  x = body,
-  file = paste0("build/", current.task, '_for_robot.tsv'),
-  append = FALSE,
-  quote = TRUE,
-  sep = '\t',
-  row.names = FALSE,
-  col.names = TRUE
-)
-
-build.source.med.classifications.annotations(
-  version.list = version.list,
-  onto.iri = more.specific$onto.iri ,
-  onto.file = more.specific$onto.file ,
-  onto.file.format = more.specific$onto.file.format
-)
-
 ####
 
-current.task <- 'reference_medications'
-more.specific <-
-  config::get(file = config.fn, config = current.task)
+# tried rdflib::add approach instead of robot... too slow
 
-keepers <-
-  med_map_csv_cols$more_generic %in% setdiff(graphs.cols[[current.task]], "source_has_rxcui")
+robot.templating <- function(current.task) {
+  # paramaterize the file names in all subsequent scripts
+  # or gz?
+  # if zip works, update YAML configuration file
+  
+  print(current.task)
+  
+  robot.java.settings <- "ROBOT_JAVA_ARGS=-Xmx8G"
+  
+  more.specific <-
+    config::get(file = config$config.fn, config = current.task)
+  
+  keepers <-
+    med_map_csv_cols$more_generic %in% setdiff(graphs.cols[[current.task]], "source_has_rxcui")
+  
+  body <- unique(classification.res.tidied[, keepers])
+  pre.robot <- colnames(body)
+  class.col <- rep(more.specific$my.class, nrow(body))
+  body <- cbind.data.frame(class.col, body)
+  pre.robot <- colnames(body)
+  # print(pre.robot)
+  
+  robot.line <-
+    med_map_csv_cols$robot[med_map_csv_cols$more_generic %in% pre.robot]
+  robot.line[1] <- 'ID'
+  robot.line <-
+    c('TYPE', robot.line)
+  
+  print(robot.line)
+  
+  body[] <- lapply(body[], as.character)
+  
+  body <- rbind.data.frame(robot.line, body)
+  names(body) <- pre.robot
+  
+  write.table(
+    x = body,
+    file = paste0("build/", current.task, '_for_robot.tsv'),
+    append = FALSE,
+    quote = TRUE,
+    sep = '\t',
+    row.names = FALSE,
+    col.names = TRUE
+  )
+  
+  build.source.med.classifications.annotations(
+    version.list = version.list,
+    onto.iri = more.specific$onto.iri ,
+    onto.file = more.specific$onto.file ,
+    onto.file.format = more.specific$onto.file.format
+  )
+  
+  robot.command <-
+    paste0(
+      'robot -vvv template --prefix "xsd: http://www.w3.org/2001/XMLSchema#" --prefix "obo: http://purl.obolibrary.org/obo/"  --template build/',
+      current.task,
+      '_for_robot.tsv --output build/',
+      current.task,
+      '_from_robot.ttl'
+    )
+  
+  robot.results <-
+    system(command = paste0(robot.java.settings,
+                            ' && ', robot.command),
+           intern = TRUE)
+  
+  # many warnings
+  # print(robot.results)
+  
+  zip::zip(
+    root = "build",
+    zipfile = paste0(current.task, "from_robot.ttl.zip"),
+    files = c(paste0(current.task, "_from_robot.ttl"))
+  )
+  
+}
 
-body <- unique(classification.res.tidied[, keepers])
-pre.robot <- colnames(body)
-class.col <- rep(more.specific$my.class, nrow(body))
-body <- cbind.data.frame(class.col, body)
+lapply(sort(names(graphs.cols)), robot.templating)
+# system calls to robot now replace  med_mapping_robot.sh which had read from and written to completely hardcoded files/path
 
-pre.robot <- colnames(body)
-print(pre.robot)
+# for debugging
+save.image(config$image.fn)
 
-robot.line <-
-  med_map_csv_cols$robot[med_map_csv_cols$more_generic %in% pre.robot]
-robot.line[1] <- 'ID'
-robot.line <-
-  c('TYPE', robot.line)
+# next run XXX
 
-print(robot.line)
-
-body[] <- lapply(body[], as.character)
-
-body <- rbind.data.frame(robot.line, body)
-names(body) <- pre.robot
-
-# the filename below is monstly hardcoded so that the robot shell script
-# doesn't ahve to parse the yaml file
-# I guess we could actually write the shell script IN this R script ?!
-write.table(
-  x = body,
-  file = paste0("build/", current.task, '_for_robot.tsv'),
-  append = FALSE,
-  quote = TRUE,
-  sep = '\t',
-  row.names = FALSE,
-  col.names = TRUE
-)
-
-build.source.med.classifications.annotations(
-  version.list = version.list,
-  onto.iri = more.specific$onto.iri ,
-  onto.file = more.specific$onto.file ,
-  onto.file.format = more.specific$onto.file.format
-)
-
-# now run med_mapping_robot.sh
-# which reads from and writes to completely hardcoded files/paths
-
-# TODO add ontology annotations to the two robot-created turtle files
-
-# and then run XXX
-
-save.image(image.fn)
