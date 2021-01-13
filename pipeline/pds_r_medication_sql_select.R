@@ -4,7 +4,7 @@
 
 # get global settings, functions, etc. from https://raw.githubusercontent.com/PennTURBO/turbo-globals
 
-# some people (https://www.r-bloggers.com/reading-an-r-file-from-github/) 
+# some people (https://www.r-bloggers.com/reading-an-r-file-from-github/)
 # say it’s necessary to load the devtools package before sourcing from GitHub?
 # but the raw page is just a http-accessible page of text, right?
 
@@ -13,7 +13,7 @@
 # see https://github.com/PennTURBO/turbo-globals/blob/master/turbo_R_setup.template.yaml
 
 source(
-  "https://raw.githubusercontent.com/PennTURBO/turbo-globals/master/turbo_R_setup.R"
+  "https://raw.githubusercontent.com/PennTURBO/turbo-globals/master/turbo_R_setup_action_versioning.R"
 )
 
 # Java memory is set in turbo_R_setup.R
@@ -72,11 +72,10 @@ print(timed.system)
 dbDisconnect(pdsConnection)
 
 # should have applied this in the SQL query
-
 # dput(colnames(source.medications))
-
 # c("FK_MEDICATION_ID", "FULL_NAME", "GENERIC_NAME", "RXNORM", "EMPI_COUNT")
-
+# MEDICATION_COUNT is a lousy name. That column actullay contains a count of unique people (by EMPI)
+# who received an order for that reference medication (without filtering out canceled orders, etc.)
 colnames(source.medications) <-
   c("MEDICATION_ID",
     "FULL_NAME",
@@ -84,6 +83,8 @@ colnames(source.medications) <-
     "RXNORM",
     "MEDICATION_COUNT")
 
+
+# add option for saving as delimited text
 # write.table(
 #   source.medications,
 #   config$source.medications.savepath,
@@ -96,4 +97,4 @@ colnames(source.medications) <-
 
 # save.image("pds_r_medication_sql_select.Rdata")
 
-save(source.medications, file = config$source.medications.Rdata.loadpath)
+save(source.medications, file = config$source.medications.Rdata.path)
