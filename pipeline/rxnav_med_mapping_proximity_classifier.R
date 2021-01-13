@@ -1,7 +1,9 @@
+# source- vs ref- vs ehr (just to get rid of both legacy terms)
+
 # need better terms for identical and more distant
-# no spaces
-# defined in ontology
-# would have to go back to training
+# no spaces in names like that, sincle they may become IRIs
+# should be defined in the TMM ontology
+# would have to go back to training to be consistent
 # use http://purl.bioontology.org/ontology/RXNORM/ base for now
 
 #   query.source	http://example.com/resource/query_source/ OK
@@ -13,8 +15,6 @@
 #   RXNORM	http://purl.bioontology.org/ontology/RXNORM/ OK
 #   rxcui	http://purl.bioontology.org/ontology/RXNORM/ OK
 
-# source- vs ref- vs ehr (just to get rid of both legacy terms)
-
 ####
 
 # set the working directory to medication-knowledgegraph-pipeline/pipeline
@@ -23,23 +23,13 @@
 
 # get global settings, functions, etc. from https://raw.githubusercontent.com/PennTURBO/turbo-globals
 
-# some people (https://www.r-bloggers.com/reading-an-r-file-from-github/)
-# say it’s necessary to load the devtools package before sourcing from GitHub?
-# but the raw page is just a http-accessible page of text, right?
-
 # requires a properly formatted "turbo_R_setup.yaml" in medication-knowledgegraph-pipeline/config
-# or better yet, a symbolic link to a centrally loated "turbo_R_setup.yaml", which could be used by multiple pipelines
+# or better yet, a symbolic link to a centrally located "turbo_R_setup.yaml", which could be used by multiple pipelines
 # see https://github.com/PennTURBO/turbo-globals/blob/master/turbo_R_setup.template.yaml
 
 source(
   "https://raw.githubusercontent.com/PennTURBO/turbo-globals/master/turbo_R_setup_action_versioning.R"
 )
-
-# config.fn <- "config/turbo_R_setup.yaml"
-# image.fn <- "build/rxnav_med_mapping_pds_proximity_classifier.Rdata"
-# config.fn <- config$config.fn
-# image.fn <- config$image.fn
-
 
 # Java memory is set in turbo_R_setup.R
 print(getOption("java.parameters"))
@@ -51,32 +41,17 @@ pre_commit_tags.fp <- "../release_tag.txt"
 #   https://raw.githubusercontent.com/PennTURBO/turbo-globals/master/turbo_R_setup.R
 #   is sourced
 
-#### where does config$med.mapping.sw.version come from?
-#### nice to have a fallback, but it should work!
-# if (file.exists(pre_commit_tags.fp)) {
-#   temp <- read_lines(pre_commit_tags.fp)
-#   version.list <-
-#     list(versioninfo = temp,
-#          created = execution.timestamp)
-# } else {
-#   version.list <-
-#     list(versioninfo = config$med.mapping.sw.version,
-#          created = execution.timestamp)
-# }
-
 temp <- read_lines(pre_commit_tags.fp)
 version.list <-
   list(versioninfo = temp,
        created = execution.timestamp)
 
-
 ####
 
-# is this still true?
-# assumes this script has been launched from the current working directory that contains
-#  rxnav_med_mapping_setup.R, rxnav_med_mapping.yaml
-
-####
+# try to connect to RxNav database with a reusable and closable connection
+# so first try to close that handle if it exists
+# be careful...
+#  over time, that kind of approach could use up more connections that a RDBMS is willing to grant
 
 tryCatch({
   dbDisconnect(rxnCon)
@@ -119,13 +94,46 @@ test.and.refresh <- function() {
   })
 }
 
-# put in config file
-# could this possibly overwrite the software version and date asserted above
-# to document this execution of he classification?
-# see workaround at load(config$rf.model.loadpath)
 # load("build/source_medications.Rdata")
-# currently ony loads source.medications
-load(config$source.medications.Rdata.loadpath)
+# currently loads source.medications
+# stop using separate save, (write?) and load paths
+current.version.list <- version.list
+# modifies version list!
+load(config$source.medications.Rdata.path)
+source.medications.version.list <- version.list
+version.list <- current.version.list
+
+source.medications$ehr.rxn.annotated <-
+  !is.na(source.medications$RXNORM)
+
+# source_medications.all.pds.Rdata @ 17 September 2020 has ~ 900k reference medications,
+# but many are linked, via an encounter, to either zero or only one patients/EMPIs
+# as determined from the unfortunately named "MEDICATION_COUNT" column
+
+# > table(source.medications$MEDICATION_COUNT)
+#
+# 0      1      2
+# 701166 132971  21048
+
+# # destructive (changing would require rerunning query or load
+source.medications <-
+  source.medications[source.medications$MEDICATION_COUNT >= config$min.empi.count , ]
+
+####
+
+# add option for CSV input
+
+# if the source medication table was saved as Rdata, it will be more compatible that reopening
+#   a tab, comma or pipe-delimited text file
+
+# source.medications <- read_delim(
+#   config$source.medications.loadpath,
+#   "|",
+#   escape_double = FALSE,
+#   trim_ws = TRUE
+# )
+
+####
 
 post.res <- POST(update.endpoint,
                  body = list(update = 'clear all'),
@@ -145,28 +153,6 @@ while (not.empty.yet) {
 
 ####
 
-# if the source medication table was saved as Rdata, it will be more compatible that reopening
-#   a tab, comma or pipe-delimited text file
-
-# source.medications <- read_delim(
-#   config$source.medications.loadpath,
-#   "|",
-#   escape_double = FALSE,
-#   trim_ws = TRUE
-# )
-
-source.medications$ehr.rxn.annotated <-
-  !is.na(source.medications$RXNORM)
-
-# ~ 900k r-medications,
-# but only ~250k that have an order/encounter link to a patient with an EMPI
-
-# # destructive (changing would require rerunning query or load
-source.medications <-
-  source.medications[source.medications$MEDICATION_COUNT >= config$min.empi.count ,]
-
-####
-
 # normalize source (UPHS) lexical peculiarities
 
 normalization.rules.res <-
@@ -183,11 +169,11 @@ normalization.rules.res$wc <- nchar(normalization.rules.res$ws) + 1
 normalization.rules.res$replacement[is.na(normalization.rules.res$replacement)] <-
   ""
 normalization.rules.res <-
-  normalization.rules.res[normalization.rules.res$confidence == "high" ,]
+  normalization.rules.res[normalization.rules.res$confidence == "high" , ]
 normalization.rules.res <-
   normalization.rules.res[order(normalization.rules.res$wc,
                                 normalization.rules.res$char,
-                                decreasing = TRUE),]
+                                decreasing = TRUE), ]
 
 normalization.rules.res$pattern <-
   paste("\\b", normalization.rules.res$pattern, "\\b", sep = "")
@@ -207,7 +193,7 @@ source.medications$GENERIC_NAME.lc <-
 source.medications$GENERIC_NAME.lc[is.na(source.medications$GENERIC_NAME.lc)] <-
   ""
 
-# applying longest normalizastions first
+# applying longest normalization first
 # use some kind of automated synonym discovery, like phrase2vec?
 source.medications$normalized <-
   stringr::str_replace_all(source.medications$normalized, normalization.rules)
@@ -343,9 +329,7 @@ query.list <-
 
 ####
 
-# todo parameterize
-# safe.rxnav.submission.size <- config$safe.rxnav.submission.size
-safe.rxnav.submission.size <- 2000
+safe.rxnav.submission.size <- config$safe.rxnav.submission.size
 
 safe.rxnav.submission.count <-
   ceiling(length(query.list) / safe.rxnav.submission.size)
@@ -353,18 +337,28 @@ safe.rxnav.submission.count <-
 safe.rxnav.submission.chunks <-
   chunk.vec(vec = query.list, chunk.count = safe.rxnav.submission.count)
 
+# paramterize message?
 outer.chunks <-
   lapply(
     X = safe.rxnav.submission.chunks,
     FUN = function(current.chunk) {
       print(Sys.time())
       inner.temp <- bulk.approximateTerm(current.chunk)
-      print("sleeping between chunk submissions")
+      print(
+        paste0(
+          "    sleeping ",
+          config$inter.outer.seconds,
+          " seconds starting next chunk of ",
+          config$safe.rxnav.submission.size
+        )
+      )
       gc()
-      Sys.sleep(30)
+      Sys.sleep(config$inter.outer.seconds)
       return(inner.temp)
     }
   )
+
+####
 
 approximate.term.res <-
   do.call(what = rbind.data.frame, args = outer.chunks)
@@ -378,6 +372,7 @@ test.and.refresh()
 
 # two or three minutes
 # TODO add some progress indication back in
+# in general, should be more consistent about chunking by count vs size
 rxaui.asserted.string.res <-
   bulk.rxaui.asserted.strings(approximate.term.res$rxaui,
                               chunk.count = config$rxaui.asserted.strings.chunk.count)
@@ -525,7 +520,7 @@ current.version.list <- version.list
 
 # modifies version list!
 
-load(config$rf.model.loadpath)
+load(config$rf.model.path)
 
 rf.model.version.list <- version.list
 
@@ -686,10 +681,10 @@ monitor.named.graphs()
 # now get rxcuis with labels in repo
 # this should go into setup
 
-saved.authentication <-
-  authenticate(config$my.graphdb.username,
-               config$my.graphdb.pw,
-               type = "basic")
+# saved.authentication <-
+#   authenticate(config$my.graphdb.username,
+#                config$my.graphdb.pw,
+#                type = "basic")
 
 my.query <- 'PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 select distinct ?rxcui_with_rxaui_with_skos_notation
@@ -807,7 +802,7 @@ classification.res.tidied.md <-
                                 !(
                                   classification.res.tidied$MEDICATION_ID %in% classification.res.tidied.onehop$MEDICATION_ID
                                 )
-                              ) , ]
+                              ) ,]
 
 probs.matrix <- classification.res.tidied.md[, c(
   "consists_of",
@@ -926,6 +921,8 @@ robot.templating <- function(current.task) {
   # or gz?
   # if zip works, update YAML configuration file
   
+  current.task <- "reference_medications"
+  
   print(current.task)
   
   robot.java.settings <- "ROBOT_JAVA_ARGS=-Xmx8G"
@@ -1001,8 +998,7 @@ robot.templating <- function(current.task) {
 lapply(sort(names(graphs.cols)), robot.templating)
 # system calls to robot now replace  med_mapping_robot.sh which had read from and written to completely hardcoded files/path
 
-# for debugging
-save.image(config$image.fn)
+# # for debugging
+# save.image(config$image.fn)
 
 # next run XXX
-
