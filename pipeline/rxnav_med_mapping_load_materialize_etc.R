@@ -22,7 +22,6 @@ print(getOption("java.parameters"))
 ####
 
 # load public ontologies & RDF data sets
-# inspired by disease_diagnosis_dev.R
 # more refactoring (even package writing) opportunities
 
 # upload from file if upload from URL might fail
@@ -256,7 +255,7 @@ post.res <- POST(
 
 ####    ####    ####    ####
 
-if (FALSE) {
+if (config$clear.raw.class.search.res) {
   # this should probably be optional... it is verbose,
   #   and the http://example.com/resource/elected_mapping replacement
   #   is proabbply more useful in most circumstances
@@ -285,10 +284,9 @@ if (FALSE) {
 #
 # $ ~/solr-8.4.1/bin/solr create_core -c <config$med.map.kb.solr.host>
 
-# many of the next steps take several minutes each
-
 ####    ####    ####    ####
 
+# many of the next steps take several minutes each
 
 # MAIN labels
 # < 1 minute
@@ -311,7 +309,7 @@ colnames(crsc.solr.res) <-
   c("main.label", "definedin", "id", "employment")
 
 crsc.solr.res <-
-  crsc.solr.res[crsc.solr.res$id %in% crsc.addtions, ]
+  crsc.solr.res[crsc.solr.res$id %in% crsc.addtions,]
 
 main.solr.res <-
   rbind.data.frame(main.solr.res, crsc.solr.res[, colnames(main.solr.res)])
@@ -414,7 +412,7 @@ chebi.selected.syns <-
 merged <-
   dplyr::full_join(merged, chebi.selected.syns)
 
-merged <- merged[order(merged$id),]
+merged <- merged[order(merged$id), ]
 
 merged$chebi.demoted <- NA
 merged$chebi.demoted[!is.na(merged$dron.for.chebi)] <-
