@@ -1,8 +1,3 @@
-rxcui_ttys.fn <-  'build/rxcui_ttys.ttl'
-
-# paste0(config$json.source, "/", config$json.for.solr)
-
-
 # set the working directory to medication-knowledgegraph-pipeline/pipeline
 # for example,
 # setwd("~/GitHub/medication-knowledgegraph-pipeline/pipeline")
@@ -18,7 +13,7 @@ rxcui_ttys.fn <-  'build/rxcui_ttys.ttl'
 # see https://github.com/PennTURBO/turbo-globals/blob/master/turbo_R_setup.template.yaml
 
 source(
-  "https://raw.githubusercontent.com/PennTURBO/turbo-globals/master/turbo_R_setup.R"
+  "https://raw.githubusercontent.com/PennTURBO/turbo-globals/master/turbo_R_setup_action_versioning.R"
 )
 
 # Java memory is set in turbo_R_setup.R
@@ -42,7 +37,6 @@ mm.kb.solr.client$delete_by_query(name = config$med.map.kb.solr.core, query = "*
 # https://debian-administration.org/article/530/SSH_with_authentication_key_instead_of_password
 session <-
   ssh_connect(paste0(config$ssh.user, "@", config$ssh.host))
-#' @markampa@turbo-prd-app01.pmacs.upenn.edu")
 print(session)
 
 # countdown dips to negative before finishing
@@ -74,7 +68,7 @@ ssh_disconnect(session)
 
 ####
 
-# run the sample Solr queries from teh TMM ontology
+# run the sample Solr queries from the TMM ontology
 
 tmm.ont.url <-
   "https://raw.githubusercontent.com/PennTURBO/medication-knowledgegraph-pipeline/master/ontology/tmm_ontology.ttl"
@@ -106,7 +100,6 @@ minus {
 "
 
 # solr.queries.result <- rdflib::rdf_query(rdf = tmm.ont, query = solr.queries.query)
-
 # rrdf seems like a better query engine but requires downloading to a tempfile
 rdf.temp.file <- tempfile()
 download.file(url = tmm.ont.url, destfile = rdf.temp.file)
@@ -137,8 +130,6 @@ solr.query.template <-
     fixed = TRUE
   )
 
-# prepared.solr.query <- c()
-
 solr.param.list <- list(defType = "edismax",
                         fl = "id,medlabel,employment,definedin,tokens,score",
                         qf = "medlabel tokens")
@@ -166,7 +157,6 @@ placeholder <-
           name = config$med.map.kb.solr.core,
           params = solr.param.list
         )
-      # print(head(current.solr.result))
       failures <- setdiff(current.expected, current.solr.result$id)
       print("failures...")
       print(failures)
