@@ -97,4 +97,6 @@ colnames(source.medications) <-
 
 # save.image("pds_r_medication_sql_select.Rdata")
 
-save(source.medications, file = config$source.medications.Rdata.path)
+save(source.medications,
+     version.list,
+     file = config$source.medications.Rdata.path)

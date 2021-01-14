@@ -13,116 +13,17 @@
 # see https://github.com/PennTURBO/turbo-globals/blob/master/turbo_R_setup.template.yaml
 
 source(
-  "https://raw.githubusercontent.com/PennTURBO/turbo-globals/master/turbo_R_setup.R"
+  "https://raw.githubusercontent.com/PennTURBO/turbo-globals/master/turbo_R_setup_action_versioning.R"
 )
 
 # Java memory is set in turbo_R_setup.R
 print(getOption("java.parameters"))
-
-####
-
-library(gtools)
 
 more.pages <- NA
 current.page <- NA
 next.page <- NA
 my.page.count <- NA
 aggregated.mapping <- data.frame()
-
-bp.mappings.pair.to.minimal.df <- function(from.ont, to.ont) {
-  # initialize global variables for while loop
-  
-  more.pages <<- TRUE
-  aggregated.mapping <<- data.frame()
-  
-  # from.ont <- 'CHEBI'
-  # to.ont <- 'DRON'
-  
-  current.page <<- 1
-  next.page <<- 0
-  my.page.count <<- NA
-  
-  while (more.pages) {
-    print(paste0('Searching ', from.ont, ' against ', to.ont))
-    
-    print(paste0('page ',
-                 current.page,
-                 ' of ',
-                 my.page.count,
-                 ' pages'))
-    
-    pair.uri <-
-      paste0(
-        config$my.bioportal.api.base,
-        '/mappings?ontologies=',
-        from.ont,
-        ',',
-        to.ont,
-        '&apikey=',
-        config$my.apikey,
-        '&pagesize=',
-        config$my.pagesize,
-        '&page=',
-        current.page
-      )
-    mappings.result <- httr::GET(pair.uri)
-    mappings.result <- rawToChar(mappings.result$content)
-    whole.prep.parse <- mappings.result
-    
-    mappings.result <- jsonlite::fromJSON(mappings.result)
-    
-    current.page <<- mappings.result$page
-    next.page <<- mappings.result$nextPage
-    my.page.count <<- mappings.result$pageCount
-    
-    mappings.result <- mappings.result$collection
-    
-    if (length(mappings.result) > 0) {
-      mappings.result <-
-        mappings.result$classes[mappings.result$source == 'LOOM']
-      inner.res <-
-        lapply(mappings.result, function(current.result) {
-          # current.result <- mappings.result[[1]]
-          current.ids <- current.result$`@id`
-          current.ontologies <- current.result$links$ontology
-          return(
-            list(
-              'source.term' = current.ids[[1]],
-              'source.ontology' = current.ontologies[[1]],
-              'mapped.term' = current.ids[[2]],
-              'mapped.ontology' = current.ontologies[[2]]
-            )
-          )
-        })
-      
-      inner.res <- do.call(rbind.data.frame, inner.res)
-      inner.res <-
-        inner.res[as.character(inner.res$source.term) != as.character(inner.res$mapped.term),]
-      inner.res <-
-        unique(inner.res[, c("source.term", "source.ontology", "mapped.term")])
-      
-      if (current.page >= my.page.count) {
-        more.pages <- FALSE
-      } else {
-        current.page <- next.page
-      }
-      
-      aggregated.mapping <<-
-        rbind.data.frame(aggregated.mapping, inner.res)
-    } else {
-      print(paste0("no rows in collection from page ", current.page))
-      print(whole.prep.parse)
-      if (current.page >= my.page.count) {
-        more.pages <- FALSE
-      } else {
-        current.page <- next.page
-      }
-    }
-    
-  }
-  
-  return(aggregated.mapping)
-}
 
 onto.combos <- combinations(
   n = length(config$my.source.ontolgies),
@@ -165,24 +66,19 @@ colnames(bound.source.results) <-
     fixed = TRUE
   )
 
-# # OOPS... doesn't consistently recognize IRIs
+# # OOPS... rdflib::as_rdf doesn't consistently recognize objects as IRIs
 # # https://stackoverflow.com/questions/60853395/rdflibas-rdf-only-recognizes-some-iris
 # # otherwise...
 # # pretty fast
 # # simplify after loading into graphdb?
 # # really only care that X is mapped to Y, right?
-# # otherwise, we should probablya ssert a type for these things
+# # otherwise, we should probably assert a type for these things
 #
 # per.source.results.rdf <-
 #   rdflib::as_rdf(x = bound.source.results[1:2,c(1,2,4,5)],
 #                  prefix = config$my.prefix,
 #                  key = 'uuid')
 # rdf_serialize(rdf = per.source.results.rdf, doc = config$bioportal.triples.destination)
-#
-# # http://pennturbo.org:7200
-# # med_mapping
-# # grep... see hayden's notes. for now use something like <>
-# # bioportal_mappings
 
 ####
 
@@ -202,26 +98,37 @@ placeholder <-
       rdf_add(
         rdf = direct.rdf,
         subject = current.row[['source_term']],
-        predicate = paste0('http://example.com/resource/',
-                           config$bioportal.mapping.graph.name),
+        predicate = paste0(
+          'http://example.com/resource/',
+          config$bioportal.mapping.graph.name
+        ),
         object = current.row[['mapped_term']]
       )
     }
   )
 print(Sys.time())
 
-# really want to know the release dates/verions of tee included component
+# really want to know the release dates/versions of the included component
 # in the mean time, could add the IP address of the BioPortal server that was queried?
-
-tm <- as.POSIXlt(Sys.time(), "UTC", "%Y-%m-%dT%H:%M:%S")
-tm <- strftime(tm , "%Y-%m-%dT%H:%M:%S%z")
 
 rdf_add(
   rdf = direct.rdf,
-  subject = paste0('http://example.com/resource/',
-                   config$bioportal.mapping.graph.name),
-  predicate = "http://www.w3.org/2002/07/versionInfo",
-  object = tm
+  subject = paste0(
+    'http://example.com/resource/',
+    config$bioportal.mapping.graph.name
+  ),
+  predicate = "http://www.w3.org/2002/07/owl#versionInfo",
+  object = version.list$versioninfo
+)
+
+rdflib::rdf_add(
+  rdf = direct.rdf,
+  subject = paste0(
+    'http://example.com/resource/',
+    config$bioportal.mapping.graph.name
+  ),
+  predicate = "http://purl.org/dc/terms/created",
+  object = version.list$created
 )
 
 lapply(config$my.source.ontolgies, function(current.source) {
@@ -267,14 +174,15 @@ post.dest <-
     config$my.selected.repo,
     '/rdf-graphs/service?graph=',
     URLencode(
-      paste0('http://example.com/resource/',
-             config$bioportal.mapping.graph.name),
+      paste0(
+        'http://example.com/resource/',
+        config$bioportal.mapping.graph.name
+      ),
       reserved = TRUE
     )
   )
 
 print(post.dest)
-
 print(Sys.time())
 
 post.resp <-
@@ -282,13 +190,10 @@ post.resp <-
     url = post.dest,
     body = upload_file(config$bioportal.triples.destination),
     content_type(config$my.mappings.format),
-    authenticate(
-      config$my.graphdb.username,
-      config$my.graphdb.pw,
-      type = 'basic'
-    )
+    authenticate(config$my.graphdb.username,
+                 config$my.graphdb.pw,
+                 type = 'basic')
   )
 
 print('Errors will be listed below:')
 print(rawToChar(post.resp$content))
-

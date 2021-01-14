@@ -34,6 +34,9 @@ source(
 # Java memory is set in turbo_R_setup.R
 print(getOption("java.parameters"))
 
+# many warnings saved to robot.results when templating and intern = TRUE
+capture.robot.output <- FALSE
+
 # may also want to capture
 #   pre_commit_status.txt
 pre_commit_tags.fp <- "../release_tag.txt"
@@ -123,8 +126,8 @@ source.medications <-
 
 # add option for CSV input
 
-# if the source medication table was saved as Rdata, it will be more compatible that reopening
-#   a tab, comma or pipe-delimited text file
+# if the source medication table was saved as Rdata, it will have better fidelity
+#   than reopening a tab, comma or pipe-delimited text file
 
 # source.medications <- read_delim(
 #   config$source.medications.loadpath,
@@ -679,12 +682,6 @@ expectation <- temp.name
 monitor.named.graphs()
 
 # now get rxcuis with labels in repo
-# this should go into setup
-
-# saved.authentication <-
-#   authenticate(config$my.graphdb.username,
-#                config$my.graphdb.pw,
-#                type = "basic")
 
 my.query <- 'PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 select distinct ?rxcui_with_rxaui_with_skos_notation
@@ -979,12 +976,13 @@ robot.templating <- function(current.task) {
       '_from_robot.ttl'
     )
   
+  # many warnings saved to robot.results when intern = TRUE
   robot.results <-
     system(command = paste0(robot.java.settings,
                             ' && ', robot.command),
-           intern = TRUE)
+           intern = capture.robot.output)
   
-  # many warnings
+
   # print(robot.results)
   
   zip::zip(

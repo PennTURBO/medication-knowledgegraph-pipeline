@@ -463,11 +463,11 @@ table(performance.frame$overridden)
 
 ###   ###   ###
 
-print(
+performance.summary <-
   confusionMatrix(performance.frame$rf_responses, test.frame$RELA, positive = "TRUE")
-)
 
-write.csv(rf_classifier$confusion, file = config$testing.confusion.path)
+# # can regenerate from rf_classifier
+# write.csv(rf_classifier$confusion, file = config$testing.confusion.path)
 
 # SKIPPING ROC (complex with multi-class classifications)
 
@@ -494,10 +494,14 @@ covered.rxcuis <-
 attempted.rxcuis <- unique(coverage.check.frame$RXCUI)
 coverage <- length(covered.rxcuis) / length(attempted.rxcuis)
 
-print(coverage)
+# print(coverage)
 
 # 24 MB... on the large size for github
-save(rf_classifier, file = config$rf.model.path)
+save(rf_classifier,
+     version.list,
+     performance.summary,
+     coverage,
+     file = config$rf.model.path)
 
 # # for debugging
 # save.image(config$rxnav_med_mapping_training_image)
