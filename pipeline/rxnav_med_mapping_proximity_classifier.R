@@ -1,10 +1,9 @@
-config.fn <- "config/turbo_R_setup.yaml"
-image.fn <- "build/rxnav_med_mapping_pds_proximity_classifier.Rdata"
+# source- vs ref- vs ehr (just to get rid of both legacy terms)
 
 # need better terms for identical and more distant
-# no spaces
-# defined in ontology
-# would have to go back to training
+# no spaces in names like that, sincle they may become IRIs
+# should be defined in the TMM ontology
+# would have to go back to training to be consistent
 # use http://purl.bioontology.org/ontology/RXNORM/ base for now
 
 #   query.source	http://example.com/resource/query_source/ OK
@@ -16,8 +15,6 @@ image.fn <- "build/rxnav_med_mapping_pds_proximity_classifier.Rdata"
 #   RXNORM	http://purl.bioontology.org/ontology/RXNORM/ OK
 #   rxcui	http://purl.bioontology.org/ontology/RXNORM/ OK
 
-# source- vs ref- vs ehr (just to get rid of both legacy terms)
-
 ####
 
 # set the working directory to medication-knowledgegraph-pipeline/pipeline
@@ -26,12 +23,8 @@ image.fn <- "build/rxnav_med_mapping_pds_proximity_classifier.Rdata"
 
 # get global settings, functions, etc. from https://raw.githubusercontent.com/PennTURBO/turbo-globals
 
-# some people (https://www.r-bloggers.com/reading-an-r-file-from-github/)
-# say it’s necessary to load the devtools package before sourcing from GitHub?
-# but the raw page is just a http-accessible page of text, right?
-
 # requires a properly formatted "turbo_R_setup.yaml" in medication-knowledgegraph-pipeline/config
-# or better yet, a symbolic link to a centrally loated "turbo_R_setup.yaml", which could be used by multiple pipelines
+# or better yet, a symbolic link to a centrally located "turbo_R_setup.yaml", which could be used by multiple pipelines
 # see https://github.com/PennTURBO/turbo-globals/blob/master/turbo_R_setup.template.yaml
 
 source(
@@ -41,31 +34,27 @@ source(
 # Java memory is set in turbo_R_setup.R
 print(getOption("java.parameters"))
 
-# may also want to capture
-#   pre_commit_status.txt
-pre_commit_tags.fp <- "../release_tags.txt"
-# execution.timestamp determined fresh each time
-#   https://raw.githubusercontent.com/PennTURBO/turbo-globals/master/turbo_R_setup.R
-#   is sourced
-if (file.exists(pre_commit_tags.fp)) {
-  temp <- read_lines(pre_commit_tags.fp)
-  version.list <-
-    list(versioninfo = temp,
-         created = execution.timestamp)
-} else {
-  version.list <-
-    list(versioninfo = config$med.mapping.sw.version,
-         created = execution.timestamp)
-}
+# many warnings saved to robot.results when templating and intern = TRUE
+capture.robot.output <- FALSE
 
+# # may also want to capture
+# #   pre_commit_status.txt
+# pre_commit_tags.fp <- "../release_tag.txt"
+# # execution.timestamp determined fresh each time
+# #   https://raw.githubusercontent.com/PennTURBO/turbo-globals/master/turbo_R_setup.R
+# #   is sourced
+#
+# temp <- read_lines(pre_commit_tags.fp)
+# version.list <-
+#   list(versioninfo = temp,
+#        created = execution.timestamp)
 
 ####
 
-# is this still true?
-# assumes this script has been launched from the current working directory that contains
-#  rxnav_med_mapping_setup.R, rxnav_med_mapping.yaml
-
-####
+# try to connect to RxNav database with a reusable and closable connection
+# so first try to close that handle if it exists
+# be careful...
+#  over time, that kind of approach could use up more connections that a RDBMS is willing to grant
 
 tryCatch({
   dbDisconnect(rxnCon)
@@ -108,13 +97,50 @@ test.and.refresh <- function() {
   })
 }
 
-# put in config file
-# could this possibly overwrite the software version and date asserted above
-# to document this execution of he classification?
-# see workaround at load(config$rf.model.loadpath)
 # load("build/source_medications.Rdata")
-# currently ony loads source.medications
-load(config$source.medications.Rdata.loadpath)
+# currently loads source.medications
+# stop using separate save, (write?) and load paths
+
+version.lol <- list()
+version.lol[['this']] <- version.list
+# current.version.list <- version.list
+# # modifies version list!
+load(config$source.medications.Rdata.path)
+# source.medications.version.list <- version.list
+# version.list <- current.version.list
+version.lol[['reference_medications']] <- version.list
+
+source.medications$ehr.rxn.annotated <-
+  !is.na(source.medications$RXNORM)
+
+# source_medications.all.pds.Rdata @ 17 September 2020 has ~ 900k reference medications,
+# but many are linked, via an encounter, to either zero or only one patients/EMPIs
+# as determined from the unfortunately named "MEDICATION_COUNT" column
+
+# > table(source.medications$MEDICATION_COUNT)
+#
+# 0      1      2
+# 701166 132971  21048
+
+# # destructive (changing would require rerunning query or load
+source.medications <-
+  source.medications[source.medications$MEDICATION_COUNT >= config$min.empi.count , ]
+
+####
+
+# add option for CSV input
+
+# if the source medication table was saved as Rdata, it will have better fidelity
+#   than reopening a tab, comma or pipe-delimited text file
+
+# source.medications <- read_delim(
+#   config$source.medications.loadpath,
+#   "|",
+#   escape_double = FALSE,
+#   trim_ws = TRUE
+# )
+
+####
 
 post.res <- POST(update.endpoint,
                  body = list(update = 'clear all'),
@@ -131,28 +157,6 @@ while (not.empty.yet) {
   print(context.report)
   sleep(config$monitor.pause.seconds)
 }
-
-####
-
-# if the source medication table was saved as Rdata, it will be more compatible that reopening
-#   a tab, comma or pipe-delimited text file
-
-# source.medications <- read_delim(
-#   config$source.medications.loadpath,
-#   "|",
-#   escape_double = FALSE,
-#   trim_ws = TRUE
-# )
-
-source.medications$ehr.rxn.annotated <-
-  !is.na(source.medications$RXNORM)
-
-# ~ 900k r-medications,
-# but only ~250k that have an order/encounter link to a patient with an EMPI
-
-# # destructive (changing would require rerunning query or load
-source.medications <-
-  source.medications[source.medications$MEDICATION_COUNT >= config$min.empi.count , ]
 
 ####
 
@@ -196,7 +200,7 @@ source.medications$GENERIC_NAME.lc <-
 source.medications$GENERIC_NAME.lc[is.na(source.medications$GENERIC_NAME.lc)] <-
   ""
 
-# applying longest normalizastions first
+# applying longest normalization first
 # use some kind of automated synonym discovery, like phrase2vec?
 source.medications$normalized <-
   stringr::str_replace_all(source.medications$normalized, normalization.rules)
@@ -332,9 +336,7 @@ query.list <-
 
 ####
 
-# todo parameterize
-# safe.rxnav.submission.size <- config$safe.rxnav.submission.size
-safe.rxnav.submission.size <- 2000
+safe.rxnav.submission.size <- config$safe.rxnav.submission.size
 
 safe.rxnav.submission.count <-
   ceiling(length(query.list) / safe.rxnav.submission.size)
@@ -342,20 +344,31 @@ safe.rxnav.submission.count <-
 safe.rxnav.submission.chunks <-
   chunk.vec(vec = query.list, chunk.count = safe.rxnav.submission.count)
 
+# paramterize message?
 outer.chunks <-
   lapply(
     X = safe.rxnav.submission.chunks,
     FUN = function(current.chunk) {
       print(Sys.time())
       inner.temp <- bulk.approximateTerm(current.chunk)
-      print("sleeping between chunk submissions")
+      print(
+        paste0(
+          "    sleeping ",
+          config$inter.outer.seconds,
+          " seconds starting next chunk of ",
+          config$safe.rxnav.submission.size
+        )
+      )
       gc()
-      Sys.sleep(30)
+      Sys.sleep(config$inter.outer.seconds)
       return(inner.temp)
     }
   )
 
-approximate.term.res <- do.call(what = rbind.data.frame, args = outer.chunks)
+####
+
+approximate.term.res <-
+  do.call(what = rbind.data.frame, args = outer.chunks)
 
 # # ~ 45 minutes for XXX
 # # break up into chunks of 10 or 20k?
@@ -366,6 +379,7 @@ test.and.refresh()
 
 # two or three minutes
 # TODO add some progress indication back in
+# in general, should be more consistent about chunking by count vs size
 rxaui.asserted.string.res <-
   bulk.rxaui.asserted.strings(approximate.term.res$rxaui,
                               chunk.count = config$rxaui.asserted.strings.chunk.count)
@@ -509,15 +523,16 @@ print(sort(table(accounted.cols)))
 
 ####
 
-current.version.list <- version.list
+# current.version.list <- version.list
+#
+# # modifies version list!
 
-# modifies version list!
+load(config$rf.model.path)
+version.lol[['classified_search_results']] <- version.list
 
-load(config$rf.model.loadpath)
-
-rf.model.version.list <- version.list
-
-version.list <- current.version.list
+# rf.model.version.list <- version.list
+#
+# version.list <- current.version.list
 
 ####
 
@@ -599,7 +614,7 @@ uncovered.keys <- setdiff(all.keys, covered.keys)
 
 # save for followup?
 uncovered.frame <-
-  ehr.approximate.original.dists[ehr.approximate.original.dists$MEDICATION_ID %in% uncovered.keys ,]
+  ehr.approximate.original.dists[ehr.approximate.original.dists$MEDICATION_ID %in% uncovered.keys , ]
 
 ###
 
@@ -672,12 +687,6 @@ expectation <- temp.name
 monitor.named.graphs()
 
 # now get rxcuis with labels in repo
-# this should go into setup
-
-saved.authentication <-
-  authenticate(config$my.graphdb.username,
-               config$my.graphdb.pw,
-               type = "basic")
 
 my.query <- 'PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 select distinct ?rxcui_with_rxaui_with_skos_notation
@@ -707,13 +716,13 @@ rxnorm.entities.in.repo <-
 ####
 
 classification.res.tidied.inactive.rxcui <-
-  classification.res.tidied[!(classification.res.tidied$rxcui %in% rxnorm.entities.in.repo),]
+  classification.res.tidied[!(classification.res.tidied$rxcui %in% rxnorm.entities.in.repo), ]
 
 classification.res.tidied <-
-  classification.res.tidied[classification.res.tidied$rxcui %in% rxnorm.entities.in.repo,]
+  classification.res.tidied[classification.res.tidied$rxcui %in% rxnorm.entities.in.repo, ]
 
 classification.res.tidied.id <-
-  classification.res.tidied[classification.res.tidied$override == "identical", ]
+  classification.res.tidied[classification.res.tidied$override == "identical",]
 best.identical <-
   aggregate(
     classification.res.tidied.id$identical,
@@ -730,7 +739,7 @@ classification.res.tidied.onehop <-
   classification.res.tidied[(
     classification.res.tidied$override != "identical" &
       classification.res.tidied$override != "more distant"
-  ) ,]
+  ) , ]
 
 probs.matrix <- classification.res.tidied.onehop[, c(
   "consists_of",
@@ -777,10 +786,10 @@ equal.or.better.Q$identical[is.na(equal.or.better.Q$identical)] <- 0
 equal.or.better.Q$probs.matrix.rowmax[is.na(equal.or.better.Q$probs.matrix.rowmax)] <-
   0
 equal.or.better.Q <-
-  equal.or.better.Q[equal.or.better.Q$probs.matrix.rowmax >= equal.or.better.Q$identical , ]
+  equal.or.better.Q[equal.or.better.Q$probs.matrix.rowmax >= equal.or.better.Q$identical ,]
 
 classification.res.tidied.onehop <-
-  classification.res.tidied.onehop[classification.res.tidied.onehop$MEDICATION_ID %in% equal.or.better.Q$MEDICATION_ID , ]
+  classification.res.tidied.onehop[classification.res.tidied.onehop$MEDICATION_ID %in% equal.or.better.Q$MEDICATION_ID ,]
 
 ####
 
@@ -900,125 +909,116 @@ placeholder <-
 
 #####
 
-# graph name/column relationships are in graphs.cols
-# would theoretically be better to iterate over that
-# but will use  hard-coded names as special actions for now
-
-# # should really extract this from source.medications
-
-# > print(predlist)
-# [1] "source_med_id"               "source_full_name"            "source_generic_name"         "source_rxcui"
-# [5] "source_count"                "source_normalized_full_name"
-
-####
 
 classification.res.tidied$source_rxcui[classification.res.tidied$source_rxcui ==
                                          'http://purl.bioontology.org/ontology/RXNORM/'] <-
   ''
 
-# 90 minutes for rdflib::add... instantiating all search results, not filtered by best identical score etc.
-
-
-# refactor
-current.task <- 'classified_search_results'
-more.specific <-
-  config::get(file = config.fn, config = current.task)
-
-keepers <-
-  med_map_csv_cols$more_generic %in% setdiff(graphs.cols[[current.task]], "source_has_rxcui")
-
-body <- unique(classification.res.tidied[, keepers])
-pre.robot <- colnames(body)
-class.col <- rep(more.specific$my.class, nrow(body))
-body <- cbind.data.frame(class.col, body)
-pre.robot <- colnames(body)
-print(pre.robot)
-
-robot.line <-
-  med_map_csv_cols$robot[med_map_csv_cols$more_generic %in% pre.robot]
-robot.line[1] <- 'ID'
-robot.line <-
-  c('TYPE', robot.line)
-
-print(robot.line)
-
-body[] <- lapply(body[], as.character)
-
-body <- rbind.data.frame(robot.line, body)
-names(body) <- pre.robot
-
-write.table(
-  x = body,
-  file = paste0("build/", current.task, '_for_robot.tsv'),
-  append = FALSE,
-  quote = TRUE,
-  sep = '\t',
-  row.names = FALSE,
-  col.names = TRUE
-)
-
-build.source.med.classifications.annotations(
-  version.list = version.list,
-  onto.iri = more.specific$onto.iri ,
-  onto.file = more.specific$onto.file ,
-  onto.file.format = more.specific$onto.file.format
-)
-
 ####
 
-current.task <- 'reference_medications'
-more.specific <-
-  config::get(file = config.fn, config = current.task)
+# tried rdflib::add approach instead of robot... too slow
 
-keepers <-
-  med_map_csv_cols$more_generic %in% setdiff(graphs.cols[[current.task]], "source_has_rxcui")
+robot.templating <- function(current.task) {
+  # paramaterize the file names in all subsequent scripts
+  # or gz?
+  # if zip works, update YAML configuration file
+  
+  # current.task <- "reference_medications"
+  
+  print(current.task)
+  
+  robot.java.settings <- "ROBOT_JAVA_ARGS=-Xmx8G"
+  
+  more.specific <-
+    config::get(file = config$config.fn, config = current.task)
+  
+  keepers <-
+    med_map_csv_cols$more_generic %in% setdiff(graphs.cols[[current.task]], "source_has_rxcui")
+  
+  body <- unique(classification.res.tidied[, keepers])
+  pre.robot <- colnames(body)
+  class.col <- rep(more.specific$my.class, nrow(body))
+  body <- cbind.data.frame(class.col, body)
+  pre.robot <- colnames(body)
+  # print(pre.robot)
+  
+  robot.line <-
+    med_map_csv_cols$robot[med_map_csv_cols$more_generic %in% pre.robot]
+  robot.line[1] <- 'ID'
+  robot.line <-
+    c('TYPE', robot.line)
+  
+  print(robot.line)
+  
+  body[] <- lapply(body[], as.character)
+  
+  body <- rbind.data.frame(robot.line, body)
+  names(body) <- pre.robot
+  
+  write.table(
+    x = body,
+    file = paste0("build/", current.task, '_for_robot.tsv'),
+    append = FALSE,
+    quote = TRUE,
+    sep = '\t',
+    row.names = FALSE,
+    col.names = TRUE
+  )
+  
+  contextual.version <- version.lol[[current.task]]
+  
+  build.source.med.classifications.annotations(
+    version.list = contextual.version,
+    onto.iri = more.specific$onto.iri ,
+    onto.file = more.specific$onto.file ,
+    onto.file.format = more.specific$onto.file.format
+  )
+  
+  # "-vvv" verbosity flags generate a LOT of statements along the lines of
+  # WARN  org.obolibrary.robot.IOHelper - Unable to find namespace for: http://example.com/resource/...
+  robot.command <-
+    paste0(
+      'robot template ',
+      '--prefix "xsd: http://www.w3.org/2001/XMLSchema#" ',
+      '--prefix "obo: http://purl.obolibrary.org/obo/" ',
+      '--template build/',
+      current.task,
+      '_for_robot.tsv ',
+      'annotate ',
+      '--ontology-iri "http://example.com/resource/',
+      current.task,
+      '" ',
+      '--annotation-file ',
+      more.specific$onto.file,
+      ' ',
+      '--output build/',
+      current.task,
+      '_from_robot.ttl '
+    )
+  
+  cat(robot.command)
+  
+  # many warnings saved to robot.results when intern = TRUE
+  robot.results <-
+    system(command = paste0(robot.java.settings,
+                            ' && ', robot.command),
+           intern = capture.robot.output)
+  
+  
+  # print(robot.results)
+  
+  zip::zip(
+    root = "build",
+    zipfile = paste0(current.task, "_from_robot.ttl.zip"),
+    files = c(paste0(current.task, "_from_robot.ttl"))
+  )
+  
+}
 
-body <- unique(classification.res.tidied[, keepers])
-pre.robot <- colnames(body)
-class.col <- rep(more.specific$my.class, nrow(body))
-body <- cbind.data.frame(class.col, body)
+lapply(rev(sort(names(graphs.cols))), robot.templating)
+# system calls to robot now replace  med_mapping_robot.sh which had read from and written to completely hardcoded files/path
 
-pre.robot <- colnames(body)
-print(pre.robot)
+# # for debugging
+# save.image(config$image.fn)
 
-robot.line <-
-  med_map_csv_cols$robot[med_map_csv_cols$more_generic %in% pre.robot]
-robot.line[1] <- 'ID'
-robot.line <-
-  c('TYPE', robot.line)
-
-print(robot.line)
-
-body[] <- lapply(body[], as.character)
-
-body <- rbind.data.frame(robot.line, body)
-names(body) <- pre.robot
-
-# the filename below is monstly hardcoded so that the robot shell script
-# doesn't ahve to parse the yaml file
-# I guess we could actually write the shell script IN this R script ?!
-write.table(
-  x = body,
-  file = paste0("build/", current.task, '_for_robot.tsv'),
-  append = FALSE,
-  quote = TRUE,
-  sep = '\t',
-  row.names = FALSE,
-  col.names = TRUE
-)
-
-build.source.med.classifications.annotations(
-  version.list = version.list,
-  onto.iri = more.specific$onto.iri ,
-  onto.file = more.specific$onto.file ,
-  onto.file.format = more.specific$onto.file.format
-)
-
-# now run med_mapping_robot.sh
-# which reads from and writes to completely hardcoded files/paths
-
-# TODO add ontology annotations to the two robot-created turtle files
-
-# and then run XXX
-
-save.image(image.fn)
+# next run XXX
