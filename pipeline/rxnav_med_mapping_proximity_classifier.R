@@ -37,17 +37,17 @@ print(getOption("java.parameters"))
 # many warnings saved to robot.results when templating and intern = TRUE
 capture.robot.output <- FALSE
 
-# may also want to capture
-#   pre_commit_status.txt
-pre_commit_tags.fp <- "../release_tag.txt"
-# execution.timestamp determined fresh each time
-#   https://raw.githubusercontent.com/PennTURBO/turbo-globals/master/turbo_R_setup.R
-#   is sourced
-
-temp <- read_lines(pre_commit_tags.fp)
-version.list <-
-  list(versioninfo = temp,
-       created = execution.timestamp)
+# # may also want to capture
+# #   pre_commit_status.txt
+# pre_commit_tags.fp <- "../release_tag.txt"
+# # execution.timestamp determined fresh each time
+# #   https://raw.githubusercontent.com/PennTURBO/turbo-globals/master/turbo_R_setup.R
+# #   is sourced
+#
+# temp <- read_lines(pre_commit_tags.fp)
+# version.list <-
+#   list(versioninfo = temp,
+#        created = execution.timestamp)
 
 ####
 
@@ -100,11 +100,15 @@ test.and.refresh <- function() {
 # load("build/source_medications.Rdata")
 # currently loads source.medications
 # stop using separate save, (write?) and load paths
-current.version.list <- version.list
-# modifies version list!
+
+version.lol <- list()
+version.lol[['this']] <- version.list
+# current.version.list <- version.list
+# # modifies version list!
 load(config$source.medications.Rdata.path)
-source.medications.version.list <- version.list
-version.list <- current.version.list
+# source.medications.version.list <- version.list
+# version.list <- current.version.list
+version.lol[['reference_medications']] <- version.list
 
 source.medications$ehr.rxn.annotated <-
   !is.na(source.medications$RXNORM)
@@ -120,7 +124,7 @@ source.medications$ehr.rxn.annotated <-
 
 # # destructive (changing would require rerunning query or load
 source.medications <-
-  source.medications[source.medications$MEDICATION_COUNT >= config$min.empi.count ,]
+  source.medications[source.medications$MEDICATION_COUNT >= config$min.empi.count , ]
 
 ####
 
@@ -172,11 +176,11 @@ normalization.rules.res$wc <- nchar(normalization.rules.res$ws) + 1
 normalization.rules.res$replacement[is.na(normalization.rules.res$replacement)] <-
   ""
 normalization.rules.res <-
-  normalization.rules.res[normalization.rules.res$confidence == "high" ,]
+  normalization.rules.res[normalization.rules.res$confidence == "high" , ]
 normalization.rules.res <-
   normalization.rules.res[order(normalization.rules.res$wc,
                                 normalization.rules.res$char,
-                                decreasing = TRUE),]
+                                decreasing = TRUE), ]
 
 normalization.rules.res$pattern <-
   paste("\\b", normalization.rules.res$pattern, "\\b", sep = "")
@@ -519,15 +523,16 @@ print(sort(table(accounted.cols)))
 
 ####
 
-current.version.list <- version.list
-
-# modifies version list!
+# current.version.list <- version.list
+#
+# # modifies version list!
 
 load(config$rf.model.path)
+version.lol[['classified_search_results']] <- version.list
 
-rf.model.version.list <- version.list
-
-version.list <- current.version.list
+# rf.model.version.list <- version.list
+#
+# version.list <- current.version.list
 
 ####
 
@@ -555,11 +560,11 @@ temp$GENERIC_NAME[is.na(temp$GENERIC_NAME)] <- ''
 
 # get before and after counts
 pre <- unique(temp$MEDICATION_ID)
-temp <- temp[complete.cases(temp), ]
+temp <- temp[complete.cases(temp),]
 post <- unique(temp$MEDICATION_ID)
 lost <- setdiff(pre, post)
 lost <-
-  ehr.approximate.original.dists[ehr.approximate.original.dists$MEDICATION_ID %in% lost ,]
+  ehr.approximate.original.dists[ehr.approximate.original.dists$MEDICATION_ID %in% lost , ]
 
 print(Sys.time())
 timed.system <- system.time(rf_responses <-
@@ -609,7 +614,7 @@ uncovered.keys <- setdiff(all.keys, covered.keys)
 
 # save for followup?
 uncovered.frame <-
-  ehr.approximate.original.dists[ehr.approximate.original.dists$MEDICATION_ID %in% uncovered.keys ,]
+  ehr.approximate.original.dists[ehr.approximate.original.dists$MEDICATION_ID %in% uncovered.keys , ]
 
 ###
 
@@ -711,13 +716,13 @@ rxnorm.entities.in.repo <-
 ####
 
 classification.res.tidied.inactive.rxcui <-
-  classification.res.tidied[!(classification.res.tidied$rxcui %in% rxnorm.entities.in.repo),]
+  classification.res.tidied[!(classification.res.tidied$rxcui %in% rxnorm.entities.in.repo), ]
 
 classification.res.tidied <-
-  classification.res.tidied[classification.res.tidied$rxcui %in% rxnorm.entities.in.repo,]
+  classification.res.tidied[classification.res.tidied$rxcui %in% rxnorm.entities.in.repo, ]
 
 classification.res.tidied.id <-
-  classification.res.tidied[classification.res.tidied$override == "identical", ]
+  classification.res.tidied[classification.res.tidied$override == "identical",]
 best.identical <-
   aggregate(
     classification.res.tidied.id$identical,
@@ -734,7 +739,7 @@ classification.res.tidied.onehop <-
   classification.res.tidied[(
     classification.res.tidied$override != "identical" &
       classification.res.tidied$override != "more distant"
-  ) ,]
+  ) , ]
 
 probs.matrix <- classification.res.tidied.onehop[, c(
   "consists_of",
@@ -781,10 +786,10 @@ equal.or.better.Q$identical[is.na(equal.or.better.Q$identical)] <- 0
 equal.or.better.Q$probs.matrix.rowmax[is.na(equal.or.better.Q$probs.matrix.rowmax)] <-
   0
 equal.or.better.Q <-
-  equal.or.better.Q[equal.or.better.Q$probs.matrix.rowmax >= equal.or.better.Q$identical , ]
+  equal.or.better.Q[equal.or.better.Q$probs.matrix.rowmax >= equal.or.better.Q$identical ,]
 
 classification.res.tidied.onehop <-
-  classification.res.tidied.onehop[classification.res.tidied.onehop$MEDICATION_ID %in% equal.or.better.Q$MEDICATION_ID , ]
+  classification.res.tidied.onehop[classification.res.tidied.onehop$MEDICATION_ID %in% equal.or.better.Q$MEDICATION_ID ,]
 
 ####
 
@@ -799,7 +804,7 @@ classification.res.tidied.md <-
                                 !(
                                   classification.res.tidied$MEDICATION_ID %in% classification.res.tidied.onehop$MEDICATION_ID
                                 )
-                              ) ,]
+                              ) , ]
 
 probs.matrix <- classification.res.tidied.md[, c(
   "consists_of",
@@ -960,21 +965,38 @@ robot.templating <- function(current.task) {
     col.names = TRUE
   )
   
+  contextual.version <- version.lol[[current.task]]
+  
   build.source.med.classifications.annotations(
-    version.list = version.list,
+    version.list = contextual.version,
     onto.iri = more.specific$onto.iri ,
     onto.file = more.specific$onto.file ,
     onto.file.format = more.specific$onto.file.format
   )
   
+  # "-vvv" verbosity flags generate a LOT of statements along the lines of
+  # WARN  org.obolibrary.robot.IOHelper - Unable to find namespace for: http://example.com/resource/...
   robot.command <-
     paste0(
-      'robot -vvv template --prefix "xsd: http://www.w3.org/2001/XMLSchema#" --prefix "obo: http://purl.obolibrary.org/obo/"  --template build/',
+      'robot template ',
+      '--prefix "xsd: http://www.w3.org/2001/XMLSchema#" ',
+      '--prefix "obo: http://purl.obolibrary.org/obo/" ',
+      '--template build/',
       current.task,
-      '_for_robot.tsv --output build/',
+      '_for_robot.tsv ',
+      'annotate ',
+      '--ontology-iri "http://example.com/resource/',
       current.task,
-      '_from_robot.ttl'
+      '" ',
+      '--annotation-file ',
+      more.specific$onto.file,
+      ' ',
+      '--output build/',
+      current.task,
+      '_from_robot.ttl '
     )
+  
+  cat(robot.command)
   
   # many warnings saved to robot.results when intern = TRUE
   robot.results <-
@@ -982,7 +1004,7 @@ robot.templating <- function(current.task) {
                             ' && ', robot.command),
            intern = capture.robot.output)
   
-
+  
   # print(robot.results)
   
   zip::zip(

@@ -1,4 +1,0 @@
-## action-versioning...origin/action-versioning
- M release_date.txt
- M release_status.txt
-?? release_tag.txt
