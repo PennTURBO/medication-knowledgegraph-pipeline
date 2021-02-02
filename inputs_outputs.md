@@ -80,3 +80,5 @@
 - **Outputs**
   - Populates the Solr core described above
   - The TMM ontology contains templated Solr queries and expected results. The queries are submitted to the medication mapping Solr, and status including any "failures" are printed to standard output. Zero failures is informal evidence that all components of the medication mapping pipeline ran as expected. 
+  
+See also the [readme.md](readme.md), which narrates what tasks the scripts perform.
