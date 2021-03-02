@@ -4,7 +4,8 @@
   Inputs: pds_r_medication_sql_select.R requires a connection to PDS, which is defined with the following settings, which must be kept **secret**: 
   - `config$oracle.jdbc.path`
   - `config$pds.host`
-  - `config$pds.portconfig$pds.database`
+  - `config$pds.port
+  - config$pds.database`
 - **Output**: a list, containing the medication string dataframe and some version metadata. Serialized as an `.Rdata` file whose path & name are specified by `config$source.medications.Rdata.path`. There are several advantages and some disadvantages to using the `.Rdata` format.
 - **Date/versioning**:
   - The date on which the script was run (and therefore date of database contents) is reflected with property <http://purl.org/dc/terms/created> on subject http://example.com/resource/reference_medications
