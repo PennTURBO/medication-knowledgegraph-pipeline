@@ -6,7 +6,7 @@
   - `config$pds.host`
   - `config$pds.port`
   - `config$pds.database`
-- **Output**: a list, containing the medication string dataframe and some version metadata. Serialized as an `.Rdata` file whose path & name are specified by `config$source.medications.Rdata.path`. There are several advantages and some disadvantages to using the `.Rdata` format.
+- **Output**: a list, containing the medication string dataframe (with hardcoded column names) and some version metadata. Serialized as an `.Rdata` file whose path & name are specified by `config$source.medications.Rdata.path`. There are several advantages and some disadvantages to using the `.Rdata` format.
 - **Date/versioning**:
   - The date on which the script was run (and therefore date of database contents) is reflected with property <http://purl.org/dc/terms/created> on subject http://example.com/resource/reference_medications
     The release tag of the pipeline software that retrieved and serialized the medication string dataframe is reflected with property `owl:versionInfo`. Alternatively, the GitHub release URL could be reflected with `owl:versionIRI`
