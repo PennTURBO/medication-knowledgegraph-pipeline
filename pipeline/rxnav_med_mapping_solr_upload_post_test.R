@@ -34,37 +34,62 @@ print(mm.kb.solr.client)
 # clear the core!
 mm.kb.solr.client$delete_by_query(name = config$med.map.kb.solr.core, query = "*:*")
 
-# https://debian-administration.org/article/530/SSH_with_authentication_key_instead_of_password
-session <-
-  ssh_connect(paste0(config$ssh.user, "@", config$ssh.host))
-print(session)
-
-# countdown dips to negative before finishing
-# finishes at -31%
-scp_upload(
-  session = session,
-  files = paste0(config$json.source, config$json.for.solr),
-  to =  paste0(config$json.dest, config$json.for.solr),
-  verbose = TRUE
-)
-
-ssh.command <-
-  paste0(
-    "curl 'http://localhost:8983/solr/",
-    config$med.map.kb.solr.core,
-    "/update?commit=true&overwrite=false' --data-binary  @",
-    config$json.dest,
-    config$json.for.solr,
-    " -H 'Content-type:application/json'"
+if (post.via.ssh) {
+  # https://debian-administration.org/article/530/SSH_with_authentication_key_instead_of_password
+  session <-
+    ssh_connect(paste0(config$ssh.user, "@", config$ssh.host))
+  print(session)
+  
+  # countdown dips to negative before finishing
+  # finishes at -31%
+  scp_upload(
+    session = session,
+    files = paste0(config$json.source, config$json.for.solr),
+    to =  paste0(config$json.dest, config$json.for.solr),
+    verbose = TRUE
   )
+  
+  ssh.command <-
+    paste0(
+      "curl 'http://localhost:8983/solr/",
+      config$med.map.kb.solr.core,
+      "/update?commit=true&overwrite=false' --data-binary  @",
+      config$json.dest,
+      config$json.for.solr,
+      " -H 'Content-type:application/json'"
+    )
+  
+  print(ssh.command)
+  
+  out <- ssh_exec_wait(session, command = ssh.command)
+  
+  print(out)
+  
+  ssh_disconnect(session)
+} else {
+  # httr?
+  # solrium?
+  # MAY NOT UNDERSTAND THE DIFFERNCE BETWEEN A SINGLE SOLR DOCUMENT AND A JSON WRAPPER OF MULTIPLE DOCUMENTS?
+  # also PERFORMANCE?
+  
+  # assemble url from config
+  
+  assembled.url <- paste0(
+    url = "http://",
+    config$med.map.kb.solr.host,
+    ":",
+    config$med.map.kb.solr.port,
+    "/solr/",
+    config$med.map.kb.solr.core,
+    "/update?commit=true&overwrite=false"
+  )
+  placeholder <-
+    httr::POST(url = assembled.url,
+               body = upload_file("build/medlabels_for_chebi_for_solr.json"))
+  print(placeholder)
+}
 
-print(ssh.command)
 
-out <- ssh_exec_wait(session, command = ssh.command)
-
-print(out)
-
-ssh_disconnect(session)
 
 ####
 

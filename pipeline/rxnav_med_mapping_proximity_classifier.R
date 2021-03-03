@@ -124,7 +124,7 @@ source.medications$ehr.rxn.annotated <-
 
 # # destructive (changing would require rerunning query or load
 source.medications <-
-  source.medications[source.medications$MEDICATION_COUNT >= config$min.empi.count , ]
+  source.medications[source.medications$MEDICATION_COUNT >= config$min.empi.count ,]
 
 ####
 
@@ -176,11 +176,11 @@ normalization.rules.res$wc <- nchar(normalization.rules.res$ws) + 1
 normalization.rules.res$replacement[is.na(normalization.rules.res$replacement)] <-
   ""
 normalization.rules.res <-
-  normalization.rules.res[normalization.rules.res$confidence == "high" , ]
+  normalization.rules.res[normalization.rules.res$confidence == "high" ,]
 normalization.rules.res <-
   normalization.rules.res[order(normalization.rules.res$wc,
                                 normalization.rules.res$char,
-                                decreasing = TRUE), ]
+                                decreasing = TRUE),]
 
 normalization.rules.res$pattern <-
   paste("\\b", normalization.rules.res$pattern, "\\b", sep = "")
@@ -341,6 +341,10 @@ safe.rxnav.submission.size <- config$safe.rxnav.submission.size
 safe.rxnav.submission.count <-
   ceiling(length(query.list) / safe.rxnav.submission.size)
 
+if (safe.rxnav.submission.count <= 2) {
+  safe.rxnav.submission.count <- 2
+}
+
 safe.rxnav.submission.chunks <-
   chunk.vec(vec = query.list, chunk.count = safe.rxnav.submission.count)
 
@@ -355,7 +359,7 @@ outer.chunks <-
         paste0(
           "    sleeping ",
           config$inter.outer.seconds,
-          " seconds starting next chunk of ",
+          " seconds before starting next chunk of ",
           config$safe.rxnav.submission.size
         )
       )
@@ -560,11 +564,11 @@ temp$GENERIC_NAME[is.na(temp$GENERIC_NAME)] <- ''
 
 # get before and after counts
 pre <- unique(temp$MEDICATION_ID)
-temp <- temp[complete.cases(temp),]
+temp <- temp[complete.cases(temp), ]
 post <- unique(temp$MEDICATION_ID)
 lost <- setdiff(pre, post)
 lost <-
-  ehr.approximate.original.dists[ehr.approximate.original.dists$MEDICATION_ID %in% lost , ]
+  ehr.approximate.original.dists[ehr.approximate.original.dists$MEDICATION_ID %in% lost ,]
 
 print(Sys.time())
 timed.system <- system.time(rf_responses <-
@@ -614,7 +618,7 @@ uncovered.keys <- setdiff(all.keys, covered.keys)
 
 # save for followup?
 uncovered.frame <-
-  ehr.approximate.original.dists[ehr.approximate.original.dists$MEDICATION_ID %in% uncovered.keys , ]
+  ehr.approximate.original.dists[ehr.approximate.original.dists$MEDICATION_ID %in% uncovered.keys ,]
 
 ###
 
@@ -716,13 +720,13 @@ rxnorm.entities.in.repo <-
 ####
 
 classification.res.tidied.inactive.rxcui <-
-  classification.res.tidied[!(classification.res.tidied$rxcui %in% rxnorm.entities.in.repo), ]
+  classification.res.tidied[!(classification.res.tidied$rxcui %in% rxnorm.entities.in.repo),]
 
 classification.res.tidied <-
-  classification.res.tidied[classification.res.tidied$rxcui %in% rxnorm.entities.in.repo, ]
+  classification.res.tidied[classification.res.tidied$rxcui %in% rxnorm.entities.in.repo,]
 
 classification.res.tidied.id <-
-  classification.res.tidied[classification.res.tidied$override == "identical",]
+  classification.res.tidied[classification.res.tidied$override == "identical", ]
 best.identical <-
   aggregate(
     classification.res.tidied.id$identical,
@@ -739,7 +743,7 @@ classification.res.tidied.onehop <-
   classification.res.tidied[(
     classification.res.tidied$override != "identical" &
       classification.res.tidied$override != "more distant"
-  ) , ]
+  ) ,]
 
 probs.matrix <- classification.res.tidied.onehop[, c(
   "consists_of",
@@ -786,10 +790,10 @@ equal.or.better.Q$identical[is.na(equal.or.better.Q$identical)] <- 0
 equal.or.better.Q$probs.matrix.rowmax[is.na(equal.or.better.Q$probs.matrix.rowmax)] <-
   0
 equal.or.better.Q <-
-  equal.or.better.Q[equal.or.better.Q$probs.matrix.rowmax >= equal.or.better.Q$identical ,]
+  equal.or.better.Q[equal.or.better.Q$probs.matrix.rowmax >= equal.or.better.Q$identical , ]
 
 classification.res.tidied.onehop <-
-  classification.res.tidied.onehop[classification.res.tidied.onehop$MEDICATION_ID %in% equal.or.better.Q$MEDICATION_ID ,]
+  classification.res.tidied.onehop[classification.res.tidied.onehop$MEDICATION_ID %in% equal.or.better.Q$MEDICATION_ID , ]
 
 ####
 
@@ -804,7 +808,7 @@ classification.res.tidied.md <-
                                 !(
                                   classification.res.tidied$MEDICATION_ID %in% classification.res.tidied.onehop$MEDICATION_ID
                                 )
-                              ) , ]
+                              ) ,]
 
 probs.matrix <- classification.res.tidied.md[, c(
   "consists_of",
