@@ -1,15 +1,13 @@
-# set the working directory to medication-knowledgegraph-pipeline/pipeline
-# for example,
-# setwd("~/GitHub/medication-knowledgegraph-pipeline/pipeline")
+# MAM TODO flesh out post.via.ssh options
+#  including creating that varible in the config file
+
+# run from medication-knowledgegraph-pipeline/pipeline
+# in RStudio, setwd("~/GitHub/medication-knowledgegraph-pipeline/pipeline")
 
 # get global settings, functions, etc. from https://raw.githubusercontent.com/PennTURBO/turbo-globals
 
-# some people (https://www.r-bloggers.com/reading-an-r-file-from-github/)
-# say it’s necessary to load the devtools package before sourcing from GitHub?
-# but the raw page is just a http-accessible page of text, right?
-
 # requires a properly formatted "turbo_R_setup.yaml" in medication-knowledgegraph-pipeline/config
-# or better yet, a symbolic link to a centrally loated "turbo_R_setup.yaml", which could be used by multiple pipelines
+# or better yet, a symbolic link to a centrally located "turbo_R_setup.yaml", which could be used by multiple pipelines
 # see https://github.com/PennTURBO/turbo-globals/blob/master/turbo_R_setup.template.yaml
 
 source(
@@ -34,14 +32,13 @@ print(mm.kb.solr.client)
 # clear the core!
 mm.kb.solr.client$delete_by_query(name = config$med.map.kb.solr.core, query = "*:*")
 
-if (post.via.ssh) {
+if (config$post.via.ssh) {
   # https://debian-administration.org/article/530/SSH_with_authentication_key_instead_of_password
   session <-
     ssh_connect(paste0(config$ssh.user, "@", config$ssh.host))
   print(session)
   
-  # countdown dips to negative before finishing
-  # finishes at -31%
+  # countdown may dip to negative before finishing
   scp_upload(
     session = session,
     files = paste0(config$json.source, config$json.for.solr),
@@ -67,12 +64,6 @@ if (post.via.ssh) {
   
   ssh_disconnect(session)
 } else {
-  # httr?
-  # solrium?
-  # MAY NOT UNDERSTAND THE DIFFERNCE BETWEEN A SINGLE SOLR DOCUMENT AND A JSON WRAPPER OF MULTIPLE DOCUMENTS?
-  # also PERFORMANCE?
-  
-  # assemble url from config
   
   assembled.url <- paste0(
     url = "http://",
@@ -83,9 +74,10 @@ if (post.via.ssh) {
     config$med.map.kb.solr.core,
     "/update?commit=true&overwrite=false"
   )
+
   placeholder <-
     httr::POST(url = assembled.url,
-               body = upload_file("build/medlabels_for_chebi_for_solr.json"))
+               body = upload_file(paste0(json.source,"/",json.for.solr)))
   print(placeholder)
 }
 
