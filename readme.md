@@ -25,3 +25,5 @@ The pipeline steps are:
 7. Assemble a Medication Knowledge Graph
    1. Load the classification output, the BioPortal mappings, and additional ontologies/RDF models into a Graph DB repository to create the RDF knowledge graph. [rxnav_med_mapping_load_materialize_etc.]
 8. Create Solr core from with the labels and URIs of the entities in the ontologies and RDF data models. [rxnav_med_mapping_solr_upload_post_test.R]
+
+See also [inputs_outputs.md](inputs_outputs.md), which also shows the order in which the scripts should be run the first time around.

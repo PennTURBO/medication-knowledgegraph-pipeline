@@ -1,12 +1,10 @@
-rxcui_ttys.fn <-  'build/rxcui_ttys.ttl'
-
 # set the working directory to medication-knowledgegraph-pipeline/pipeline
 # for example,
 # setwd("~/GitHub/medication-knowledgegraph-pipeline/pipeline")
 
 # get global settings, functions, etc. from https://raw.githubusercontent.com/PennTURBO/turbo-globals
 
-# some people (https://www.r-bloggers.com/reading-an-r-file-from-github/) 
+# some people (https://www.r-bloggers.com/reading-an-r-file-from-github/)
 # say it’s necessary to load the devtools package before sourcing from GitHub?
 # but the raw page is just a http-accessible page of text, right?
 
@@ -15,7 +13,7 @@ rxcui_ttys.fn <-  'build/rxcui_ttys.ttl'
 # see https://github.com/PennTURBO/turbo-globals/blob/master/turbo_R_setup.template.yaml
 
 source(
-  "https://raw.githubusercontent.com/PennTURBO/turbo-globals/master/turbo_R_setup.R"
+  "https://raw.githubusercontent.com/PennTURBO/turbo-globals/master/turbo_R_setup_action_versioning.R"
 )
 
 # Java memory is set in turbo_R_setup.R
@@ -24,17 +22,18 @@ print(getOption("java.parameters"))
 ####
 
 # load public ontologies & RDF data sets
-# inspired by disease_diagnosis_dev.R
 # more refactoring (even package writing) opportunities
 
-####    ####    ####    ####
+# upload from file if upload from URL might fail
 
-### upload from file if upload from URL might fail
 # the name of the destination graph is part of the "endpoint URL"
 
 ####    ####    ####    ####
 
 # probably don't really need dron_chebi or dron_pro?
+
+last.post.status <-
+  'Multiple OBO and BioPortal/UMLS uploads from URLs '
 
 import.urls <- config$my.import.urls
 import.names <- names(import.urls)
@@ -65,21 +64,9 @@ placeholder <-
                            some.rdf.format)
   })
 
-# "/Users/markampa/cleanroom/med_mapping/classified_search_results_from_robot.ttl.zip"
-# "/Users/markampa/cleanroom/med_mapping/classified_search_results_from_robot.ttl"
-# "/Users/markampa/cleanroom/med_mapping/reference_medications_from_robot.ttl
-
-# import.from.local.file(
-#   some.graph.name = "http://example.com/resource/classified_search_results",
-#   some.local.file = "/Users/markampa/cleanroom/med_mapping/classified_search_results_from_robot.ttl",
-#   some.rdf.format = "text/turtle"
-# )
-
 # need to wait for imports to finish
 # file uploads may be synchronous blockers
 
-last.post.status <-
-  'Multiple OBO and BioPortal/UMLS uploads from URLs '
 last.post.time <- Sys.time()
 
 expectation <- import.names
@@ -122,7 +109,6 @@ connected.test.query <-
   "select RSAB from rxnorm_current.RXNSAB r"
 
 # todo paramterize connection and query string
-# how to user conenction parpatmeron LHS or assignment?
 test.and.refresh <- function() {
   tryCatch({
     dbGetQuery(rxnCon, connected.test.query)
@@ -223,7 +209,9 @@ one.per$TTY <-
 as.rdf <- as_rdf(x = one.per)
 
 # todo parmaterize this hardcoding
-rdf_serialize(rdf = as.rdf, doc = rxcui_ttys.fn, format = 'turtle')
+rdf_serialize(rdf = as.rdf,
+              doc = config$rxcui_ttys.fp,
+              format = 'turtle')
 
 
 post.res <- POST(
@@ -234,7 +222,7 @@ post.res <- POST(
 
 placeholder <-
   import.from.local.file('http://example.com/resource/rxn_tty_temp',
-                         rxcui_ttys.fn,
+                         config$rxcui_ttys.fp,
                          'text/turtle')
 
 # move the statement to the config file
@@ -267,7 +255,7 @@ post.res <- POST(
 
 ####    ####    ####    ####
 
-if (FALSE) {
+if (config$clear.raw.class.search.res) {
   # this should probably be optional... it is verbose,
   #   and the http://example.com/resource/elected_mapping replacement
   #   is proabbply more useful in most circumstances
@@ -296,10 +284,9 @@ if (FALSE) {
 #
 # $ ~/solr-8.4.1/bin/solr create_core -c <config$med.map.kb.solr.host>
 
-# many of the next steps take several minutes each
-
 ####    ####    ####    ####
 
+# many of the next steps take several minutes each
 
 # MAIN labels
 # < 1 minute
@@ -312,9 +299,6 @@ main.solr.res <-
 names(main.solr.res) <-
   c("id", "definedin",  "employment", "main.label")
 
-# temp <- table(main.solr.res$id)
-# temp <- cbind.data.frame(names(temp), as.numeric(temp))
-
 # clinrel structctclass labels
 system.time(crsc.solr.res <-
               q2j2df(query = config$clinrel_structclass.solr))
@@ -325,7 +309,7 @@ colnames(crsc.solr.res) <-
   c("main.label", "definedin", "id", "employment")
 
 crsc.solr.res <-
-  crsc.solr.res[crsc.solr.res$id %in% crsc.addtions, ]
+  crsc.solr.res[crsc.solr.res$id %in% crsc.addtions,]
 
 main.solr.res <-
   rbind.data.frame(main.solr.res, crsc.solr.res[, colnames(main.solr.res)])
@@ -352,10 +336,6 @@ merged <-
   dplyr::full_join(main.solr.res, dron.additional.chebi.labels)
 
 #### All RxNorm alternative labels
-
-####
-
-# BROKEN as of 2020AA?
 
 system.time(rxn.alt.lab.solr.res <-
               q2j2df(query = config$rxn.alt.lab.solr.query))
@@ -387,16 +367,6 @@ colnames(chebi.synonym.res) <-
     "synsource",
     "employment" ,
     "l")
-
-# # don't reort a synonm twice just because it's also a clinrel_structclass
-# chebi.synonym.res <- unique(chebi.synonym.res[, colnames(chebi.synonym.res) <-
-#                                          c("chebi.syn",
-#                                            "synstrength",
-#                                            "synlen",
-#                                            "syntype",
-#                                            "id",
-#                                            "synsource",
-#                                            "l")])
 
 chebi.synonym.res$synsource <-
   sub(
@@ -472,12 +442,6 @@ listed <-
     MARGIN = 1,
     FUN = function(currentrow) {
       print(currentrow[['id']])
-      # print(currentrow)
-      # medlabel <-
-      #   sort(unique(tolower(c(
-      #     currentrow[["main.label"]], currentrow[["dron.for.chebi"]]
-      #   ))))
-      # print(medlabel)
       tokens <-
         c(currentrow[["main.label"]],
           currentrow[["dron.for.chebi"]],
@@ -506,7 +470,7 @@ temp <- listed
 names(temp) <-  NULL
 temp <- toJSON(temp, pretty = TRUE)
 
-write_lines(temp, path = paste0(config$json.source, "/", config$json.for.solr))
+write_lines(temp, file = paste0(config$json.source, "/", config$json.for.solr))
 
 ####
 
@@ -516,5 +480,3 @@ write_lines(temp, path = paste0(config$json.source, "/", config$json.for.solr))
 # --data-binary  @medlabels_for_chebi_for_solr.json  -H 'Content-type:application/json'
 
 # now run rxnav_med_mapping_solr_upload_post.R
-
-

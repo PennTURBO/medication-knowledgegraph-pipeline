@@ -4,7 +4,7 @@
 
 # get global settings, functions, etc. from https://raw.githubusercontent.com/PennTURBO/turbo-globals
 
-# some people (https://www.r-bloggers.com/reading-an-r-file-from-github/) 
+# some people (https://www.r-bloggers.com/reading-an-r-file-from-github/)
 # say it’s necessary to load the devtools package before sourcing from GitHub?
 # but the raw page is just a http-accessible page of text, right?
 
@@ -13,7 +13,7 @@
 # see https://github.com/PennTURBO/turbo-globals/blob/master/turbo_R_setup.template.yaml
 
 source(
-  "https://raw.githubusercontent.com/PennTURBO/turbo-globals/master/turbo_R_setup.R"
+  "https://raw.githubusercontent.com/PennTURBO/turbo-globals/master/turbo_R_setup_action_versioning.R"
 )
 
 # Java memory is set in turbo_R_setup.R
@@ -97,7 +97,7 @@ random.str.res$bad.tty <-
 # hist(log10(nchar(random.str.res$STR)), breaks = 99)
 # somewhat right skewed. good cutoff ~ 100 to 300
 
-### DOES THIS (discarding some of the random RxNorm strings) 
+### DOES THIS (discarding some of the random RxNorm strings)
 ### leads to incomplete merges
 ### and therefore EFFECT COVERAGE CALCULATION???
 random.queries <-
@@ -122,6 +122,10 @@ random.queries <-
 
 safe.rxnav.submission.count <-
   ceiling(length(random.queries) / config$safe.rxnav.submission.size)
+
+if (safe.rxnav.submission.count < 2) {
+  safe.rxnav.submission.count <-  2
+}
 
 safe.rxnav.submission.chunks <-
   chunk.vec(vec = random.queries, chunk.count = safe.rxnav.submission.count)
@@ -361,7 +365,7 @@ unknowns.approximate.original.dists <-
   unknowns.approximate.original.dists[complete.cases(unknowns.approximate.original.dists), ]
 
 
-#### STOP HERE FOR TUNING
+#### STOP HERE IF MANUAL TUNING IS DESIRED
 
 coverage.check <-
   unique(unknowns.approximate.original.dists$STR.q)
@@ -396,8 +400,8 @@ test.frame <- strat.res[[2]]
 
 ###   ###   ###
 
-### probably would require retuning (ntree, mtry, important factors)
-# if signficiant changes were made to veracity/proximity assessment
+### probably would require re-tuning (ntree, mtry, important factors)
+# if significant changes were made to veracity/proximity assessment
 
 # 10 minutes with 30 000 labels queried from RxNorm
 # ~ 20 000 (case?) normalized unique queries
@@ -459,9 +463,11 @@ table(performance.frame$overridden)
 
 ###   ###   ###
 
-print(confusionMatrix(performance.frame$rf_responses, test.frame$RELA, positive = "TRUE"))
+performance.summary <-
+  confusionMatrix(performance.frame$rf_responses, test.frame$RELA, positive = "TRUE")
 
-write.csv(rf_classifier$confusion, file = config$testing.confusion.writepath)
+# # can regenerate from rf_classifier
+# write.csv(rf_classifier$confusion, file = config$testing.confusion.path)
 
 # SKIPPING ROC (complex with multi-class classifications)
 
@@ -488,10 +494,14 @@ covered.rxcuis <-
 attempted.rxcuis <- unique(coverage.check.frame$RXCUI)
 coverage <- length(covered.rxcuis) / length(attempted.rxcuis)
 
-print(coverage)
+# print(coverage)
 
 # 24 MB... on the large size for github
-save(rf_classifier, file = config$rf.model.savepath)
+save(rf_classifier,
+     version.list,
+     performance.summary,
+     coverage,
+     file = config$rf.model.path)
 
-save.image(config$rxnav_med_mapping_training_image)
-
+# # for debugging
+# save.image(config$rxnav_med_mapping_training_image)
