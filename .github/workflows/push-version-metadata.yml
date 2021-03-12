@@ -23,8 +23,8 @@ jobs:
           # echo "show working directory"
           # pwd
           git describe --tags > release_tag.txt
-          date "+%Y-%m-%dT%H:%M:%S" > release_date.txt
-          git status --short --branch --ignored > release_status.txt
+          # date "+%Y-%m-%dT%H:%M:%S" > release_date.txt
+          # git status --short --branch --ignored > release_status.txt
           echo "show release_*.txt contents"
           cat release_*.txt
           git add release_*.txt
