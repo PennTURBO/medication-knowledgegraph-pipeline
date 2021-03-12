@@ -1,0 +1,159 @@
+{
+  "id": "medication-mapping-test",
+  "title": "",
+  "type": "se",
+  "sesameType": "owlim:MonitorRepository",
+  "location": "",
+  "params": {
+    "queryTimeout": {
+      "label": "Query time-out (seconds)",
+      "name": "queryTimeout",
+      "value": "0"
+    },
+    "cacheSelectNodes": {
+      "label": "Cache select nodes",
+      "name": "cacheSelectNodes",
+      "value": "true"
+    },
+    "rdfsSubClassReasoning": {
+      "label": "RDFS subClass reasoning",
+      "name": "rdfsSubClassReasoning",
+      "value": "true"
+    },
+    "undefinedTargetValidatesAllSubjects": {
+      "label": "Validate subjects when target is undefined",
+      "name": "undefinedTargetValidatesAllSubjects",
+      "value": "false"
+    },
+    "validationEnabled": {
+      "label": "Enable the SHACL validation",
+      "name": "validationEnabled",
+      "value": "true"
+    },
+    "parallelValidation": {
+      "label": "Run parallel validation",
+      "name": "parallelValidation",
+      "value": "true"
+    },
+    "checkForInconsistencies": {
+      "label": "Check for inconsistencies",
+      "name": "checkForInconsistencies",
+      "value": "false"
+    },
+    "performanceLogging": {
+      "label": "Log the execution time per shape",
+      "name": "performanceLogging",
+      "value": "false"
+    },
+    "disableSameAs": {
+      "label": "Disable owl:sameAs",
+      "name": "disableSameAs",
+      "value": "true"
+    },
+    "entityIndexSize": {
+      "label": "Entity index size",
+      "name": "entityIndexSize",
+      "value": "10000000"
+    },
+    "owlimLicense": {
+      "label": "License file (leave blank for evaluation)",
+      "name": "owlimLicense",
+      "value": ""
+    },
+    "queryLimitResults": {
+      "label": "Limit query results",
+      "name": "queryLimitResults",
+      "value": "0"
+    },
+    "throwQueryEvaluationExceptionOnTimeout": {
+      "label": "Throw exception on query time-out",
+      "name": "throwQueryEvaluationExceptionOnTimeout",
+      "value": "false"
+    },
+    "storageFolder": {
+      "label": "Storage folder",
+      "name": "storageFolder",
+      "value": "storage"
+    },
+    "enablePredicateList": {
+      "label": "Use predicate indices",
+      "name": "enablePredicateList",
+      "value": "true"
+    },
+    "logValidationPlans": {
+      "label": "Log the executed validation plans",
+      "name": "logValidationPlans",
+      "value": "false"
+    },
+    "imports": {
+      "label": "Imported RDF files(';' delimited)",
+      "name": "imports",
+      "value": ""
+    },
+    "isShacl": {
+      "label": "Supports SHACL validation",
+      "name": "isShacl",
+      "value": "false"
+    },
+    "inMemoryLiteralProperties": {
+      "label": "Cache literal language tags",
+      "name": "inMemoryLiteralProperties",
+      "value": "true"
+    },
+    "ruleset": {
+      "label": "Ruleset",
+      "name": "ruleset",
+      "value": "empty"
+    },
+    "readOnly": {
+      "label": "Read-only",
+      "name": "readOnly",
+      "value": "false"
+    },
+    "ignoreNoShapesLoadedException": {
+      "label": "Ignore no shapes loaded exception",
+      "name": "ignoreNoShapesLoadedException",
+      "value": "false"
+    },
+    "enableLiteralIndex": {
+      "label": "Enable literal index",
+      "name": "enableLiteralIndex",
+      "value": "true"
+    },
+    "defaultNS": {
+      "label": "Default namespaces for imports(';' delimited)",
+      "name": "defaultNS",
+      "value": ""
+    },
+    "enableContextIndex": {
+      "label": "Use context index",
+      "name": "enableContextIndex",
+      "value": "true"
+    },
+    "baseURL": {
+      "label": "Base URL",
+      "name": "baseURL",
+      "value": "http://example.org/owlim#"
+    },
+    "logValidationViolations": {
+      "label": "Log validation violations",
+      "name": "logValidationViolations",
+      "value": "false"
+    },
+    "globalLogValidationExecution": {
+      "label": "Log every execution step of the SHACL validation",
+      "name": "globalLogValidationExecution",
+      "value": "false"
+    },
+    "entityIdSize": {
+      "label": "Entity ID bit-size",
+      "name": "entityIdSize",
+      "value": "32"
+    },
+    "repositoryType": {
+      "label": "Repository type",
+      "name": "repositoryType",
+      "value": "file-repository"
+    }
+  }
+}

@@ -5,6 +5,8 @@
 **/*.yaml
 **/.DS_Store
 
+!app.yaml
+
 pipeline/build
 pipeline/config
 pipeline/data

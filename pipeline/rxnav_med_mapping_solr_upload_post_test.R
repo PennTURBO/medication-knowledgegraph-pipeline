@@ -1,15 +1,13 @@
-# set the working directory to medication-knowledgegraph-pipeline/pipeline
-# for example,
-# setwd("~/GitHub/medication-knowledgegraph-pipeline/pipeline")
+# MAM TODO flesh out post.via.ssh options
+#  including creating that varible in the config file
+
+# run from medication-knowledgegraph-pipeline/pipeline
+# in RStudio, setwd("~/GitHub/medication-knowledgegraph-pipeline/pipeline")
 
 # get global settings, functions, etc. from https://raw.githubusercontent.com/PennTURBO/turbo-globals
 
-# some people (https://www.r-bloggers.com/reading-an-r-file-from-github/)
-# say it’s necessary to load the devtools package before sourcing from GitHub?
-# but the raw page is just a http-accessible page of text, right?
-
 # requires a properly formatted "turbo_R_setup.yaml" in medication-knowledgegraph-pipeline/config
-# or better yet, a symbolic link to a centrally loated "turbo_R_setup.yaml", which could be used by multiple pipelines
+# or better yet, a symbolic link to a centrally located "turbo_R_setup.yaml", which could be used by multiple pipelines
 # see https://github.com/PennTURBO/turbo-globals/blob/master/turbo_R_setup.template.yaml
 
 source(
@@ -34,37 +32,56 @@ print(mm.kb.solr.client)
 # clear the core!
 mm.kb.solr.client$delete_by_query(name = config$med.map.kb.solr.core, query = "*:*")
 
-# https://debian-administration.org/article/530/SSH_with_authentication_key_instead_of_password
-session <-
-  ssh_connect(paste0(config$ssh.user, "@", config$ssh.host))
-print(session)
-
-# countdown dips to negative before finishing
-# finishes at -31%
-scp_upload(
-  session = session,
-  files = paste0(config$json.source, config$json.for.solr),
-  to =  paste0(config$json.dest, config$json.for.solr),
-  verbose = TRUE
-)
-
-ssh.command <-
-  paste0(
-    "curl 'http://localhost:8983/solr/",
+if (config$post.via.ssh) {
+  # https://debian-administration.org/article/530/SSH_with_authentication_key_instead_of_password
+  session <-
+    ssh_connect(paste0(config$ssh.user, "@", config$ssh.host))
+  print(session)
+  
+  # countdown may dip to negative before finishing
+  scp_upload(
+    session = session,
+    files = paste0(config$json.source, config$json.for.solr),
+    to =  paste0(config$json.dest, config$json.for.solr),
+    verbose = TRUE
+  )
+  
+  ssh.command <-
+    paste0(
+      "curl 'http://localhost:8983/solr/",
+      config$med.map.kb.solr.core,
+      "/update?commit=true&overwrite=false' --data-binary  @",
+      config$json.dest,
+      config$json.for.solr,
+      " -H 'Content-type:application/json'"
+    )
+  
+  print(ssh.command)
+  
+  out <- ssh_exec_wait(session, command = ssh.command)
+  
+  print(out)
+  
+  ssh_disconnect(session)
+} else {
+  
+  assembled.url <- paste0(
+    url = "http://",
+    config$med.map.kb.solr.host,
+    ":",
+    config$med.map.kb.solr.port,
+    "/solr/",
     config$med.map.kb.solr.core,
-    "/update?commit=true&overwrite=false' --data-binary  @",
-    config$json.dest,
-    config$json.for.solr,
-    " -H 'Content-type:application/json'"
+    "/update?commit=true&overwrite=false"
   )
 
-print(ssh.command)
+  placeholder <-
+    httr::POST(url = assembled.url,
+               body = upload_file(paste0(json.source,"/",json.for.solr)))
+  print(placeholder)
+}
 
-out <- ssh_exec_wait(session, command = ssh.command)
 
-print(out)
-
-ssh_disconnect(session)
 
 ####
 
