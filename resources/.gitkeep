@@ -1,0 +1,5 @@
+#Folder for JARs
+#Currently assumes the following are present:
+#
+#mysql-connector-java-8.0.23.jar
+#ojdbc8.jar

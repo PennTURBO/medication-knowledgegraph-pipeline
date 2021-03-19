@@ -13,7 +13,9 @@
 # see https://github.com/PennTURBO/turbo-globals/blob/master/turbo_R_setup.template.yaml
 
 source(
-  "https://raw.githubusercontent.com/PennTURBO/turbo-globals/master/turbo_R_setup_action_versioning.R"
+#  "https://raw.githubusercontent.com/PennTURBO/turbo-globals/master/turbo_R_setup_action_versioning.R"
+#  "turbo_R_setup_action_versioning.R"
+  "/pipeline/turbo_setup.R"
 )
 
 # Java memory is set in turbo_R_setup.R
@@ -21,11 +23,14 @@ print(getOption("java.parameters"))
 
 ####
 
+#print(config$oracle.jdbc.path)
+
 # VPN and tunnel may be required
 # set that up outside of this script
 pdsDriver <-
   JDBC(driverClass = "oracle.jdbc.OracleDriver",
        classPath = config$oracle.jdbc.path)
+###library(dblog)
 
 pds.con.string <- paste0(
   "jdbc:oracle:thin:@//",
@@ -35,6 +40,10 @@ pds.con.string <- paste0(
   "/",
   config$pds.database
 )
+
+#print(pdsDriver)
+#print(pds.con.string)
+#print(config$pds.user)
 
 pdsConnection <-
   dbConnect(pdsDriver,
@@ -55,11 +64,14 @@ LEFT JOIN MDM.ORDER_MED om ON
 rm.PK_MEDICATION_ID = om.FK_MEDICATION_ID
 LEFT JOIN MDM.PATIENT_ENCOUNTER pe ON
 om.FK_PATIENT_ENCOUNTER_ID = pe.PK_PATIENT_ENCOUNTER_ID
+WHERE rownum <= 1000 --TODO remove
 GROUP BY
 rm.PK_MEDICATION_ID,
 rm.FULL_NAME,
 rm.GENERIC_NAME,
-rm.RXNORM"
+rm.RXNORM
+"
+
 
 # 30 minutes
 print(Sys.time())
@@ -97,6 +109,9 @@ colnames(source.medications) <-
 
 # save.image("pds_r_medication_sql_select.Rdata")
 
+save.image("pds_r_medication_sql_select.Rdata")
+
 save(source.medications,
      version.list,
      file = config$source.medications.Rdata.path)
+

@@ -1,0 +1,15 @@
+default:
+#   pds.host: host.docker.internal
+    pds.host: localhost
+    pds.port:     <port>
+    pds.database: <db>
+    pds.user:     <user>
+    pds.pw:       <pass>
+
+    oracle.jdbc.path: "/resources/ojdbc8.jar"
+
+    source.medications.savepath: "source_medications.txt"
+    source.medications.loadpath: "source_medications.txt"
+    source.medications.Rdata.path: "test_source_medications.Rdata"
+    normalization.file: "med_name_normalization.csv"
+

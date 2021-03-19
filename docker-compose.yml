@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+
+  builder:
+    build:
+      context: .
+      dockerfile: docker/builder/Dockerfile
+    ports:
+      - "7799:7799"
+    volumes:
+      - "./config/:/config"
+      - "./data/:/data"
+#     - "./docker/:/docker" # ?
+#     - "./graphdb-config/:/graphdb-config"   #merge into config/ once using
+      - "./ontology/:/ontology"               #merge into data/ ?
+      - "./pipeline:/pipeline"
+      - "./resources/:/resources"
+#     - "./rxnavbox-config/:/rxnavbox-config" #merge into main docker-compose
+      - "./scripts:/scripts"
+#     - "./solr-config/:/solr-config"         #merge into config/ once using
+      - "./test:/test"
+
+#   command: bash -x -c 'test/test.sh'
+    command: bash -c 'dos2unix scripts/builder.sh && sh scripts/builder.sh'
+    tty: true
+    stdin_open: true
+
+#volumes:
+#  pipeline:
