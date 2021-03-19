@@ -1,0 +1,818 @@
+default:
+  # I haven't been consistent about enclosing strings in quotes
+  # some of the classification-specific settings currently have very general names
+  #   should rename here and in source code
+  my.graphdb.base: 'http://localhost:7200'
+  my.graphdb.username: <SECRET>
+  my.graphdb.pw: <SECRET>
+  my.selected.repo: 'medication-mapping-dev'
+  # where are the JDBC drivers on the client's filesystem?
+  oracle.jdbc.path: "/resources/ojdbc8.jar"
+  mysql.jdbc.path: "/resources/mysql-connector-java-8.0.19.jar"
+  # place this file in some location other than build?
+  #   (even though we have a script to "build" the medications file from our PDS source, or from a drug formulary on the web?)
+  source.medications.Rdata.path: "/data/source_medications.all.pds.Rdata"
+  # exclude data rows (medications, lab results, etc) when that data appears for less than N people/EMPIs
+  # MAM TODO explain poor column and variable naming
+  # min.empi.count can be used to exclude source source_medications rows
+  #   based on the value in the MEDICATION_COUNT columns
+  #   we have been using that to exclude medications that were only ordered for one unique empi
+  #   but other people may put a different value in that column
+  #   I guess the names should be more general
+  min.empi.count: 2
+  # med_name_normalization_emphasize_actings.csv
+  #   strips out dose, form, route etc BUT NOT NUMBERS
+  # we have other normalization files that do more replacing than stripping
+  #   and can therefore map to semantic clinical drugs more frequently, not just active ingredients
+  normalization.file: "/data/med_name_normalization_emphasize_actings.csv"
+  # how many strings to submit to RxNav approximate search before taking a REST nap
+  inter.outer.seconds: 10
+  safe.rxnav.submission.size: 10000
+  #
+  #rxnav.api.address: host.docker.internal
+  rxnav.api.address: localhost
+  rxnav.api.port: 4000
+  #
+  rxnav.mysql.user: "webuser"
+  # 2020-05
+  # rxnav.mysql.pw: "changeMePleaseAlpha0-9only"
+  # 2021-03
+  rxnav.mysql.pw: "9521354c77aa"
+  rxnav.mysql.address: localhost
+  # this requires a "ports" stanza in the docker-compose.yml
+  rxnav.mysql.port: 3307
+  #
+  rxaui.asserted.strings.chunk.count: 300
+  rf.model.path: "build/rxnav_med_mapping_rf_model.all.pds.Rdata"
+  #
+  factor.levels: {"TTY.sr": ["AB","BD","BN","BPCK","CD","CDA","CDC","CDD","CE","DF","DFG","DP","GN","GPCK","IN","MH","MIN","MS","MTH_RXN_BD","MTH_RXN_CD","MTH_RXN_CDC","MTH_RXN_DP","NM","PCE","PEP","PIN","PSN","RXN_IN","RXN_PT","SBD","SBDC","SBDF","SC","SCD","SCDC","SCDF","SY"], "SAB.sr": ["ATC","CVX","DRUGBANK","GS","MMSL","MMX","MSH","MTHSPL","NDDF","RXNORM","USP","VANDF"], "RELA": ["consists_of","constitutes","contained_in","contains","form_of","has_form","has_ingredient","has_part","has_quantified_form","has_tradename","identical","ingredient_of","inverse_isa","isa","more distant","part_of","quantified_form_of","tradename_of"]}
+  # skipping http://purl.obolibrary.org/obo/dron/dron-ndc.owl , http://purl.obolibrary.org/obo/dron/dron-pro.owl
+  # could possibly do some rewriting and not need http://purl.obolibrary.org/obo/dron/dron-chebi.owl ?
+  my.import.urls: {"http://purl.obolibrary.org/obo/dron.owl":{"url":["https://bitbucket.org/uamsdbmi/dron/raw/master/dron-full.owl"],"format":[""]},
+  "http://purl.obolibrary.org/obo/dron/dron-hand.owl":{"url":["https://bitbucket.org/uamsdbmi/dron/raw/master/dron-hand.owl"],"format":[""]},
+  "http://purl.obolibrary.org/obo/dron/dron-ingredient.owl":{"url":["https://s3.amazonaws.com/drugontology/dron-ingredient.owl"],"format":[""]},
+  "http://purl.obolibrary.org/obo/dron/dron-rxnorm.owl":{"url":["https://s3.amazonaws.com/drugontology/dron-rxnorm.owl"],"format":[""]},
+  "https://raw.githubusercontent.com/PennTURBO/medication-knowledgegraph-pipeline/master/ontology/tmm_ontology.ttl":{"url":["https://raw.githubusercontent.com/PennTURBO/medication-knowledgegraph-pipeline/master/ontology/tmm_ontology.ttl"],"format":[""]},
+  "http://purl.obolibrary.org/obo/dron/dron-upper.owl":{"url":["https://bitbucket.org/uamsdbmi/dron/raw/master/dron-upper.owl"],"format":[""]}}
+  # "http://purl.bioontology.org/ontology/NDFRT/":{"local.file":["/Users/markampa/med_mapping/local/NDFRT.ttl"],"format":["text/turtle"]},
+  # "http://purl.bioontology.org/ontology/UATC/":{"local.file":["/Users/markampa/med_mapping/local/ATC.ttl"],"format":["text/turtle"]},
+  my.import.files: {"http://example.com/resource/bioportal_mapping":{"local.file":["build/med_mapping_bioportal_mapping.ttl"],"format":["text/turtle"]},
+  "http://example.com/resource/classified_search_results":{"local.file":["build/classified_search_results_from_robot.ttl.zip"],"format":["text/turtle"]},
+  "http://example.com/resource/reference_medications":{"local.file":["build/reference_medications_from_robot.ttl.zip"],"format":["text/turtle"]},
+  "http://purl.bioontology.org/ontology/RXNORM/":{"local.file":["data/RXNORM.ttl.gz"],"format":["text/turtle"]},
+  "http://purl.obolibrary.org/obo/chebi.owl":{"local.file":["data/chebi.owl.gz"],"format":["application/rdf+xml"]}}
+  #
+  per.task.columns: 'data/med_map_csv_cols.csv'
+  tasks:
+    - reference_medications
+    - classified_search_results
+  # could use better names, or even an approach that doesn't require reopening the config file 
+  config.fn: "/config/turbo_R_setup.yaml"
+  image.fn: "/data/rxnav_med_mapping_pds_proximity_classifier.Rdata"
+  #
+  source.med.classifications.onto.comment: |
+    We are using owl:versionInfo to indicate the version of the software that created this file/graph etc.
+    If xsd:dateTime is to be used with dcterms:created, the literal object should use the full ISO format, like 2020-09-17T00:00:00
+    With a timezone?
+  # specifically for training:
+  # how many rows of random data from RxNav should be used for training?
+  approximate.row.count: 5000
+  # are there any term types that should be excuded from the training?
+  excluded.term.types:
+    - ET
+    - FN
+    - FSY
+    - N1
+    - PM
+    - PT
+    - PTGB
+    - SBDG
+    - SCDG
+    - SU
+    - SYGB
+    - TMSY
+  # in general, synonyms are not considered for training
+  # are there any sources of synonyms that should be included, as an override of that general rule?
+  allowed.synonym.sources: RXNORM
+  # what's the longest term that should be included in training?
+  approximate.max.chars: 100
+  # we can check the percentage of terms that only get mapped to a "more distant" RxCUI
+  # that requires a setaside before beginning training
+  # what fraction of the medication terms (stings) should be set aside?
+  coverage.check.fraction: 0.1
+  # what value is the training about?
+  target.col: "RELA"
+  # the most important training features should be determined as part of manual tuning
+  important.features: ["score","rank","rxcui.count","SAB.sr","TTY.sr","q.char","q.words","sr.char","sr.words","qgram","cosine","jaccard","jw"]
+  # what proportion of the medication terms/strings, after the coverage setaside, should be used for traiing
+  # the reaminder will be used for performance assesment
+  train.split: 0.7
+  # choose some hyper-paramters for the training
+  # THAT'S what could potentially be manually tuned (along with the important factors)
+  static.ntree: 351
+  static.mtry: 9
+  #
+  # testing.confusion.path: "build/rxnav_med_mapping_confusion.all.pds.csv"
+  # 
+  # rxnav_med_mapping_training_image:  "build/rxnav_med_mapping_proximity_training_no_tuning.Rdata"
+  # get bioportal mappings
+  my.bioportal.api.base: 'http://data.bioontology.org'
+  my.apikey: <SECRET>
+  my.pagesize: 1000
+  # setting up a local OntoPortal VM will return the results faster,
+  #   should be less vulnerable to dropped network packets,
+  #   and reduces the burden on the NCBO BioPortal server
+  my.source.ontolgies:
+    - 'CHEBI'
+    - 'DRON'
+    - 'RXNORM'
+  bioportal.mapping.graph.name: 'bioportal_mapping'
+  bioportal.triples.destination: 'build/med_mapping_bioportal_mapping.ttl'
+  my.mappings.format: 'text/turtle'
+  # load and materialize
+  rxcui_ttys.fp: 'build/rxcui_ttys.ttl'
+  monitor.pause.seconds: 30
+  # LOTS of SPARQL statements
+  # move them somwhere else?
+  materializastion.projection.sparqls:
+      delete_useless_named_ind_assertions: |
+          delete {
+              ?s a <http://www.w3.org/2002/07/owl#NamedIndividual>
+          } where {
+              {
+                  graph <http://example.com/resource/classified_search_results> {
+                      ?s a <http://www.w3.org/2002/07/owl#NamedIndividual>
+                  }
+              } union  {
+                  graph <http://example.com/resource/reference_medications> {
+                      ?s a <http://www.w3.org/2002/07/owl#NamedIndividual>
+                  }
+              }
+          }
+      # Removed 322727 statements. Update took 3s, moments ago
+      # this could be a CRID symbol value
+      standalone_source_med_ids: |
+          PREFIX mydata: <http://example.com/resource/>
+          PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+          PREFIX obo: <http://purl.obolibrary.org/obo/>
+          PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+          insert {
+              graph <http://example.com/resource/source_med_id> {
+                  ?s skos:notation ?extracted_id
+              }
+          } 
+          where {
+              graph mydata:reference_medications {
+                  ?s a obo:PDRO_0000024 .
+              }
+              bind(strafter(str(?s),"http://example.com/resource/source_med_id/") as ?extracted_id)
+          }
+      # Added 4872153 statements. Update took 50s, moments ago
+      reference_medications_labels: |
+        PREFIX obo: <http://purl.obolibrary.org/obo/>
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+        insert {
+            graph <http://example.com/resource/reference_medications_labels> {
+                ?s rdfs:label ?bound .
+            }
+        }
+        where {
+            graph <http://example.com/resource/reference_medications> {
+                ?s a obo:PDRO_0000024 ;
+                   <http://example.com/resource/source_full_name> ?source_full_name .
+            }
+            graph <http://example.com/resource/source_med_id> {
+                ?s skos:notation ?extracted_id
+            }
+            bind(concat(?extracted_id, "|", ?source_full_name ) as ?bound)
+        }
+      # Added 108995 statements. Update took 21s, moments ago. 
+      classifications_labels: |
+          PREFIX obo: <http://purl.obolibrary.org/obo/>
+          PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+          insert {
+              graph <http://example.com/resource/classifications_labels> {
+                  ?s rdfs:label ?bound .
+              }
+          }
+          where {
+              graph <http://example.com/resource/classified_search_results> {
+                  ?s a obo:OBI_0001909 ;
+                     <http://example.com/resource/query_val> ?query_val .
+                  bind(concat(?query_val, "|", replace(str(?s), "http://example.com.resource/", "")) as ?bound)
+              }
+          }
+      # Added 322727 statements. Update took 1m 35s, moments ago
+      # if something is defined in ChEBI (XXX), remove assertion that it is also defined in DrOn-ChEBI (XXX)?
+      defined_in: |
+          PREFIX owl: <http://www.w3.org/2002/07/owl#>
+          insert {
+              graph <http://example.com/resource/defined_in> {
+                  ?s <http://example.com/resource/defined_in> ?g .
+              }
+          }
+          where {
+              graph ?g {
+                  ?s a owl:Class .
+                  filter (isuri(?s))
+              }
+              #    ?s a owl:Class?
+              #    ?s a ?c ; ?c a owl:Class ?
+          }
+      # Added 378163 statements. Update took 6.6s, moments ago
+      # # keep this, or just use BioPortal mappings?
+      # materialized_rxcui: |
+      #     PREFIX obo: <http://purl.obolibrary.org/obo/>
+      #     insert {
+      #         graph <http://example.com/resource/materialized_rxcui> {
+      #             ?s <http://example.com/resource/materialized_rxcui> ?concat
+      #         }
+      #     } where {
+      #         {
+      #             graph <http://purl.obolibrary.org/obo/dron/dron-ingredient.owl>
+      #             {
+      #                 ?s obo:DRON_00010000 ?o .
+      #             }
+      #         }
+      #         union
+      #         {
+      #             graph <http://purl.obolibrary.org/obo/dron/dron-rxnorm.owl>
+      #             {
+      #                 ?s obo:DRON_00010000 ?o .
+      #             }
+      #         }
+      #         bind(uri(concat("http://purl.bioontology.org/ontology/RXNORM/",?o)) as ?concat)
+      #     }
+      transitively_materialized_dron_ingredient: |
+          PREFIX obo: <http://purl.obolibrary.org/obo/>
+          PREFIX owl: <http://www.w3.org/2002/07/owl#>
+          PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+          PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+          PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+          PREFIX ro: <http://www.obofoundry.org/ro/ro.owl#>
+          insert {
+              graph <http://example.com/resource/transitively_materialized_dron_ingredient> {
+                  ?dronsubprod <http://example.com/resource/transitively_materialized_dron_ingredient> ?droning .
+              }
+          }
+          where {
+              graph <http://purl.obolibrary.org/obo/dron/dron-ingredient.owl> {
+                  ?s a owl:Restriction ;
+                     owl:someValuesFrom ?droning ;
+                     owl:onProperty obo:BFO_0000071 .
+                  ?bt1 rdf:first ?s ;
+                       rdf:rest rdf:nil .
+                  ?bt2f a owl:Restriction ;
+                        owl:onProperty obo:BFO_0000053 ;
+                        owl:someValuesFrom obo:DRON_00000028 .
+                  ?bt2 rdf:rest ?bt1 ;
+                       rdf:first ?bt2f .
+                  ?bt3 rdf:rest ?bt2 ;
+                       rdf:first obo:OBI_0000576 .
+                  ?bt4 owl:intersectionOf ?bt3 ;
+                       rdf:type owl:Class .
+                  ?bt5 owl:someValuesFrom ?bt4 ;
+                       rdf:type owl:Restriction ;
+                       owl:onProperty ro:has_proper_part .
+                  ?dronprod rdfs:subClassOf ?bt5 ;
+                            a owl:Class .
+              }
+              ?dronsubprod rdfs:subClassOf* ?dronprod
+          }
+      # Added 129575 statements. Update took 25s, moments ago
+      transitively_materialized_drugrole: |
+          PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+          PREFIX obo: <http://purl.obolibrary.org/obo/>
+          insert {
+              graph <http://example.com/resource/transitively_materialized_drugrole> {
+                  ?nextdrugrole <http://example.com/resource/transitively_materialized_drugrole> ?subdrugrole .
+              }
+              
+          } where {
+              values ?valsource  {
+                  obo:CHEBI_130181 obo:CHEBI_131699 obo:CHEBI_131770 obo:CHEBI_131787 obo:CHEBI_139503 obo:CHEBI_22333 obo:CHEBI_22586 
+                  obo:CHEBI_23018 obo:CHEBI_23354 obo:CHEBI_23357 obo:CHEBI_23366 obo:CHEBI_23888 obo:CHEBI_24020 obo:CHEBI_24621 
+                  obo:CHEBI_24869 obo:CHEBI_25435 obo:CHEBI_25491 obo:CHEBI_25728 obo:CHEBI_27026 obo:CHEBI_27314 obo:CHEBI_33229 
+                  obo:CHEBI_33280 obo:CHEBI_35195 obo:CHEBI_35221 obo:CHEBI_35522 obo:CHEBI_35530 obo:CHEBI_35544 obo:CHEBI_35569 
+                  obo:CHEBI_35660 obo:CHEBI_35856 obo:CHEBI_35941 obo:CHEBI_36413 obo:CHEBI_37153 obo:CHEBI_37670 obo:CHEBI_37699 
+                  obo:CHEBI_37700 obo:CHEBI_37733 obo:CHEBI_37886 obo:CHEBI_37887 obo:CHEBI_37890 obo:CHEBI_37955 obo:CHEBI_37956 
+                  obo:CHEBI_37961 obo:CHEBI_38157 obo:CHEBI_38161 obo:CHEBI_38215 obo:CHEBI_38234 obo:CHEBI_38324 obo:CHEBI_38325 
+                  obo:CHEBI_38462 obo:CHEBI_38623 obo:CHEBI_38632 obo:CHEBI_38633 obo:CHEBI_38637 obo:CHEBI_38706 obo:CHEBI_38808 
+                  obo:CHEBI_38809 obo:CHEBI_39000 obo:CHEBI_47958 obo:CHEBI_48001 obo:CHEBI_48279 obo:CHEBI_48561 obo:CHEBI_48578 
+                  obo:CHEBI_48873 obo:CHEBI_48876 obo:CHEBI_48878 obo:CHEBI_49020 obo:CHEBI_49103 obo:CHEBI_49159 obo:CHEBI_49200 
+                  obo:CHEBI_50103 obo:CHEBI_50112 obo:CHEBI_50113 obo:CHEBI_50114 obo:CHEBI_50137 obo:CHEBI_50183 obo:CHEBI_50188 
+                  obo:CHEBI_50218 obo:CHEBI_50276 obo:CHEBI_50390 obo:CHEBI_50502 obo:CHEBI_50509 obo:CHEBI_50510 obo:CHEBI_50566 
+                  obo:CHEBI_50568 obo:CHEBI_50629 obo:CHEBI_50630 obo:CHEBI_50683 obo:CHEBI_50696 obo:CHEBI_50745 obo:CHEBI_50750 
+                  obo:CHEBI_50781 obo:CHEBI_50790 obo:CHEBI_50837 obo:CHEBI_50844 obo:CHEBI_50902 obo:CHEBI_50904 obo:CHEBI_50905 
+                  obo:CHEBI_50908 obo:CHEBI_50910 obo:CHEBI_51060 obo:CHEBI_51065 obo:CHEBI_51373 obo:CHEBI_52209 obo:CHEBI_52210 
+                  obo:CHEBI_52290 obo:CHEBI_53559 obo:CHEBI_53756 obo:CHEBI_55322 obo:CHEBI_59282 obo:CHEBI_59517 obo:CHEBI_59826 
+                  obo:CHEBI_59897 obo:CHEBI_60186 obo:CHEBI_60311 obo:CHEBI_60605 obo:CHEBI_60606 obo:CHEBI_60643 obo:CHEBI_60798 
+                  obo:CHEBI_60807 obo:CHEBI_60832 obo:CHEBI_61015 obo:CHEBI_61016 obo:CHEBI_61115 obo:CHEBI_61908 obo:CHEBI_61951 
+                  obo:CHEBI_62488 obo:CHEBI_62872 obo:CHEBI_64571 obo:CHEBI_64909 obo:CHEBI_64911 obo:CHEBI_65023 obo:CHEBI_65259 
+                  obo:CHEBI_68495 obo:CHEBI_68563 obo:CHEBI_70727 obo:CHEBI_70781 obo:CHEBI_71232 obo:CHEBI_73240 obo:CHEBI_73263 
+                  obo:CHEBI_73333 obo:CHEBI_73913 obo:CHEBI_74213 obo:CHEBI_74234 obo:CHEBI_76779 obo:CHEBI_76797 obo:CHEBI_76932 
+                  obo:CHEBI_77194 obo:CHEBI_77255 obo:CHEBI_77402 obo:CHEBI_77748 obo:CHEBI_78444 obo:CHEBI_85234 obo:CHEBI_86385 
+                  obo:CHEBI_90414 obo:CHEBI_90415 obo:CHEBI_91079 obo:CHEBI_35664
+              }
+              ?subdrugrole rdfs:subClassOf* ?valsource .
+              ?nextdrugrole rdfs:subClassOf* ?subdrugrole .
+          }
+      # Added 2276 statements. Update took 1.1s, moments ago.
+      transitive_role_of_class: |
+          PREFIX owl: <http://www.w3.org/2002/07/owl#>
+          PREFIX obo: <http://purl.obolibrary.org/obo/>
+          PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+          insert {
+              graph <http://example.com/resource/transitive_role_of_class> {
+                  ?chebidrugsubclass <http://example.com/resource/transitive_role_of_class> ?superrole .
+              }
+          } where {
+              graph <http://example.com/resource/transitively_materialized_drugrole> {
+                  ?drugrole <http://example.com/resource/transitively_materialized_drugrole>* ?superrole .
+              }
+              graph obo:chebi.owl {
+                  ?restr a owl:Restriction ;
+                         owl:someValuesFrom ?drugrole ;
+                         owl:onProperty obo:RO_0000087 .
+                  ?chebidrugclass rdfs:subClassOf ?restr .
+                  ?chebidrugsubclass rdfs:subClassOf* ?chebidrugclass .
+                  filter(isuri(?chebidrugsubclass))
+              }
+          }
+      # Added 43039 statements. Update took 10s, moments ago
+      # # I don't think we're actually using this
+      # materialize_cuis: |
+      #     insert {
+      #         graph <http://example.com/resource/cui> {
+      #             ?materialized a <http://purl.obolibrary.org/obo/IAO_0000578> ;
+      #                           <http://purl.obolibrary.org/obo/IAO_0000219> ?s .
+      #         }
+      #     }
+      #     where {
+      #         ?s <http://bioportal.bioontology.org/ontologies/umls/cui> ?cui .
+      #         bind(uri(concat("http://example.com/resource/cui/",?cui)) as ?materialized )
+      #     }
+      elected_mappings: |
+          PREFIX mydata: <http://example.com/resource/>
+          PREFIX obo: <http://purl.obolibrary.org/obo/>
+          insert {
+              graph mydata:elected_mapping {
+                  ?wasinner mydata:elected_mapping ?outermrxc
+              }
+          }
+          where 
+          {
+              {
+                  select
+                  (?innersm as ?wasinner) ?outermrxc ?innerpimax (sum(?outerpi) as ?outersum) 
+                  where {
+                      graph mydata:classified_search_results {
+                          ?doublecheck mydata:source_id_uri ?innersm ;
+                                       mydata:prob_identical ?outerpi ;
+                                       mydata:match_rxcui ?outermrxc .
+                      }
+                      {
+                          select (?sourcemed as ?innersm) (max(?pisum) as ?innerpimax) 
+                          where
+                          {
+                              select ?sourcemed ?match_rxcui (sum( ?prob_identical ) as ?pisum)
+                              where {
+                                  graph mydata:reference_medications {
+                                      ?sourcemed a obo:PDRO_0000024 ;
+                                                 mydata:source_count ?source_count .
+                                  }
+                                  graph mydata:classified_search_results {
+                                      ?classified_search_result mydata:source_id_uri ?sourcemed ;
+                                                                mydata:prob_more_distant ?prob_more_distant ;
+                                                                mydata:prob_identical ?prob_identical ;
+                                                                mydata:match_rxcui ?match_rxcui .
+                                  }
+                              }
+                              group by ?sourcemed ?match_rxcui
+                              order by desc (sum( ?prob_identical ))
+                          }
+                          group by ?sourcemed 
+                      }
+                  }
+                  group by ?innersm ?innerpimax ?outermrxc
+              }
+              filter(?innerpimax = ?outersum) 
+          }
+      # Added 110645 statements. Update took 17s, moments ago. 
+      ing.prod.employment: |
+          PREFIX owl: <http://www.w3.org/2002/07/owl#>
+          PREFIX ro: <http://www.obofoundry.org/ro/ro.owl#>
+          PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+          PREFIX obo: <http://purl.obolibrary.org/obo/>
+          PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+          PREFIX mydata: <http://example.com/resource/>
+          PREFIX oboInOwl: <http://www.geneontology.org/formats/oboInOwl#>
+          insert {
+              graph mydata:employment {
+                  ?dronprod mydata:employment mydata:product .
+                  ?acting mydata:employment mydata:active_ingredient .
+              }
+          }
+          where {
+              graph <http://purl.obolibrary.org/obo/dron/dron-ingredient.owl> {
+                  ?r a owl:Restriction ;
+                     owl:onProperty ro:has_proper_part ;
+                     owl:someValuesFrom ?hpp_valsource .
+                  ?hpp_valsource owl:intersectionOf ?hpp_intersection .
+                  ?hpp_intersection rdf:first obo:OBI_0000576 ;
+                                    rdf:rest ?sma_intersection .
+                  ?sma_intersection  rdf:first ?sma_intersection_first ;
+                                     rdf:rest ?acting_intersection .
+                  ?sma_intersection_first a owl:Restriction ;
+                                          owl:onProperty obo:BFO_0000053 ;
+                                          owl:someValuesFrom obo:DRON_00000028 .
+                  ?acting_intersection rdf:first ?acting_first ;
+                                       rdf:rest rdf:nil .
+                  ?acting_first  a owl:Restriction ;
+                                 owl:onProperty obo:BFO_0000071 ;
+                                 owl:someValuesFrom ?acting .
+              }
+              # was constraining the subacting asn product graphs more for performance that truth?
+              # acutally added in some junk?!
+              # or was that from subacting? 
+              ?dronprod rdfs:subClassOf* ?r .
+              filter( isiri(?dronprod))
+          }
+      # Added 89966 statements. Update took 30s, moments ago
+      # todo how did I choose these roles? 
+      # bootstapped from common roles of ingredients with lots of products?
+      # or lots of patients?
+      curated.role.employment: |
+          PREFIX mydata: <http://example.com/resource/>
+          PREFIX obo: <http://purl.obolibrary.org/obo/>
+          PREFIX owl: <http://www.w3.org/2002/07/owl#>
+          PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+          PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+          insert {
+              graph mydata:employment {
+                  ?role mydata:employment mydata:curated_role
+              }
+          }
+          where {
+              values ?valsource  {
+                  obo:CHEBI_130181 obo:CHEBI_131699 obo:CHEBI_131770 obo:CHEBI_131787 obo:CHEBI_139503 obo:CHEBI_22333 obo:CHEBI_22586 
+                  obo:CHEBI_23018 obo:CHEBI_23354 obo:CHEBI_23357 obo:CHEBI_23366 obo:CHEBI_23888 obo:CHEBI_24020 obo:CHEBI_24621 
+                  obo:CHEBI_24869 obo:CHEBI_25435 obo:CHEBI_25491 obo:CHEBI_25728 obo:CHEBI_27026 obo:CHEBI_27314 obo:CHEBI_33229 
+                  obo:CHEBI_33280 obo:CHEBI_35195 obo:CHEBI_35221 obo:CHEBI_35522 obo:CHEBI_35530 obo:CHEBI_35544 obo:CHEBI_35569 
+                  obo:CHEBI_35660 obo:CHEBI_35856 obo:CHEBI_35941 obo:CHEBI_36413 obo:CHEBI_37153 obo:CHEBI_37670 obo:CHEBI_37699 
+                  obo:CHEBI_37700 obo:CHEBI_37733 obo:CHEBI_37886 obo:CHEBI_37887 obo:CHEBI_37890 obo:CHEBI_37955 obo:CHEBI_37956 
+                  obo:CHEBI_37961 obo:CHEBI_38157 obo:CHEBI_38161 obo:CHEBI_38215 obo:CHEBI_38234 obo:CHEBI_38324 obo:CHEBI_38325 
+                  obo:CHEBI_38462 obo:CHEBI_38623 obo:CHEBI_38632 obo:CHEBI_38633 obo:CHEBI_38637 obo:CHEBI_38706 obo:CHEBI_38808 
+                  obo:CHEBI_38809 obo:CHEBI_39000 obo:CHEBI_47958 obo:CHEBI_48001 obo:CHEBI_48279 obo:CHEBI_48561 obo:CHEBI_48578 
+                  obo:CHEBI_48873 obo:CHEBI_48876 obo:CHEBI_48878 obo:CHEBI_49020 obo:CHEBI_49103 obo:CHEBI_49159 obo:CHEBI_49200 
+                  obo:CHEBI_50103 obo:CHEBI_50112 obo:CHEBI_50113 obo:CHEBI_50114 obo:CHEBI_50137 obo:CHEBI_50183 obo:CHEBI_50188 
+                  obo:CHEBI_50218 obo:CHEBI_50276 obo:CHEBI_50390 obo:CHEBI_50502 obo:CHEBI_50509 obo:CHEBI_50510 obo:CHEBI_50566 
+                  obo:CHEBI_50568 obo:CHEBI_50629 obo:CHEBI_50630 obo:CHEBI_50683 obo:CHEBI_50696 obo:CHEBI_50745 obo:CHEBI_50750 
+                  obo:CHEBI_50781 obo:CHEBI_50790 obo:CHEBI_50837 obo:CHEBI_50844 obo:CHEBI_50902 obo:CHEBI_50904 obo:CHEBI_50905 
+                  obo:CHEBI_50908 obo:CHEBI_50910 obo:CHEBI_51060 obo:CHEBI_51065 obo:CHEBI_51373 obo:CHEBI_52209 obo:CHEBI_52210 
+                  obo:CHEBI_52290 obo:CHEBI_53559 obo:CHEBI_53756 obo:CHEBI_55322 obo:CHEBI_59282 obo:CHEBI_59517 obo:CHEBI_59826 
+                  obo:CHEBI_59897 obo:CHEBI_60186 obo:CHEBI_60311 obo:CHEBI_60605 obo:CHEBI_60606 obo:CHEBI_60643 obo:CHEBI_60798 
+                  obo:CHEBI_60807 obo:CHEBI_60832 obo:CHEBI_61015 obo:CHEBI_61016 obo:CHEBI_61115 obo:CHEBI_61908 obo:CHEBI_61951 
+                  obo:CHEBI_62488 obo:CHEBI_62872 obo:CHEBI_64571 obo:CHEBI_64909 obo:CHEBI_64911 obo:CHEBI_65023 obo:CHEBI_65259 
+                  obo:CHEBI_68495 obo:CHEBI_68563 obo:CHEBI_70727 obo:CHEBI_70781 obo:CHEBI_71232 obo:CHEBI_73240 obo:CHEBI_73263 
+                  obo:CHEBI_73333 obo:CHEBI_73913 obo:CHEBI_74213 obo:CHEBI_74234 obo:CHEBI_76779 obo:CHEBI_76797 obo:CHEBI_76932 
+                  obo:CHEBI_77194 obo:CHEBI_77255 obo:CHEBI_77402 obo:CHEBI_77748 obo:CHEBI_78444 obo:CHEBI_85234 obo:CHEBI_86385 
+                  obo:CHEBI_90414 obo:CHEBI_90415 obo:CHEBI_91079 obo:CHEBI_35664
+              }
+              graph obo:chebi.owl {
+                  ?role rdfs:subClassOf* ?valsource ;
+                                       rdfs:label ?rolelab .
+              }
+          }
+      # Added 666 statements. Update took 0.2s, moments ago. 
+      # # this is an attempt to get knowledge about clinically relevant
+      # # structural classes in ChEBI
+      # # like statins, cardiac glycosides, benzodiazepines, etc.
+      # # macrolide antibiotics may be especially tricky
+      # # and or use ATC/NDFRT in the future
+      # Added 333 statements. Update took 18m, minutes ago. 
+      # does the rest of the R script need to be blocked until this is complete?
+      assert_clinrel_structclass: |
+          PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+          PREFIX owl: <http://www.w3.org/2002/07/owl#>
+          PREFIX obo: <http://purl.obolibrary.org/obo/>
+          insert {
+              graph <http://example.com/resource/employment> {
+                  ?molent <http://example.com/resource/employment> <http://example.com/resource/clinrel_structclass>
+              }
+          }
+          where {
+              graph <http://example.com/resource/employment> {
+                  ?superrole <http://example.com/resource/employment> <http://example.com/resource/curated_role> .
+              }
+              graph <http://purl.obolibrary.org/obo/chebi.owl> {
+                  ?subrole rdfs:subClassOf* ?superrole .
+                  ?restr a owl:Restriction ;
+                         owl:someValuesFrom ?subrole ;
+                         owl:onProperty obo:RO_0000087 .
+                  ?molent rdfs:subClassOf ?restr ;
+                          rdfs:label ?ml .
+                  ?anything rdfs:subClassOf ?molent .
+              }
+          }
+  # Added 333 statements. Update took 21m 43s, minutes ago. 
+  # now some settings for generating the solr medication label database 
+  # which is currently still part of the load/materialize script
+  main.solr.query: |
+    PREFIX mydata: <http://example.com/resource/>
+    PREFIX obo: <http://purl.obolibrary.org/obo/>
+    PREFIX owl: <http://www.w3.org/2002/07/owl#>
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    PREFIX rxn_tty: <http://example.com/resource/rxn_tty/>
+    PREFIX rxnorm: <http://purl.bioontology.org/ontology/RXNORM/>
+    PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+    select (?iri_for_solr as ?mediri) ?definedin ?employment ?labelpred (lcase(str(?l)) as ?medlabel)
+    where {
+        {
+            # only ChEBI, RxNorm and DrOn (subontologies) are included in this result at this point
+            # skipping
+            #    <http://purl.obolibrary.org/obo/dron/dron-upper.owl> (contains dispositions... but just a few)
+            # assuming that, in a given graph from a given definer) each term will have only one rdfs:label or skos:prefLabel
+            # who has obo:IAO_0000118 alternative terms? just turbo, DrOn hand and DrOn upper
+            {
+                # for ChEBI ingredients and roles
+                # ChEBI has synonyms with sources and types (sometimes)
+                # rosuvastatin not in here because employment creation did not consider BioPortal mappings
+                graph mydata:employment {
+                    values ?employment_iri {
+                        mydata:active_ingredient
+                        mydata:curated_role
+                    }
+                    ?iri_for_solr mydata:employment ?employment_iri .
+                    bind(replace(str( ?employment_iri  ), "http://example.com/resource/", "") as ?employment)
+                }
+                values ?definedin {
+                    obo:chebi.owl
+                }
+                values ?labelpred {
+                    rdfs:label
+                }
+                graph ?definedin {
+                    ?iri_for_solr ?labelpred ?l .
+                }
+            } union {
+                # for DrOn products
+                graph mydata:employment {
+                    values ?employment_iri {
+                        mydata:product
+                    }
+                    ?iri_for_solr mydata:employment ?employment_iri .
+                    bind(replace(str( ?employment_iri  ), "http://example.com/resource/", "") as ?employment)
+                }
+                values ?definedin {
+                    <http://purl.obolibrary.org/obo/dron/dron-rxnorm.owl> <http://purl.obolibrary.org/obo/dron/dron-hand.owl>
+                }
+                values ?labelpred {
+                    rdfs:label
+                }
+                graph ?definedin {
+                    ?iri_for_solr ?labelpred ?l .
+                }
+            } union {
+                # for DrOn native ingredients
+                graph mydata:employment {
+                    values ?employment_iri {
+                        mydata:active_ingredient
+                    }
+                    ?iri_for_solr mydata:employment ?employment_iri .
+                    bind(replace(str( ?employment_iri  ), "http://example.com/resource/", "") as ?employment)
+                }
+                # the obo RxNorm graph name is liable to change (due to a typo from MAM)
+                values ?definedin {
+                    <http://purl.obolibrary.org/obo/dron/dron-ingredient.owl>
+                }
+                values ?labelpred {
+                    rdfs:label
+                }
+                graph ?definedin {
+                    ?iri_for_solr ?labelpred ?l .
+                }
+                minus {
+                    graph obo:chebi.owl {
+                        ?iri_for_solr a owl:Class .
+                    }
+                }
+            } union {
+                # RxNorm
+                # BioPortal RxNorm RDF does have some alternative terms
+                # but not as many as the NLM files/tables ?
+                graph mydata:employment {
+                    # values ?employment_iri {
+                    #  rxn_tty:IN rxn_tty:MIN rxn_tty:PIN rxn_tty:BN
+                    #  rxn_tty:SBDF rxn_tty:SBDG rxn_tty:SCDF rxn_tty:SCDG
+                    # }
+                    ?iri_for_solr mydata:employment ?employment_iri .
+                    bind(replace(str( ?employment_iri  ), "http://example.com/resource/rxn_tty/", "") as ?employment)
+                }
+                values ?definedin {
+                    rxnorm:
+                }
+                values ?labelpred {
+                    skos:prefLabel
+                }
+                graph rxnorm: {
+                    ?iri_for_solr ?labelpred  ?l .
+                }
+            }
+        }
+        filter(isiri( ?iri_for_solr  ))
+    }
+  clinrel_structclass.solr: |
+      PREFIX obo: <http://purl.obolibrary.org/obo/>
+      PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+      select ?id ?definedin ?employment (lcase(str(?l)) as ?medlabel)
+      where {
+          values ?definedin {
+              obo:chebi.owl
+          }
+          values ?labelpred {
+              rdfs:label
+          }
+          values ?employment_iri {
+              <http://example.com/resource/clinrel_structclass> 
+          }
+          graph <http://example.com/resource/employment> {
+              ?id <http://example.com/resource/employment>  
+                      ?employment_iri .
+              bind(replace(str( ?employment_iri  ), "http://example.com/resource/", "") as ?employment)
+          }
+          graph ?definedin {
+              ?id ?labelpred ?l .
+          }
+      }
+  rxn.alt.lab.solr.query: |
+      PREFIX mydata: <http://example.com/resource/>
+      PREFIX rxn_tty: <http://example.com/resource/rxn_tty/>
+      PREFIX rxnorm: <http://purl.bioontology.org/ontology/RXNORM/>
+      PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+      select distinct ?mediri ?medlabel
+      where {
+          graph rxnorm: {
+              values ?labelpred {
+                  skos:altLabel
+              }
+              graph mydata:employment {
+      #            values ?employment_iri {
+      #                rxn_tty:IN rxn_tty:MIN rxn_tty:PIN rxn_tty:BN
+      #                rxn_tty:SBDF rxn_tty:SBDG rxn_tty:SCDF rxn_tty:SCDG
+      #            }
+                  ?mediri mydata:employment ?employment_iri .
+              }
+              ?mediri  ?labelpred ?rawlab ;
+                       skos:prefLabel ?pl .
+              bind(lcase(str(?rawlab)) as ?medlabel)
+              filter(lcase(str(?rawlab)) != lcase(str(?pl)))
+          }
+      }
+      #group by ?mediri ?labelpred
+  chebi.synonym.query: |
+      PREFIX obo: <http://purl.obolibrary.org/obo/>
+      PREFIX owl: <http://www.w3.org/2002/07/owl#>
+      PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+      PREFIX oboInOwl: <http://www.geneontology.org/formats/oboInOwl#>
+      PREFIX mydata: <http://example.com/resource/>
+      select 
+      (?annsource as ?mediri) ?l (?annprop as ?synstrength) (?dbxr as ?synsource) ?syntype (?anntarg as ?synval) (strlen( ?anntarg ) as ?synlen) ?employment
+      where {
+      values ?employment { mydata:active_ingredient mydata:clinrel_structclass }
+      graph mydata:employment {
+      ?annsource mydata:employment ?employment
+      }
+      graph obo:chebi.owl {
+      values ?annprop {
+      oboInOwl:hasExactSynonym oboInOwl:hasRelatedSynonym 
+      }
+      ?restr a owl:Axiom ;
+      owl:annotatedSource ?annsource ;
+      owl:annotatedProperty ?annprop ;
+      owl:annotatedTarget ?anntarg .
+      ?annsource rdfs:label ?l .
+      filter( ?syntype != <http://purl.obolibrary.org/obo/chebi#IUPAC_NAME> )
+      filter( lcase(str(?l)) != lcase(str(?anntarg)) )
+      optional {
+      ?restr oboInOwl:hasDbXref ?dbxr .
+      }        
+      optional {
+      ?restr  oboInOwl:hasSynonymType ?syntype .
+      }
+      }
+      }
+  dron.additional.chebi.label.query: |
+    PREFIX obo: <http://purl.obolibrary.org/obo/>
+    PREFIX owl: <http://www.w3.org/2002/07/owl#>
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    PREFIX : <http://purl.obolibrary.org/obo/dron.owl#>
+    select
+    *
+    where {
+        graph <http://purl.obolibrary.org/obo/chebi.owl> {
+            ?s a owl:Class ;
+               rdfs:label ?cl .
+        }
+        graph <http://purl.obolibrary.org/obo/dron/dron-ingredient.owl> {
+            # labels not asserted here
+            ?s a owl:Class ;
+               rdfs:label ?dl .
+        }
+        filter(lcase(str(?dl))!= lcase(str(?cl)))
+    }
+  chebi.role.syns: |
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    PREFIX oboInOwl: <http://www.geneontology.org/formats/oboInOwl#>
+    PREFIX owl: <http://www.w3.org/2002/07/owl#>
+    select 
+    distinct
+    ?role ?at
+    where {
+        values ?dbxr { "ChEBI" "IUPHAR" }  
+        graph <http://example.com/resource/transitive_role_of_class> {
+            ?ing <http://example.com/resource/transitive_role_of_class> ?role .
+        }
+        graph <http://purl.obolibrary.org/obo/chebi.owl> {
+            ?ing rdfs:label ?il .
+            ?role rdfs:label ?rl .
+            ?an <http://www.w3.org/2002/07/owl#annotatedSource> ?role ;
+                owl:annotatedProperty oboInOwl:hasRelatedSynonym ;
+                owl:annotatedTarget ?at  ;
+                oboInOwl:hasDbXref ?dbxr .
+        }
+    }
+  #
+  json.for.solr: "medlabels_for_chebi_for_solr.json"
+  json.source: "build/"
+  clear.raw.class.search.res: false
+  #
+  med.map.kb.solr.host: 'localhost'
+  med.map.kb.solr.core: 'medication-employment-labels-dev'
+  med.map.kb.solr.port: '8983'
+  post.via.ssh: false
+  # the actual Solr POST can optionally be run ON the Solr server
+  #   that requires using the R ssh library to copy the json file and to execute the POST 
+  ssh.user: <SECRET>
+  ssh.host: <SECRET>
+  # into what directory should the json for solr be copied?
+  json.dest: ""
+  # <SECRET>
+  # PDS configuration is specific to Penn Medicine
+  # see pds_r_medication_sql_select.R
+  pds.host: localhost
+# pds.host: host.docker.internal
+  pds.port: <SECRET>
+  pds.database: <SECRET>
+  pds.user: <SECRET>
+  pds.pw: <SECRET>
+# top level configurations that govern the outout from the calssification step
+classified_search_results:
+  onto.iri: "http://example.com/resource/classified_search_results"
+  onto.file: "build/classified_search_results_ontology_annotations.ttl"
+  onto.file.format: "turtle"  
+  current.file.base.name: 'classified_search_results'
+  my.numericals:
+      - match_chars
+      - match_words
+      - query_chars
+      - query_words
+      - match_rank
+      - match_rxaui
+      - match_score
+      - prob_consists_of
+      - prob_constitutes
+      - prob_contained_in
+      - prob_contains
+      - prob_form_of
+      - prob_has_form
+      - prob_has_ingredient
+      - prob_has_part
+      - prob_has_quantified_form
+      - prob_has_tradename
+      - prob_identical
+      - prob_ingredient_of
+      - prob_inverse_isa
+      - prob_isa
+      - prob_more_distant
+      - prob_part_of
+      - prob_quantified_form_of
+      - prob_tradename_of
+      - rxaui_freq
+      - rxcui_freq
+      - sd_cosine
+      - sd_jaccard
+      - sd_jw
+      - sd_lcs
+      - sd_lv
+      - sd_qgram
+  my.class: 'http://purl.obolibrary.org/obo/OBI_0001909'
+reference_medications:
+  onto.iri: "http://example.com/resource/reference_medications"
+  onto.file: "build/reference_medications_ontology_annotations.ttl"
+  onto.file.format: "turtle"
+  current.file.base.name: 'reference_medications'
+  my.numericals:
+      - source_count
+  my.class: 'http://purl.obolibrary.org/obo/PDRO_0000024'
