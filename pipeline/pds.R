@@ -15,7 +15,7 @@
 source(
 #  "https://raw.githubusercontent.com/PennTURBO/turbo-globals/master/turbo_R_setup_action_versioning.R"
 #  "turbo_R_setup_action_versioning.R"
-  "/pipeline/turbo_setup.R"
+  "/pipeline/setup.R"
 )
 
 # Java memory is set in turbo_R_setup.R

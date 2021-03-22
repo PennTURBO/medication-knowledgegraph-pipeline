@@ -82,7 +82,7 @@ version.list <-
   list(versioninfo = temp,
        created = execution.timestamp)
 
-config.file <- "/config/turbo_R_setup.yaml"
+config.file <- "/config/setup.yaml"
 
 config <- config::get(file = config.file)
 
