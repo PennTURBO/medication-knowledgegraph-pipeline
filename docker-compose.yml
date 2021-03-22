@@ -26,5 +26,45 @@ services:
     tty: true
     stdin_open: true
 
+#Local setup:
+#https://mor.nlm.nih.gov/dnwl/auth/docker/rxnav-in-a-box.zip
+#Extract rxnav-in-a-box
+#Put mysql/ and tomcat/ into base directory
+
+#Default rxnav-in-a-box docker-compose
+#Portions added by Mark commented out for now
+#?:Do current scripts communicate with real RxNav API or only pull from local RxNav-In-A-Box?
+#?:Is secrets file related to storing API key or just factoring out the dummy password to the local mariadb instance?
+  rxnav-db:
+    image: mariadb:10.4
+    restart: "no"
+    expose:
+    - "3306"
+#   ports:                                                     #added by M to initial rxnav d-c
+#   - "3307:3306"                                              #added by M to initial rxnav d-c
+    volumes:
+      - ./mysql:/docker-entrypoint-initdb.d:ro
+#   secrets:                                                   #added by M to initial rxnav d-c
+#   - mysql_webuser_secret                                     #added by M to initial rxnav d-c
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+      MYSQL_USER: webuser
+#     MYSQL_PASSWORD_FILE: /run/secrets/mysql_webuser_secret   #added by M to initial rxnav d-c
+      MYSQL_PASSWORD: 9521354c77aa
+
+  rxnav-web:
+    build: tomcat
+    restart: "no"
+    ports:
+    - "4000:8080"
+#   secrets:                  #added by M to initial rxnav d-c
+#   - mysql_webuser_secret    #added by M to initial rxnav d-c
+    depends_on:
+    - rxnav-db
+#secrets:                     #added by M to initial rxnav d-c
+# mysql_webuser_secret:       #added by M to initial rxnav d-c
+#   file: ./mysql-secret.txt  #added by M to initial rxnav d-c
+
 #volumes:
 #  pipeline:
+

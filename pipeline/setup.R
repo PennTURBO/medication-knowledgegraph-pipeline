@@ -118,21 +118,21 @@ rxnDriver <-
   JDBC(driverClass = "com.mysql.cj.jdbc.Driver",
        classPath = config$mysql.jdbc.path)
 
-rxnCon <- NULL
+#rxnCon <- NULL
 
 # # i keep re-doing this thorugh other scripts
-# rxnCon <-
-#   dbConnect(
-#     rxnDriver,
-#     paste0(
-#       "jdbc:mysql://",
-#       config$rxnav.mysql.address,
-#       ":",
-#       config$rxnav.mysql.port
-#     ),
-#     config$rxnav.mysql.user,
-#     config$rxnav.mysql.pw
-#   )
+ rxnCon <-
+   dbConnect(
+     rxnDriver,
+     paste0(
+       "jdbc:mysql://",
+       config$rxnav.mysql.address,
+       ":",
+       config$rxnav.mysql.port
+     ),
+     config$rxnav.mysql.user,
+     config$rxnav.mysql.pw
+   )
 
 ####
 
