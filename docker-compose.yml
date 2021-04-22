@@ -21,8 +21,11 @@ services:
 #     - "./solr-config/:/solr-config"         #merge into config/ once using
       - "./test:/test"
 
-#   command: bash -x -c 'test/test.sh'
-    command: bash -c 'dos2unix scripts/builder.sh && sh scripts/builder.sh'
+#    command: bash -x -c 'test/pds_test.sh'
+#    command: bash -x -c '/test/rxnav_test.sh'
+#    command: bash -c 'dos2unix scripts/builder.sh && sh scripts/builder.sh'
+#    command: bash -c 'sh scripts/builder.sh'
+    command: bash -c 'sh scripts/advbuilder.sh'
     tty: true
     stdin_open: true
 
@@ -32,7 +35,7 @@ services:
 #Put mysql/ and tomcat/ into base directory
 
 #Default rxnav-in-a-box docker-compose
-#Portions added by Mark commented out for now
+#Portions added by Mark to upstream's docker-compose.yml commented out for now
 #?:Do current scripts communicate with real RxNav API or only pull from local RxNav-In-A-Box?
 #?:Is secrets file related to storing API key or just factoring out the dummy password to the local mariadb instance?
   rxnav-db:
@@ -40,23 +43,30 @@ services:
     restart: "no"
     expose:
     - "3306"
-#   ports:                                                     #added by M to initial rxnav d-c
-#   - "3307:3306"                                              #added by M to initial rxnav d-c
+    ports:                                                     #added by M to initial rxnav d-c
+    - "3306:3306"                                              #added by M to initial rxnav d-c
     volumes:
       - ./mysql:/docker-entrypoint-initdb.d:ro
 #   secrets:                                                   #added by M to initial rxnav d-c
 #   - mysql_webuser_secret                                     #added by M to initial rxnav d-c
     environment:
-      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+#     MYSQL_RANDOM_ROOT_PASSWORD: "yes"
       MYSQL_USER: webuser
 #     MYSQL_PASSWORD_FILE: /run/secrets/mysql_webuser_secret   #added by M to initial rxnav d-c
       MYSQL_PASSWORD: 9521354c77aa
 
+      #TH5
+      MYSQL_ROOT_PASSWORD: 9521354c77aa
+#    entrypoint: mysqld --init-file=/update
+
+
   rxnav-web:
     build: tomcat
     restart: "no"
-    ports:
-    - "4000:8080"
+    expose:
+    - "8080"
+#    ports:
+#    - "4000:8080"
 #   secrets:                  #added by M to initial rxnav d-c
 #   - mysql_webuser_secret    #added by M to initial rxnav d-c
     depends_on:

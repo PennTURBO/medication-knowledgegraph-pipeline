@@ -27,15 +27,19 @@
 # or better yet, a symbolic link to a centrally located "turbo_R_setup.yaml", which could be used by multiple pipelines
 # see https://github.com/PennTURBO/turbo-globals/blob/master/turbo_R_setup.template.yaml
 
+#options(error = function()traceback(2))
+
 source(
-  "https://raw.githubusercontent.com/PennTURBO/turbo-globals/master/turbo_R_setup_action_versioning.R"
+#  "https://raw.githubusercontent.com/PennTURBO/turbo-globals/master/turbo_R_setup_action_versioning.R"
+  "/pipeline/setup.R"
 )
 
 # Java memory is set in turbo_R_setup.R
 print(getOption("java.parameters"))
 
 # many warnings saved to robot.results when templating and intern = TRUE
-capture.robot.output <- FALSE
+#capture.robot.output <- FALSE
+capture.robot.output <- TRUE #TH5
 
 # # may also want to capture
 # #   pre_commit_status.txt
@@ -54,18 +58,31 @@ capture.robot.output <- FALSE
 # try to connect to RxNav database with a reusable and closable connection
 # so first try to close that handle if it exists
 # be careful...
-#  over time, that kind of approach could use up more connections that a RDBMS is willing to grant
+#  over time, that kind of approach could use up more connections than an RDBMS is willing to grant
 
-tryCatch({
-  dbDisconnect(rxnCon)
-},
-warning = function(w) {
-  
-}, error = function(e) {
-  print(e)
-})
+#tryCatch({
+#  dbDisconnect(rxnCon)
+#},
+#warning = function(w) {
+#  
+#}, error = function(e) {
+#  print(e)
+#})
 
-rxnCon <- NULL
+#rxnCon <- NULL
+
+rxnCon <-
+  dbConnect(
+    rxnDriver,
+    paste0(
+      "jdbc:mysql://",
+      config$rxnav.mysql.address,
+      ":",
+      config$rxnav.mysql.port
+    ),
+    config$rxnav.mysql.user,
+    config$rxnav.mysql.pw
+  )
 
 connected.test.query <-
   "select RSAB from rxnorm_current.RXNSAB r"
@@ -105,7 +122,7 @@ version.lol <- list()
 version.lol[['this']] <- version.list
 # current.version.list <- version.list
 # # modifies version list!
-load(config$source.medications.Rdata.path)
+load(config$source.medications.Rdata.path, verbose=TRUE)
 # source.medications.version.list <- version.list
 # version.list <- current.version.list
 version.lol[['reference_medications']] <- version.list
@@ -142,14 +159,23 @@ source.medications <-
 
 ####
 
+#print("Exit just before POST")
+#quit()
+
 post.res <- POST(update.endpoint,
                  body = list(update = 'clear all'),
                  saved.authentication)
 
 not.empty.yet <- TRUE
 
+print("get.context.report() does HTTP GET to graphdb")
+print(paste0(config$my.graphdb.base, "/repositories/", config$my.selected.repo, "/contexts"))
+print(saved.authentication)
+
 while (not.empty.yet) {
+print("pre:get.context.report()")
   context.report <- get.context.report()
+print("pre:get.context.report()")
   if (is.null(context.report)) {
     break
   }
@@ -364,10 +390,16 @@ outer.chunks <-
         )
       )
       gc()
+
+      test.and.refresh() #TH5
+
       Sys.sleep(config$inter.outer.seconds)
+      # save.image("/data/prox_class.Rdata")
       return(inner.temp)
     }
   )
+
+save.image("/data/prox_class.Rdata")
 
 ####
 
@@ -378,6 +410,8 @@ approximate.term.res <-
 # # break up into chunks of 10 or 20k?
 
 ###
+
+save.image("/data/prox_class.Rdata")
 
 test.and.refresh()
 
@@ -428,6 +462,23 @@ string.dist.mat.res <-
   get.string.dist.mat(ehr.approximately[, c("query.val", "STR.lc")])
 
 string.dist.mat.res <- unique(string.dist.mat.res)
+
+# builder_1    | > string.dist.mat.res <- get.string.dist.mat(ehr.approximately[,
+# builder_1    | +     c("query.val", "STR.lc")])
+# builder_1    | [1] "cosine"
+# builder_1    | [1] "jaccard"
+# builder_1    | [1] "jw"
+# builder_1    | [1] "lcs"
+# builder_1    | [1] "lv"
+# builder_1    | [1] "qgram"
+# builder_1    |
+# builder_1    | > string.dist.mat.res <- unique(string.dist.mat.res)
+# builder_1    |
+# builder_1    | > ehr.approximate.original.dists <- left_join(x = ehr.approximately,
+# builder_1    | +     y = string.dist.mat.res, by = c("query.val", "STR.lc"), suffixes = c(".q",
+# builder_1    | +         ".sr"))
+# builder_1    | Killed
+# builder_1    | /pipeline/rxnav_med_mapping_proximity_classifier.R failed. Stopping pipeline.
 
 ehr.approximate.original.dists <-
   left_join(
@@ -682,6 +733,11 @@ classification.res.tidied <- unique(classification.res.tidied)
 
 temp.name <- 'http://purl.bioontology.org/ontology/RXNORM/'
 last.post.time <- Sys.time()
+
+print(temp.name)
+print(config$my.import.files[[temp.name]]$local.file)
+print(config$my.import.files[[temp.name]]$format)
+
 placeholder <- import.from.local.file(temp.name,
                                       config$my.import.files[[temp.name]]$local.file,
                                       config$my.import.files[[temp.name]]$format)
@@ -889,7 +945,13 @@ graphs.cols <-
     return(selected)
   })
 
+print(graphs.cols)
+
+print(unique.destination.graphs)
+
 names(graphs.cols) <- unique.destination.graphs
+
+
 
 ####
 
@@ -929,18 +991,23 @@ robot.templating <- function(current.task) {
   
   # current.task <- "reference_medications"
   
+  print("current.task")
   print(current.task)
   
   robot.java.settings <- "ROBOT_JAVA_ARGS=-Xmx8G"
-  
+
   more.specific <-
     config::get(file = config$config.fn, config = current.task)
+
+#print(more.specific)
   
   keepers <-
     med_map_csv_cols$more_generic %in% setdiff(graphs.cols[[current.task]], "source_has_rxcui")
-  
+
   body <- unique(classification.res.tidied[, keepers])
+
   pre.robot <- colnames(body)
+
   class.col <- rep(more.specific$my.class, nrow(body))
   body <- cbind.data.frame(class.col, body)
   pre.robot <- colnames(body)
@@ -948,44 +1015,57 @@ robot.templating <- function(current.task) {
   
   robot.line <-
     med_map_csv_cols$robot[med_map_csv_cols$more_generic %in% pre.robot]
+
   robot.line[1] <- 'ID'
   robot.line <-
     c('TYPE', robot.line)
-  
   print(robot.line)
   
   body[] <- lapply(body[], as.character)
-  
   body <- rbind.data.frame(robot.line, body)
   names(body) <- pre.robot
-  
+
   write.table(
     x = body,
-    file = paste0("build/", current.task, '_for_robot.tsv'),
+#    file = paste0("build/", current.task, '_for_robot.tsv'),
+    file = paste0("/data/", current.task, '_for_robot.tsv'),
     append = FALSE,
     quote = TRUE,
     sep = '\t',
     row.names = FALSE,
     col.names = TRUE
   )
-  
+
   contextual.version <- version.lol[[current.task]]
-  
+
+#print(contextual.version)
+#print(more.specific)
+#print("more.specific$onto.iri")
+#print(more.specific$onto.iri)
+#print("more.specific$onto.file")
+#print(more.specific$onto.file)
+#print("more.specific$onto.file.format")
+#print(more.specific$onto.file.format)
+
   build.source.med.classifications.annotations(
     version.list = contextual.version,
     onto.iri = more.specific$onto.iri ,
     onto.file = more.specific$onto.file ,
     onto.file.format = more.specific$onto.file.format
   )
-  
+
+#print("current task:")
+#print(current.task)
+
   # "-vvv" verbosity flags generate a LOT of statements along the lines of
   # WARN  org.obolibrary.robot.IOHelper - Unable to find namespace for: http://example.com/resource/...
   robot.command <-
     paste0(
-      'robot template ',
+#      'robot template ',
+      '/resources/robot template ',
       '--prefix "xsd: http://www.w3.org/2001/XMLSchema#" ',
       '--prefix "obo: http://purl.obolibrary.org/obo/" ',
-      '--template build/',
+      '--template /data/',
       current.task,
       '_for_robot.tsv ',
       'annotate ',
@@ -995,13 +1075,11 @@ robot.templating <- function(current.task) {
       '--annotation-file ',
       more.specific$onto.file,
       ' ',
-      '--output build/',
+      '--output /data/',
       current.task,
       '_from_robot.ttl '
     )
-  
   cat(robot.command)
-  
   # many warnings saved to robot.results when intern = TRUE
   robot.results <-
     system(command = paste0(robot.java.settings,
@@ -1010,14 +1088,23 @@ robot.templating <- function(current.task) {
   
   
   # print(robot.results)
-  
+  print(robot.results)
+
   zip::zip(
-    root = "build",
+    root = "/data",
     zipfile = paste0(current.task, "_from_robot.ttl.zip"),
     files = c(paste0(current.task, "_from_robot.ttl"))
   )
   
 }
+
+#reaches here
+#fails on lapply()
+#Error in path.expand(path) : invalid 'path' argument
+
+#print(graphs.cols)
+#print(robot.templating)
+
 
 lapply(rev(sort(names(graphs.cols))), robot.templating)
 # system calls to robot now replace  med_mapping_robot.sh which had read from and written to completely hardcoded files/path

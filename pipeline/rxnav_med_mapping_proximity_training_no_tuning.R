@@ -22,17 +22,20 @@ print(getOption("java.parameters"))
 
 ####
 
-tryCatch({
-  dbDisconnect(rxnCon)
-},
-warning = function(w) {
-  
-}, error = function(e) {
-  print(e)
-})
+#tryCatch({
+#  dbDisconnect(rxnCon)
+#},
+#warning = function(w) {
+#  
+#}, error = function(e) {
+#  print(e)
+#})
 
-print(rxnCon)
 #rxnCon <- NULL
+
+rxnCon <- dbConnect(rxnDriver, paste0("jdbc:mysql://",
+     config$rxnav.mysql.address, ":", config$rxnav.mysql.port),
+     config$rxnav.mysql.user, config$rxnav.mysql.pw)
 
 connected.test.query <-
   "select RSAB from rxnorm_current.RXNSAB r"
@@ -498,6 +501,9 @@ coverage <- length(covered.rxcuis) / length(attempted.rxcuis)
 
 # print(coverage)
 
+# # for debugging
+# save.image(config$rxnav_med_mapping_training_image)
+
 # 24 MB... on the large size for github
 save(rf_classifier,
      version.list,
@@ -505,5 +511,3 @@ save(rf_classifier,
      coverage,
      file = config$rf.model.path)
 
-# # for debugging
-# save.image(config$rxnav_med_mapping_training_image)

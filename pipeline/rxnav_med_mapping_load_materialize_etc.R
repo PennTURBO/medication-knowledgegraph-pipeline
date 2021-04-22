@@ -13,8 +13,11 @@
 # see https://github.com/PennTURBO/turbo-globals/blob/master/turbo_R_setup.template.yaml
 
 source(
-  "https://raw.githubusercontent.com/PennTURBO/turbo-globals/master/turbo_R_setup_action_versioning.R"
+#  "https://raw.githubusercontent.com/PennTURBO/turbo-globals/master/turbo_R_setup_action_versioning.R"
+  "/pipeline/setup.R"
 )
+
+options(error = function()traceback(2))
 
 # Java memory is set in turbo_R_setup.R
 print(getOption("java.parameters"))
@@ -85,10 +88,27 @@ placeholder <-
     cat(innner.sparql)
     cat('\n\n')
     
-    post.res <- POST(update.endpoint,
-                     body = list(update = innner.sparql),
-                     saved.authentication)
-  })
+    print("POST(URL):") #TH5
+    print(update.endpoint)
+
+#https://rdrr.io/cran/httr/man/verbose.html
+#   post.res <- POST(update.endpoint,
+    post.res <- tryCatch({
+                    POST(update.endpoint,
+                        body = list(update = innner.sparql),
+                        saved.authentication,
+                        timeout(1300),
+                        verbose(data_out=TRUE, data_in=TRUE, info=TRUE, ssl=TRUE),
+                        config(tcp_keepalive=1) #useless?
+                    )
+                }, error = function(e){
+                             print("Caught error, sleeping for 10 minutes")
+                             Sys.sleep(600) #seconds
+                           }
+                )
+    print(post.res)
+  }
+)
 
 ####    ####    ####    ####
 
@@ -213,7 +233,6 @@ rdf_serialize(rdf = as.rdf,
               doc = config$rxcui_ttys.fp,
               format = 'turtle')
 
-
 post.res <- POST(
   update.endpoint,
   body = list(update = 'clear graph <http://example.com/resource/rxn_tty_temp>'),
@@ -224,6 +243,7 @@ placeholder <-
   import.from.local.file('http://example.com/resource/rxn_tty_temp',
                          config$rxcui_ttys.fp,
                          'text/turtle')
+
 
 # move the statement to the config file
 rxn.tty.update <- 'PREFIX mydata: <http://example.com/resource/>
@@ -242,6 +262,7 @@ bind(iri(?t) as ?turi)
 }'
 
 # Added 203754 statements. Update took 16s, moments ago.
+
 
 post.res <- POST(update.endpoint,
                  body = list(update = rxn.tty.update),

@@ -13,8 +13,10 @@
 # see https://github.com/PennTURBO/turbo-globals/blob/master/turbo_R_setup.template.yaml
 
 source(
-  "https://raw.githubusercontent.com/PennTURBO/turbo-globals/master/turbo_R_setup_action_versioning.R"
-)
+#  "https://raw.githubusercontent.com/PennTURBO/turbo-globals/master/turbo_R_setup_action_versioning.R"
+  "/pipeline/setup.R"
+,echo=TRUE, max.deparse.length=Inf, verbose=TRUE)
+#)
 
 # Java memory is set in turbo_R_setup.R
 print(getOption("java.parameters"))
@@ -144,8 +146,7 @@ lapply(config$my.source.ontolgies, function(current.source) {
   temp <- httr::GET(temp)
   temp <- rawToChar(temp$content)
   temp <- fromJSON(temp)
-  
-  
+    
   rdf_add(
     rdf = direct.rdf,
     subject = paste0(
@@ -185,6 +186,8 @@ post.dest <-
 print(post.dest)
 print(Sys.time())
 
+#save.image("/data/get_bioportal_mappings_env_before_post.Rdata")
+
 post.resp <-
   httr::POST(
     url = post.dest,
@@ -197,3 +200,4 @@ post.resp <-
 
 print('Errors will be listed below:')
 print(rawToChar(post.resp$content))
+

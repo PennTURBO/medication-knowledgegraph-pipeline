@@ -61,8 +61,8 @@ options(scipen = 999)
 # user's home?
 # current working directory?
 
-print("Default file path set to:")
-print(getwd())
+#print("Default file path set to:")
+#print(getwd())
 
 # pre_commit_tags = readLines("../release_tag.txt")
 # pre_commit_status = readLines("../release_status.txt")
@@ -114,25 +114,50 @@ saved.authentication <-
                config$my.graphdb.pw,
                type = "basic")
 
+#print("pipeline/setup.R")
+#print("config$mysql.jdbc.path")
+#print(config$mysql.jdbc.path)
+
 rxnDriver <-
   JDBC(driverClass = "com.mysql.cj.jdbc.Driver",
        classPath = config$mysql.jdbc.path)
 
 #rxnCon <- NULL
 
+#print("pipeline/setup.R")
+#print("Attempting rxnCon <- dbConnect()")
+
+#print("rxnDriver")
+#print(rxnDriver)
+
+#print("config$rxnav.mysql.address")
+#print(config$rxnav.mysql.address)
+
+#print("config$rxnav.mysql.port")
+#print(config$rxnav.mysql.port)
+
+#print("config$rxnav.mysql.user")
+#print(config$rxnav.mysql.user)
+
+#Default pass different from config pass?
+#print("Default pass different from config pass?")
+#print("config$rxnav.mysql.pw")
+#print(config$rxnav.mysql.pw)
+
+
 # # i keep re-doing this thorugh other scripts
- rxnCon <-
-   dbConnect(
-     rxnDriver,
-     paste0(
-       "jdbc:mysql://",
-       config$rxnav.mysql.address,
-       ":",
-       config$rxnav.mysql.port
-     ),
-     config$rxnav.mysql.user,
-     config$rxnav.mysql.pw
-   )
+# rxnCon <-
+#   dbConnect(
+#     rxnDriver,
+#     paste0(
+#       "jdbc:mysql://",
+#       config$rxnav.mysql.address,
+#       ":",
+#       config$rxnav.mysql.port
+#     ),
+#     config$rxnav.mysql.user,
+#     config$rxnav.mysql.pw
+#   )
 
 ####
 
@@ -323,7 +348,7 @@ monitor.named.graphs <- function() {
     print(paste0("Next check in ",
                  config$monitor.pause.seconds,
                  " seconds."))
-    
+ 
     Sys.sleep(config$monitor.pause.seconds)
     
   }
@@ -624,6 +649,7 @@ bp.mappings.pair.to.minimal.df <- function(from.ont, to.ont) {
         '&page=',
         current.page
       )
+
     mappings.result <- httr::GET(pair.uri)
     mappings.result <- rawToChar(mappings.result$content)
     whole.prep.parse <- mappings.result
@@ -826,37 +852,32 @@ build.source.med.classifications.annotations <-
            onto.file,
            onto.file.format) {
     # cat(config$source.med.classifications.onto.comment)
-    
+#print("setup.R:build.source.med.classifications.annotations()")
     annotation.model <- rdf()
-    
     rdflib::rdf_add(
       rdf = annotation.model,
       subject = onto.iri,
       predicate = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
       object = "http://www.w3.org/2002/07/owl#Ontology"
     )
-    
     rdflib::rdf_add(
       rdf = annotation.model,
       subject = onto.iri,
       predicate = "http://purl.org/dc/terms/created",
       object = version.list$created
-    )
-    
+    ) 
     rdflib::rdf_add(
       rdf = annotation.model,
       subject = onto.iri,
       predicate = "http://www.w3.org/2002/07/owl#versionInfo",
       object = version.list$versioninfo
     )
-    
     rdflib::rdf_add(
       rdf = annotation.model,
       subject = onto.iri,
       predicate = "http://www.w3.org/2000/01/rdf-schema#comment",
       object = config$source.med.classifications.onto.comment
     )
-    
     rdf_serialize(rdf = annotation.model,
                   doc = onto.file,
                   format = onto.file.format)

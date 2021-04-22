@@ -14,7 +14,6 @@
 
 source(
 #  "https://raw.githubusercontent.com/PennTURBO/turbo-globals/master/turbo_R_setup_action_versioning.R"
-#  "turbo_R_setup_action_versioning.R"
   "/pipeline/setup.R"
 )
 
@@ -25,63 +24,93 @@ print(getOption("java.parameters"))
 
 #print(config$oracle.jdbc.path)
 
-# VPN and tunnel may be required
-# set that up outside of this script
-pdsDriver <-
-  JDBC(driverClass = "oracle.jdbc.OracleDriver",
-       classPath = config$oracle.jdbc.path)
-###library(dblog)
+if (config$live.pds) {
 
-pds.con.string <- paste0(
-  "jdbc:oracle:thin:@//",
-  config$pds.host,
-  ":",
-  config$pds.port,
-  "/",
-  config$pds.database
-)
+  # VPN and tunnel may be required
+  # set that up outside of this script
+  pdsDriver <-
+    JDBC(driverClass = "oracle.jdbc.OracleDriver",
+        classPath = config$oracle.jdbc.path)
 
-#print(pdsDriver)
-#print(pds.con.string)
-#print(config$pds.user)
+  pds.con.string <- paste0(
+    "jdbc:oracle:thin:@//",
+    config$pds.host,
+    ":",
+    config$pds.port,
+    "/",
+    config$pds.database
+  )
 
-pdsConnection <-
-  dbConnect(pdsDriver,
-            pds.con.string,
-            config$pds.user,
-            config$pds.pw)
+  #print(pdsDriver)
+  #print(pds.con.string)
+  #print(config$pds.user)
 
-my.query <- "
-SELECT
-rm.PK_MEDICATION_ID,
-rm.FULL_NAME,
-rm.GENERIC_NAME,
-rm.RXNORM,
-COUNT(DISTINCT pe.EMPI) AS empi_count
-FROM
-mdm.R_MEDICATION rm
-LEFT JOIN MDM.ORDER_MED om ON
-rm.PK_MEDICATION_ID = om.FK_MEDICATION_ID
-LEFT JOIN MDM.PATIENT_ENCOUNTER pe ON
-om.FK_PATIENT_ENCOUNTER_ID = pe.PK_PATIENT_ENCOUNTER_ID
-WHERE rownum <= 1000 --TODO remove
-GROUP BY
-rm.PK_MEDICATION_ID,
-rm.FULL_NAME,
-rm.GENERIC_NAME,
-rm.RXNORM
-"
+  pdsConnection <-
+    dbConnect(pdsDriver,
+              pds.con.string,
+              config$pds.user,
+              config$pds.pw)
 
+  my.query <- "
+  SELECT
+  rm.PK_MEDICATION_ID,
+  rm.FULL_NAME,
+  rm.GENERIC_NAME,
+  rm.RXNORM,
+  COUNT(DISTINCT pe.EMPI) AS empi_count
+  FROM
+  mdm.R_MEDICATION rm
+  LEFT JOIN MDM.ORDER_MED om ON
+  rm.PK_MEDICATION_ID = om.FK_MEDICATION_ID
+  LEFT JOIN MDM.PATIENT_ENCOUNTER pe ON
+  om.FK_PATIENT_ENCOUNTER_ID = pe.PK_PATIENT_ENCOUNTER_ID
+  WHERE rownum <= 1000
+  GROUP BY
+  rm.PK_MEDICATION_ID,
+  rm.FULL_NAME,
+  rm.GENERIC_NAME,
+  rm.RXNORM
+  "
 
-# 30 minutes
-print(Sys.time())
-timed.system <- system.time(source.medications <-
-                              dbGetQuery(pdsConnection, my.query))
-print(Sys.time())
-print(timed.system)
+  #--WHERE rownum <= 1000
 
-# Close connection
-dbDisconnect(pdsConnection)
+#TH5
+#https://www.rforge.net/doc/packages/RJDBC/JDBCConnection-methods.html
+#dbGetQuery is a shorthand for sendQuery + fetch. 
+#Parameters n=-1, block=2048L and use.label=TRUE are passed through to fetch() others to dbSendQuery. 
+
+#Separate out sendQuery and fetch
+
+# print(Sys.time())
+
+# dbSendQuery(pdsConnection, my.query)
+
+# print(Sys.time())
+
+# print(dbGetInfo(pdsConnection))
+
+# source.medications <- fetch(pdsConnection)
+
+#source.medications <- dbGetQuery(pdsConnection, my.query)
+
+#TH5 end
+
+  # 30 minutes
+  print(Sys.time())
+  timed.system <- system.time(source.medications <-
+                                dbGetQuery(pdsConnection, my.query))
+  print(Sys.time())
+  # print(timed.system)
+
+  # Close connection
+  dbDisconnect(pdsConnection)
+
+} else {
+
+# source.medications <- read.csv("/data/pds_full.csv", header = TRUE)
+  source.medications <- read.csv(config$pds.csv, header = TRUE)
+
+}
 
 # should have applied this in the SQL query
 # dput(colnames(source.medications))
@@ -95,7 +124,6 @@ colnames(source.medications) <-
     "RXNORM",
     "MEDICATION_COUNT")
 
-
 # add option for saving as delimited text
 # write.table(
 #   source.medications,
@@ -107,9 +135,13 @@ colnames(source.medications) <-
 #   col.names = TRUE
 # )
 
-# save.image("pds_r_medication_sql_select.Rdata")
+#save whole R environment
+#save.image("/data/pds_r_medication_sql_select.Rdata")
 
-save.image("pds_r_medication_sql_select.Rdata")
+# print(version.list)
+# print(config$source.medications.Rdata.path)
+
+# print(source.medications)
 
 save(source.medications,
      version.list,
