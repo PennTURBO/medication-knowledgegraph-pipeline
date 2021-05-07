@@ -46,7 +46,7 @@ services:
     ports:                                                     #added by M to initial rxnav d-c
     - "3306:3306"                                              #added by M to initial rxnav d-c
     volumes:
-      - ./mysql:/docker-entrypoint-initdb.d:ro
+      - ./rxnav-in-a-box/mysql:/docker-entrypoint-initdb.d:ro
 #   secrets:                                                   #added by M to initial rxnav d-c
 #   - mysql_webuser_secret                                     #added by M to initial rxnav d-c
     environment:
@@ -61,7 +61,7 @@ services:
 
 
   rxnav-web:
-    build: tomcat
+    build: rxnav-in-a-box/tomcat
     restart: "no"
     expose:
     - "8080"
