@@ -27,7 +27,7 @@
 # or better yet, a symbolic link to a centrally located "turbo_R_setup.yaml", which could be used by multiple pipelines
 # see https://github.com/PennTURBO/turbo-globals/blob/master/turbo_R_setup.template.yaml
 
-#options(error = function()traceback(2))
+options(error = function(){traceback(2); q(status=1)})
 
 source(
 #  "https://raw.githubusercontent.com/PennTURBO/turbo-globals/master/turbo_R_setup_action_versioning.R"

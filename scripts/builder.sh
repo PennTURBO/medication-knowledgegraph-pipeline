@@ -40,7 +40,7 @@
 
 #Rscript --verbose -e 'source("/pipeline/rxnav_med_mapping_solr_upload_post_test.R", echo=TRUE, verbose=TRUE, max.deparse.length=Inf)'
 
-#Rscript --verbose -e 'source("/pipeline/rxnav_med_mapping_solr_upload_post_test.R", echo=TRUE, verbose=TRUE, max.deparse.length=Inf)'
+Rscript --verbose -e 'source("/pipeline/rxnav_med_mapping_solr_upload_post_test.R", echo=TRUE, verbose=TRUE, max.deparse.length=Inf)'
 
 #ls -al /resources
 #cd /resources
@@ -73,7 +73,3 @@
 #apt-get -y install libaio1
 
 #R CMD INSTALL --configure-args='--with-oci-lib=/usr/lib/oracle/21/client64/lib --with-oci-inc=/usr/include/oracle/21/client64' /resources/ROracle_1.3-1.tar.gz
-
-#Rscript --verbose -e 'source("/pipeline/pds2.R", echo=TRUE, max.deparse.length=Inf)'
-
-Rscript --verbose -e 'source("/pipeline/rxnav_med_mapping_solr_upload_post_test.R", echo=TRUE, verbose=TRUE, max.deparse.length=Inf)'

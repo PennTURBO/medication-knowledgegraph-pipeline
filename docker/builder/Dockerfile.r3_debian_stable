@@ -1,6 +1,6 @@
 #FROM r-base:3.6.2
-#FROM rocker/r-ver:3.6.3
-FROM rocker/r-ver:4.0.1
+FROM rocker/r-ver:3.6.3
+#FROM rocker/r-ver:4.0.1
 
 RUN apt-get clean && apt-get update
 
@@ -24,7 +24,6 @@ RUN apt-get update && \
     libpcre3-dev \
     liblzma-dev \
     libbz2-dev \
-    libglpk-dev \
 #    libraptor2-dev \
 #    librasqal3-dev \
 #    libcurl4-gnutls-dev \
@@ -113,8 +112,6 @@ RUN apt-get update && \
 #system("java -version"); \
 #  library(devtools); library(rJava);    
 
-# RUN apt-get -y install libglpk-dev #rocker/r-ver:4.0.1, libglpk.so.40:
-
 RUN Rscript -e 'install.packages(c( \
   "devtools",                       \
   "caret",                          \
@@ -150,8 +147,6 @@ RUN Rscript -e 'install.packages(c( \
   install_github("egonw/rrdf", subdir="rrdf", build_vignettes = FALSE) \
   '
 #RUN Rscript -e 'install.packages(c("rJava", "devtools", "config", "dplyr", "e1071", "ggplot2", "httr", "igraph", "jsonlite", "randomForest", "rdflib", "readr", "readxl", "reshape2", "RJDBC", "solrium", "ssh", "stringdist", "stringr", "tm", "uuid", "splitstackshape", "ROCR", "caret", "xgboost", "zip", "gtools"))'
-
-#devtools, caret, config, dplyr, e1071, ggplot2, gtools, httr, igraph, jsonlite, randomForest, rdflib, readr, readxl, reshape2, ROCR, rJava, RJDBC, solrium, SPARQL, splitstackshape, ssh, stringdist, tibble, tm, uuid, xgboost, zip
 
 #RUN Rscript -e 'install.packages("devtools")'
 #RUN Rscript -e 'install.packages("rJava")'
@@ -211,7 +206,6 @@ library(ROCR); \
 library(caret); \
 library(zip); \
 library(gtools); \
-library(rrdf); \
 '
 
 # RUN apt-get -y install unixodbc unixodbc-dev
@@ -230,3 +224,4 @@ library(rrdf); \
 #COPY /home/user/medication-knowledgegraph-pipeline/ojdbc8.jar /ojdbc8.jar.2
 #COPY ojdbc8.jar /ojdbc8.jar
 #COPY mysql-connector-java-8.0.23.jar /mysql-connector-java-8.0.23.jar
+

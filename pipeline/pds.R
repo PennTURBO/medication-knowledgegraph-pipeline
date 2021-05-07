@@ -24,7 +24,7 @@ print(getOption("java.parameters"))
 
 #print(config$oracle.jdbc.path)
 
-if (config$live.pds) {
+if (config$pds.live) {
 
   # VPN and tunnel may be required
   # set that up outside of this script

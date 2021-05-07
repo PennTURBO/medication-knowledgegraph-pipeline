@@ -30,13 +30,18 @@ mm.kb.solr.client <- SolrClient$new(
 # could also ping it
 print(mm.kb.solr.client)
 
+# mm.kb.solr.client$core_exists(config$med.map.kb.solr.core)
+# mm.kb.solr.client$core_exists("medication-employment-labels-dev")
+
 # clear the core!
 mm.kb.solr.client$delete_by_query(name = config$med.map.kb.solr.core, query = "*:*")
 
 if (config$post.via.ssh) {
   # https://debian-administration.org/article/530/SSH_with_authentication_key_instead_of_password
   session <-
-    ssh_connect(paste0(config$ssh.user, "@", config$ssh.host))
+    # ssh_connect(paste0(config$ssh.user, "@", config$ssh.host))
+    # ssh_connect(paste0(config$ssh.user, "@", config$ssh.host), passwd = config$ssh.password, verbose=TRUE)
+    ssh_connect(paste0(config$ssh.user, "@", config$ssh.host), passwd = config$ssh.password)
   print(session)
   
   # countdown may dip to negative before finishing
@@ -67,7 +72,7 @@ if (config$post.via.ssh) {
 } else {
   
   assembled.url <- paste0(
-    url = "http://",
+    url = #"http://",
     config$med.map.kb.solr.host,
     ":",
     config$med.map.kb.solr.port,
@@ -76,9 +81,15 @@ if (config$post.via.ssh) {
     "/update?commit=true&overwrite=false"
   )
 
+  # print(assembled.url)
+  # print(paste0(config$json.source,"/",config$json.for.solr))
+
   placeholder <-
     httr::POST(url = assembled.url,
-               body = upload_file(paste0(json.source,"/",json.for.solr)))
+               body = upload_file(paste0(config$json.source,"/",config$json.for.solr))
+               , timeout(600) #seconds
+#               , verbose(data_out = TRUE, data_in = TRUE, info = TRUE, ssl = TRUE)
+               )
   print(placeholder)
 }
 
@@ -175,6 +186,9 @@ placeholder <-
           name = config$med.map.kb.solr.core,
           params = solr.param.list
         )
+
+      # print(current.solr.result)
+
       failures <- setdiff(current.expected, current.solr.result$id)
       print("failures...")
       print(failures)

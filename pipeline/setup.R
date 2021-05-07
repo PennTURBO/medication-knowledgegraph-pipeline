@@ -227,9 +227,9 @@ import.from.local.file <-
   function(some.graph.name,
            some.local.file,
            some.rdf.format) {
-    print(some.graph.name)
-    print(some.local.file)
-    print(some.rdf.format)
+    #print(some.graph.name)
+    #print(some.local.file)
+    #print(some.rdf.format)
     post.dest <-
       paste0(
         config$my.graphdb.base,
@@ -240,6 +240,8 @@ import.from.local.file <-
       )
     
     print(post.dest)
+    print(some.local.file)
+    print(some.rdf.format)
     
     post.resp <-
       httr::POST(
@@ -248,7 +250,9 @@ import.from.local.file <-
         content_type(some.rdf.format),
         authenticate(config$my.graphdb.username,
                      config$my.graphdb.pw,
-                     type = 'basic')
+                     type = 'basic'),
+
+        timeout(600) #seconds
       )
     
     print('Errors will be listed below:')
