@@ -12,10 +12,11 @@ default:
   pds.pw: <redacted>
 
   #If pds.live == false, read from pds.cvs instead
-  pds.live: true
-  
-  #pds.csv: "/data/pds_limited.csv"
-  pds.csv: "/data/pds_full.csv"
+  pds.live: false
+
+# pds.csv: "/data/pds_limited.csv"
+# pds.csv: "/data/pds_full.csv"
+  pds.csv: "/data/pds_tenth.csv"
 
     #
 #    rxnav.api.address: localhost
@@ -66,15 +67,18 @@ default:
     #med.map.kb.solr.core: 'medication-employment-labels'
   med.map.kb.solr.port: <redacted>
 
-#    post.via.ssh: false
+# post.via.ssh: true
+  post.via.ssh: false
+
   # the actual Solr POST can optionally be run ON the Solr server
   #   that requires using the R ssh library to copy the json file and to execute the POST 
   ssh.user: <redacted>
   ssh.host: <redacted>
+  ssh.password: <redacted>
 
   json.for.solr: "medlabels_for_chebi_for_solr.json"
   json.source: "/data/"
-  json.dest: "/data/"
+  json.dest: ""
   clear.raw.class.search.res: false
     #
 
@@ -100,7 +104,7 @@ default:
 #  safe.rxnav.submission.size: 10000
   safe.rxnav.submission.size: 1000
 #   inter.outer.seconds: 60
-  inter.outer.seconds: 10
+  inter.outer.seconds: 1
 
 #for debugging, saved session from rxnav_med_mapping_proximity_training_no_tuning.R
   rxnav_med_mapping_training_image:  "/data/rxnav_med_mapping_proximity_training_no_tuning.Rdata"
